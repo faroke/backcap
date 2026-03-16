@@ -1,5 +1,11 @@
 # @backcap/cli
 
+## 0.1.4
+
+### Patch Changes
+
+- Fix registry URLs to use GitHub Pages where JSON files are actually served
+
 ## 0.1.3
 
 ### Patch Changes
