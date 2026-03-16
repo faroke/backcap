@@ -20,7 +20,8 @@ export default defineCommand({
       const configResult = await loadConfig(cwd);
       if (configResult.isOk()) {
         const config = configResult.unwrap();
-        installed = new Set(config.installed ?? []);
+        const caps = config.installed?.capabilities ?? [];
+        installed = new Set(caps.map((c) => c.name));
       }
     } else {
       log.info("Run `backcap init` to configure your project.");

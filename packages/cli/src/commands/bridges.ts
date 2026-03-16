@@ -38,14 +38,10 @@ export default defineCommand({
     }
 
     const config = configResult.unwrap();
-    const installed = (config as Record<string, unknown>).installed as
-      | { capabilities?: Array<{ name: string }> }
-      | undefined;
-    const installedNames = new Set(
-      installed?.capabilities?.map((c) => c.name) ?? [],
-    );
+    const installedCaps = config.installed?.capabilities ?? [];
+    const installedCapNames = new Set(installedCaps.map((c) => c.name));
 
-    if (installedNames.size === 0) {
+    if (installedCapNames.size === 0) {
       clack.log.info("No capabilities installed yet. Run `backcap add <capability>` to get started.");
       clack.outro("No bridges available.");
       return;
@@ -63,7 +59,7 @@ export default defineCommand({
     }
 
     const compatible = catalog.bridges.filter((b) =>
-      b.dependencies.every((dep) => installedNames.has(dep)),
+      b.dependencies.every((dep) => installedCapNames.has(dep)),
     );
 
     if (compatible.length === 0) {
@@ -73,12 +69,7 @@ export default defineCommand({
     }
 
     const installedBridges = new Set(
-      ((config as Record<string, unknown>).installed as Record<string, unknown>)?.bridges
-        ? (
-            ((config as Record<string, unknown>).installed as Record<string, unknown>)
-              .bridges as Array<{ name: string }>
-          ).map((b) => b.name)
-        : [],
+      (config.installed?.bridges ?? []).map((b) => b.name),
     );
 
     const lines = compatible.map((b) => {
@@ -87,6 +78,11 @@ export default defineCommand({
     });
 
     clack.note(lines.join("\n\n"), "Available Bridges");
+
+    const availableCount = compatible.filter((b) => !installedBridges.has(b.name)).length;
+    if (availableCount > 0) {
+      clack.log.info(`Run \`backcap add <bridge-name>\` to install a bridge.`);
+    }
     clack.outro(`${compatible.length} bridge(s) found.`);
   },
 });

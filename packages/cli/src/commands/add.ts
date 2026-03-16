@@ -7,7 +7,7 @@ import { detectAdapters } from "../lib/detect-adapters.js";
 import { detectPM } from "../lib/detect-pm.js";
 import { writeCapabilityFiles } from "../lib/write-capability.js";
 import { installDeps } from "../lib/install-deps.js";
-import { updateConfig } from "../lib/update-config.js";
+import { updateConfigCapability, updateConfigBridge } from "../lib/update-config.js";
 import { detectConflicts } from "../installer/conflict-detector.js";
 import { renderConflictSummary, renderDetailedDiffs } from "../installer/diff-renderer.js";
 import { selectiveInstall, InstallCancelledError } from "../installer/selective-installer.js";
@@ -23,24 +23,25 @@ import { intro, outro, fail } from "../ui/prompts.js";
 import { log } from "../utils/logger.js";
 import { ConflictDetectionError } from "../errors/conflict-detection.error.js";
 import { FileWriteError } from "../installer/file-writer.js";
+import { MissingDependencyError } from "../errors/bridge.error.js";
 
 const DEFAULT_REGISTRY_URL = "https://backcap.dev";
 
 export default defineCommand({
   meta: {
     name: "add",
-    description: "Install a capability from the registry",
+    description: "Install a capability or bridge from the registry",
   },
   args: {
     capability: {
       type: "positional",
       required: true,
-      description: "Capability name to install",
+      description: "Capability or bridge name to install",
     },
   },
   async run({ args }) {
     const cwd = process.cwd();
-    const capabilityName = args.capability;
+    const itemName = args.capability;
     intro();
 
     // Load config
@@ -57,26 +58,45 @@ export default defineCommand({
 
     const config = configResult.unwrap();
 
-    // Fetch capability item JSON
-    log.info(`Fetching ${capabilityName}...`);
+    // Fetch item JSON — try capability path first, then bridges
+    log.info(`Fetching ${itemName}...`);
     let itemData: unknown;
+    let fetchedFromBridges = false;
     try {
-      itemData = await ofetch(`${DEFAULT_REGISTRY_URL}/dist/${capabilityName}.json`, {
+      itemData = await ofetch(`${DEFAULT_REGISTRY_URL}/dist/${itemName}.json`, {
         timeout: 5000,
       });
     } catch {
-      fail(`Could not fetch capability "${capabilityName}" from registry.`);
-      return;
+      // Try bridges path
+      try {
+        itemData = await ofetch(`${DEFAULT_REGISTRY_URL}/dist/bridges/${itemName}.json`, {
+          timeout: 5000,
+        });
+        fetchedFromBridges = true;
+      } catch {
+        fail(`Could not fetch "${itemName}" from registry.`);
+        return;
+      }
     }
 
     const parsed = registryItemSchema.safeParse(itemData);
     if (!parsed.success) {
-      fail("Invalid capability data received from registry.");
+      fail("Invalid data received from registry.");
       return;
     }
 
     const item = parsed.data;
     const itemVersion = (item as Record<string, unknown>).version as string | undefined;
+    const itemType = item.type;
+
+    // Route to bridge installation if type is "bridge"
+    if (itemType === "bridge" || fetchedFromBridges) {
+      await installBridge(cwd, config, item, itemVersion);
+      return;
+    }
+
+    // --- Capability installation flow ---
+    const capabilityName = itemName;
 
     // Resolve skill files from capability JSON
     const skillFiles = resolveSkillFiles(item as { files?: Array<{ path: string; content?: string }>; skills?: string[] });
@@ -171,7 +191,7 @@ export default defineCommand({
 
           // Track partial install
           const version = itemVersion ?? "1.0.0";
-          await updateConfig(cwd, {
+          await updateConfigCapability(cwd, {
             name: capabilityName,
             version,
             adapters: selectedAdapters,
@@ -211,7 +231,7 @@ export default defineCommand({
 
       // Update backcap.json
       const version = itemVersion ?? "1.0.0";
-      await updateConfig(cwd, {
+      await updateConfigCapability(cwd, {
         name: capabilityName,
         version,
         adapters: selectedAdapters,
@@ -279,3 +299,119 @@ export default defineCommand({
     }
   },
 });
+
+// --- Bridge installation flow ---
+async function installBridge(
+  cwd: string,
+  config: { paths: { capabilities: string; adapters: string; bridges: string; skills: string }; installed: { capabilities: Array<{ name: string }>; bridges: Array<{ name: string }> } },
+  item: { name: string; type: string; files: Array<Record<string, unknown>>; dependencies?: Record<string, string> | string[] },
+  itemVersion: string | undefined,
+): Promise<void> {
+  const bridgeName = item.name;
+  const version = itemVersion ?? "0.1.0";
+
+  // Check if already installed
+  const installedBridgeNames = new Set(config.installed.bridges.map((b) => b.name));
+  if (installedBridgeNames.has(bridgeName)) {
+    log.info(`Bridge "${bridgeName}" is already installed.`);
+    outro("Nothing to update.");
+    return;
+  }
+
+  // Validate dependencies — all required capabilities must be installed
+  const requiredDeps = Array.isArray(item.dependencies)
+    ? item.dependencies
+    : item.dependencies ? Object.keys(item.dependencies) : [];
+
+  if (requiredDeps.length > 0) {
+    const installedCapNames = new Set(config.installed.capabilities.map((c) => c.name));
+    const missing = requiredDeps.filter((dep) => !installedCapNames.has(dep));
+
+    if (missing.length > 0) {
+      const err = new MissingDependencyError(missing);
+      fail(`${err.message}\n${err.suggestion}`);
+      return;
+    }
+  }
+
+  // Extract files to write
+  const files = item.files as Array<{ path: string; content?: string }>;
+  const filesToWrite = files
+    .filter((f): f is { path: string; content: string } => typeof f.content === "string");
+
+  const markers = {
+    capabilities_path: config.paths.capabilities,
+    adapters_path: config.paths.adapters,
+    bridges_path: config.paths.bridges,
+    skills_path: config.paths.skills,
+  };
+
+  const bridgeRoot = normalize(join(cwd, config.paths.bridges, bridgeName));
+
+  // Conflict detection
+  const incomingFiles = filesToWrite.map((f) => ({
+    relativePath: f.path,
+    content: f.content,
+  }));
+
+  try {
+    const report = await detectConflicts(bridgeRoot, incomingFiles);
+
+    if (report.files.every((f) => f.status === "identical")) {
+      log.info("All bridge files are identical. No changes needed.");
+      outro("Nothing to update.");
+      return;
+    }
+
+    if (report.hasConflicts) {
+      renderConflictSummary(report);
+      const action = await promptConflictResolution();
+      if (action === "abort") {
+        outro("Installation cancelled. No files were written.");
+        return;
+      }
+      if (action === "compare_and_continue") {
+        renderDetailedDiffs(report);
+      }
+      if (action === "different_path") {
+        // For bridges, just abort — different path is less useful
+        outro("Bridge installation cancelled.");
+        return;
+      }
+    }
+  } catch (err) {
+    if (err instanceof ConflictDetectionError) {
+      fail(`Conflict detection failed for ${err.filePath}: ${err.message}\n${err.suggestion}`);
+      return;
+    }
+    throw err;
+  }
+
+  // Confirm installation
+  const confirmed = await promptInstallConfirm(bridgeName);
+  if (!confirmed) {
+    outro("Installation cancelled.");
+    return;
+  }
+
+  // Write bridge files
+  await writeCapabilityFiles(filesToWrite, { capabilityRoot: bridgeRoot, markers });
+  log.success(`Bridge files written to ${bridgeRoot}`);
+
+  // Update config
+  await updateConfigBridge(cwd, { name: bridgeName, version });
+
+  // Success message
+  const lines = [
+    `Bridge ${bridgeName} v${version} installed successfully!`,
+    "",
+    `  Bridge: ${bridgeRoot}`,
+    `  Connects: ${requiredDeps.join(" + ")}`,
+    "",
+    "  Next steps:",
+    `  1. Review the bridge files in ${config.paths.bridges}/${bridgeName}/`,
+    "  2. Wire the bridge in your application entry point",
+    "  3. Run the test suite: npx vitest run",
+  ];
+  outro(lines.join("\n"));
+}

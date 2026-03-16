@@ -1,6 +1,23 @@
 import type { FrameworkId } from "../detection/framework.js";
 import type { PackageManagerId } from "../detection/package-manager.js";
 
+export interface InstalledCapability {
+  name: string;
+  version: string;
+  adapters: string[];
+  partial?: boolean;
+}
+
+export interface InstalledBridge {
+  name: string;
+  version: string;
+}
+
+export interface InstalledConfig {
+  capabilities: InstalledCapability[];
+  bridges: InstalledBridge[];
+}
+
 export interface BackcapConfig {
   framework: string;
   packageManager: string;
@@ -11,7 +28,7 @@ export interface BackcapConfig {
     skills: string;
     shared: string;
   };
-  installed: string[];
+  installed: InstalledConfig;
 }
 
 export function buildDefaultConfig(
@@ -28,6 +45,6 @@ export function buildDefaultConfig(
       skills: "src/skills",
       shared: "src/shared",
     },
-    installed: [],
+    installed: { capabilities: [], bridges: [] },
   };
 }

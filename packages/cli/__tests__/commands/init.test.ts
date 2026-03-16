@@ -68,7 +68,7 @@ describe("init command integration", () => {
     expect(config.framework).toBe("express");
     expect(config.packageManager).toBe("npm");
     expect(config.paths.capabilities).toBe("src/capabilities");
-    expect(config.installed).toEqual([]);
+    expect(config.installed).toEqual({ capabilities: [], bridges: [] });
 
     const writeResult = await writeConfig(config, "/project");
     expect(writeResult.isOk()).toBe(true);
@@ -86,7 +86,7 @@ describe("init command integration", () => {
         skills: "src/skills",
         shared: "src/shared",
       },
-      installed: [],
+      installed: { capabilities: [], bridges: [] },
     });
   });
 
