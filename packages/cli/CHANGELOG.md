@@ -1,5 +1,13 @@
 # @backcap/cli
 
+## 0.1.2
+
+### Patch Changes
+
+- Fix registry URLs to point to faroke.github.io/backcap and update CLI command references to npx @backcap/cli
+- Updated dependencies
+  - @backcap/shared@0.1.2
+
 ## 0.1.0
 
 ### Minor Changes
