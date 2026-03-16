@@ -1,69 +1,226 @@
 ---
 title: Blog Capability
-description: Blog post management for TypeScript backends — coming soon.
+description: Blog post management for TypeScript backends — create, publish, and list posts with Clean Architecture.
 ---
 
-The `blog` capability will provide blog post management for TypeScript backends. It will follow the same four-layer Clean Architecture used by all Backcap capabilities.
+The `blog` capability provides **blog post management** for TypeScript backends. It handles post creation, publishing lifecycle, slug generation, and listing with filtering.
 
-## Status
+## Install
 
-This capability is on the roadmap. It is not yet available in the registry.
+```bash
+npx backcap add blog
+```
 
-## Planned Features
-
-- Create, update, publish, and delete blog posts
-- Draft and published states
-- Slug generation and uniqueness enforcement
-- Tag associations
-- Author references via `userId`
-- Pagination-friendly post listing
-
-## Planned Domain Model
+## Domain Model
 
 ### Post Entity
 
-The `Post` entity will be the aggregate root. Planned fields:
+The `Post` entity is the aggregate root. It is immutable — all state changes return new instances.
+
+```typescript
+import { Post } from "./capabilities/blog/domain/entities/post.entity";
+
+const result = Post.create({
+  id: crypto.randomUUID(),
+  title: "Getting Started with Backcap",
+  content: "Blog post content here...",
+  authorId: "user-123",
+});
+
+if (result.isOk()) {
+  const post = result.unwrap();
+  console.log(post.slug.value); // "getting-started-with-backcap"
+}
+```
 
 | Field | Type | Description |
 |---|---|---|
-| `id` | `string` | Unique identifier |
+| `id` | `string` | Unique identifier (UUID) |
 | `title` | `string` | Post title |
-| `slug` | `Slug` | URL-safe identifier (value object) |
-| `body` | `string` | Post body content (Markdown) |
+| `slug` | `Slug` | URL-safe kebab-case identifier (value object) |
+| `content` | `string` | Post body content |
 | `authorId` | `string` | Reference to the author's user ID |
-| `status` | `"draft" \| "published"` | Publication state |
-| `tags` | `string[]` | Tag names |
-| `publishedAt` | `Date \| null` | Set when the post is published |
+| `status` | `"draft" \| "published"` | Lifecycle state, defaults to `"draft"` |
 | `createdAt` | `Date` | Creation timestamp |
-| `updatedAt` | `Date` | Last modification timestamp |
+| `publishedAt` | `Date \| null` | Set when the post is published |
 
-### Planned Domain Errors
+`Post.create()` returns `Result<Post, InvalidSlug>`. If no slug is provided, one is auto-generated from the title via `Slug.fromTitle()`.
 
-| Error | Condition |
-|---|---|
-| `PostNotFound` | Post does not exist for the given ID or slug |
-| `SlugAlreadyExists` | A post with the given slug already exists |
-| `PostAlreadyPublished` | Attempt to publish an already-published post |
-| `InvalidSlug` | Slug fails format validation |
+#### Publishing a Post
 
-### Planned Use Cases
+```typescript
+const publishResult = post.publish();
+if (publishResult.isOk()) {
+  const { post: published, event } = publishResult.unwrap();
+  console.log(published.status); // "published"
+  console.log(event); // PostPublished { postId, slug, publishedAt }
+}
+```
 
-| Use Case | Description |
-|---|---|
-| `CreatePost` | Creates a draft post with a unique slug |
-| `PublishPost` | Transitions a draft post to published state |
-| `UpdatePost` | Updates title, body, or tags |
-| `DeletePost` | Removes a post permanently |
-| `GetPostBySlug` | Retrieves a published post by slug |
-| `ListPosts` | Returns paginated posts filtered by status or tag |
+Returns `Result<{ post: Post; event: PostPublished }, PostAlreadyPublished>`. Fails if the post is already published.
 
-## Planned Adapters
+### Slug Value Object
 
-- **blog-prisma**: Prisma adapter implementing `IPostRepository`
-- **blog-express**: Express router with CRUD endpoints
+```typescript
+import { Slug } from "./capabilities/blog/domain/value-objects/slug.vo";
 
-## Stay Updated
+const result = Slug.create("my-blog-post");
+// Result<Slug, InvalidSlug>
 
-Watch the [Backcap GitHub repository](https://github.com/backcap/backcap) for progress on the blog capability.
+const fromTitle = Slug.fromTitle("Hello World! My Post");
+// Result<Slug, InvalidSlug> — produces "hello-world-my-post"
+```
 
-If you need blog functionality today, you can follow the [Create a Capability guide](/guides/create-capability) to build your own using the same patterns.
+Validates against `/^[a-z0-9]+(?:-[a-z0-9]+)*$/` — lowercase alphanumeric segments joined by single hyphens.
+
+### Domain Errors
+
+| Error Class | Condition | Message |
+|---|---|---|
+| `InvalidSlug` | Slug fails format validation | `Invalid slug: "<value>". Slug must be lowercase kebab-case.` |
+| `PostNotFound` | No post found for the given ID | `Post not found with id: "<id>"` |
+| `PostAlreadyPublished` | Attempt to publish an already-published post | `Post with id "<id>" is already published.` |
+
+### Domain Events
+
+| Event | Emitted By | Payload |
+|---|---|---|
+| `PostCreated` | `CreatePost` use case | `postId`, `authorId`, `occurredAt` |
+| `PostPublished` | `Post.publish()` method | `postId`, `slug`, `publishedAt`, `occurredAt` |
+
+## Application Layer
+
+### Use Cases
+
+#### CreatePost
+
+Creates a draft post with an auto-generated or explicit slug.
+
+```typescript
+import { CreatePost } from "./capabilities/blog/application/use-cases/create-post.use-case";
+
+const createPost = new CreatePost(postRepository);
+
+const result = await createPost.execute({
+  title: "My First Post",
+  content: "Hello world!",
+  authorId: "user-123",
+  slug: "my-first-post", // optional
+});
+// Result<{ output: { postId, slug }; event: PostCreated }, Error>
+```
+
+#### PublishPost
+
+Transitions a draft post to published state.
+
+```typescript
+const result = await publishPost.execute({ postId: "post-123" });
+// Result<{ output: { postId, slug, publishedAt }; event: PostPublished }, Error>
+```
+
+**Possible failures**: `PostNotFound`, `PostAlreadyPublished`
+
+#### GetPost
+
+Retrieves a post by ID with full details.
+
+```typescript
+const result = await getPost.execute({ postId: "post-123" });
+// Result<GetPostOutput, Error>
+```
+
+#### ListPosts
+
+Returns paginated posts with optional filters.
+
+```typescript
+const result = await listPosts.execute({
+  authorId: "user-123",  // optional
+  status: "published",   // optional
+});
+// Result<{ posts: ListPostsOutputItem[] }, Error>
+```
+
+### Port Interface
+
+#### IPostRepository
+
+```typescript
+export interface IPostRepository {
+  findById(id: string): Promise<Post | null>;
+  findBySlug(slug: string): Promise<Post | null>;
+  findAll(filter?: { authorId?: string; status?: "draft" | "published" }): Promise<Post[]>;
+  save(post: Post): Promise<void>;
+}
+```
+
+No registry adapter is provided — implement this port for your database of choice.
+
+## Public API (contracts/)
+
+```typescript
+import { createBlogService, IBlogService } from "./capabilities/blog/contracts";
+
+const blogService: IBlogService = createBlogService({
+  postRepository,
+});
+
+// IBlogService interface:
+// createPost(input): Promise<Result<CreatePostOutput, Error>>
+// publishPost(input): Promise<Result<PublishPostOutput, Error>>
+// getPost(input): Promise<Result<GetPostOutput, Error>>
+// listPosts(input): Promise<Result<ListPostsOutput, Error>>
+```
+
+Events are stripped at the service boundary — `IBlogService` returns only output DTOs.
+
+## Bridges
+
+### blog-search
+
+Indexes published posts into the search capability when `PostPublished` fires.
+
+```bash
+npx backcap add blog-search
+```
+
+**Requires**: `blog` and `search` capabilities installed.
+
+### blog-comments
+
+Notifies post authors when a comment is posted on their post.
+
+### blog-tags
+
+Associates tags with posts when they are published.
+
+## File Map
+
+```
+capabilities/blog/
+  domain/
+    entities/post.entity.ts
+    value-objects/slug.vo.ts
+    events/post-created.event.ts
+    events/post-published.event.ts
+    errors/invalid-slug.error.ts
+    errors/post-not-found.error.ts
+    errors/post-already-published.error.ts
+  application/
+    use-cases/create-post.use-case.ts
+    use-cases/publish-post.use-case.ts
+    use-cases/get-post.use-case.ts
+    use-cases/list-posts.use-case.ts
+    ports/post-repository.port.ts
+    dto/create-post.dto.ts
+    dto/publish-post.dto.ts
+    dto/get-post.dto.ts
+    dto/list-posts.dto.ts
+  contracts/
+    blog.contract.ts
+    blog.factory.ts
+    index.ts
+  shared/
+    result.ts
+```
