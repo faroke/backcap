@@ -2,17 +2,20 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 
 export default defineConfig({
+  site: "https://backcap.github.io",
+  base: "/backcap",
   integrations: [
     starlight({
       title: "Backcap",
       description:
         "A registry of composable backend capabilities for TypeScript. Install backend features like packages.",
-      logo: {
-        alt: "Backcap",
-      },
-      social: {
-        github: "https://github.com/backcap/backcap",
-      },
+      social: [
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/backcap/backcap",
+        },
+      ],
       editLink: {
         baseUrl: "https://github.com/backcap/backcap/edit/main/apps/docs/",
       },
@@ -66,7 +69,7 @@ export default defineConfig({
           ],
         },
       ],
-      customCss: [],
+      customCss: ["./src/styles/custom.css"],
       head: [
         {
           tag: "link",

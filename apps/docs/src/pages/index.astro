@@ -1,0 +1,839 @@
+---
+// Custom landing page — replaces Starlight default index
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Backcap — The shadcn/ui for backends</title>
+  <meta name="description" content="A registry of composable backend capabilities for TypeScript. Install backend features like packages." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: hsl(220 20% 4%);
+      --fg: hsl(210 20% 92%);
+      --card: hsl(220 18% 7%);
+      --primary: hsl(152 76% 52%);
+      --primary-fg: hsl(220 20% 4%);
+      --accent: hsl(172 66% 50%);
+      --secondary: hsl(220 16% 12%);
+      --muted: hsl(215 14% 50%);
+      --border: hsl(220 14% 16%);
+      --destructive: hsl(0 84% 60%);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── Utilities ── */
+    .text-gradient {
+      background-image: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .glow-primary { box-shadow: 0 0 40px hsl(152 76% 52% / 0.15); }
+    .border-glow { border-color: hsl(152 76% 52% / 0.3); }
+
+    .bg-grid {
+      background-image:
+        linear-gradient(hsl(220 14% 16% / 0.5) 1px, transparent 1px),
+        linear-gradient(90deg, hsl(220 14% 16% / 0.5) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ── Animations ── */
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-in-left {
+      from { opacity: 0; transform: translateX(-24px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fade-in-right {
+      from { opacity: 0; transform: translateX(24px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes terminal-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .anim { opacity: 0; transform: translateY(24px); }
+    .anim.visible { animation: fade-in-up 0.6s ease-out forwards; }
+    .anim.from-left { transform: translateX(-24px); }
+    .anim.from-left.visible { animation: fade-in-left 0.6s ease-out forwards; }
+    .anim.from-right { transform: translateX(24px); }
+    .anim.from-right.visible { animation: fade-in-right 0.6s ease-out forwards; }
+
+    .d1 { animation-delay: 0.1s; }
+    .d2 { animation-delay: 0.2s; }
+    .d3 { animation-delay: 0.3s; }
+    .d4 { animation-delay: 0.4s; }
+    .d5 { animation-delay: 0.5s; }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      border-bottom: 1px solid hsl(220 14% 16% / 0.5);
+      background: hsl(220 20% 4% / 0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .navbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 4rem;
+    }
+    .navbar-left { display: flex; align-items: center; gap: 2rem; }
+    .logo { display: flex; align-items: center; gap: 0.5rem; }
+    .logo-icon {
+      width: 1.5rem; height: 1.5rem; border-radius: 0.25rem;
+      background: var(--primary); display: flex; align-items: center; justify-content: center;
+      color: var(--primary-fg); font-weight: 700; font-size: 0.75rem;
+    }
+    .logo-text { font-weight: 700; font-size: 1.125rem; }
+    .nav-links { display: flex; gap: 1.5rem; font-size: 0.875rem; color: var(--muted); }
+    .nav-links a:hover { color: var(--fg); }
+    .github-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 1rem; border-radius: 0.5rem;
+      border: 1px solid var(--border); font-size: 0.875rem; color: var(--muted);
+      transition: all 0.2s;
+    }
+    .github-btn:hover { color: var(--fg); border-color: hsl(152 76% 52% / 0.3); }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .github-label { display: none; }
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; min-height: 100vh; display: flex; align-items: center;
+      justify-content: center; overflow: hidden; padding-top: 4rem;
+    }
+    .hero .bg-grid { position: absolute; inset: 0; opacity: 0.3; }
+    .hero-orb-1 {
+      position: absolute; top: 33%; left: 25%;
+      width: 500px; height: 500px; border-radius: 50%;
+      background: hsl(152 76% 52% / 0.05); filter: blur(150px);
+    }
+    .hero-orb-2 {
+      position: absolute; bottom: 25%; right: 25%;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: hsl(172 66% 50% / 0.05); filter: blur(120px);
+    }
+    .hero-content { position: relative; z-index: 10; text-align: center; padding: 5rem 0; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.375rem 1rem; border-radius: 9999px;
+      border: 1px solid hsl(152 76% 52% / 0.3); background: var(--secondary);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; margin-bottom: 2rem;
+    }
+    .hero-badge-dot {
+      width: 0.5rem; height: 0.5rem; border-radius: 50%;
+      background: var(--primary); animation: terminal-blink 2s ease-in-out infinite;
+    }
+    .hero-badge span:last-child { color: var(--muted); }
+    .hero h1 {
+      font-size: clamp(2.5rem, 7vw, 5.5rem); font-weight: 800;
+      letter-spacing: -0.03em; line-height: 0.95; margin-bottom: 1.5rem;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.25rem); color: var(--muted);
+      max-width: 40rem; margin: 0 auto 2.5rem; line-height: 1.7;
+    }
+    .hero-ctas {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+      gap: 1rem; margin-bottom: 3rem;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.5rem; border-radius: 0.5rem;
+      background: var(--primary); color: var(--primary-fg);
+      font-weight: 500; font-size: 0.875rem; transition: background 0.2s;
+    }
+    .btn-primary:hover { background: hsl(152 76% 45%); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.5rem; border-radius: 0.5rem;
+      border: 1px solid var(--border); color: var(--muted);
+      font-weight: 500; font-size: 0.875rem; transition: all 0.2s;
+    }
+    .btn-outline:hover { color: var(--fg); border-color: hsl(152 76% 52% / 0.3); }
+    .cmd-box {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem 1.25rem; border-radius: 0.5rem;
+      background: var(--secondary); border: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;
+      margin-bottom: 4rem;
+    }
+    .cmd-box .dollar { color: var(--muted); user-select: none; }
+    .cmd-copy {
+      background: none; border: none; color: var(--muted); cursor: pointer;
+      padding: 0; margin-left: 0.5rem; transition: color 0.2s;
+    }
+    .cmd-copy:hover { color: var(--fg); }
+
+    /* ── Terminal ── */
+    .terminal {
+      max-width: 42rem; margin: 0 auto; border-radius: 0.75rem;
+      border: 1px solid var(--border); background: var(--card); overflow: hidden;
+    }
+    .terminal.glow-primary { box-shadow: 0 0 40px hsl(152 76% 52% / 0.15); }
+    .terminal-bar {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+    }
+    .terminal-dot { width: 0.75rem; height: 0.75rem; border-radius: 50%; }
+    .terminal-dot.red { background: hsl(0 84% 60% / 0.6); }
+    .terminal-dot.yellow { background: hsl(152 76% 52% / 0.3); }
+    .terminal-dot.green { background: hsl(152 76% 52% / 0.6); }
+    .terminal-title {
+      margin-left: 0.75rem; font-size: 0.75rem; color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .terminal-body {
+      padding: 1.5rem; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem; line-height: 1.7; min-height: 320px;
+    }
+    .terminal-line { opacity: 0; transition: opacity 0.15s; }
+    .terminal-line.show { opacity: 1; }
+    .terminal-line.command { color: var(--fg); font-weight: 600; }
+    .terminal-line.prompt { color: var(--accent); }
+    .terminal-line.success { color: var(--primary); }
+    .terminal-line.file { color: var(--muted); }
+    .terminal-line.empty { height: 1rem; }
+    .terminal-cursor {
+      display: inline-block; width: 0.5rem; height: 1rem;
+      background: var(--primary); animation: terminal-blink 1s step-end infinite;
+    }
+
+    /* ── Section shared ── */
+    section { padding: 7rem 0; }
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 3rem); font-weight: 700;
+      margin-bottom: 1rem; text-align: center;
+    }
+    .section-sub {
+      color: var(--muted); font-size: 1.125rem;
+      max-width: 40rem; margin: 0 auto 4rem; text-align: center;
+    }
+
+    /* ── Problem ── */
+    .problem-grid {
+      display: grid; gap: 1.5rem; max-width: 56rem; margin: 0 auto;
+    }
+    @media (min-width: 768px) { .problem-grid { grid-template-columns: 1fr 1fr; } }
+    .problem-card {
+      padding: 1.5rem; border-radius: 0.75rem; background: var(--card);
+    }
+    .problem-card.bad { border: 1px solid hsl(0 84% 60% / 0.2); }
+    .problem-card.good { border: 1px solid hsl(152 76% 52% / 0.2); }
+    .problem-card h3 { font-weight: 600; font-size: 1.125rem; margin-bottom: 1.25rem; }
+    .problem-item {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.875rem; padding: 0.375rem 0;
+    }
+    .problem-item.bad-item { color: var(--muted); }
+    .problem-item.good-item code {
+      font-family: 'JetBrains Mono', monospace; color: var(--primary);
+    }
+    .icon-x { color: var(--destructive); flex-shrink: 0; }
+    .icon-check { color: var(--primary); flex-shrink: 0; }
+
+    /* ── How it works ── */
+    .how-section { position: relative; }
+    .how-section .bg-grid { position: absolute; inset: 0; opacity: 0.15; }
+    .how-grid {
+      display: grid; gap: 2rem; max-width: 56rem; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    @media (min-width: 768px) { .how-grid { grid-template-columns: repeat(3, 1fr); } }
+    .step-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3rem; font-weight: 800; color: hsl(152 76% 52% / 0.1);
+      margin-bottom: 1rem; display: block;
+    }
+    .step h3 { font-weight: 600; font-size: 1.125rem; margin-bottom: 0.75rem; }
+    .step p { font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
+    .step-code {
+      border-radius: 0.5rem; background: var(--secondary);
+      border: 1px solid var(--border); padding: 1rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      line-height: 1.8; color: var(--primary);
+    }
+
+    /* ── Examples ── */
+    .examples-grid {
+      display: grid; gap: 1.5rem; max-width: 64rem; margin: 0 auto;
+    }
+    @media (min-width: 768px) { .examples-grid { grid-template-columns: repeat(3, 1fr); } }
+    .example-card {
+      padding: 1.5rem; border-radius: 0.75rem;
+      border: 1px solid var(--border); background: var(--card);
+      transition: all 0.3s;
+    }
+    .example-card:hover { border-color: hsl(152 76% 52% / 0.3); box-shadow: 0 0 40px hsl(152 76% 52% / 0.15); }
+    .example-icon {
+      width: 2rem; height: 2rem; color: var(--primary); margin-bottom: 1rem;
+      transition: transform 0.3s;
+    }
+    .example-card:hover .example-icon { transform: scale(1.1); }
+    .example-card h3 { font-weight: 600; font-size: 1.25rem; margin-bottom: 1.25rem; }
+    .example-list {
+      border-radius: 0.5rem; background: var(--secondary);
+      border: 1px solid var(--border); padding: 1rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 2;
+    }
+    .example-list span { color: var(--muted); }
+    .example-list .plus { color: var(--primary); }
+
+    /* ── Capabilities ── */
+    .cap-section { position: relative; overflow: hidden; }
+    .cap-section .bg-grid { position: absolute; inset: 0; opacity: 0.1; }
+    .cap-ambient {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 800px; height: 600px; border-radius: 50%; opacity: 0.2;
+      filter: blur(120px); pointer-events: none;
+      background: radial-gradient(circle, hsl(152 76% 52% / 0.3), hsl(172 66% 50% / 0.1), transparent 70%);
+    }
+    .cap-badge {
+      display: inline-block; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--primary); margin-bottom: 1rem;
+      padding: 0.25rem 0.75rem; border-radius: 9999px;
+      border: 1px solid hsl(152 76% 52% / 0.2); background: hsl(152 76% 52% / 0.05);
+    }
+    .cap-grid {
+      display: grid; gap: 0.75rem; max-width: 72rem; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    @media (min-width: 640px) { .cap-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .cap-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 1280px) { .cap-grid { grid-template-columns: repeat(4, 1fr); } }
+    .cap-card {
+      position: relative; padding: 1.25rem; border-radius: 0.75rem;
+      border: 1px solid hsl(220 14% 16% / 0.6); background: hsl(220 18% 7% / 0.4);
+      backdrop-filter: blur(4px); overflow: hidden;
+      transition: all 0.5s; cursor: default;
+    }
+    .cap-card:hover { background: hsl(220 18% 7% / 0.8); transform: translateY(-2px); }
+    .cap-hover-glow {
+      position: absolute; inset: 0; opacity: 0;
+      transition: opacity 0.5s; pointer-events: none;
+    }
+    .cap-card:hover .cap-hover-glow { opacity: 1; }
+    .cap-top-glow {
+      position: absolute; top: 0; left: 1rem; right: 1rem; height: 1px;
+      opacity: 0; transition: opacity 0.5s;
+    }
+    .cap-card:hover .cap-top-glow { opacity: 1; }
+    .cap-icon-box {
+      width: 2rem; height: 2rem; border-radius: 0.5rem;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 0.75rem; transition: transform 0.3s;
+    }
+    .cap-card:hover .cap-icon-box { transform: scale(1.1); }
+    .cap-icon-box svg { width: 1rem; height: 1rem; }
+    .cap-card h3 { font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem; }
+    .cap-card .cap-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+    .cap-hint {
+      position: absolute; bottom: 0.75rem; right: 0.75rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.625rem;
+      color: hsl(152 76% 52% / 0.6); opacity: 0;
+      transform: translateY(4px); transition: all 0.3s;
+    }
+    .cap-card:hover .cap-hint { opacity: 1; transform: translateY(0); }
+
+    /* ── Architecture ── */
+    .arch-grid {
+      display: grid; gap: 4rem; max-width: 64rem; margin: 0 auto; align-items: center;
+    }
+    @media (min-width: 768px) { .arch-grid { grid-template-columns: 1fr 1fr; } }
+    .arch-text h2 { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; margin-bottom: 1.25rem; }
+    .arch-text p { color: var(--muted); margin-bottom: 1.5rem; line-height: 1.7; }
+    .arch-label {
+      font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;
+    }
+    .arch-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .arch-tag {
+      padding: 0.375rem 0.75rem; border-radius: 0.375rem;
+      background: var(--secondary); border: 1px solid var(--border);
+      font-size: 0.875rem; font-family: 'JetBrains Mono', monospace;
+    }
+    .arch-tree {
+      border-radius: 0.75rem; border: 1px solid var(--border);
+      background: var(--card); padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;
+    }
+    .arch-tree .dir { color: var(--primary); }
+    .arch-tree .accent-dir { color: var(--accent); }
+    .arch-tree .muted { color: var(--muted); }
+
+    /* ── AI Section ── */
+    .ai-section { position: relative; }
+    .ai-section .bg-grid { position: absolute; inset: 0; opacity: 0.15; }
+    .ai-grid {
+      display: grid; gap: 1.5rem; max-width: 56rem; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    @media (min-width: 768px) { .ai-grid { grid-template-columns: repeat(3, 1fr); } }
+    .ai-card {
+      padding: 1.5rem; border-radius: 0.75rem;
+      border: 1px solid var(--border); background: hsl(220 18% 7% / 0.5);
+    }
+    .ai-card svg { width: 1.5rem; height: 1.5rem; color: var(--primary); margin-bottom: 1rem; }
+    .ai-card h3 { font-weight: 600; margin-bottom: 0.5rem; }
+    .ai-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── CTA ── */
+    .cta-section { position: relative; padding: 8rem 0; }
+    .cta-orb {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 600px; height: 600px; border-radius: 50%;
+      background: hsl(152 76% 52% / 0.05); filter: blur(150px);
+    }
+    .cta-content { position: relative; z-index: 1; text-align: center; max-width: 42rem; margin: 0 auto; }
+    .cta-content h2 {
+      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 1.5rem;
+    }
+    .cta-content .sub { color: var(--muted); font-size: 1.125rem; margin-bottom: 2.5rem; }
+    .cta-btns {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+      gap: 1rem; margin-bottom: 3rem;
+    }
+    .cta-github { color: var(--muted); font-size: 0.875rem; transition: color 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
+    .cta-github:hover { color: var(--fg); }
+    .cta-footer {
+      margin-top: 4rem; display: flex; align-items: center; justify-content: center;
+      gap: 2rem; font-size: 0.875rem; color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .cta-dot { width: 0.25rem; height: 0.25rem; border-radius: 50%; background: var(--primary); }
+
+    /* SVG icons inline */
+    .icon { display: inline-block; vertical-align: middle; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <div class="navbar-left">
+        <a href="/" class="logo">
+          <div class="logo-icon">B</div>
+          <span class="logo-text">backcap</span>
+        </a>
+        <div class="nav-links">
+          <a href="#capabilities">Capabilities</a>
+          <a href="#architecture">Architecture</a>
+          <a href={`${base}/getting-started/introduction`}>Docs</a>
+        </div>
+      </div>
+      <a href="https://github.com/backcap/backcap" target="_blank" rel="noopener noreferrer" class="github-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span class="github-label">Star on GitHub</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="bg-grid"></div>
+    <div class="hero-orb-1"></div>
+    <div class="hero-orb-2"></div>
+    <div class="container hero-content">
+      <div style="max-width:56rem;margin:0 auto">
+        <div class="anim visible">
+          <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            <span>shadcn/ui for backend capabilities</span>
+          </div>
+        </div>
+        <h1 class="anim visible d1">The <span class="text-gradient">shadcn/ui</span><br/>for backends.</h1>
+        <p class="hero-sub anim visible d2">
+          Copy and own backend capabilities.<br/>
+          Auth, Blog, Search, Payments and more — ready for any TypeScript backend.
+        </p>
+        <div class="hero-ctas anim visible d3">
+          <a href="#capabilities" class="btn-primary">
+            Explore capabilities
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="https://github.com/backcap/backcap" target="_blank" rel="noopener noreferrer" class="btn-outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            View on GitHub
+          </a>
+        </div>
+        <div class="anim visible d4" style="display:flex;justify-content:center;margin-bottom:4rem">
+          <div class="cmd-box">
+            <span class="dollar">$</span>
+            <span>npx backcap add auth</span>
+            <button class="cmd-copy" onclick="navigator.clipboard.writeText('npx backcap add auth')" title="Copy">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="anim visible d5">
+        <div class="terminal glow-primary" id="terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dot red"></div>
+            <div class="terminal-dot yellow"></div>
+            <div class="terminal-dot green"></div>
+            <span class="terminal-title">terminal</span>
+          </div>
+          <div class="terminal-body" id="terminal-body"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section>
+    <div class="container">
+      <h2 class="section-title anim">Stop rewriting <span class="text-gradient">backend features.</span></h2>
+      <p class="section-sub anim">
+        Every backend project rebuilds the same features — authentication, permissions, blog, search, notifications, billing. This slows development and creates duplicated logic across projects.
+      </p>
+      <div class="problem-grid">
+        <div class="problem-card bad anim from-left">
+          <h3>Traditional backend development</h3>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Rewrite auth from scratch</span></div>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Build custom permissions</span></div>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Implement blog system</span></div>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Create search engine</span></div>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Set up notifications</span></div>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Handle billing logic</span></div>
+        </div>
+        <div class="problem-card good glow-primary anim from-right">
+          <h3>Backcap capabilities</h3>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add auth</code></div>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add rbac</code></div>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add blog</code></div>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add search</code></div>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add notifications</code></div>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add billing</code></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-section">
+    <div class="bg-grid"></div>
+    <div class="container">
+      <h2 class="section-title anim">Install backend <span class="text-gradient">capabilities.</span></h2>
+      <div class="how-grid">
+        <div class="step anim">
+          <span class="step-number">01</span>
+          <h3>Install the CLI</h3>
+          <p>Initialize Backcap in your existing TypeScript project.</p>
+          <div class="step-code">npx backcap init</div>
+        </div>
+        <div class="step anim d1">
+          <span class="step-number">02</span>
+          <h3>Add capabilities</h3>
+          <p>Pick the backend features you need.</p>
+          <div class="step-code">
+            <div>npx backcap add auth</div>
+            <div>npx backcap add blog</div>
+            <div>npx backcap add search</div>
+          </div>
+        </div>
+        <div class="step anim d2">
+          <span class="step-number">03</span>
+          <h3>Use them in your backend</h3>
+          <p>Capabilities are added directly to your project with full source code. No vendor lock-in.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Examples -->
+  <section>
+    <div class="container">
+      <h2 class="section-title anim">Build anything with <span class="text-gradient">capabilities.</span></h2>
+      <div class="examples-grid">
+        <div class="example-card anim">
+          <svg class="example-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          <h3>SaaS</h3>
+          <div class="example-list">
+            <div><span class="plus">+</span> <span>authentication</span></div>
+            <div><span class="plus">+</span> <span>organizations</span></div>
+            <div><span class="plus">+</span> <span>billing</span></div>
+            <div><span class="plus">+</span> <span>feature-flags</span></div>
+            <div><span class="plus">+</span> <span>notifications</span></div>
+          </div>
+        </div>
+        <div class="example-card anim d1">
+          <svg class="example-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <h3>Ecommerce</h3>
+          <div class="example-list">
+            <div><span class="plus">+</span> <span>catalog</span></div>
+            <div><span class="plus">+</span> <span>cart</span></div>
+            <div><span class="plus">+</span> <span>orders</span></div>
+            <div><span class="plus">+</span> <span>payments</span></div>
+            <div><span class="plus">+</span> <span>inventory</span></div>
+          </div>
+        </div>
+        <div class="example-card anim d2">
+          <svg class="example-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+          <h3>Content Platform</h3>
+          <div class="example-list">
+            <div><span class="plus">+</span> <span>blog</span></div>
+            <div><span class="plus">+</span> <span>comments</span></div>
+            <div><span class="plus">+</span> <span>tags</span></div>
+            <div><span class="plus">+</span> <span>media</span></div>
+            <div><span class="plus">+</span> <span>analytics</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities -->
+  <section class="cap-section" id="capabilities">
+    <div class="bg-grid"></div>
+    <div class="cap-ambient"></div>
+    <div class="container" style="position:relative;z-index:1">
+      <div style="text-align:center;margin-bottom:4rem" class="anim">
+        <span class="cap-badge">plug &amp; play</span>
+        <h2 class="section-title" style="margin-bottom:1rem">Available <span class="text-gradient">capabilities.</span></h2>
+        <p style="color:var(--muted);font-size:1.125rem;max-width:32rem;margin:0 auto">
+          Ready-to-install backend features — full source code, zero lock-in.
+        </p>
+      </div>
+      <div class="cap-grid" id="cap-grid"></div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section id="architecture">
+    <div class="container">
+      <div class="arch-grid">
+        <div class="arch-text anim from-left">
+          <h2>Framework agnostic <span class="text-gradient">by design.</span></h2>
+          <p>Backcap uses a modular architecture inspired by clean architecture and hexagonal architecture. The core domain is independent from frameworks.</p>
+          <div class="arch-label">Runtimes</div>
+          <div class="arch-tags">
+            <span class="arch-tag">Node</span>
+            <span class="arch-tag">Bun</span>
+            <span class="arch-tag">Deno</span>
+          </div>
+          <div class="arch-label">Frameworks</div>
+          <div class="arch-tags">
+            <span class="arch-tag">Next.js</span>
+            <span class="arch-tag">Express</span>
+            <span class="arch-tag">Fastify</span>
+            <span class="arch-tag">NestJS</span>
+          </div>
+        </div>
+        <div class="arch-tree anim from-right">
+          <div class="muted" style="font-size:0.75rem;margin-bottom:0.5rem">project/</div>
+          <div style="margin-left:0.5rem;display:flex;flex-direction:column;gap:0.375rem">
+            <div>├── <span class="dir">capabilities/</span></div>
+            <div style="margin-left:1.5rem" class="muted">├── auth</div>
+            <div style="margin-left:1.5rem" class="muted">├── blog</div>
+            <div style="margin-left:1.5rem" class="muted">└── search</div>
+            <div>├── <span class="accent-dir">adapters/</span></div>
+            <div>└── <span class="accent-dir">integrations/</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Section -->
+  <section class="ai-section">
+    <div class="bg-grid"></div>
+    <div class="container">
+      <h2 class="section-title anim">Built for <span class="text-gradient">AI-assisted</span> development.</h2>
+      <p class="section-sub anim">Every capability is structured so AI tools can understand and extend your backend.</p>
+      <div class="ai-grid">
+        <div class="ai-card anim">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          <h3>Clear specifications</h3>
+          <p>Each capability includes a spec.yaml contract readable by humans and AI alike.</p>
+        </div>
+        <div class="ai-card anim d1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
+          <h3>Domain contracts</h3>
+          <p>Typed interfaces and ports that AI tools can understand and extend automatically.</p>
+        </div>
+        <div class="ai-card anim d2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+          <h3>AI-friendly structure</h3>
+          <p>Consistent architecture lets LLMs generate, modify and compose capabilities.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-orb"></div>
+    <div class="container cta-content anim">
+      <h2>Start building <span class="text-gradient">faster backends.</span></h2>
+      <p class="sub">Stop rewriting. Start composing.</p>
+      <div class="cta-btns">
+        <a href={`${base}/getting-started/introduction`} class="btn-primary">
+          Get Started
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="#capabilities" class="btn-outline">Explore Capabilities</a>
+      </div>
+      <a href="https://github.com/backcap/backcap" target="_blank" rel="noopener noreferrer" class="cta-github">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        View on GitHub
+      </a>
+      <div class="cta-footer">
+        <span>TypeScript</span>
+        <span class="cta-dot"></span>
+        <span>Open Source</span>
+        <span class="cta-dot"></span>
+        <span>AI-Native</span>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // ── Scroll animations ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.anim:not(.visible)').forEach(el => observer.observe(el));
+
+    // ── Terminal animation ──
+    const lines = [
+      { text: '$ npx backcap init', type: 'command' },
+      { text: '? runtime › node', type: 'prompt' },
+      { text: '? framework › fastify', type: 'prompt' },
+      { text: '', type: 'empty' },
+      { text: '✓ Project initialized', type: 'success' },
+      { text: '', type: 'empty' },
+      { text: '$ npx backcap add auth', type: 'command' },
+      { text: '  ✓ core/domain/user.ts', type: 'file' },
+      { text: '  ✓ core/ports/auth-provider.ts', type: 'file' },
+      { text: '  ✓ core/usecases/sign-in.ts', type: 'file' },
+      { text: '  ✓ adapters/drizzle-user-repo.ts', type: 'file' },
+      { text: '  ✓ spec.yaml', type: 'file' },
+      { text: '', type: 'empty' },
+      { text: '✓ auth capability added', type: 'success' },
+      { text: '', type: 'empty' },
+      { text: '$ npx backcap add blog', type: 'command' },
+      { text: '  ✓ core/domain/post.ts', type: 'file' },
+      { text: '  ✓ core/usecases/publish-post.ts', type: 'file' },
+      { text: '  ✓ spec.yaml', type: 'file' },
+      { text: '', type: 'empty' },
+      { text: '✓ blog capability added', type: 'success' },
+    ];
+
+    const body = document.getElementById('terminal-body');
+    let idx = 0;
+
+    function addLine() {
+      if (idx >= lines.length) return;
+      const line = lines[idx];
+      const div = document.createElement('div');
+      div.className = 'terminal-line show ' + line.type;
+      div.textContent = line.text;
+      // Remove cursor before adding new line
+      const cursor = body.querySelector('.terminal-cursor');
+      if (cursor) cursor.remove();
+      body.appendChild(div);
+      idx++;
+      if (idx < lines.length) {
+        // Add cursor
+        const c = document.createElement('span');
+        c.className = 'terminal-cursor';
+        body.appendChild(c);
+        const delay = lines[idx]?.type === 'command' ? 600 : 120;
+        setTimeout(addLine, delay);
+      }
+    }
+
+    // Start terminal animation when visible
+    const terminalObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setTimeout(addLine, 500);
+          terminalObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    terminalObs.observe(document.getElementById('terminal'));
+
+    // ── Capabilities grid ──
+    const capabilities = [
+      { name: 'Authentication', desc: 'User sign-up, login, sessions and API keys.', color: '152 76% 52%', icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>' },
+      { name: 'Blog', desc: 'Posts, categories, drafts and publishing.', color: '172 66% 50%', icon: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>' },
+      { name: 'Search', desc: 'Full-text search with filters and facets.', color: '200 80% 55%', icon: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>' },
+      { name: 'Files', desc: 'Upload, storage and file management.', color: '38 92% 55%', icon: '<path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>' },
+      { name: 'Notifications', desc: 'In-app, email and push notifications.', color: '280 70% 60%', icon: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>' },
+      { name: 'Webhooks', desc: 'Outbound event delivery and retries.', color: '152 76% 52%', icon: '<path d="M18 16.98h-5.99c-1.1 0-1.95.94-2.48 1.9A4 4 0 0 1 2 17c.01-.7.2-1.4.57-2"/><path d="m6 17 3.13-5.78c.53-.97.1-2.18-.5-3.1a4 4 0 1 1 6.89-4.06"/><path d="m12 6 3.13 5.73C15.66 12.7 16.9 13 18 13a4 4 0 0 1 0 8H12"/>' },
+      { name: 'Queues', desc: 'Background jobs and task processing.', color: '172 66% 50%', icon: '<rect width="7" height="18" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/>' },
+      { name: 'Feature Flags', desc: 'Toggle features per user or environment.', color: '340 75% 55%', icon: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>' },
+      { name: 'Audit Log', desc: 'Track every action in your system.', color: '200 80% 55%', icon: '<rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>' },
+      { name: 'Analytics', desc: 'Events, metrics and dashboards.', color: '38 92% 55%', icon: '<line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/>' },
+      { name: 'Forms', desc: 'Dynamic form schemas and submissions.', color: '280 70% 60%', icon: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/>' },
+      { name: 'Comments', desc: 'Threaded comments and moderation.', color: '152 76% 52%', icon: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>' },
+      { name: 'Tags', desc: 'Flexible tagging and categorization.', color: '172 66% 50%', icon: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>' },
+    ];
+
+    const grid = document.getElementById('cap-grid');
+    capabilities.forEach((cap, i) => {
+      const slug = cap.name.toLowerCase().replace(/\s/g, '-');
+      const card = document.createElement('div');
+      card.className = 'cap-card anim';
+      card.style.animationDelay = `${i * 0.04}s`;
+      card.innerHTML = `
+        <div class="cap-hover-glow" style="background:radial-gradient(circle at 30% 20%, hsl(${cap.color} / 0.08), transparent 60%)"></div>
+        <div class="cap-top-glow" style="background:linear-gradient(90deg, transparent, hsl(${cap.color} / 0.5), transparent)"></div>
+        <div style="position:relative;z-index:1">
+          <div class="cap-icon-box" style="background:hsl(${cap.color} / 0.1);border:1px solid hsl(${cap.color} / 0.15)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="hsl(${cap.color})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${cap.icon}</svg>
+          </div>
+          <h3>${cap.name}</h3>
+          <p class="cap-desc">${cap.desc}</p>
+        </div>
+        <div class="cap-hint">backcap add ${slug}</div>
+      `;
+      grid.appendChild(card);
+    });
+
+    // Re-observe newly added capability cards
+    document.querySelectorAll('.cap-card.anim:not(.visible)').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
