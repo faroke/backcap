@@ -21,13 +21,13 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm turbo build
+      - run: pnpm turbo build --filter='!@backcap/docs' --filter='!@backcap/demo'
 
       - name: Create Release Pull Request or Publish
         uses: changesets/action@v1
