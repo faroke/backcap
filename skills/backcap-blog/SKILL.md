@@ -127,7 +127,9 @@ See [`references/bridges.md`](references/bridges.md) for detailed bridge documen
 | Command | Description |
 |---|---|
 | `npx @backcap/cli init` | Scaffold `backcap.json` in the current project |
+| `npx @backcap/cli init --yes` | Non-interactive init; fails if framework or package manager cannot be detected |
 | `npx @backcap/cli list` | List all available capabilities from the registry |
 | `npx @backcap/cli add blog` | Install the blog capability (prompts for adapter selection) |
+| `npx @backcap/cli add blog --yes` | Non-interactive install; auto-selects detected adapters, overwrites conflicts |
 | `npx @backcap/cli bridges` | List bridges compatible with installed capabilities |
 | `npx @backcap/cli add bridge blog-search` | Install the blog-search bridge |

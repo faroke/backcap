@@ -143,8 +143,10 @@ and bridge catalogue.
 | Command | Description |
 |---|---|
 | `npx @backcap/cli init` | Scaffold `backcap.json` config in the current project; auto-detects framework and package manager |
+| `npx @backcap/cli init --yes` | Non-interactive init; fails if framework or package manager cannot be detected |
 | `npx @backcap/cli list` | Fetch and display all available capabilities from the registry |
 | `npx @backcap/cli add <name>` | Install a capability (e.g. `npx @backcap/cli add auth`); detects adapters, resolves conflicts, writes files, installs npm deps |
+| `npx @backcap/cli add <name> --yes` | Non-interactive install; auto-selects detected adapters, overwrites conflicts, skips confirmations |
 | `npx @backcap/cli bridges` | List bridges that are compatible with currently installed capabilities |
 | `npx @backcap/cli add bridge <name>` | Install a specific bridge into the project |
 
