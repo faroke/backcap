@@ -1,516 +1,23 @@
 ---
-// Custom landing page — replaces Starlight default index
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Backcap — The shadcn/ui for backends</title>
-  <meta name="description" content="A registry of composable backend capabilities for TypeScript. Install backend features like packages." />
-  <meta name="base" content={base} />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<StarlightPage frontmatter={{
+  title: 'Backcap — The shadcn/ui for backends',
+  description: 'A registry of composable backend capabilities for TypeScript. Install backend features like packages.',
+  template: 'splash',
+  pagefind: false,
+  tableOfContents: false,
+  editUrl: false,
+  prev: false,
+  next: false,
+}}>
 
-    :root {
-      --bg: hsl(220 20% 4%);
-      --fg: hsl(210 20% 92%);
-      --card: hsl(220 18% 7%);
-      --primary: hsl(152 76% 52%);
-      --primary-fg: hsl(220 20% 4%);
-      --accent: hsl(172 66% 50%);
-      --secondary: hsl(220 16% 12%);
-      --muted: hsl(215 14% 50%);
-      --border: hsl(220 14% 16%);
-      --destructive: hsl(0 84% 60%);
-    }
-
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--fg);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .font-mono { font-family: 'JetBrains Mono', monospace; }
-
-    a { color: inherit; text-decoration: none; }
-
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
-
-    /* ── Utilities ── */
-    .text-gradient {
-      background-image: linear-gradient(135deg, var(--primary), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .glow-primary { box-shadow: 0 0 40px hsl(152 76% 52% / 0.15); }
-    .border-glow { border-color: hsl(152 76% 52% / 0.3); }
-
-    .bg-grid {
-      background-image:
-        linear-gradient(hsl(220 14% 16% / 0.5) 1px, transparent 1px),
-        linear-gradient(90deg, hsl(220 14% 16% / 0.5) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-
-    /* ── Animations ── */
-    @keyframes fade-in-up {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fade-in-left {
-      from { opacity: 0; transform: translateX(-24px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes fade-in-right {
-      from { opacity: 0; transform: translateX(24px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes terminal-blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-
-    .anim { opacity: 0; transform: translateY(24px); }
-    .anim.visible { animation: fade-in-up 0.6s ease-out forwards; }
-    .anim.from-left { transform: translateX(-24px); }
-    .anim.from-left.visible { animation: fade-in-left 0.6s ease-out forwards; }
-    .anim.from-right { transform: translateX(24px); }
-    .anim.from-right.visible { animation: fade-in-right 0.6s ease-out forwards; }
-
-    .d1 { animation-delay: 0.1s; }
-    .d2 { animation-delay: 0.2s; }
-    .d3 { animation-delay: 0.3s; }
-    .d4 { animation-delay: 0.4s; }
-    .d5 { animation-delay: 0.5s; }
-
-    /* ── Navbar ── */
-    .navbar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-      border-bottom: 1px solid hsl(220 14% 16% / 0.5);
-      background: hsl(220 20% 4% / 0.8);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-    }
-    .navbar-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      height: 4rem;
-    }
-    .navbar-left { display: flex; align-items: center; gap: 2rem; }
-    .logo { display: flex; align-items: center; gap: 0.5rem; }
-    .logo-icon {
-      width: 1.5rem; height: 1.5rem; border-radius: 0.25rem;
-      background: var(--primary); display: flex; align-items: center; justify-content: center;
-      color: var(--primary-fg); font-weight: 700; font-size: 0.75rem;
-    }
-    .logo-text { font-weight: 700; font-size: 1.125rem; }
-    .nav-links { display: flex; gap: 1.5rem; font-size: 0.875rem; color: var(--muted); }
-    .nav-links a:hover { color: var(--fg); }
-    .github-star {
-      display: inline-flex; align-items: center; gap: 0.625rem;
-      padding: 0.4rem 0.875rem; border-radius: 0.5rem;
-      border: 1px solid var(--border); font-size: 0.8125rem; color: var(--muted);
-      transition: all 0.2s; font-weight: 500;
-    }
-    .github-star:hover { color: var(--fg); border-color: hsl(152 76% 52% / 0.3); }
-    .github-star svg { flex-shrink: 0; }
-    .github-star-count {
-      display: inline-flex; align-items: center; gap: 0.25rem;
-      padding-left: 0.625rem; border-left: 1px solid var(--border);
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
-      color: var(--fg); font-weight: 600;
-    }
-
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .github-label { display: none; }
-    }
-
-    /* ── Hero ── */
-    .hero {
-      position: relative; min-height: 100vh; display: flex; align-items: center;
-      justify-content: center; overflow: hidden; padding-top: 4rem;
-    }
-    .hero .bg-grid { position: absolute; inset: 0; opacity: 0.3; }
-    .hero-orb-1 {
-      position: absolute; top: 33%; left: 25%;
-      width: 500px; height: 500px; border-radius: 50%;
-      background: hsl(152 76% 52% / 0.05); filter: blur(150px);
-    }
-    .hero-orb-2 {
-      position: absolute; bottom: 25%; right: 25%;
-      width: 400px; height: 400px; border-radius: 50%;
-      background: hsl(172 66% 50% / 0.05); filter: blur(120px);
-    }
-    .hero-content { position: relative; z-index: 10; text-align: center; padding: 5rem 0; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.375rem 1rem; border-radius: 9999px;
-      border: 1px solid hsl(152 76% 52% / 0.3); background: var(--secondary);
-      font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; margin-bottom: 2rem;
-    }
-    .hero-badge-dot {
-      width: 0.5rem; height: 0.5rem; border-radius: 50%;
-      background: var(--primary); animation: terminal-blink 2s ease-in-out infinite;
-    }
-    .hero-badge span:last-child { color: var(--muted); }
-    .hero h1 {
-      font-size: clamp(2.5rem, 7vw, 5.5rem); font-weight: 800;
-      letter-spacing: -0.03em; line-height: 0.95; margin-bottom: 1.5rem;
-    }
-    .hero-sub {
-      font-size: clamp(1rem, 2vw, 1.25rem); color: var(--muted);
-      max-width: 40rem; margin: 0 auto 2.5rem; line-height: 1.7;
-    }
-    .hero-ctas {
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-      gap: 1rem; margin-bottom: 3rem;
-    }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.75rem 1.5rem; border-radius: 0.5rem;
-      background: var(--primary); color: var(--primary-fg);
-      font-weight: 500; font-size: 0.875rem; transition: background 0.2s;
-    }
-    .btn-primary:hover { background: hsl(152 76% 45%); }
-    .btn-outline {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.75rem 1.5rem; border-radius: 0.5rem;
-      border: 1px solid var(--border); color: var(--muted);
-      font-weight: 500; font-size: 0.875rem; transition: all 0.2s;
-    }
-    .btn-outline:hover { color: var(--fg); border-color: hsl(152 76% 52% / 0.3); }
-    .cmd-box {
-      display: inline-flex; align-items: center; gap: 0.75rem;
-      padding: 0.75rem 1.25rem; border-radius: 0.5rem;
-      background: var(--secondary); border: 1px solid var(--border);
-      font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;
-      margin-bottom: 4rem;
-    }
-    .cmd-box .dollar { color: var(--muted); user-select: none; }
-    .cmd-copy {
-      background: none; border: none; color: var(--muted); cursor: pointer;
-      padding: 0; margin-left: 0.5rem; transition: color 0.2s;
-    }
-    .cmd-copy:hover { color: var(--fg); }
-
-    /* ── Terminal ── */
-    .terminal {
-      max-width: 42rem; margin: 0 auto; border-radius: 0.75rem;
-      border: 1px solid var(--border); background: hsl(220 20% 3.5%); overflow: hidden;
-      box-shadow: 0 0 60px hsl(152 76% 52% / 0.08), 0 25px 50px -12px rgba(0,0,0,0.5);
-    }
-    .terminal-bar {
-      display: flex; align-items: center; gap: 0.5rem;
-      padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
-      background: hsl(220 18% 5.5%);
-    }
-    .terminal-dot { width: 0.75rem; height: 0.75rem; border-radius: 50%; }
-    .terminal-dot.red { background: hsl(0 84% 50%); }
-    .terminal-dot.yellow { background: hsl(45 96% 58%); }
-    .terminal-dot.green { background: hsl(130 60% 46%); }
-    .terminal-title {
-      flex: 1; text-align: center; font-size: 0.75rem; color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .terminal-body {
-      padding: 1.25rem 1.5rem; font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8125rem; line-height: 1.6; min-height: 340px;
-      text-align: left;
-    }
-    .terminal-line { opacity: 0; transition: opacity 0.15s; white-space: pre; }
-    .terminal-line.show { opacity: 1; }
-    .tl-cmd { color: hsl(210 20% 70%); }
-    .tl-cmd .prompt-char { color: var(--muted); user-select: none; }
-    .tl-cmd strong { color: var(--fg); font-weight: 600; }
-    .tl-clack-intro { color: var(--primary); }
-    .tl-clack-bar { color: hsl(220 14% 25%); }
-    .tl-clack-select { color: var(--accent); }
-    .tl-clack-select .label { color: hsl(210 20% 70%); }
-    .tl-tag { color: hsl(152 76% 52% / 0.5); }
-    .tl-info { color: hsl(200 80% 65%); }
-    .tl-success { color: var(--primary); }
-    .tl-file { color: var(--muted); }
-    .tl-file .plus { color: var(--primary); }
-    .tl-empty { height: 0.5rem; }
-    .tl-outro { color: var(--primary); }
-    .terminal-cursor {
-      display: inline-block; width: 0.5rem; height: 1rem;
-      background: var(--primary); animation: terminal-blink 1s step-end infinite;
-      vertical-align: text-bottom;
-    }
-
-    /* ── Section shared ── */
-    section { padding: 7rem 0; }
-    .section-title {
-      font-size: clamp(1.75rem, 4vw, 3rem); font-weight: 700;
-      margin-bottom: 1rem; text-align: center;
-    }
-    .section-sub {
-      color: var(--muted); font-size: 1.125rem;
-      max-width: 40rem; margin: 0 auto 4rem; text-align: center;
-    }
-
-    /* ── Problem ── */
-    .problem-grid {
-      display: grid; gap: 1.5rem; max-width: 56rem; margin: 0 auto;
-    }
-    @media (min-width: 768px) { .problem-grid { grid-template-columns: 1fr 1fr; } }
-    .problem-card {
-      padding: 1.5rem; border-radius: 0.75rem; background: var(--card);
-    }
-    .problem-card.bad { border: 1px solid hsl(0 84% 60% / 0.2); }
-    .problem-card.good { border: 1px solid hsl(152 76% 52% / 0.2); }
-    .problem-card h3 { font-weight: 600; font-size: 1.125rem; margin-bottom: 1.25rem; }
-    .problem-item {
-      display: flex; align-items: center; gap: 0.75rem;
-      font-size: 0.875rem; padding: 0.375rem 0;
-    }
-    .problem-item.bad-item { color: var(--muted); }
-    .problem-item.good-item code {
-      font-family: 'JetBrains Mono', monospace; color: var(--primary);
-    }
-    .icon-x { color: var(--destructive); flex-shrink: 0; }
-    .icon-check { color: var(--primary); flex-shrink: 0; }
-
-    /* ── How it works ── */
-    .how-section { position: relative; }
-    .how-section .bg-grid { position: absolute; inset: 0; opacity: 0.15; }
-    .how-grid {
-      display: grid; gap: 2rem; max-width: 56rem; margin: 0 auto;
-      position: relative; z-index: 1;
-    }
-    @media (min-width: 768px) { .how-grid { grid-template-columns: repeat(3, 1fr); } }
-    .step-number {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 3rem; font-weight: 800; color: hsl(152 76% 52% / 0.1);
-      margin-bottom: 1rem; display: block;
-    }
-    .step h3 { font-weight: 600; font-size: 1.125rem; margin-bottom: 0.75rem; }
-    .step p { font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
-    .step-code {
-      border-radius: 0.5rem; background: var(--secondary);
-      border: 1px solid var(--border); padding: 1rem;
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
-      line-height: 1.8; color: var(--primary);
-    }
-
-    /* ── Examples ── */
-    .examples-grid {
-      display: grid; gap: 1.5rem; max-width: 64rem; margin: 0 auto;
-    }
-    @media (min-width: 768px) { .examples-grid { grid-template-columns: repeat(3, 1fr); } }
-    .example-card {
-      padding: 1.5rem; border-radius: 0.75rem;
-      border: 1px solid var(--border); background: var(--card);
-      transition: all 0.3s;
-    }
-    .example-card:hover { border-color: hsl(152 76% 52% / 0.3); box-shadow: 0 0 40px hsl(152 76% 52% / 0.15); }
-    .example-icon {
-      width: 2rem; height: 2rem; color: var(--primary); margin-bottom: 1rem;
-      transition: transform 0.3s;
-    }
-    .example-card:hover .example-icon { transform: scale(1.1); }
-    .example-card h3 { font-weight: 600; font-size: 1.25rem; margin-bottom: 1.25rem; }
-    .example-list {
-      border-radius: 0.5rem; background: var(--secondary);
-      border: 1px solid var(--border); padding: 1rem;
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 2;
-    }
-    .example-list span { color: var(--muted); }
-    .example-list .plus { color: var(--primary); }
-
-    /* ── Capabilities ── */
-    .cap-section { position: relative; overflow: hidden; }
-    .cap-section .bg-grid { position: absolute; inset: 0; opacity: 0.1; }
-    .cap-ambient {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 800px; height: 600px; border-radius: 50%; opacity: 0.2;
-      filter: blur(120px); pointer-events: none;
-      background: radial-gradient(circle, hsl(152 76% 52% / 0.3), hsl(172 66% 50% / 0.1), transparent 70%);
-    }
-    .cap-badge {
-      display: inline-block; font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--primary); margin-bottom: 1rem;
-      padding: 0.25rem 0.75rem; border-radius: 9999px;
-      border: 1px solid hsl(152 76% 52% / 0.2); background: hsl(152 76% 52% / 0.05);
-    }
-    .cap-grid {
-      display: grid; gap: 1rem; max-width: 72rem; margin: 0 auto;
-      position: relative; z-index: 1;
-    }
-    @media (min-width: 640px) { .cap-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1024px) { .cap-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (min-width: 1280px) { .cap-grid { grid-template-columns: repeat(4, 1fr); } }
-    .cap-card {
-      position: relative; padding: 1.5rem; border-radius: 0.75rem;
-      border: 1px solid hsl(220 14% 16% / 0.6); background: hsl(220 18% 7% / 0.4);
-      backdrop-filter: blur(4px); overflow: hidden;
-      transition: all 0.3s; cursor: pointer;
-      text-decoration: none; color: inherit; display: block;
-    }
-    .cap-card:hover {
-      background: hsl(220 18% 7% / 0.8);
-      transform: translateY(-3px);
-      border-color: hsl(220 14% 22%);
-    }
-    .cap-card.has-link:hover { border-color: hsl(152 76% 52% / 0.3); }
-    .cap-hover-glow {
-      position: absolute; inset: 0; opacity: 0;
-      transition: opacity 0.5s; pointer-events: none;
-    }
-    .cap-card:hover .cap-hover-glow { opacity: 1; }
-    .cap-top-glow {
-      position: absolute; top: 0; left: 1rem; right: 1rem; height: 1px;
-      opacity: 0; transition: opacity 0.5s;
-    }
-    .cap-card:hover .cap-top-glow { opacity: 1; }
-    .cap-icon-box {
-      width: 2.25rem; height: 2.25rem; border-radius: 0.5rem;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 0.875rem; transition: transform 0.3s;
-    }
-    .cap-card:hover .cap-icon-box { transform: scale(1.1); }
-    .cap-icon-box svg { width: 1.125rem; height: 1.125rem; }
-    .cap-card h3 { font-weight: 600; font-size: 0.9375rem; margin-bottom: 0.375rem; }
-    .cap-card .cap-desc { font-size: 0.8125rem; color: var(--muted); line-height: 1.5; }
-    .cap-footer {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid hsl(220 14% 16% / 0.5);
-    }
-    .cap-cmd {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem;
-      color: var(--muted); transition: color 0.3s;
-    }
-    .cap-card:hover .cap-cmd { color: hsl(152 76% 52% / 0.7); }
-    .cap-status {
-      font-size: 0.6875rem; font-weight: 500; padding: 0.125rem 0.5rem;
-      border-radius: 9999px;
-    }
-    .cap-status.available {
-      color: var(--primary); background: hsl(152 76% 52% / 0.1);
-      border: 1px solid hsl(152 76% 52% / 0.2);
-    }
-    .cap-status.soon {
-      color: var(--muted); background: hsl(220 14% 16% / 0.5);
-      border: 1px solid hsl(220 14% 20%);
-    }
-    .cap-arrow {
-      position: absolute; top: 1.25rem; right: 1.25rem;
-      color: var(--muted); opacity: 0; transform: translateX(-4px);
-      transition: all 0.3s;
-    }
-    .cap-card.has-link:hover .cap-arrow { opacity: 1; transform: translateX(0); }
-
-    /* ── Architecture ── */
-    .arch-grid {
-      display: grid; gap: 4rem; max-width: 64rem; margin: 0 auto; align-items: center;
-    }
-    @media (min-width: 768px) { .arch-grid { grid-template-columns: 1fr 1fr; } }
-    .arch-text h2 { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; margin-bottom: 1.25rem; }
-    .arch-text p { color: var(--muted); margin-bottom: 1.5rem; line-height: 1.7; }
-    .arch-label {
-      font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
-      color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;
-    }
-    .arch-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
-    .arch-tag {
-      padding: 0.375rem 0.75rem; border-radius: 0.375rem;
-      background: var(--secondary); border: 1px solid var(--border);
-      font-size: 0.875rem; font-family: 'JetBrains Mono', monospace;
-    }
-    .arch-tree {
-      border-radius: 0.75rem; border: 1px solid var(--border);
-      background: var(--card); padding: 1.5rem;
-      font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;
-    }
-    .arch-tree .dir { color: var(--primary); }
-    .arch-tree .accent-dir { color: var(--accent); }
-    .arch-tree .muted { color: var(--muted); }
-
-    /* ── AI Section ── */
-    .ai-section { position: relative; }
-    .ai-section .bg-grid { position: absolute; inset: 0; opacity: 0.15; }
-    .ai-grid {
-      display: grid; gap: 1.5rem; max-width: 56rem; margin: 0 auto;
-      position: relative; z-index: 1;
-    }
-    @media (min-width: 768px) { .ai-grid { grid-template-columns: repeat(3, 1fr); } }
-    .ai-card {
-      padding: 1.5rem; border-radius: 0.75rem;
-      border: 1px solid var(--border); background: hsl(220 18% 7% / 0.5);
-    }
-    .ai-card svg { width: 1.5rem; height: 1.5rem; color: var(--primary); margin-bottom: 1rem; }
-    .ai-card h3 { font-weight: 600; margin-bottom: 0.5rem; }
-    .ai-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
-
-    /* ── CTA ── */
-    .cta-section { position: relative; padding: 8rem 0; }
-    .cta-orb {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 600px; height: 600px; border-radius: 50%;
-      background: hsl(152 76% 52% / 0.05); filter: blur(150px);
-    }
-    .cta-content { position: relative; z-index: 1; text-align: center; max-width: 42rem; margin: 0 auto; }
-    .cta-content h2 {
-      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 1.5rem;
-    }
-    .cta-content .sub { color: var(--muted); font-size: 1.125rem; margin-bottom: 2.5rem; }
-    .cta-btns {
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-      gap: 1rem; margin-bottom: 3rem;
-    }
-    .cta-github { color: var(--muted); font-size: 0.875rem; transition: color 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
-    .cta-github:hover { color: var(--fg); }
-    .cta-footer {
-      margin-top: 4rem; display: flex; align-items: center; justify-content: center;
-      gap: 2rem; font-size: 0.875rem; color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .cta-dot { width: 0.25rem; height: 0.25rem; border-radius: 50%; background: var(--primary); }
-
-    /* SVG icons inline */
-    .icon { display: inline-block; vertical-align: middle; }
-  </style>
-</head>
-<body>
-
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="container navbar-inner">
-      <div class="navbar-left">
-        <a href="/" class="logo">
-          <div class="logo-icon">B</div>
-          <span class="logo-text">backcap</span>
-        </a>
-        <div class="nav-links">
-          <a href="#capabilities">Capabilities</a>
-          <a href="#architecture">Architecture</a>
-          <a href={`${base}/getting-started/introduction`}>Docs</a>
-        </div>
-      </div>
-      <a href="https://github.com/faroke/backcap" target="_blank" rel="noopener noreferrer" class="github-star">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-        Star
-        <span class="github-star-count" id="star-count">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <span id="star-num">-</span>
-        </span>
-      </a>
-    </div>
-  </nav>
+<div class="landing" data-base={base}>
 
   <!-- Hero -->
-  <section class="hero">
+  <section class="lp-hero">
     <div class="bg-grid"></div>
     <div class="hero-orb-1"></div>
     <div class="hero-orb-2"></div>
@@ -666,13 +173,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <!-- Capabilities -->
   <section class="cap-section" id="capabilities">
-    <div class="bg-grid"></div>
-    <div class="cap-ambient"></div>
-    <div class="container" style="position:relative;z-index:1">
+    <div class="container">
       <div style="text-align:center;margin-bottom:4rem" class="anim">
         <span class="cap-badge">plug &amp; play</span>
         <h2 class="section-title" style="margin-bottom:1rem">Available <span class="text-gradient">capabilities.</span></h2>
-        <p style="color:var(--muted);font-size:1.125rem;max-width:32rem;margin:0 auto">
+        <p style="color:var(--lp-muted);font-size:1.125rem;max-width:32rem;margin:0 auto">
           Ready-to-install backend features — full source code, zero lock-in.
         </p>
       </div>
@@ -769,82 +274,476 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </div>
   </section>
 
-  <script>
-    // ── Scroll animations ──
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
+</div>
 
-    document.querySelectorAll('.anim:not(.visible)').forEach(el => observer.observe(el));
+</StarlightPage>
 
-    // ── GitHub star count ──
-    fetch('https://api.github.com/repos/faroke/backcap')
-      .then(r => r.json())
-      .then(d => {
-        const el = document.getElementById('star-num');
-        if (el && typeof d.stargazers_count === 'number') {
-          el.textContent = d.stargazers_count;
-        }
-      }).catch(() => {});
+<style is:global>
+  /* ── Override Starlight layout for full-bleed landing (scoped to pages with .landing) ── */
+  main:has(.landing) { padding: 0 !important; }
+  main:has(.landing) > .content-panel:first-child { display: none !important; }
+  main:has(.landing) .content-panel { padding: 0 !important; border: none !important; }
+  main:has(.landing) .sl-container { max-width: none !important; }
+  main:has(.landing) .sl-container > * + * { margin-top: 0 !important; }
+  main:has(.landing) .sl-markdown-content > * + * { margin-top: 0 !important; }
+  main:has(.landing) footer { display: none !important; }
 
-    // ── Terminal animation ──
-    // Realistic clack-style output matching the actual backcap CLI
-    const lines = [
-      // Command 1: backcap init
-      { html: '<span class="prompt-char">$ </span><strong>npx backcap add auth</strong>', cls: 'tl-cmd', delay: 800 },
-      { html: '', cls: 'tl-empty', delay: 60 },
-      // clack intro
-      { html: '┌  <strong>backcap add</strong>', cls: 'tl-clack-intro', delay: 300 },
-      { html: '│', cls: 'tl-clack-bar', delay: 80 },
-      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Fetching auth...', cls: '', delay: 400 },
-      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Detected framework: fastify', cls: '', delay: 200 },
-      { html: '│', cls: 'tl-clack-bar', delay: 80 },
-      // files written
-      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Capability files written', cls: '', delay: 120 },
-      { html: '  <span class="plus">+</span> src/capabilities/auth/domain/user.ts', cls: 'tl-file', delay: 60 },
-      { html: '  <span class="plus">+</span> src/capabilities/auth/domain/session.ts', cls: 'tl-file', delay: 60 },
-      { html: '  <span class="plus">+</span> src/capabilities/auth/application/ports/auth-provider.port.ts', cls: 'tl-file', delay: 60 },
-      { html: '  <span class="plus">+</span> src/capabilities/auth/application/use-cases/sign-in.use-case.ts', cls: 'tl-file', delay: 60 },
-      { html: '  <span class="plus">+</span> src/capabilities/auth/application/use-cases/sign-up.use-case.ts', cls: 'tl-file', delay: 60 },
-      { html: '  <span class="plus">+</span> src/capabilities/auth/contracts/auth.contract.ts', cls: 'tl-file', delay: 60 },
-      { html: '│', cls: 'tl-clack-bar', delay: 80 },
-      // adapter
-      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Fetching adapter auth-prisma...', cls: '', delay: 300 },
-      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Adapter files written', cls: '', delay: 150 },
-      { html: '│', cls: 'tl-clack-bar', delay: 80 },
-      // skill
-      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Skill installed to .claude/skills/backcap-auth/', cls: '', delay: 150 },
-      { html: '│', cls: 'tl-clack-bar', delay: 80 },
-      // outro
-      { html: '└  auth v1.0.0 installed successfully!', cls: 'tl-outro', delay: 0 },
-    ];
+  /* ── Landing page variables ── */
+  .landing {
+    --lp-bg: hsl(220 20% 4%);
+    --lp-fg: hsl(210 20% 92%);
+    --lp-card: hsl(220 18% 7%);
+    --lp-primary: hsl(152 76% 52%);
+    --lp-primary-fg: hsl(220 20% 4%);
+    --lp-accent: hsl(172 66% 50%);
+    --lp-secondary: hsl(220 16% 12%);
+    --lp-muted: hsl(215 14% 50%);
+    --lp-border: hsl(220 14% 16%);
+    --lp-destructive: hsl(0 84% 60%);
 
-    const body = document.getElementById('terminal-body');
-    let idx = 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--lp-bg);
+    color: var(--lp-fg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    function addLine() {
-      if (idx >= lines.length) return;
-      const line = lines[idx];
-      const div = document.createElement('div');
-      div.className = 'terminal-line show ' + line.cls;
-      div.innerHTML = line.html;
-      const cursor = body.querySelector('.terminal-cursor');
-      if (cursor) cursor.remove();
-      body.appendChild(div);
-      idx++;
-      if (idx < lines.length) {
-        const c = document.createElement('span');
-        c.className = 'terminal-cursor';
-        body.appendChild(c);
-        setTimeout(addLine, lines[idx].delay);
+  .landing .font-mono { font-family: 'JetBrains Mono', monospace; }
+  .landing a { color: inherit; text-decoration: none; }
+  .landing .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── Utilities ── */
+  .landing .text-gradient {
+    background-image: linear-gradient(135deg, var(--lp-primary), var(--lp-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .landing .glow-primary { box-shadow: 0 0 40px hsl(152 76% 52% / 0.15); }
+  .landing .border-glow { border-color: hsl(152 76% 52% / 0.3); }
+
+  .landing .bg-grid {
+    background-image:
+      linear-gradient(hsl(220 14% 16% / 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(220 14% 16% / 0.5) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* ── Animations ── */
+  @keyframes lp-fade-in-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes lp-fade-in-left {
+    from { opacity: 0; transform: translateX(-24px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes lp-fade-in-right {
+    from { opacity: 0; transform: translateX(24px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes lp-terminal-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .landing .anim { opacity: 0; transform: translateY(24px); }
+  .landing .anim.visible { animation: lp-fade-in-up 0.6s ease-out forwards; }
+  .landing .anim.from-left { transform: translateX(-24px); }
+  .landing .anim.from-left.visible { animation: lp-fade-in-left 0.6s ease-out forwards; }
+  .landing .anim.from-right { transform: translateX(24px); }
+  .landing .anim.from-right.visible { animation: lp-fade-in-right 0.6s ease-out forwards; }
+
+  .landing .d1 { animation-delay: 0.1s; }
+  .landing .d2 { animation-delay: 0.2s; }
+  .landing .d3 { animation-delay: 0.3s; }
+  .landing .d4 { animation-delay: 0.4s; }
+  .landing .d5 { animation-delay: 0.5s; }
+
+  /* ── Hero ── */
+  .landing .lp-hero {
+    position: relative; min-height: 100vh; display: flex; align-items: center;
+    justify-content: center; overflow: hidden; padding-top: var(--sl-nav-height);
+  }
+  .landing .lp-hero .bg-grid { position: absolute; inset: 0; opacity: 0.3; }
+  .landing .hero-orb-1 {
+    position: absolute; top: 33%; left: 25%;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: hsl(152 76% 52% / 0.05); filter: blur(150px);
+  }
+  .landing .hero-orb-2 {
+    position: absolute; bottom: 25%; right: 25%;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: hsl(172 66% 50% / 0.05); filter: blur(120px);
+  }
+  .landing .hero-content { position: relative; z-index: 10; text-align: center; padding: 5rem 0; }
+  .landing .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.375rem 1rem; border-radius: 9999px;
+    border: 1px solid hsl(152 76% 52% / 0.3); background: var(--lp-secondary);
+    font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; margin-bottom: 2rem;
+  }
+  .landing .hero-badge-dot {
+    width: 0.5rem; height: 0.5rem; border-radius: 50%;
+    background: var(--lp-primary); animation: lp-terminal-blink 2s ease-in-out infinite;
+  }
+  .landing .hero-badge span:last-child { color: var(--lp-muted); }
+  .landing .lp-hero h1 {
+    font-size: clamp(2.5rem, 7vw, 5.5rem); font-weight: 800;
+    letter-spacing: -0.03em; line-height: 0.95; margin-bottom: 1.5rem;
+    color: var(--lp-fg);
+  }
+  .landing .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.25rem); color: var(--lp-muted);
+    max-width: 40rem; margin: 0 auto 2.5rem; line-height: 1.7;
+  }
+  .landing .hero-ctas {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    gap: 1rem; margin-bottom: 3rem;
+  }
+  .landing .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1.5rem; border-radius: 0.5rem;
+    background: var(--lp-primary); color: var(--lp-primary-fg);
+    font-weight: 500; font-size: 0.875rem; transition: background 0.2s;
+  }
+  .landing .btn-primary:hover { background: hsl(152 76% 45%); }
+  .landing .btn-outline {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1.5rem; border-radius: 0.5rem;
+    border: 1px solid var(--lp-border); color: var(--lp-muted);
+    font-weight: 500; font-size: 0.875rem; transition: all 0.2s;
+  }
+  .landing .btn-outline:hover { color: var(--lp-fg); border-color: hsl(152 76% 52% / 0.3); }
+  .landing .cmd-box {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem 1.25rem; border-radius: 0.5rem;
+    background: var(--lp-secondary); border: 1px solid var(--lp-border);
+    font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;
+    margin-bottom: 4rem;
+  }
+  .landing .cmd-box .dollar { color: var(--lp-muted); user-select: none; }
+  .landing .cmd-copy {
+    background: none; border: none; color: var(--lp-muted); cursor: pointer;
+    padding: 0; margin-left: 0.5rem; transition: color 0.2s;
+  }
+  .landing .cmd-copy:hover { color: var(--lp-fg); }
+
+  /* ── Terminal ── */
+  .landing .terminal {
+    max-width: 42rem; margin: 0 auto; border-radius: 0.75rem;
+    border: 1px solid var(--lp-border); background: hsl(220 20% 3.5%); overflow: hidden;
+    box-shadow: 0 0 60px hsl(152 76% 52% / 0.08), 0 25px 50px -12px rgba(0,0,0,0.5);
+  }
+  .landing .terminal-bar {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1rem; border-bottom: 1px solid var(--lp-border);
+    background: hsl(220 18% 5.5%);
+  }
+  .landing .terminal-dot { width: 0.75rem; height: 0.75rem; border-radius: 50%; }
+  .landing .terminal-dot.red { background: hsl(0 84% 50%); }
+  .landing .terminal-dot.yellow { background: hsl(45 96% 58%); }
+  .landing .terminal-dot.green { background: hsl(130 60% 46%); }
+  .landing .terminal-title {
+    flex: 1; text-align: center; font-size: 0.75rem; color: var(--lp-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .landing .terminal-body {
+    padding: 1.25rem 1.5rem; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8125rem; line-height: 1.6; min-height: 340px;
+    text-align: left;
+  }
+  .landing .terminal-line { opacity: 0; transition: opacity 0.15s; white-space: pre; }
+  .landing .terminal-line.show { opacity: 1; }
+  .landing .tl-cmd { color: hsl(210 20% 70%); }
+  .landing .tl-cmd .prompt-char { color: var(--lp-muted); user-select: none; }
+  .landing .tl-cmd strong { color: var(--lp-fg); font-weight: 600; }
+  .landing .tl-clack-intro { color: var(--lp-primary); }
+  .landing .tl-clack-bar { color: hsl(220 14% 25%); }
+  .landing .tl-clack-select { color: var(--lp-accent); }
+  .landing .tl-clack-select .label { color: hsl(210 20% 70%); }
+  .landing .tl-tag { color: hsl(152 76% 52% / 0.5); }
+  .landing .tl-info { color: hsl(200 80% 65%); }
+  .landing .tl-success { color: var(--lp-primary); }
+  .landing .tl-file { color: var(--lp-muted); }
+  .landing .tl-file .plus { color: var(--lp-primary); }
+  .landing .tl-empty { height: 0.5rem; }
+  .landing .tl-outro { color: var(--lp-primary); }
+  .landing .terminal-cursor {
+    display: inline-block; width: 0.5rem; height: 1rem;
+    background: var(--lp-primary); animation: lp-terminal-blink 1s step-end infinite;
+    vertical-align: text-bottom;
+  }
+
+  /* ── Section shared ── */
+  .landing section { padding: 7rem 0; }
+  .landing .section-title {
+    font-size: clamp(1.75rem, 4vw, 3rem); font-weight: 700;
+    margin-bottom: 1rem; text-align: center;
+  }
+  .landing .section-sub {
+    color: var(--lp-muted); font-size: 1.125rem;
+    max-width: 40rem; margin: 0 auto 4rem; text-align: center;
+  }
+
+  /* ── Problem ── */
+  .landing .problem-grid {
+    display: grid; gap: 1.5rem; max-width: 56rem; margin: 0 auto;
+  }
+  @media (min-width: 768px) { .landing .problem-grid { grid-template-columns: 1fr 1fr; } }
+  .landing .problem-card {
+    padding: 1.5rem; border-radius: 0.75rem; background: var(--lp-card);
+  }
+  .landing .problem-card.bad { border: 1px solid hsl(0 84% 60% / 0.2); }
+  .landing .problem-card.good { border: 1px solid hsl(152 76% 52% / 0.2); }
+  .landing .problem-card h3 { font-weight: 600; font-size: 1.125rem; margin-bottom: 1.25rem; }
+  .landing .problem-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    font-size: 0.875rem; padding: 0.375rem 0;
+  }
+  .landing .problem-item.bad-item { color: var(--lp-muted); }
+  .landing .problem-item.good-item code {
+    font-family: 'JetBrains Mono', monospace; color: var(--lp-primary);
+  }
+  .landing .icon-x { color: var(--lp-destructive); flex-shrink: 0; }
+  .landing .icon-check { color: var(--lp-primary); flex-shrink: 0; }
+
+  /* ── How it works ── */
+  .landing .how-section { position: relative; }
+  .landing .how-section .bg-grid { position: absolute; inset: 0; opacity: 0.15; }
+  .landing .how-grid {
+    display: grid; gap: 2rem; max-width: 56rem; margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+  @media (min-width: 768px) { .landing .how-grid { grid-template-columns: repeat(3, 1fr); } }
+  .landing .step-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 3rem; font-weight: 800; color: hsl(152 76% 52% / 0.1);
+    margin-bottom: 1rem; display: block;
+  }
+  .landing .step h3 { font-weight: 600; font-size: 1.125rem; margin-bottom: 0.75rem; }
+  .landing .step p { font-size: 0.875rem; color: var(--lp-muted); margin-bottom: 1rem; }
+  .landing .step-code {
+    border-radius: 0.5rem; background: var(--lp-secondary);
+    border: 1px solid var(--lp-border); padding: 1rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+    line-height: 1.8; color: var(--lp-primary);
+  }
+
+  /* ── Examples ── */
+  .landing .examples-grid {
+    display: grid; gap: 1.5rem; max-width: 64rem; margin: 0 auto;
+  }
+  @media (min-width: 768px) { .landing .examples-grid { grid-template-columns: repeat(3, 1fr); } }
+  .landing .example-card {
+    padding: 1.5rem; border-radius: 0.75rem;
+    border: 1px solid var(--lp-border); background: var(--lp-card);
+    transition: all 0.3s;
+  }
+  .landing .example-card:hover { border-color: hsl(152 76% 52% / 0.3); box-shadow: 0 0 40px hsl(152 76% 52% / 0.15); }
+  .landing .example-icon {
+    width: 2rem; height: 2rem; color: var(--lp-primary); margin-bottom: 1rem;
+    transition: transform 0.3s;
+  }
+  .landing .example-card:hover .example-icon { transform: scale(1.1); }
+  .landing .example-card h3 { font-weight: 600; font-size: 1.25rem; margin-bottom: 1.25rem; }
+  .landing .example-list {
+    border-radius: 0.5rem; background: var(--lp-secondary);
+    border: 1px solid var(--lp-border); padding: 1rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 2;
+  }
+  .landing .example-list span { color: var(--lp-muted); }
+  .landing .example-list .plus { color: var(--lp-primary); }
+
+  /* ── Capabilities ── */
+  .landing .cap-section { position: relative; overflow: hidden; }
+  .landing .cap-badge {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--lp-primary); margin-bottom: 1rem;
+    padding: 0.25rem 0.75rem; border-radius: 9999px;
+    border: 1px solid hsl(152 76% 52% / 0.2); background: hsl(152 76% 52% / 0.05);
+  }
+  .landing .cap-grid {
+    display: grid; gap: 0.75rem; max-width: 72rem; margin: 0 auto;
+  }
+  @media (min-width: 640px) { .landing .cap-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .landing .cap-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1280px) { .landing .cap-grid { grid-template-columns: repeat(4, 1fr); } }
+  .landing .cap-card {
+    display: flex; align-items: center; gap: 0.875rem;
+    padding: 1rem 1.25rem; border-radius: 0.625rem;
+    border: 1px solid hsl(220 14% 18%);
+    background: hsl(220 20% 7%);
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    text-decoration: none; color: inherit;
+  }
+  .landing .cap-card:hover {
+    transform: translateY(-2px);
+    background: hsl(220 20% 9%);
+  }
+  .landing a.cap-card:hover {
+    border-color: hsl(152 76% 52% / 0.4);
+  }
+  .landing .cap-card.is-soon { opacity: 0.5; }
+  .landing .cap-card.is-soon:hover { transform: none; opacity: 0.55; }
+  .landing .cap-icon {
+    flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 0.5rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .landing .cap-icon svg { width: 1.25rem; height: 1.25rem; }
+  .landing .cap-info { min-width: 0; flex: 1; }
+  .landing .cap-info h3 {
+    font-weight: 600; font-size: 0.875rem; margin: 0 0 0.125rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .landing .cap-info p {
+    font-size: 0.75rem; color: var(--lp-muted); margin: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .landing .cap-soon-tag {
+    font-size: 0.625rem; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--lp-muted); background: hsl(220 14% 14%);
+    padding: 0.1rem 0.4rem; border-radius: 0.25rem;
+  }
+  .landing .cap-arrow-icon {
+    flex-shrink: 0; color: hsl(152 76% 52% / 0);
+    transition: color 0.2s;
+  }
+  .landing a.cap-card:hover .cap-arrow-icon { color: hsl(152 76% 52% / 0.6); }
+
+  /* ── Architecture ── */
+  .landing .arch-grid {
+    display: grid; gap: 4rem; max-width: 64rem; margin: 0 auto; align-items: center;
+  }
+  @media (min-width: 768px) { .landing .arch-grid { grid-template-columns: 1fr 1fr; } }
+  .landing .arch-text h2 { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; margin-bottom: 1.25rem; }
+  .landing .arch-text p { color: var(--lp-muted); margin-bottom: 1.5rem; line-height: 1.7; }
+  .landing .arch-label {
+    font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
+    color: var(--lp-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;
+  }
+  .landing .arch-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .landing .arch-tag {
+    padding: 0.375rem 0.75rem; border-radius: 0.375rem;
+    background: var(--lp-secondary); border: 1px solid var(--lp-border);
+    font-size: 0.875rem; font-family: 'JetBrains Mono', monospace;
+  }
+  .landing .arch-tree {
+    border-radius: 0.75rem; border: 1px solid var(--lp-border);
+    background: var(--lp-card); padding: 1.5rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;
+  }
+  .landing .arch-tree .dir { color: var(--lp-primary); }
+  .landing .arch-tree .accent-dir { color: var(--lp-accent); }
+  .landing .arch-tree .muted { color: var(--lp-muted); }
+
+  /* ── AI Section ── */
+  .landing .ai-section { position: relative; }
+  .landing .ai-section .bg-grid { position: absolute; inset: 0; opacity: 0.15; }
+  .landing .ai-grid {
+    display: grid; gap: 1.5rem; max-width: 56rem; margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+  @media (min-width: 768px) { .landing .ai-grid { grid-template-columns: repeat(3, 1fr); } }
+  .landing .ai-card {
+    padding: 1.5rem; border-radius: 0.75rem;
+    border: 1px solid var(--lp-border); background: hsl(220 18% 7% / 0.5);
+  }
+  .landing .ai-card svg { width: 1.5rem; height: 1.5rem; color: var(--lp-primary); margin-bottom: 1rem; }
+  .landing .ai-card h3 { font-weight: 600; margin-bottom: 0.5rem; }
+  .landing .ai-card p { font-size: 0.875rem; color: var(--lp-muted); line-height: 1.6; }
+
+  /* ── CTA ── */
+  .landing .cta-section { position: relative; padding: 8rem 0; }
+  .landing .cta-orb {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 600px; height: 600px; border-radius: 50%;
+    background: hsl(152 76% 52% / 0.05); filter: blur(150px);
+  }
+  .landing .cta-content { position: relative; z-index: 1; text-align: center; max-width: 42rem; margin: 0 auto; }
+  .landing .cta-content h2 {
+    font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 1.5rem;
+  }
+  .landing .cta-content .sub { color: var(--lp-muted); font-size: 1.125rem; margin-bottom: 2.5rem; }
+  .landing .cta-btns {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    gap: 1rem; margin-bottom: 3rem;
+  }
+  .landing .cta-github { color: var(--lp-muted); font-size: 0.875rem; transition: color 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
+  .landing .cta-github:hover { color: var(--lp-fg); }
+  .landing .cta-footer {
+    margin-top: 4rem; display: flex; align-items: center; justify-content: center;
+    gap: 2rem; font-size: 0.875rem; color: var(--lp-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .landing .cta-dot { width: 0.25rem; height: 0.25rem; border-radius: 50%; background: var(--lp-primary); }
+
+  .landing .icon { display: inline-block; vertical-align: middle; }
+</style>
+
+<script>
+  // ── Scroll animations ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
       }
-    }
+    });
+  }, { threshold: 0.1 });
 
+  document.querySelectorAll('.landing .anim:not(.visible)').forEach(el => observer.observe(el));
+
+  // ── Terminal animation ──
+  const lines = [
+    { html: '<span class="prompt-char">$ </span><strong>npx backcap add auth</strong>', cls: 'tl-cmd', delay: 800 },
+    { html: '', cls: 'tl-empty', delay: 60 },
+    { html: '┌  <strong>backcap add</strong>', cls: 'tl-clack-intro', delay: 300 },
+    { html: '│', cls: 'tl-clack-bar', delay: 80 },
+    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Fetching auth...', cls: '', delay: 400 },
+    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Detected framework: fastify', cls: '', delay: 200 },
+    { html: '│', cls: 'tl-clack-bar', delay: 80 },
+    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Capability files written', cls: '', delay: 120 },
+    { html: '  <span class="plus">+</span> src/capabilities/auth/domain/user.ts', cls: 'tl-file', delay: 60 },
+    { html: '  <span class="plus">+</span> src/capabilities/auth/domain/session.ts', cls: 'tl-file', delay: 60 },
+    { html: '  <span class="plus">+</span> src/capabilities/auth/application/ports/auth-provider.port.ts', cls: 'tl-file', delay: 60 },
+    { html: '  <span class="plus">+</span> src/capabilities/auth/application/use-cases/sign-in.use-case.ts', cls: 'tl-file', delay: 60 },
+    { html: '  <span class="plus">+</span> src/capabilities/auth/application/use-cases/sign-up.use-case.ts', cls: 'tl-file', delay: 60 },
+    { html: '  <span class="plus">+</span> src/capabilities/auth/contracts/auth.contract.ts', cls: 'tl-file', delay: 60 },
+    { html: '│', cls: 'tl-clack-bar', delay: 80 },
+    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Fetching adapter auth-prisma...', cls: '', delay: 300 },
+    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Adapter files written', cls: '', delay: 150 },
+    { html: '│', cls: 'tl-clack-bar', delay: 80 },
+    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Skill installed to .claude/skills/backcap-auth/', cls: '', delay: 150 },
+    { html: '│', cls: 'tl-clack-bar', delay: 80 },
+    { html: '└  auth v1.0.0 installed successfully!', cls: 'tl-outro', delay: 0 },
+  ];
+
+  const body = document.getElementById('terminal-body');
+  let idx = 0;
+
+  function addLine() {
+    if (!body || idx >= lines.length) return;
+    const line = lines[idx];
+    const div = document.createElement('div');
+    div.className = 'terminal-line show ' + line.cls;
+    div.innerHTML = line.html;
+    const cursor = body.querySelector('.terminal-cursor');
+    if (cursor) cursor.remove();
+    body.appendChild(div);
+    idx++;
+    if (idx < lines.length) {
+      const c = document.createElement('span');
+      c.className = 'terminal-cursor';
+      body.appendChild(c);
+      setTimeout(addLine, lines[idx].delay);
+    }
+  }
+
+  const terminalEl = document.getElementById('terminal');
+  if (terminalEl) {
     const terminalObs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -853,59 +752,52 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         }
       });
     }, { threshold: 0.3 });
-    terminalObs.observe(document.getElementById('terminal'));
+    terminalObs.observe(terminalEl);
+  }
 
-    // ── Capabilities grid ──
-    const base = document.querySelector('meta[name="base"]')?.content || '';
-    const capabilities = [
-      { name: 'Auth', desc: 'User sign-up, login, sessions and API keys.', color: '152 76% 52%', slug: 'auth', link: '/capabilities/auth', icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>' },
-      { name: 'Blog', desc: 'Posts, categories, drafts and publishing.', color: '172 66% 50%', slug: 'blog', link: '/capabilities/blog', icon: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>' },
-      { name: 'Search', desc: 'Full-text search with filters and facets.', color: '200 80% 55%', slug: 'search', link: '/capabilities/search', icon: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>' },
-      { name: 'Files', desc: 'Upload, storage and file management.', color: '38 92% 55%', slug: 'files', link: null, icon: '<path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>' },
-      { name: 'Notifications', desc: 'In-app, email and push notifications.', color: '280 70% 60%', slug: 'notifications', link: null, icon: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>' },
-      { name: 'Webhooks', desc: 'Outbound event delivery and retries.', color: '152 76% 52%', slug: 'webhooks', link: null, icon: '<path d="M18 16.98h-5.99c-1.1 0-1.95.94-2.48 1.9A4 4 0 0 1 2 17c.01-.7.2-1.4.57-2"/><path d="m6 17 3.13-5.78c.53-.97.1-2.18-.5-3.1a4 4 0 1 1 6.89-4.06"/><path d="m12 6 3.13 5.73C15.66 12.7 16.9 13 18 13a4 4 0 0 1 0 8H12"/>' },
-      { name: 'Queues', desc: 'Background jobs and task processing.', color: '172 66% 50%', slug: 'queues', link: null, icon: '<rect width="7" height="18" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/>' },
-      { name: 'Feature Flags', desc: 'Toggle features per user or environment.', color: '340 75% 55%', slug: 'feature-flags', link: null, icon: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>' },
-      { name: 'Audit Log', desc: 'Track every action in your system.', color: '200 80% 55%', slug: 'audit-log', link: null, icon: '<rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>' },
-      { name: 'Analytics', desc: 'Events, metrics and dashboards.', color: '38 92% 55%', slug: 'analytics', link: null, icon: '<line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/>' },
-      { name: 'Forms', desc: 'Dynamic form schemas and submissions.', color: '280 70% 60%', slug: 'forms', link: null, icon: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/>' },
-      { name: 'Comments', desc: 'Threaded comments and moderation.', color: '152 76% 52%', slug: 'comments', link: null, icon: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>' },
-      { name: 'Tags', desc: 'Flexible tagging and categorization.', color: '172 66% 50%', slug: 'tags', link: null, icon: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>' },
-    ];
+  // ── Capabilities grid ──
+  const landingEl = document.querySelector('.landing');
+  const base = landingEl?.getAttribute('data-base') || '';
+  const capabilities = [
+    { name: 'Auth', desc: 'Sign-up, login, sessions & API keys', color: '152 76% 52%', link: '/capabilities/auth', icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>' },
+    { name: 'Blog', desc: 'Posts, categories, drafts & publishing', color: '172 66% 50%', link: '/capabilities/blog', icon: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>' },
+    { name: 'Search', desc: 'Full-text search with filters & facets', color: '200 80% 55%', link: '/capabilities/search', icon: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>' },
+    { name: 'Files', desc: 'Upload, storage & file management', color: '38 92% 55%', link: null, icon: '<path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>' },
+    { name: 'Notifications', desc: 'In-app, email & push notifications', color: '280 70% 60%', link: null, icon: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>' },
+    { name: 'Webhooks', desc: 'Outbound event delivery & retries', color: '152 76% 52%', link: null, icon: '<path d="M18 16.98h-5.99c-1.1 0-1.95.94-2.48 1.9A4 4 0 0 1 2 17c.01-.7.2-1.4.57-2"/><path d="m6 17 3.13-5.78c.53-.97.1-2.18-.5-3.1a4 4 0 1 1 6.89-4.06"/><path d="m12 6 3.13 5.73C15.66 12.7 16.9 13 18 13a4 4 0 0 1 0 8H12"/>' },
+    { name: 'Queues', desc: 'Background jobs & task processing', color: '172 66% 50%', link: null, icon: '<rect width="7" height="18" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/>' },
+    { name: 'Feature Flags', desc: 'Toggle features per user or env', color: '340 75% 55%', link: null, icon: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>' },
+    { name: 'Audit Log', desc: 'Track every action in your system', color: '200 80% 55%', link: null, icon: '<rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>' },
+    { name: 'Analytics', desc: 'Events, metrics & dashboards', color: '38 92% 55%', link: null, icon: '<line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/>' },
+    { name: 'Forms', desc: 'Dynamic form schemas & submissions', color: '280 70% 60%', link: null, icon: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/>' },
+    { name: 'Comments', desc: 'Threaded comments & moderation', color: '152 76% 52%', link: null, icon: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>' },
+    { name: 'Tags', desc: 'Flexible tagging & categorization', color: '172 66% 50%', link: null, icon: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>' },
+  ];
 
-    const arrowSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+  const arrow = '<svg class="cap-arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
 
-    const grid = document.getElementById('cap-grid');
+  const grid = document.getElementById('cap-grid');
+  if (grid) {
     capabilities.forEach((cap, i) => {
-      const tag = cap.link ? 'a' : 'div';
+      const isAvailable = !!cap.link;
+      const tag = isAvailable ? 'a' : 'div';
       const card = document.createElement(tag);
-      card.className = 'cap-card anim' + (cap.link ? ' has-link' : '');
-      if (cap.link) card.href = base + cap.link;
+      card.className = 'cap-card anim' + (isAvailable ? '' : ' is-soon');
+      if (isAvailable) card.href = base + cap.link;
       card.style.animationDelay = `${i * 0.04}s`;
-      const statusHtml = cap.link
-        ? `<span class="cap-status available">Available</span>`
-        : `<span class="cap-status soon">Soon</span>`;
       card.innerHTML = `
-        <div class="cap-hover-glow" style="background:radial-gradient(circle at 30% 20%, hsl(${cap.color} / 0.08), transparent 60%)"></div>
-        <div class="cap-top-glow" style="background:linear-gradient(90deg, transparent, hsl(${cap.color} / 0.5), transparent)"></div>
-        ${cap.link ? `<span class="cap-arrow">${arrowSvg}</span>` : ''}
-        <div style="position:relative;z-index:1">
-          <div class="cap-icon-box" style="background:hsl(${cap.color} / 0.1);border:1px solid hsl(${cap.color} / 0.15)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="hsl(${cap.color})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${cap.icon}</svg>
-          </div>
-          <h3>${cap.name}</h3>
-          <p class="cap-desc">${cap.desc}</p>
-          <div class="cap-footer">
-            <span class="cap-cmd">backcap add ${cap.slug}</span>
-            ${statusHtml}
-          </div>
+        <div class="cap-icon" style="background:hsl(${cap.color} / 0.1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="hsl(${cap.color})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${cap.icon}</svg>
         </div>
+        <div class="cap-info">
+          <h3>${cap.name}${isAvailable ? '' : '<span class="cap-soon-tag">soon</span>'}</h3>
+          <p>${cap.desc}</p>
+        </div>
+        ${isAvailable ? arrow : ''}
       `;
       grid.appendChild(card);
     });
 
     document.querySelectorAll('.cap-card.anim:not(.visible)').forEach(el => observer.observe(el));
-  </script>
-
-</body>
-</html>
+  }
+</script>
