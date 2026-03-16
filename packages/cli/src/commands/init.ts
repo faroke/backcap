@@ -18,15 +18,29 @@ export default defineCommand({
     name: "init",
     description: "Initialize a Backcap project in the current directory",
   },
-  async run() {
+  args: {
+    yes: {
+      type: "boolean",
+      alias: "y",
+      default: false,
+      description: "Skip all prompts (non-interactive mode)",
+    },
+  },
+  async run({ args }) {
     const cwd = process.cwd();
     intro();
 
     // Detect framework
     const frameworkResult = await detectFramework(cwd);
-    let framework = frameworkResult.isOk()
-      ? frameworkResult.unwrap()
-      : await promptFramework();
+    let framework: string;
+    if (frameworkResult.isOk()) {
+      framework = frameworkResult.unwrap();
+    } else if (args.yes) {
+      fail("Cannot detect framework. Run without --yes or create backcap.json manually.");
+      return;
+    } else {
+      framework = await promptFramework();
+    }
 
     if (frameworkResult.isOk()) {
       log.info(`Detected framework: ${framework}`);
@@ -34,9 +48,15 @@ export default defineCommand({
 
     // Detect package manager
     const pmResult = await detectPackageManager(cwd);
-    let pm = pmResult.isOk()
-      ? pmResult.unwrap()
-      : await promptPackageManager();
+    let pm: string;
+    if (pmResult.isOk()) {
+      pm = pmResult.unwrap();
+    } else if (args.yes) {
+      fail("Cannot detect package manager. Run without --yes or create backcap.json manually.");
+      return;
+    } else {
+      pm = await promptPackageManager();
+    }
 
     if (pmResult.isOk()) {
       log.info(`Detected package manager: ${pm}`);
@@ -47,12 +67,14 @@ export default defineCommand({
       const existingResult = await loadConfig(cwd);
 
       if (existingResult.isOk()) {
-        const shouldOverwrite = await promptOverwriteConfirm(
-          existingResult.unwrap(),
-        );
-        if (!shouldOverwrite) {
-          outro("Kept existing backcap.json unchanged.");
-          return;
+        if (!args.yes) {
+          const shouldOverwrite = await promptOverwriteConfirm(
+            existingResult.unwrap(),
+          );
+          if (!shouldOverwrite) {
+            outro("Kept existing backcap.json unchanged.");
+            return;
+          }
         }
       }
     }

@@ -40,6 +40,12 @@ export default defineCommand({
       required: true,
       description: "Capability or bridge name to install",
     },
+    yes: {
+      type: "boolean",
+      alias: "y",
+      default: false,
+      description: "Skip all prompts (non-interactive mode)",
+    },
   },
   async run({ args }) {
     const cwd = process.cwd();
@@ -93,7 +99,7 @@ export default defineCommand({
 
     // Route to bridge installation if type is "bridge"
     if (itemType === "bridge" || fetchedFromBridges) {
-      await installBridge(cwd, config, item, itemVersion);
+      await installBridge(cwd, config, item, itemVersion, args.yes);
       return;
     }
 
@@ -108,10 +114,14 @@ export default defineCommand({
     let selectedAdapters: string[] = [];
 
     if (availableAdapters.length > 0) {
-      selectedAdapters = await promptAdapterSelection(
-        availableAdapters.map((a) => ({ name: a.name, category: a.category })),
-        availableAdapters.filter((a) => a.detected).map((a) => a.name),
-      );
+      if (args.yes) {
+        selectedAdapters = availableAdapters.filter((a) => a.detected).map((a) => a.name);
+      } else {
+        selectedAdapters = await promptAdapterSelection(
+          availableAdapters.map((a) => ({ name: a.name, category: a.category })),
+          availableAdapters.filter((a) => a.detected).map((a) => a.name),
+        );
+      }
     }
 
     const files = item.files as Array<{ path: string; content?: string }>;
@@ -163,7 +173,7 @@ export default defineCommand({
       // Show conflict summary and prompt
       renderConflictSummary(report);
 
-      const action = await promptConflictResolution();
+      const action = args.yes ? "compare_and_continue" : await promptConflictResolution();
 
       if (action === "abort") {
         outro("Installation cancelled. No files were written.");
@@ -221,10 +231,12 @@ export default defineCommand({
     // If selective install was used, skip the normal write flow
     if (!useSelectiveInstall) {
       // Confirm
-      const confirmed = await promptInstallConfirm(capabilityName);
-      if (!confirmed) {
-        outro("Installation cancelled.");
-        return;
+      if (!args.yes) {
+        const confirmed = await promptInstallConfirm(capabilityName);
+        if (!confirmed) {
+          outro("Installation cancelled.");
+          return;
+        }
       }
 
       // Write all capability files
@@ -295,7 +307,7 @@ export default defineCommand({
         skillFiles: capSkillFiles,
         coreSkillFiles,
         templateValues: markers,
-        onConflict: promptSkillConflict,
+        onConflict: args.yes ? async () => "overwrite" as const : promptSkillConflict,
       });
       log.success(`Skill installed to ${skillsPath}/backcap-${capabilityName}/`);
     }
@@ -340,6 +352,7 @@ async function installBridge(
   config: { paths: { capabilities: string; adapters: string; bridges: string; skills: string }; installed: { capabilities: Array<{ name: string }>; bridges: Array<{ name: string }> } },
   item: { name: string; type: string; files: Array<Record<string, unknown>>; dependencies?: Record<string, string> | string[] },
   itemVersion: string | undefined,
+  yes = false,
 ): Promise<void> {
   const bridgeName = item.name;
   const version = itemVersion ?? "0.1.0";
@@ -399,7 +412,7 @@ async function installBridge(
 
     if (report.hasConflicts) {
       renderConflictSummary(report);
-      const action = await promptConflictResolution();
+      const action = yes ? "compare_and_continue" : await promptConflictResolution();
       if (action === "abort") {
         outro("Installation cancelled. No files were written.");
         return;
@@ -422,10 +435,12 @@ async function installBridge(
   }
 
   // Confirm installation
-  const confirmed = await promptInstallConfirm(bridgeName);
-  if (!confirmed) {
-    outro("Installation cancelled.");
-    return;
+  if (!yes) {
+    const confirmed = await promptInstallConfirm(bridgeName);
+    if (!confirmed) {
+      outro("Installation cancelled.");
+      return;
+    }
   }
 
   // Write bridge files
