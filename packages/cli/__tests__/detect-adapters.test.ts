@@ -19,8 +19,11 @@ describe("detectAdapters", () => {
       dependencies: { "@prisma/client": "^5.0", express: "^4.0" },
     } as any);
 
-    const result = await detectAdapters("/fake", ["auth-prisma", "auth-express"]);
-    expect(result).toEqual(["auth-prisma", "auth-express"]);
+    const result = await detectAdapters("/fake", "auth");
+    expect(result).toEqual([
+      { name: "auth-prisma", category: "persistence", detected: true },
+      { name: "auth-express", category: "http", detected: true },
+    ]);
   });
 
   it("detects only prisma when express is missing", async () => {
@@ -28,8 +31,8 @@ describe("detectAdapters", () => {
       dependencies: { "@prisma/client": "^5.0" },
     } as any);
 
-    const result = await detectAdapters("/fake", ["auth-prisma", "auth-express"]);
-    expect(result).toEqual(["auth-prisma"]);
+    const result = await detectAdapters("/fake", "auth");
+    expect(result.map((a) => a.name)).toEqual(["auth-prisma"]);
   });
 
   it("returns empty when no packages match", async () => {
@@ -37,13 +40,22 @@ describe("detectAdapters", () => {
       dependencies: { lodash: "^4.0" },
     } as any);
 
-    const result = await detectAdapters("/fake", ["auth-prisma", "auth-express"]);
+    const result = await detectAdapters("/fake", "auth");
     expect(result).toEqual([]);
   });
 
   it("returns empty when readPackageJSON fails", async () => {
     mockReadPkg.mockRejectedValue(new Error("ENOENT"));
-    const result = await detectAdapters("/fake", ["auth-prisma"]);
+    const result = await detectAdapters("/fake", "auth");
     expect(result).toEqual([]);
+  });
+
+  it("uses capability name for adapter naming", async () => {
+    mockReadPkg.mockResolvedValue({
+      dependencies: { "@prisma/client": "^5.0" },
+    } as any);
+
+    const result = await detectAdapters("/fake", "blog");
+    expect(result[0]!.name).toBe("blog-prisma");
   });
 });

@@ -15,3 +15,8 @@ export interface BridgeMeta {
   path: string;
   dependencies: string[];
 }
+
+export interface SkillMeta {
+  name: string;
+  path: string;
+}

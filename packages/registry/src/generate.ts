@@ -1,6 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "pathe";
-import type { CapabilityMeta, AdapterMeta, BridgeMeta } from "./types.js";
+import type { CapabilityMeta, AdapterMeta, BridgeMeta, SkillMeta } from "./types.js";
 
 async function readAllFiles(
   dir: string,
@@ -150,15 +150,68 @@ export async function generateBridgeItemJson(
   };
 }
 
+export async function discoverSkills(
+  registryRoot: string,
+): Promise<SkillMeta[]> {
+  const skillsDir = join(registryRoot, "skills");
+  const results: SkillMeta[] = [];
+
+  try {
+    const entries = await readdir(skillsDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      results.push({
+        name: entry.name,
+        path: join(skillsDir, entry.name),
+      });
+    }
+  } catch {
+    // no skills directory
+  }
+
+  return results;
+}
+
+export async function generateSkillItemJson(
+  skill: SkillMeta,
+): Promise<Record<string, unknown>> {
+  const files: Array<{ path: string; type: string; content: string }> = [];
+
+  async function walk(dir: string, base: string): Promise<void> {
+    const entries = await readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        await walk(fullPath, base);
+      } else if (entry.isFile()) {
+        const relPath = relative(base, fullPath);
+        const content = await readFile(fullPath, "utf-8");
+        const type = entry.name.endsWith(".md") ? "config" : "source";
+        files.push({ path: relPath, type, content });
+      }
+    }
+  }
+
+  await walk(skill.path, skill.path);
+
+  return {
+    name: skill.name,
+    type: "skill",
+    description: `${skill.name} AI skill`,
+    files,
+  };
+}
+
 export async function generateRegistryCatalog(
   capabilities: Array<Record<string, unknown>>,
   adapters: Array<Record<string, unknown>>,
   bridges: Array<Record<string, unknown>> = [],
+  skills: Array<Record<string, unknown>> = [],
 ): Promise<Record<string, unknown>> {
   return {
     name: "backcap-registry",
     version: "1.0.0",
     description: "Official Backcap capability registry",
-    items: [...capabilities, ...adapters, ...bridges],
+    items: [...capabilities, ...adapters, ...bridges, ...skills],
   };
 }

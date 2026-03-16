@@ -2,6 +2,7 @@ interface RegistryItem {
   name: string;
   description: string;
   type: string;
+  version?: string;
 }
 
 function pad(str: string, len: number): string {
@@ -18,16 +19,18 @@ export function renderCapabilityTable(
 ): string {
   const capabilities = items.filter((i) => i.type === "capability");
 
-  const COL = { name: 20, description: 60, installed: 12 };
+  const COL = { name: 20, version: 10, description: 50, installed: 12 };
 
   const header =
-    pad("Name", COL.name) + pad("Description", COL.description) + pad("Installed", COL.installed);
-  const separator = "-".repeat(COL.name + COL.description + COL.installed);
+    pad("Name", COL.name) + pad("Version", COL.version) + pad("Description", COL.description) + pad("Installed", COL.installed);
+  const separator = "-".repeat(COL.name + COL.version + COL.description + COL.installed);
 
   const rows = capabilities.map((cap) => {
     const installedMark = installed.has(cap.name) ? "✓" : "—";
+    const version = cap.version ?? "—";
     return (
       pad(cap.name, COL.name) +
+      pad(version, COL.version) +
       pad(truncate(cap.description, COL.description - 2), COL.description) +
       installedMark
     );

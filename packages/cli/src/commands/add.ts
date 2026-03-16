@@ -73,13 +73,18 @@ export default defineCommand({
     }
 
     const item = parsed.data;
+    const itemVersion = (item as Record<string, unknown>).version as string | undefined;
 
-    // Detect adapters
-    const availableAdapters = (item.dependencies ? Object.keys(item.dependencies) : [])
-      .filter((d) => d.startsWith(`${capabilityName}-`))
-      .map((name) => ({ name, category: "unknown" }));
+    // Detect adapters from project dependencies
+    const availableAdapters = await detectAdapters(cwd, capabilityName);
+    let selectedAdapters: string[] = [];
 
-    const detected = await detectAdapters(cwd, availableAdapters.map((a) => a.name));
+    if (availableAdapters.length > 0) {
+      selectedAdapters = await promptAdapterSelection(
+        availableAdapters.map((a) => ({ name: a.name, category: a.category })),
+        availableAdapters.filter((a) => a.detected).map((a) => a.name),
+      );
+    }
 
     const files = item.files as Array<{ path: string; content?: string }>;
     const filesToWrite = files
@@ -92,7 +97,7 @@ export default defineCommand({
       skills_path: config.paths.skills,
     };
 
-    // Conflict detection
+    // Conflict detection for capability files
     let capRoot = normalize(join(cwd, config.paths.capabilities, capabilityName));
 
     const incomingFiles = filesToWrite.map((f) => ({
@@ -158,6 +163,35 @@ export default defineCommand({
     await writeCapabilityFiles(filesToWrite, { capabilityRoot: capRoot, markers });
     log.success(`Capability files written to ${capRoot}`);
 
+    // Fetch and write adapter files
+    for (const adapterName of selectedAdapters) {
+      log.info(`Fetching adapter ${adapterName}...`);
+      try {
+        const adapterData = await ofetch(`${DEFAULT_REGISTRY_URL}/dist/${adapterName}.json`, {
+          timeout: 5000,
+        });
+        const adapterParsed = registryItemSchema.safeParse(adapterData);
+        if (!adapterParsed.success) {
+          log.warn(`Invalid adapter data for "${adapterName}", skipping.`);
+          continue;
+        }
+
+        const adapterItem = adapterParsed.data;
+        const adapterFiles = (adapterItem.files as Array<{ path: string; content?: string }>)
+          .filter((f): f is { path: string; content: string } => typeof f.content === "string");
+
+        // Derive category from adapter name (e.g., "auth-prisma" → prisma → persistence)
+        const adapterType = adapterName.replace(`${capabilityName}-`, "");
+        const category = adapterType === "prisma" ? "persistence" : "http";
+        const adapterRoot = normalize(join(cwd, config.paths.adapters, category, adapterType, capabilityName));
+
+        await writeCapabilityFiles(adapterFiles, { capabilityRoot: adapterRoot, markers });
+        log.success(`Adapter files written to ${adapterRoot}`);
+      } catch {
+        log.warn(`Could not fetch adapter "${adapterName}", skipping.`);
+      }
+    }
+
     // Install npm deps
     const pm = detectPM(cwd);
     const npmDeps = item.dependencies ? Object.keys(item.dependencies) : [];
@@ -173,12 +207,26 @@ export default defineCommand({
     }
 
     // Update backcap.json
+    const version = itemVersion ?? "1.0.0";
     await updateConfig(cwd, {
       name: capabilityName,
-      version: "1.0.0",
-      adapters: detected,
+      version,
+      adapters: selectedAdapters,
     });
 
-    outro(`${capabilityName} installed successfully!`);
+    // Success message with next steps
+    const lines = [
+      `${capabilityName} v${version} installed successfully!`,
+      "",
+      `  Capability: ${capRoot}`,
+    ];
+    if (selectedAdapters.length > 0) {
+      lines.push(`  Adapters:   ${selectedAdapters.join(", ")}`);
+    }
+    lines.push("", "  Next steps:");
+    lines.push(`  1. Review the installed files in ${config.paths.capabilities}/${capabilityName}/`);
+    lines.push("  2. Run the test suite to verify: npx vitest run");
+    lines.push("  3. Check available bridges: backcap bridges");
+    outro(lines.join("\n"));
   },
 });

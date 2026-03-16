@@ -7,9 +7,11 @@ import {
   discoverCapabilities,
   discoverAdapters,
   discoverBridges,
+  discoverSkills,
   generateCapabilityItemJson,
   generateAdapterItemJson,
   generateBridgeItemJson,
+  generateSkillItemJson,
   generateRegistryCatalog,
 } from "./src/generate.js";
 
@@ -55,8 +57,16 @@ async function main(): Promise<void> {
     bridges.map((bridge) => generateBridgeItemJson(bridge, resultTs)),
   );
 
+  // Discover and generate skill item JSONs
+  console.log("[build] Discovering skills...");
+  const skills = await discoverSkills(registryRoot);
+  console.log(`[build] Found ${skills.length} skills: ${skills.map((s) => s.name).join(", ")}`);
+  const skillItems = await Promise.all(
+    skills.map((skill) => generateSkillItemJson(skill)),
+  );
+
   // Validate each item
-  for (const item of [...capItems, ...adapterItems, ...bridgeItems]) {
+  for (const item of [...capItems, ...adapterItems, ...bridgeItems, ...skillItems]) {
     const result = registryItemSchema.safeParse(item);
     if (!result.success) {
       console.error(`[build] Item validation failed for "${item.name}":`, result.error.issues);
@@ -65,7 +75,7 @@ async function main(): Promise<void> {
   }
 
   // Generate catalog
-  const catalog = await generateRegistryCatalog(capItems, adapterItems, bridgeItems);
+  const catalog = await generateRegistryCatalog(capItems, adapterItems, bridgeItems, skillItems);
   const catalogResult = registrySchema.safeParse(catalog);
   if (!catalogResult.success) {
     console.error("[build] Registry catalog validation failed:", catalogResult.error.issues);
@@ -95,6 +105,14 @@ async function main(): Promise<void> {
   for (const item of bridgeItems) {
     await writeFile(join(bridgesDistDir, `${item.name}.json`), JSON.stringify(item, null, 2) + "\n");
     console.log(`[build] Written dist/bridges/${item.name}.json`);
+  }
+
+  // Write skill JSONs
+  const skillsDistDir = join(distDir, "skills");
+  await mkdir(skillsDistDir, { recursive: true });
+  for (const item of skillItems) {
+    await writeFile(join(skillsDistDir, `${item.name}.json`), JSON.stringify(item, null, 2) + "\n");
+    console.log(`[build] Written dist/skills/${item.name}.json`);
   }
 
   // Write bridge catalog
