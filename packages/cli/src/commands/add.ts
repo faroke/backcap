@@ -10,16 +10,19 @@ import { installDeps } from "../lib/install-deps.js";
 import { updateConfig } from "../lib/update-config.js";
 import { detectConflicts } from "../installer/conflict-detector.js";
 import { renderConflictSummary, renderDetailedDiffs } from "../installer/diff-renderer.js";
+import { selectiveInstall, InstallCancelledError } from "../installer/selective-installer.js";
+import { resolveSkillFiles } from "../installer/skill-resolver.js";
+import { reportInstallResult } from "../installer/install-reporter.js";
 import {
   promptAdapterSelection,
   promptInstallConfirm,
-  promptOverwriteDir,
   promptConflictResolution,
   promptNewPath,
 } from "../lib/add-prompts.js";
 import { intro, outro, fail } from "../ui/prompts.js";
 import { log } from "../utils/logger.js";
 import { ConflictDetectionError } from "../errors/conflict-detection.error.js";
+import { FileWriteError } from "../installer/file-writer.js";
 
 const DEFAULT_REGISTRY_URL = "https://backcap.dev";
 
@@ -75,6 +78,9 @@ export default defineCommand({
     const item = parsed.data;
     const itemVersion = (item as Record<string, unknown>).version as string | undefined;
 
+    // Resolve skill files from capability JSON
+    const skillFiles = resolveSkillFiles(item as { files?: Array<{ path: string; content?: string }>; skills?: string[] });
+
     // Detect adapters from project dependencies
     const availableAdapters = await detectAdapters(cwd, capabilityName);
     let selectedAdapters: string[] = [];
@@ -105,6 +111,7 @@ export default defineCommand({
       content: f.content,
     }));
 
+    let useSelectiveInstall = false;
     let resolved = false;
     while (!resolved) {
       let report;
@@ -147,23 +154,71 @@ export default defineCommand({
         continue;
       }
 
-      // compare_and_continue
+      if (action === "selective") {
+        // Selective installation — let user pick files
+        try {
+          const installResult = await selectiveInstall(report, skillFiles);
+
+          // Filter filesToWrite to only selected + always-installed files
+          const selectedPaths = new Set([...installResult.installed, ...installResult.alwaysInstalled]);
+          const selectedFiles = filesToWrite.filter((f) => selectedPaths.has(f.path));
+
+          await writeCapabilityFiles(selectedFiles, { capabilityRoot: capRoot, markers });
+
+          reportInstallResult(installResult);
+          useSelectiveInstall = true;
+          resolved = true;
+
+          // Track partial install
+          const version = itemVersion ?? "1.0.0";
+          await updateConfig(cwd, {
+            name: capabilityName,
+            version,
+            adapters: selectedAdapters,
+            partial: installResult.skipped.length > 0,
+          });
+        } catch (err) {
+          if (err instanceof InstallCancelledError) {
+            outro("Installation cancelled. No files were written.");
+            return;
+          }
+          if (err instanceof FileWriteError) {
+            fail(`File write failed for ${err.filePath}: ${err.message}\n${err.suggestion}`);
+            return;
+          }
+          throw err;
+        }
+        break;
+      }
+
+      // compare_and_continue — show diffs then proceed to full install
       renderDetailedDiffs(report);
       resolved = true;
     }
 
-    // Confirm
-    const confirmed = await promptInstallConfirm(capabilityName);
-    if (!confirmed) {
-      outro("Installation cancelled.");
-      return;
+    // If selective install was used, skip the normal write flow
+    if (!useSelectiveInstall) {
+      // Confirm
+      const confirmed = await promptInstallConfirm(capabilityName);
+      if (!confirmed) {
+        outro("Installation cancelled.");
+        return;
+      }
+
+      // Write all capability files
+      await writeCapabilityFiles(filesToWrite, { capabilityRoot: capRoot, markers });
+      log.success(`Capability files written to ${capRoot}`);
+
+      // Update backcap.json
+      const version = itemVersion ?? "1.0.0";
+      await updateConfig(cwd, {
+        name: capabilityName,
+        version,
+        adapters: selectedAdapters,
+      });
     }
 
-    // Write capability files
-    await writeCapabilityFiles(filesToWrite, { capabilityRoot: capRoot, markers });
-    log.success(`Capability files written to ${capRoot}`);
-
-    // Fetch and write adapter files
+    // Fetch and write adapter files (always, regardless of selective install)
     for (const adapterName of selectedAdapters) {
       log.info(`Fetching adapter ${adapterName}...`);
       try {
@@ -180,7 +235,6 @@ export default defineCommand({
         const adapterFiles = (adapterItem.files as Array<{ path: string; content?: string }>)
           .filter((f): f is { path: string; content: string } => typeof f.content === "string");
 
-        // Derive category from adapter name (e.g., "auth-prisma" → prisma → persistence)
         const adapterType = adapterName.replace(`${capabilityName}-`, "");
         const category = adapterType === "prisma" ? "persistence" : "http";
         const adapterRoot = normalize(join(cwd, config.paths.adapters, category, adapterType, capabilityName));
@@ -206,27 +260,22 @@ export default defineCommand({
       await installDeps(pm, devDeps, cwd, true);
     }
 
-    // Update backcap.json
-    const version = itemVersion ?? "1.0.0";
-    await updateConfig(cwd, {
-      name: capabilityName,
-      version,
-      adapters: selectedAdapters,
-    });
-
-    // Success message with next steps
-    const lines = [
-      `${capabilityName} v${version} installed successfully!`,
-      "",
-      `  Capability: ${capRoot}`,
-    ];
-    if (selectedAdapters.length > 0) {
-      lines.push(`  Adapters:   ${selectedAdapters.join(", ")}`);
+    // Success message (only for non-selective, selective uses reportInstallResult)
+    if (!useSelectiveInstall) {
+      const version = itemVersion ?? "1.0.0";
+      const lines = [
+        `${capabilityName} v${version} installed successfully!`,
+        "",
+        `  Capability: ${capRoot}`,
+      ];
+      if (selectedAdapters.length > 0) {
+        lines.push(`  Adapters:   ${selectedAdapters.join(", ")}`);
+      }
+      lines.push("", "  Next steps:");
+      lines.push(`  1. Review the installed files in ${config.paths.capabilities}/${capabilityName}/`);
+      lines.push("  2. Run the test suite to verify: npx vitest run");
+      lines.push("  3. Check available bridges: backcap bridges");
+      outro(lines.join("\n"));
     }
-    lines.push("", "  Next steps:");
-    lines.push(`  1. Review the installed files in ${config.paths.capabilities}/${capabilityName}/`);
-    lines.push("  2. Run the test suite to verify: npx vitest run");
-    lines.push("  3. Check available bridges: backcap bridges");
-    outro(lines.join("\n"));
   },
 });

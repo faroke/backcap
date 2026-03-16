@@ -56,13 +56,14 @@ export async function promptOverwriteDir(
   return value;
 }
 
-export type ConflictAction = "compare_and_continue" | "different_path" | "abort";
+export type ConflictAction = "compare_and_continue" | "selective" | "different_path" | "abort";
 
 export async function promptConflictResolution(): Promise<ConflictAction> {
   const value = await clack.select({
     message: "Conflicts detected. How would you like to proceed?",
     options: [
-      { value: "compare_and_continue" as const, label: "Compare and continue" },
+      { value: "compare_and_continue" as const, label: "Compare and continue (overwrite all)" },
+      { value: "selective" as const, label: "Select files individually" },
       { value: "different_path" as const, label: "Choose a different path" },
       { value: "abort" as const, label: "Abort installation" },
     ],
