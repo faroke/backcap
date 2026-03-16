@@ -8,7 +8,7 @@ The `blog` capability provides **blog post management** for TypeScript backends.
 ## Install
 
 ```bash
-npx backcap add blog
+npx @backcap/cli add blog
 ```
 
 ## Domain Model
@@ -182,7 +182,7 @@ Events are stripped at the service boundary — `IBlogService` returns only outp
 Indexes published posts into the search capability when `PostPublished` fires.
 
 ```bash
-npx backcap add blog-search
+npx @backcap/cli add blog-search
 ```
 
 **Requires**: `blog` and `search` capabilities installed.

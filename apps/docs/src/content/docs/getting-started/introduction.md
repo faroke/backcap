@@ -25,7 +25,7 @@ Backcap is inspired by [shadcn/ui](https://ui.shadcn.com/): instead of installin
 The CLI fetches a capability from the registry and writes its files into your project under a path you control (default: `src/capabilities/`). From that point forward, the code is yours.
 
 ```bash
-npx backcap add auth
+npx @backcap/cli add auth
 # Writes source to src/capabilities/auth/
 # Installs required npm packages
 # Records the capability in backcap.json

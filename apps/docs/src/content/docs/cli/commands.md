@@ -3,14 +3,14 @@ title: CLI Commands
 description: Complete reference for all Backcap CLI commands.
 ---
 
-The Backcap CLI is invoked with `npx backcap` (or `backcap` if installed globally). It is built with [citty](https://github.com/unjs/citty) and [clack](https://github.com/natemoo-re/clack).
+The Backcap CLI is invoked with `npx @backcap/cli` (or `backcap` if installed globally). It is built with [citty](https://github.com/unjs/citty) and [clack](https://github.com/natemoo-re/clack).
 
 ## backcap init
 
 Initialize a Backcap project in the current directory.
 
 ```bash
-npx backcap init
+npx @backcap/cli init
 ```
 
 **What it does:**
@@ -64,7 +64,7 @@ npx backcap init
 Install a capability from the registry.
 
 ```bash
-npx backcap add <capability>
+npx @backcap/cli add <capability>
 ```
 
 **Arguments:**
@@ -94,7 +94,7 @@ npx backcap add <capability>
 **Example:**
 
 ```bash
-npx backcap add auth
+npx @backcap/cli add auth
 # Fetching auth...
 # No conflicts detected.
 # Install auth? › Yes
@@ -124,7 +124,7 @@ How would you like to proceed?
 Browse available capabilities from the registry.
 
 ```bash
-npx backcap list
+npx @backcap/cli list
 ```
 
 **What it does:**
@@ -152,7 +152,7 @@ auth-express     Express router for auth              adapter       available
 List available bridges between installed capabilities.
 
 ```bash
-npx backcap bridges
+npx @backcap/cli bridges
 ```
 
 **What it does:**
@@ -206,7 +206,7 @@ Common errors and their solutions:
 
 | Error | Solution |
 |---|---|
-| `No backcap.json found` | Run `npx backcap init` first |
+| `No backcap.json found` | Run `npx @backcap/cli init` first |
 | `Could not fetch capability from registry` | Check your internet connection; verify the capability name with `backcap list` |
 | `Invalid capability data` | The registry may be temporarily unavailable; try again |
 | `Could not fetch bridge catalog` | Check your internet connection |

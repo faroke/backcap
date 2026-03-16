@@ -16,7 +16,7 @@ Backcap is a CLI tool that scaffolds backend capabilities into your existing Typ
 Run `backcap init` in the root of your TypeScript project:
 
 ```bash
-npx backcap init
+npx @backcap/cli init
 ```
 
 The CLI will:
@@ -92,7 +92,7 @@ If no framework is detected, the CLI prompts you to select one from a list.
 Once your project is initialized, install your first capability:
 
 ```bash
-npx backcap add auth
+npx @backcap/cli add auth
 ```
 
 See the [Quick Start](/getting-started/quick-start) guide for a step-by-step walkthrough.

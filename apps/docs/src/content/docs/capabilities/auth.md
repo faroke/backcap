@@ -8,7 +8,7 @@ The `auth` capability provides **user registration and login** for TypeScript ba
 ## Install
 
 ```bash
-npx backcap add auth
+npx @backcap/cli add auth
 ```
 
 ## Domain Model
@@ -183,7 +183,7 @@ This is the only import consumers need. The internal use case classes are implem
 Provides `PrismaUserRepository` which implements `IUserRepository`.
 
 ```bash
-npx backcap add auth-prisma
+npx @backcap/cli add auth-prisma
 ```
 
 ```typescript
@@ -210,7 +210,7 @@ model User {
 Provides `createAuthRouter()` and a Bearer token middleware.
 
 ```bash
-npx backcap add auth-express
+npx @backcap/cli add auth-express
 ```
 
 ```typescript
@@ -244,7 +244,7 @@ app.use(router);
 Sends a welcome email when a new user registers.
 
 ```bash
-npx backcap add auth-notifications
+npx @backcap/cli add auth-notifications
 ```
 
 See the [auth-notifications bridge](/concepts/bridges#the-auth-notifications-bridge) documentation for wiring instructions.

@@ -15,8 +15,8 @@
 Backcap is a **capability registry and CLI** for TypeScript backends. Instead of installing opaque npm packages, you scaffold real source code — clean architecture, fully typed, ready to own and extend.
 
 ```bash
-npx backcap init
-npx backcap add auth
+npx @backcap/cli init
+npx @backcap/cli add auth
 ```
 
 That's it. You get a complete authentication module with entities, use cases, ports, DTOs, adapters, and an AI skill file — all wired into your project.
@@ -89,16 +89,16 @@ Bridges wire capabilities together through domain events:
 | `blog-tags` | Adds tagging to blog posts |
 
 ```bash
-npx backcap add blog-search
+npx @backcap/cli add blog-search
 ```
 
 ## CLI
 
 ```bash
-npx backcap init          # Initialize a project — detects framework & package manager
-npx backcap list          # List all available capabilities
-npx backcap add <name>    # Scaffold a capability or bridge into your project
-npx backcap bridges       # List bridges compatible with your installed capabilities
+npx @backcap/cli init          # Initialize a project — detects framework & package manager
+npx @backcap/cli list          # List all available capabilities
+npx @backcap/cli add <name>    # Scaffold a capability or bridge into your project
+npx @backcap/cli bridges       # List bridges compatible with your installed capabilities
 ```
 
 The CLI handles adapter detection, conflict resolution, dependency installation, and skill file placement — all interactively.
@@ -124,14 +124,14 @@ npx skills add faroke/backcap
 
 ```bash
 # 1. Initialize your project
-npx backcap init
+npx @backcap/cli init
 
 # 2. Add capabilities
-npx backcap add auth
-npx backcap add blog
+npx @backcap/cli add auth
+npx @backcap/cli add blog
 
 # 3. Wire them together
-npx backcap add blog-tags
+npx @backcap/cli add blog-tags
 
 # 4. Implement your adapters and start building
 ```

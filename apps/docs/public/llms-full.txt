@@ -15,8 +15,8 @@ A capability is a vertical slice of backend business logic — authentication, b
 Backcap follows the shadcn/ui model: run a CLI command, get source code. Not a library import.
 
 ```bash
-npx backcap init       # Create backcap.json
-npx backcap add auth   # Install auth capability source files
+npx @backcap/cli init       # Create backcap.json
+npx @backcap/cli add auth   # Install auth capability source files
 ```
 
 ### Framework Agnosticism
@@ -126,7 +126,7 @@ Thrown exceptions are reserved for programmer errors and unrecoverable environme
 ### backcap init
 
 ```bash
-npx backcap init
+npx @backcap/cli init
 ```
 
 Detects framework (from package.json deps) and package manager (from lockfiles). Prompts to confirm or override. Writes `backcap.json` to the project root.
@@ -138,7 +138,7 @@ Package manager detection: `pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `pac
 ### backcap add
 
 ```bash
-npx backcap add <capability>
+npx @backcap/cli add <capability>
 ```
 
 1. Loads backcap.json (fails if not present)
@@ -153,7 +153,7 @@ npx backcap add <capability>
 ### backcap list
 
 ```bash
-npx backcap list
+npx @backcap/cli list
 ```
 
 Fetches `https://backcap.dev/registry.json`. Renders a table of capabilities with name, description, type, and installed status.
@@ -161,7 +161,7 @@ Fetches `https://backcap.dev/registry.json`. Renders a table of capabilities wit
 ### backcap bridges
 
 ```bash
-npx backcap bridges
+npx @backcap/cli bridges
 ```
 
 Fetches `https://backcap.dev/dist/bridges/index.json`. Filters to bridges whose dependencies are all installed. Shows name, description, dependencies, status (installed / available).
@@ -173,7 +173,7 @@ Fetches `https://backcap.dev/dist/bridges/index.json`. Filters to bridges whose 
 ### Installation
 
 ```bash
-npx backcap add auth
+npx @backcap/cli add auth
 ```
 
 ### Domain Layer
@@ -340,7 +340,7 @@ Use case: `SendWelcomeEmailUseCase.execute(event: UserRegistered): Promise<Resul
 
 Port: `IEmailSender { sendEmail(dto: WelcomeEmailDto): Promise<void> }`
 
-Install: `npx backcap add auth-notifications`
+Install: `npx @backcap/cli add auth-notifications`
 
 ---
 

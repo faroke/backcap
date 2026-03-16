@@ -63,13 +63,13 @@ The bridge use case depends on `IEmailSender` — a port interface it defines it
 Use `backcap bridges` to see which bridges are available for your installed capabilities:
 
 ```bash
-npx backcap bridges
+npx @backcap/cli bridges
 ```
 
 The CLI fetches the bridge catalog from the registry and filters it to show only bridges whose dependencies are all installed in your project. Install a bridge with:
 
 ```bash
-npx backcap add auth-notifications
+npx @backcap/cli add auth-notifications
 ```
 
 ## Wiring a Bridge

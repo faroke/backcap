@@ -146,8 +146,8 @@ This separation enforces the import rules: the capability code can never acciden
 Adapters are installed with the `backcap add` command, the same as capabilities:
 
 ```bash
-npx backcap add auth-prisma
-npx backcap add auth-express
+npx @backcap/cli add auth-prisma
+npx @backcap/cli add auth-express
 ```
 
 The CLI detects which adapters are compatible with your project based on the packages in your `package.json`, and may offer to install compatible adapters automatically when you add a capability.

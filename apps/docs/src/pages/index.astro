@@ -50,8 +50,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <div class="anim visible d4" style="display:flex;justify-content:center;margin-bottom:4rem">
           <div class="cmd-box">
             <span class="dollar">$</span>
-            <span>npx backcap add auth</span>
-            <button class="cmd-copy" onclick="navigator.clipboard.writeText('npx backcap add auth')" title="Copy">
+            <span>npx @backcap/cli add auth</span>
+            <button class="cmd-copy" onclick="navigator.clipboard.writeText('npx @backcap/cli add auth')" title="Copy">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
             </button>
           </div>
@@ -90,12 +90,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </div>
         <div class="problem-card good glow-primary anim from-right">
           <h3>Backcap capabilities</h3>
-          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add auth</code></div>
-          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add rbac</code></div>
-          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add blog</code></div>
-          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add search</code></div>
-          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add notifications</code></div>
-          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx backcap add billing</code></div>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx @backcap/cli add auth</code></div>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx @backcap/cli add rbac</code></div>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx @backcap/cli add blog</code></div>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx @backcap/cli add search</code></div>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx @backcap/cli add notifications</code></div>
+          <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx @backcap/cli add billing</code></div>
         </div>
       </div>
     </div>
@@ -111,16 +111,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <span class="step-number">01</span>
           <h3>Install the CLI</h3>
           <p>Initialize Backcap in your existing TypeScript project.</p>
-          <div class="step-code">npx backcap init</div>
+          <div class="step-code">npx @backcap/cli init</div>
         </div>
         <div class="step anim d1">
           <span class="step-number">02</span>
           <h3>Add capabilities</h3>
           <p>Pick the backend features you need.</p>
           <div class="step-code">
-            <div>npx backcap add auth</div>
-            <div>npx backcap add blog</div>
-            <div>npx backcap add search</div>
+            <div>npx @backcap/cli add auth</div>
+            <div>npx @backcap/cli add blog</div>
+            <div>npx @backcap/cli add search</div>
           </div>
         </div>
         <div class="step anim d2">
@@ -730,7 +730,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   // ── Terminal animation ──
   const lines = [
-    { html: '<span class="prompt-char">$ </span><strong>npx backcap add auth</strong>', cls: 'tl-cmd', delay: 800 },
+    { html: '<span class="prompt-char">$ </span><strong>npx @backcap/cli add auth</strong>', cls: 'tl-cmd', delay: 800 },
     { html: '', cls: 'tl-empty', delay: 60 },
     { html: '┌  <strong>backcap add</strong>', cls: 'tl-clack-intro', delay: 300 },
     { html: '│', cls: 'tl-clack-bar', delay: 80 },

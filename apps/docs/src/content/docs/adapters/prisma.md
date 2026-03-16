@@ -10,7 +10,7 @@ The Prisma adapter package provides persistence implementations for Backcap capa
 Install the Prisma adapter for a specific capability:
 
 ```bash
-npx backcap add auth-prisma
+npx @backcap/cli add auth-prisma
 ```
 
 ## auth-prisma

@@ -8,7 +8,7 @@ The `search` capability provides **full-text search** for TypeScript backends. I
 ## Install
 
 ```bash
-npx backcap add search
+npx @backcap/cli add search
 ```
 
 ## Domain Model
@@ -179,7 +179,7 @@ const searchService: ISearchService = createSearchService({
 Automatically indexes blog posts when they are published via the `PostPublished` event.
 
 ```bash
-npx backcap add blog-search
+npx @backcap/cli add blog-search
 ```
 
 **Requires**: `blog` and `search` capabilities installed.

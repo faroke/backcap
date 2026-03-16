@@ -287,7 +287,7 @@ Write a skill file at `skills/backcap-notifications/SKILL.md`. See the [Skills c
 
 ### 17. Bundle for the Registry
 
-Add a build step that produces a JSON bundle (`notifications.json`) containing all source files as content strings. The CLI fetches this bundle when users run `npx backcap add notifications`.
+Add a build step that produces a JSON bundle (`notifications.json`) containing all source files as content strings. The CLI fetches this bundle when users run `npx @backcap/cli add notifications`.
 
 The bundle format matches the `registryItemSchema` in `packages/shared/`.
 

@@ -5,7 +5,7 @@ description: The four-layer architecture, import rules, and the Result pattern.
 
 A **capability** is the core unit of Backcap. It is a self-contained, framework-agnostic module that implements a vertical slice of backend business logic. Examples include `auth`, `blog`, `search`, and `notifications`.
 
-When you run `npx backcap add auth`, the CLI writes the full TypeScript source of the capability into your project. You own the code — no opaque library, no runtime dependency on Backcap.
+When you run `npx @backcap/cli add auth`, the CLI writes the full TypeScript source of the capability into your project. You own the code — no opaque library, no runtime dependency on Backcap.
 
 ## The Four Layers
 

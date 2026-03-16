@@ -10,7 +10,7 @@ This guide walks you through adding the `auth` capability to an existing TypeScr
 If you have not already initialized Backcap in your project:
 
 ```bash
-npx backcap init
+npx @backcap/cli init
 ```
 
 Accept the detected framework and package manager, or select them manually. A `backcap.json` file will be created in your project root.
@@ -18,7 +18,7 @@ Accept the detected framework and package manager, or select them manually. A `b
 ## Step 2 — Add the Auth Capability
 
 ```bash
-npx backcap add auth
+npx @backcap/cli add auth
 ```
 
 The CLI will:
@@ -85,7 +85,7 @@ export interface IUserRepository {
 If you are using Prisma, install the Prisma adapter:
 
 ```bash
-npx backcap add auth-prisma
+npx @backcap/cli add auth-prisma
 ```
 
 This writes `src/adapters/prisma/auth/user-repository.adapter.ts` — a `PrismaUserRepository` class that implements `IUserRepository`.
@@ -187,7 +187,7 @@ if (loginResult.isOk()) {
 If you are using Express, install the Express adapter:
 
 ```bash
-npx backcap add auth-express
+npx @backcap/cli add auth-express
 ```
 
 Then register the router:

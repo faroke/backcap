@@ -10,7 +10,7 @@ The Express adapter package provides HTTP route handlers and middleware for Back
 Install the Express adapter for a specific capability:
 
 ```bash
-npx backcap add auth-express
+npx @backcap/cli add auth-express
 ```
 
 ## auth-express

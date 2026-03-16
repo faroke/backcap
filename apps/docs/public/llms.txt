@@ -4,7 +4,7 @@ Backcap is a registry of composable backend capabilities for TypeScript. It lets
 
 ## Core Concept
 
-Run `npx backcap add auth` and Backcap fetches the auth capability bundle from the registry, writes all TypeScript source files to `src/capabilities/auth/`, installs required npm dependencies, and records the capability in `backcap.json`. There is no opaque runtime library. The code is yours.
+Run `npx @backcap/cli add auth` and Backcap fetches the auth capability bundle from the registry, writes all TypeScript source files to `src/capabilities/auth/`, installs required npm dependencies, and records the capability in `backcap.json`. There is no opaque runtime library. The code is yours.
 
 ## Four-Layer Architecture
 
@@ -33,10 +33,10 @@ const { userId } = result.unwrap();
 
 ## CLI Commands
 
-- `npx backcap init` — Detects framework and package manager, writes backcap.json
-- `npx backcap add <capability>` — Fetches and installs a capability with conflict detection
-- `npx backcap list` — Lists available capabilities from the registry
-- `npx backcap bridges` — Lists bridges compatible with installed capabilities
+- `npx @backcap/cli init` — Detects framework and package manager, writes backcap.json
+- `npx @backcap/cli add <capability>` — Fetches and installs a capability with conflict detection
+- `npx @backcap/cli list` — Lists available capabilities from the registry
+- `npx @backcap/cli bridges` — Lists bridges compatible with installed capabilities
 
 ## Available Capabilities
 
@@ -51,7 +51,7 @@ Planned: blog, search, notifications, payments, audit-log, feature-flags.
 
 ## Bridges
 
-Bridges connect two capabilities. auth-notifications listens for UserRegistered events and calls an IEmailSender port. Install with `npx backcap add auth-notifications`.
+Bridges connect two capabilities. auth-notifications listens for UserRegistered events and calls an IEmailSender port. Install with `npx @backcap/cli add auth-notifications`.
 
 ## Skills (AI Documentation)
 
