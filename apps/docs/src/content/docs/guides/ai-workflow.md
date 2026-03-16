@@ -186,5 +186,5 @@ These follow the [llms.txt convention](https://llmstxt.org/) and can be fetched 
 
 ```
 # Example: embed in Claude's system prompt
-curl https://backcap.dev/llms.txt
+curl https://faroke.github.io/backcap/llms.txt
 ```

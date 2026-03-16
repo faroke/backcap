@@ -4,7 +4,7 @@ import * as clack from "@clack/prompts";
 import { configExists, loadConfig } from "../config/loader.js";
 import { fail } from "../ui/prompts.js";
 
-const DEFAULT_REGISTRY_URL = "https://backcap.dev";
+const DEFAULT_REGISTRY_URL = "https://faroke.github.io/backcap";
 
 interface BridgeCatalogEntry {
   name: string;

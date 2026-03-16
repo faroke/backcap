@@ -148,7 +148,7 @@ and bridge catalogue.
 | `backcap bridges` | List bridges that are compatible with currently installed capabilities |
 | `backcap add bridge <name>` | Install a specific bridge into the project |
 
-Default registry URL: `https://backcap.dev`
+Default registry URL: `https://faroke.github.io/backcap`
 
 Config file written to `backcap.json` with default paths:
 

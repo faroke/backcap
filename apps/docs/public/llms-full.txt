@@ -142,7 +142,7 @@ npx @backcap/cli add <capability>
 ```
 
 1. Loads backcap.json (fails if not present)
-2. Fetches `https://backcap.dev/dist/<capability>.json`
+2. Fetches `https://faroke.github.io/backcap/dist/<capability>.json`
 3. Detects compatible adapters based on project package.json
 4. Runs conflict detection (identical → skip, no conflicts → proceed, conflicts → prompt)
 5. Conflict options: abort, different path, compare diffs and continue
@@ -156,7 +156,7 @@ npx @backcap/cli add <capability>
 npx @backcap/cli list
 ```
 
-Fetches `https://backcap.dev/registry.json`. Renders a table of capabilities with name, description, type, and installed status.
+Fetches `https://faroke.github.io/backcap/registry.json`. Renders a table of capabilities with name, description, type, and installed status.
 
 ### backcap bridges
 
@@ -164,7 +164,7 @@ Fetches `https://backcap.dev/registry.json`. Renders a table of capabilities wit
 npx @backcap/cli bridges
 ```
 
-Fetches `https://backcap.dev/dist/bridges/index.json`. Filters to bridges whose dependencies are all installed. Shows name, description, dependencies, status (installed / available).
+Fetches `https://faroke.github.io/backcap/dist/bridges/index.json`. Filters to bridges whose dependencies are all installed. Shows name, description, dependencies, status (installed / available).
 
 ---
 

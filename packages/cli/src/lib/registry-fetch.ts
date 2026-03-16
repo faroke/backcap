@@ -4,7 +4,7 @@ import { RegistryError } from "../errors/registry.error.js";
 import { log } from "../utils/logger.js";
 
 const FALLBACK_URL =
-  "https://raw.githubusercontent.com/backcap/registry/main/dist/registry.json";
+  "https://raw.githubusercontent.com/faroke/backcap/main/dist/registry.json";
 
 export async function fetchRegistry(
   primaryUrl: string,
@@ -31,7 +31,7 @@ export async function fetchRegistry(
   const result = registrySchema.safeParse(data);
   if (!result.success) {
     throw new RegistryError(
-      "Registry response is invalid. This may indicate a version mismatch. Try updating: npx backcap@latest list",
+      "Registry response is invalid. This may indicate a version mismatch. Try updating: npx @backcap/cli@latest list",
     );
   }
 

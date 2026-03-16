@@ -4,7 +4,7 @@ import { renderCapabilityTable } from "../lib/render-table.js";
 import { configExists, loadConfig } from "../config/loader.js";
 import { log } from "../utils/logger.js";
 
-const DEFAULT_REGISTRY_URL = "https://backcap.dev/registry.json";
+const DEFAULT_REGISTRY_URL = "https://faroke.github.io/backcap/registry.json";
 
 export default defineCommand({
   meta: {

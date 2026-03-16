@@ -77,7 +77,7 @@ npx @backcap/cli add <capability>
 
 1. Verifies that `backcap.json` exists (exits with an error if not)
 2. Loads the configuration from `backcap.json`
-3. Fetches the capability JSON bundle from `https://backcap.dev/dist/<capability>.json`
+3. Fetches the capability JSON bundle from `https://faroke.github.io/backcap/dist/<capability>.json`
 4. Detects which adapters in the bundle are compatible with your `package.json`
 5. Runs conflict detection against your existing files:
    - If all incoming files are identical to existing files, exits early (nothing to do)
@@ -130,7 +130,7 @@ npx @backcap/cli list
 **What it does:**
 
 1. Loads `backcap.json` if it exists (to know which capabilities are already installed)
-2. Fetches the registry catalog from `https://backcap.dev/registry.json`
+2. Fetches the registry catalog from `https://faroke.github.io/backcap/registry.json`
 3. Renders a table of available capabilities with their name, description, type, and installation status
 
 **Example output:**
@@ -159,7 +159,7 @@ npx @backcap/cli bridges
 
 1. Verifies that `backcap.json` exists
 2. Loads the list of installed capabilities from `backcap.json`
-3. Fetches the bridge catalog from `https://backcap.dev/dist/bridges/index.json`
+3. Fetches the bridge catalog from `https://faroke.github.io/backcap/dist/bridges/index.json`
 4. Filters bridges to show only those whose dependencies are all installed in the current project
 5. Displays compatible bridges with their description, dependencies, and installation status
 
@@ -215,4 +215,4 @@ Common errors and their solutions:
 
 ## Registry URL
 
-By default, the CLI fetches from `https://backcap.dev`. This is not currently configurable via flags but can be customized by editing the source (if you have the registry source locally for development purposes).
+By default, the CLI fetches from `https://faroke.github.io/backcap`. This is not currently configurable via flags but can be customized by editing the source (if you have the registry source locally for development purposes).

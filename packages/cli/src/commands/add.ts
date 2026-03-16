@@ -27,7 +27,7 @@ import { ConflictDetectionError } from "../errors/conflict-detection.error.js";
 import { FileWriteError } from "../installer/file-writer.js";
 import { MissingDependencyError } from "../errors/bridge.error.js";
 
-const DEFAULT_REGISTRY_URL = "https://backcap.dev";
+const DEFAULT_REGISTRY_URL = "https://faroke.github.io/backcap";
 
 export default defineCommand({
   meta: {

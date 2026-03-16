@@ -51,4 +51,4 @@ Replace the in-memory adapters with real implementations:
 | `IPostRepository` | `InMemoryPostRepository` | `PrismaPostRepository` |
 | `ISearchEngine` | `InMemorySearchEngine` | `MeilisearchEngine` / `AlgoliaEngine` |
 
-For more information, visit the [Backcap documentation](https://backcap.dev).
+For more information, visit the [Backcap documentation](https://faroke.github.io/backcap).
