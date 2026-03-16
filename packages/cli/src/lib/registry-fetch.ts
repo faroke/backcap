@@ -4,7 +4,7 @@ import { RegistryError } from "../errors/registry.error.js";
 import { log } from "../utils/logger.js";
 
 const FALLBACK_URL =
-  "https://faroke.github.io/backcap/registry.json";
+  "https://faroke.github.io/backcap/dist/registry.json";
 
 export async function fetchRegistry(
   primaryUrl: string,

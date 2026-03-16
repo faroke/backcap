@@ -1,5 +1,11 @@
 # @backcap/cli
 
+## 0.1.5
+
+### Patch Changes
+
+- Fix registry fetch URLs to include /dist/ path prefix
+
 ## 0.1.4
 
 ### Patch Changes

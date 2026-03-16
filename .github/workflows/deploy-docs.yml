@@ -33,7 +33,7 @@ jobs:
         run: pnpm --filter @backcap/shared build && pnpm --filter @backcap/registry build
 
       - name: Copy registry dist to docs public
-        run: cp -r packages/registry/dist/* apps/docs/public/
+        run: mkdir -p apps/docs/public/dist && cp -r packages/registry/dist/*.json apps/docs/public/dist/ && cp -r packages/registry/dist/bridges apps/docs/public/dist/ && cp -r packages/registry/dist/skills apps/docs/public/dist/
 
       - name: Build docs
         run: pnpm --filter @backcap/docs build
