@@ -1,0 +1,49 @@
+{
+  "name": "@backcap/shared",
+  "version": "0.0.1",
+  "type": "module",
+  "exports": {
+    "./schemas/registry": {
+      "import": "./dist/schemas/registry.schema.mjs",
+      "types": "./dist/schemas/registry.schema.d.mts"
+    },
+    "./schemas/registry-item": {
+      "import": "./dist/schemas/registry-item.schema.mjs",
+      "types": "./dist/schemas/registry-item.schema.d.mts"
+    },
+    "./schemas/config": {
+      "import": "./dist/schemas/config.schema.mjs",
+      "types": "./dist/schemas/config.schema.d.mts"
+    },
+    "./types/registry": {
+      "import": "./dist/types/registry.types.mjs",
+      "types": "./dist/types/registry.types.d.mts"
+    },
+    "./types/config": {
+      "import": "./dist/types/config.types.mjs",
+      "types": "./dist/types/config.types.d.mts"
+    },
+    "./types/capability": {
+      "import": "./dist/types/capability.types.mjs",
+      "types": "./dist/types/capability.types.d.mts"
+    },
+    "./result": {
+      "import": "./dist/result.mjs",
+      "types": "./dist/result.d.mts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "unbuild",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "unbuild": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

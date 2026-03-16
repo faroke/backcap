@@ -1,0 +1,7 @@
+{
+  "name": "blog-tags",
+  "sourceCapability": "blog",
+  "targetCapability": "tags",
+  "events": ["PostPublished"],
+  "version": "1.0.0"
+}

@@ -1,35 +1,20 @@
 {
-  "name": "backcap-poc",
-  "version": "0.1.0",
-  "description": "POC - Backend Capability Registry for TypeScript",
+  "name": "backcap",
+  "private": true,
   "type": "module",
-  "bin": {
-    "backcap": "./dist/cli.js"
+  "engines": {
+    "node": ">=18"
   },
+  "packageManager": "pnpm@9.15.4",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsx src/cli.ts",
-    "test": "vitest"
-  },
-  "keywords": [
-    "backend",
-    "capabilities",
-    "registry",
-    "architecture",
-    "typescript"
-  ],
-  "dependencies": {
-    "commander": "^11.1.0",
-    "inquirer": "^9.2.12",
-    "yaml": "^2.3.4",
-    "chalk": "^5.3.0",
-    "ora": "^8.0.1"
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck"
   },
   "devDependencies": {
-    "@types/inquirer": "^9.0.7",
-    "@types/node": "^20.10.5",
-    "tsx": "^4.7.0",
-    "typescript": "^5.3.3",
-    "vitest": "^1.0.4"
+    "turbo": "^2.3.3",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
   }
 }

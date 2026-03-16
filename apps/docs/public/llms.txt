@@ -1,0 +1,80 @@
+# Backcap
+
+Backcap is a registry of composable backend capabilities for TypeScript. It lets you install production-ready backend features — authentication, search, blog, payments, notifications — the same way you install npm packages, with full source code written directly into your project. You own every file.
+
+## Core Concept
+
+Run `npx backcap add auth` and Backcap fetches the auth capability bundle from the registry, writes all TypeScript source files to `src/capabilities/auth/`, installs required npm dependencies, and records the capability in `backcap.json`. There is no opaque runtime library. The code is yours.
+
+## Four-Layer Architecture
+
+Every Backcap capability uses strict Clean Architecture layering:
+
+- **domain/** — Entities, value objects, domain errors, domain events. Zero external imports. No framework code.
+- **application/** — Use cases, port interfaces (TypeScript interfaces), DTOs. Imports domain/ only.
+- **contracts/** — Public service interface and factory function. The only barrel index.ts. Imports application/ only.
+- **adapters/** — Framework and persistence implementations of port interfaces. Live outside the capability in src/adapters/.
+
+Import rule: dependencies point inward only. domain/ never imports from application/. application/ never imports from adapters/.
+
+## The Result Pattern
+
+Backcap does not throw errors for expected failures. Every use case returns `Result<T, E>`:
+
+```typescript
+const result = await authService.register({ email, password });
+if (result.isFail()) {
+  const error = result.unwrapError(); // typed error
+}
+const { userId } = result.unwrap();
+```
+
+`Result.ok(value)` wraps a success. `Result.fail(error)` wraps a failure. `isOk()`, `isFail()`, `unwrap()`, `unwrapError()`, and `map()` are the main methods.
+
+## CLI Commands
+
+- `npx backcap init` — Detects framework and package manager, writes backcap.json
+- `npx backcap add <capability>` — Fetches and installs a capability with conflict detection
+- `npx backcap list` — Lists available capabilities from the registry
+- `npx backcap bridges` — Lists bridges compatible with installed capabilities
+
+## Available Capabilities
+
+- **auth** — User registration and login. Domain: User entity, Email/Password value objects, 4 typed errors, UserRegistered event. Application: RegisterUser and LoginUser use cases, IUserRepository/IPasswordHasher/ITokenService ports. Public API: IAuthService and createAuthService().
+
+Planned: blog, search, notifications, payments, audit-log, feature-flags.
+
+## Adapters
+
+- **auth-prisma** — PrismaUserRepository implements IUserRepository
+- **auth-express** — createAuthRouter() adds POST /auth/register and POST /auth/login; createAuthMiddleware() verifies Bearer tokens
+
+## Bridges
+
+Bridges connect two capabilities. auth-notifications listens for UserRegistered events and calls an IEmailSender port. Install with `npx backcap add auth-notifications`.
+
+## Skills (AI Documentation)
+
+Each capability and adapter has a SKILL.md file with structured frontmatter and file-by-file tables. Load `packages/registry/skills/backcap-core/SKILL.md` and `packages/registry/skills/backcap-auth/SKILL.md` as context before making architectural changes to a Backcap project.
+
+## File Naming Conventions
+
+`.entity.ts`, `.vo.ts`, `.error.ts`, `.event.ts`, `.use-case.ts`, `.port.ts`, `.dto.ts`, `.contract.ts`, `.factory.ts`, `.adapter.ts` — all kebab-case.
+
+## backcap.json
+
+Configuration file written by `backcap init`:
+```json
+{
+  "framework": "express",
+  "packageManager": "pnpm",
+  "paths": {
+    "capabilities": "src/capabilities",
+    "adapters": "src/adapters",
+    "bridges": "src/bridges",
+    "skills": "src/skills",
+    "shared": "src/shared"
+  },
+  "installed": []
+}
+```

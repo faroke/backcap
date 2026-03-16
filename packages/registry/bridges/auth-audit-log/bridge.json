@@ -1,0 +1,7 @@
+{
+  "name": "auth-audit-log",
+  "sourceCapability": "auth",
+  "targetCapability": "audit-log",
+  "events": ["UserRegistered"],
+  "version": "1.0.0"
+}

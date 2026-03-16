@@ -1,0 +1,14 @@
+{
+  "name": "@backcap/docs",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^4.16.0",
+    "@astrojs/starlight": "^0.30.0"
+  }
+}

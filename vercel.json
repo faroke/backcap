@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm turbo build",
+  "outputDirectory": "apps/docs/dist",
+  "installCommand": "pnpm install",
+  "rewrites": [
+    { "source": "/r/:path*", "destination": "/r/:path*" }
+  ]
+}

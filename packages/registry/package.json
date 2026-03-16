@@ -1,0 +1,26 @@
+{
+  "name": "@backcap/registry",
+  "version": "0.0.1",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsx build.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "pathe": "^1.1.2"
+  },
+  "peerDependencies": {
+    "@backcap/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

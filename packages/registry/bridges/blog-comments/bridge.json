@@ -1,0 +1,7 @@
+{
+  "name": "blog-comments",
+  "sourceCapability": "comments",
+  "targetCapability": "blog",
+  "events": ["CommentPosted"],
+  "version": "1.0.0"
+}

@@ -1,0 +1,419 @@
+# Backcap — Comprehensive AI Reference
+
+Backcap is a registry of composable backend capabilities for TypeScript. Capabilities are installed via the CLI and written as full TypeScript source code into your project. There is no runtime dependency on Backcap after installation.
+
+---
+
+## Overview
+
+### What is a Capability?
+
+A capability is a vertical slice of backend business logic — authentication, blog, search, notifications, payments — implemented in strict Clean Architecture layers. When you install a capability, you receive all source files. You own and can modify every file.
+
+### Installation Model
+
+Backcap follows the shadcn/ui model: run a CLI command, get source code. Not a library import.
+
+```bash
+npx backcap init       # Create backcap.json
+npx backcap add auth   # Install auth capability source files
+```
+
+### Framework Agnosticism
+
+Domain and application layers have zero framework or database imports. The same capability logic works with Express, Fastify, Next.js, or NestJS. Runtime support: Node.js, Bun, Deno.
+
+---
+
+## Architecture
+
+### Four Layers
+
+Every capability is structured in exactly four layers with strict import rules.
+
+#### Layer 1: domain/
+
+Contents: entities, value objects, domain errors, domain events.
+
+Import rule: zero external imports. Only imports `shared/result.ts` from within the same capability.
+
+Key patterns:
+- Private constructors. Static `create()` factory returns `Result<T, E>`.
+- Entities are immutable. Mutation methods return `Result<NewEntity, Error>`.
+- Value objects wrap and validate primitives.
+- Domain errors extend `Error` with static factory methods.
+- Domain events carry `occurredAt: Date` and the event payload.
+
+#### Layer 2: application/
+
+Contents: use cases, port interfaces, DTOs.
+
+Import rule: imports from `domain/` only.
+
+Key patterns:
+- One class per use case with a single `execute()` method.
+- Port interfaces use the `I` prefix (`IUserRepository`, `IPasswordHasher`).
+- Use cases receive port interfaces via constructor injection, never concrete classes.
+- `execute()` returns `Promise<Result<T, E>>`, never throws for expected failures.
+- DTOs are plain TypeScript interfaces with no methods.
+
+#### Layer 3: contracts/
+
+Contents: public service interface, factory function, single `index.ts` barrel.
+
+Import rule: imports from `application/` ports and use cases.
+
+Key patterns:
+- `I<Name>Service` interface defines the public API.
+- `create<Name>Service(deps)` factory wires the dependency graph.
+- This is the only `index.ts` in the capability. No barrel exports in domain/ or application/.
+
+#### Layer 4: adapters/
+
+Contents: concrete implementations of port interfaces.
+
+Location: `src/adapters/<technology>/<capability>/` — outside the capability directory.
+
+Import rule: imports from `application/ports/` (for the interface) and `domain/` entities (for mapping). Never imports from `contracts/`.
+
+### The Dependency Rule
+
+```
+adapters/ → contracts/ → application/ → domain/
+```
+
+Each layer only imports from the layer to its right. Nothing imports from adapters/ except application entry points (container.ts, main.ts).
+
+---
+
+## The Result<T, E> Monad
+
+`Result<T, E>` replaces thrown exceptions for all expected failure conditions. Located at `shared/result.ts` inside each capability (duplicated intentionally for self-containment).
+
+```typescript
+export class Result<T, E extends Error = Error> {
+  static ok<T>(value: T): Result<T, never>
+  static fail<E extends Error>(error: E): Result<never, E>
+
+  isOk(): boolean
+  isFail(): boolean
+  unwrap(): T          // throws if isFail()
+  unwrapError(): E     // throws if isOk()
+  map<U>(fn: (value: T) => U): Result<U, E>
+}
+```
+
+### Usage Pattern
+
+```typescript
+const result = await authService.register({ email, password });
+
+if (result.isFail()) {
+  const error = result.unwrapError();
+  // TypeScript knows the error type here
+  return res.status(409).json({ error: error.message });
+}
+
+const { userId } = result.unwrap();
+```
+
+Thrown exceptions are reserved for programmer errors and unrecoverable environmental failures.
+
+---
+
+## CLI Reference
+
+### backcap init
+
+```bash
+npx backcap init
+```
+
+Detects framework (from package.json deps) and package manager (from lockfiles). Prompts to confirm or override. Writes `backcap.json` to the project root.
+
+Framework detection: `next` → next, `express` → express, `fastify` → fastify, `@nestjs/core` → nestjs.
+
+Package manager detection: `pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `package-lock.json` → npm.
+
+### backcap add
+
+```bash
+npx backcap add <capability>
+```
+
+1. Loads backcap.json (fails if not present)
+2. Fetches `https://backcap.dev/dist/<capability>.json`
+3. Detects compatible adapters based on project package.json
+4. Runs conflict detection (identical → skip, no conflicts → proceed, conflicts → prompt)
+5. Conflict options: abort, different path, compare diffs and continue
+6. Writes files to `<paths.capabilities>/<capability>/`
+7. Installs npm deps
+8. Updates `backcap.json` installed list
+
+### backcap list
+
+```bash
+npx backcap list
+```
+
+Fetches `https://backcap.dev/registry.json`. Renders a table of capabilities with name, description, type, and installed status.
+
+### backcap bridges
+
+```bash
+npx backcap bridges
+```
+
+Fetches `https://backcap.dev/dist/bridges/index.json`. Filters to bridges whose dependencies are all installed. Shows name, description, dependencies, status (installed / available).
+
+---
+
+## Auth Capability — Complete Reference
+
+### Installation
+
+```bash
+npx backcap add auth
+```
+
+### Domain Layer
+
+#### User Entity
+
+File: `domain/entities/user.entity.ts`
+Export: `User`
+
+Fields: `id: string`, `email: Email`, `passwordHash: string`, `roles: string[]`, `createdAt: Date`, `updatedAt: Date`
+
+Factory: `User.create(params): Result<User, InvalidEmail>`
+Mutation: `user.updateEmail(newEmail): Result<User, InvalidEmail>`
+
+Private constructor — always use `User.create()`.
+
+#### Email Value Object
+
+File: `domain/value-objects/email.vo.ts`
+Export: `Email`
+
+Factory: `Email.create(value: string): Result<Email, InvalidEmail>`
+Property: `email.value: string` — the validated email string
+
+Validates against a simplified RFC-5321 regex.
+
+#### Password Value Object
+
+File: `domain/value-objects/password.vo.ts`
+Export: `Password`
+
+Factory: `Password.create(value: string): Result<Password, DomainError>`
+
+Validates: minimum 8 characters, at least one non-alphabetic character.
+
+#### Domain Errors
+
+| File | Export | Message |
+|---|---|---|
+| `domain/errors/invalid-email.error.ts` | `InvalidEmail` | `Invalid email address: "<value>"` |
+| `domain/errors/invalid-credentials.error.ts` | `InvalidCredentials` | `Invalid email or password` |
+| `domain/errors/user-not-found.error.ts` | `UserNotFound` | `User not found with id: "<id>"` |
+| `domain/errors/user-already-exists.error.ts` | `UserAlreadyExists` | `User already exists with email: "<email>"` |
+
+All have static factory methods: `InvalidEmail.create(value)`, `UserAlreadyExists.create(email)`, etc.
+
+#### Domain Events
+
+| File | Export | Payload |
+|---|---|---|
+| `domain/events/user-registered.event.ts` | `UserRegistered` | `userId: string`, `email: string`, `occurredAt: Date` |
+
+### Application Layer
+
+#### Ports
+
+**IUserRepository** (`application/ports/user-repository.port.ts`):
+```typescript
+interface IUserRepository {
+  findByEmail(email: string): Promise<User | null>;
+  save(user: User): Promise<void>;
+  findById(id: string): Promise<User | null>;
+}
+```
+
+**IPasswordHasher** (`application/ports/password-hasher.port.ts`):
+```typescript
+interface IPasswordHasher {
+  hash(plain: string): Promise<string>;
+  compare(plain: string, hash: string): Promise<boolean>;
+}
+```
+
+**ITokenService** (`application/ports/token-service.port.ts`):
+```typescript
+interface ITokenService {
+  sign(payload: { userId: string }): Promise<string>;
+  verify(token: string): Promise<{ userId: string }>;
+}
+```
+
+#### Use Cases
+
+**RegisterUser** (`application/use-cases/register-user.use-case.ts`):
+- Input: `RegisterInput { email: string; password: string }`
+- Output: `Result<{ userId: string; event: UserRegistered }, Error>`
+- Failures: `UserAlreadyExists`, `InvalidEmail`
+- Constructor: `new RegisterUser(userRepository, passwordHasher)`
+
+**LoginUser** (`application/use-cases/login-user.use-case.ts`):
+- Input: `LoginInput { email: string; password: string }`
+- Output: `Result<{ token: string; userId: string }, Error>`
+- Failures: `InvalidCredentials`, `UserNotFound`
+- Constructor: `new LoginUser(userRepository, tokenService, passwordHasher)`
+
+### Contracts Layer
+
+**IAuthService** (`contracts/auth.contract.ts`):
+```typescript
+interface IAuthService {
+  register(input: AuthRegisterInput): Promise<Result<{ userId: string }, Error>>;
+  login(input: AuthLoginInput): Promise<Result<AuthLoginOutput, Error>>;
+}
+```
+
+**createAuthService** (`contracts/auth.factory.ts`):
+```typescript
+function createAuthService(deps: {
+  userRepository: IUserRepository;
+  tokenService: ITokenService;
+  passwordHasher: IPasswordHasher;
+}): IAuthService
+```
+
+### Adapters
+
+#### auth-prisma
+
+`PrismaUserRepository implements IUserRepository`
+
+File: `src/adapters/prisma/auth/user-repository.adapter.ts`
+
+Constructor: `new PrismaUserRepository(prisma: PrismaClient)`
+
+Required Prisma model:
+```prisma
+model User {
+  id           String   @id
+  email        String   @unique
+  passwordHash String
+  roles        String[]
+  createdAt    DateTime
+  updatedAt    DateTime
+}
+```
+
+#### auth-express
+
+**createAuthRouter** (`src/adapters/express/auth/auth.router.ts`):
+```typescript
+function createAuthRouter(authService: IAuthService, router: Router): Router
+```
+Adds: `POST /auth/register` → 201 `{ userId }` or error; `POST /auth/login` → 200 `{ token, userId }` or error.
+
+Error mapping: UserAlreadyExists → 409, InvalidCredentials/UserNotFound → 401, InvalidEmail → 400, other → 500.
+
+**createAuthMiddleware** (`src/adapters/express/auth/auth.middleware.ts`):
+```typescript
+function createAuthMiddleware(tokenService: ITokenService): RequestHandler
+```
+Reads `Authorization: Bearer <token>`, verifies with tokenService, sets `req.userId`, calls next(). Returns 401 on failure.
+
+---
+
+## Bridges
+
+A bridge is a standalone module in `src/bridges/<name>/` that connects two capabilities. It defines its own port interfaces and has its own `shared/result.ts`.
+
+### auth-notifications
+
+Responds to `UserRegistered` from auth, calls `IEmailSender` port to send a welcome email.
+
+Use case: `SendWelcomeEmailUseCase.execute(event: UserRegistered): Promise<Result<void, SendWelcomeEmailError>>`
+
+Port: `IEmailSender { sendEmail(dto: WelcomeEmailDto): Promise<void> }`
+
+Install: `npx backcap add auth-notifications`
+
+---
+
+## File Naming Conventions
+
+| Suffix | Example |
+|---|---|
+| `.entity.ts` | `user.entity.ts` |
+| `.vo.ts` | `email.vo.ts` |
+| `.error.ts` | `invalid-email.error.ts` |
+| `.event.ts` | `user-registered.event.ts` |
+| `.use-case.ts` | `register-user.use-case.ts` |
+| `.port.ts` | `user-repository.port.ts` |
+| `.dto.ts` | `register-input.dto.ts` |
+| `.contract.ts` | `auth.contract.ts` |
+| `.factory.ts` | `auth.factory.ts` |
+| `.adapter.ts` | `user-repository.adapter.ts` |
+
+All files use kebab-case. Class names use PascalCase. Interface names use `I` prefix.
+
+---
+
+## Skills (AI Documentation Files)
+
+Each capability has a corresponding `SKILL.md` in `packages/registry/skills/`:
+
+- `backcap-core/SKILL.md` — global architecture rules, import rules, naming conventions, Result pattern, CLI overview
+- `backcap-auth/SKILL.md` — auth capability domain map, all ports and use cases, error types, adapters, bridge
+
+Load these files as AI context before making changes to a Backcap project. The `description` field in each skill's YAML frontmatter is a dense one-paragraph summary suitable for use as a system prompt prefix.
+
+---
+
+## backcap.json Configuration
+
+```json
+{
+  "framework": "express",
+  "packageManager": "pnpm",
+  "paths": {
+    "capabilities": "src/capabilities",
+    "adapters": "src/adapters",
+    "bridges": "src/bridges",
+    "skills": "src/skills",
+    "shared": "src/shared"
+  },
+  "installed": ["auth"]
+}
+```
+
+All paths are relative to the project root. Customize any path before running `backcap add` to control where files are written.
+
+---
+
+## Dependency Injection
+
+Backcap uses constructor injection throughout. No IoC container is required. The factory function in `contracts/` is the composition root for each capability.
+
+```typescript
+// All wiring in one place
+const authService = createAuthService({
+  userRepository: new PrismaUserRepository(prisma),
+  passwordHasher: new BcryptPasswordHasher(),
+  tokenService: new JwtTokenService(process.env.JWT_SECRET!),
+});
+```
+
+---
+
+## Testing Strategy
+
+- **Domain tests**: Pure unit tests. No mocks. Fast. Test all value object validation and entity factories.
+- **Application tests**: Use in-memory mock implementations of port interfaces. Test use case logic without infrastructure.
+- **Adapter tests**: Integration tests against real infrastructure (real database, real bcrypt). Only these tests require external services.
+
+Mock implementations live in `application/__tests__/mocks/` and implement the port interfaces with simple in-memory logic.

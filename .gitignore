@@ -1,2 +1,9 @@
-node_modules/
+node_modules
+dist
+.turbo
+*.tsbuildinfo
 .env
+.claude/
+.opencode/
+_bmad/
+_bmad-output/
