@@ -29,8 +29,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Build registry
-        run: pnpm --filter @backcap/registry build
+      - name: Build shared + registry
+        run: pnpm --filter @backcap/shared build && pnpm --filter @backcap/registry build
 
       - name: Copy registry dist to docs public
         run: cp -r packages/registry/dist/* apps/docs/public/
