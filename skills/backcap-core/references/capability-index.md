@@ -19,7 +19,7 @@ This file lists all capabilities and bridges available in the Backcap registry.
 Install a capability:
 
 ```bash
-backcap add auth
+npx @backcap/cli add auth
 ```
 
 ---
@@ -31,8 +31,8 @@ relevant based on the project's detected framework and package manager.
 
 | Name | Parent capability | Framework / ORM | Install command |
 |---|---|---|---|
-| `auth-express` | `auth` | Express.js | `backcap add auth` (auto-detected) |
-| `auth-prisma` | `auth` | Prisma ORM | `backcap add auth` (auto-detected) |
+| `auth-express` | `auth` | Express.js | `npx @backcap/cli add auth` (auto-detected) |
+| `auth-prisma` | `auth` | Prisma ORM | `npx @backcap/cli add auth` (auto-detected) |
 
 ---
 
@@ -50,11 +50,11 @@ are installed.
 List bridges compatible with installed capabilities:
 
 ```bash
-backcap bridges
+npx @backcap/cli bridges
 ```
 
 Install a bridge:
 
 ```bash
-backcap add bridge auth-notifications
+npx @backcap/cli add bridge auth-notifications
 ```

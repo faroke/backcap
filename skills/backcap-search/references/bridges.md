@@ -14,7 +14,7 @@ into the search engine.
 ### Install
 
 ```bash
-backcap add bridge blog-search
+npx @backcap/cli add bridge blog-search
 ```
 
 ### How It Works

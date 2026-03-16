@@ -133,7 +133,7 @@ Key rules:
 |---|---|---|
 | `auth-notifications` | `auth` | Listens to `UserRegistered` and sends a welcome email via an `IEmailSender` port |
 
-Install a bridge with: `backcap add bridge auth-notifications`
+Install a bridge with: `npx @backcap/cli add bridge auth-notifications`
 
 See [`references/capability-index.md`](references/capability-index.md) for the full capability
 and bridge catalogue.
@@ -142,11 +142,11 @@ and bridge catalogue.
 
 | Command | Description |
 |---|---|
-| `backcap init` | Scaffold `backcap.json` config in the current project; auto-detects framework and package manager |
-| `backcap list` | Fetch and display all available capabilities from the registry |
-| `backcap add <name>` | Install a capability (e.g. `backcap add auth`); detects adapters, resolves conflicts, writes files, installs npm deps |
-| `backcap bridges` | List bridges that are compatible with currently installed capabilities |
-| `backcap add bridge <name>` | Install a specific bridge into the project |
+| `npx @backcap/cli init` | Scaffold `backcap.json` config in the current project; auto-detects framework and package manager |
+| `npx @backcap/cli list` | Fetch and display all available capabilities from the registry |
+| `npx @backcap/cli add <name>` | Install a capability (e.g. `npx @backcap/cli add auth`); detects adapters, resolves conflicts, writes files, installs npm deps |
+| `npx @backcap/cli bridges` | List bridges that are compatible with currently installed capabilities |
+| `npx @backcap/cli add bridge <name>` | Install a specific bridge into the project |
 
 Default registry URL: `https://faroke.github.io/backcap`
 

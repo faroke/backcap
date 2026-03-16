@@ -16,7 +16,7 @@ the post in a search engine via the `ISearchEngine` port.
 ### Install
 
 ```bash
-backcap add bridge blog-search
+npx @backcap/cli add bridge blog-search
 ```
 
 ### Wiring

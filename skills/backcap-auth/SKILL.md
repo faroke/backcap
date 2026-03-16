@@ -125,8 +125,8 @@ Auth-specific rules:
 
 | Bridge | Description | Install |
 |---|---|---|
-| `auth-notifications` | Sends a welcome email when a user registers | `backcap add bridge auth-notifications` |
-| `auth-audit-log` | Logs login, registration, and failed-login events | `backcap add bridge auth-audit-log` (planned) |
+| `auth-notifications` | Sends a welcome email when a user registers | `npx @backcap/cli add bridge auth-notifications` |
+| `auth-audit-log` | Logs login, registration, and failed-login events | `npx @backcap/cli add bridge auth-audit-log` (planned) |
 
 See [`references/bridges.md`](references/bridges.md) for detailed bridge documentation.
 
@@ -134,8 +134,8 @@ See [`references/bridges.md`](references/bridges.md) for detailed bridge documen
 
 | Command | Description |
 |---|---|
-| `backcap init` | Scaffold `backcap.json` in the current project |
-| `backcap list` | List all available capabilities from the registry |
-| `backcap add auth` | Install the auth capability (prompts for adapter selection) |
-| `backcap bridges` | List bridges compatible with installed capabilities |
-| `backcap add bridge auth-notifications` | Install the auth-notifications bridge |
+| `npx @backcap/cli init` | Scaffold `backcap.json` in the current project |
+| `npx @backcap/cli list` | List all available capabilities from the registry |
+| `npx @backcap/cli add auth` | Install the auth capability (prompts for adapter selection) |
+| `npx @backcap/cli bridges` | List bridges compatible with installed capabilities |
+| `npx @backcap/cli add bridge auth-notifications` | Install the auth-notifications bridge |

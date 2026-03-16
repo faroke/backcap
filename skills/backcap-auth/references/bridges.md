@@ -17,7 +17,7 @@ a welcome email via an `IEmailSender` port.
 ### Install
 
 ```bash
-backcap add bridge auth-notifications
+npx @backcap/cli add bridge auth-notifications
 ```
 
 ### Directory Structure
@@ -186,7 +186,7 @@ interface AuthAuditLogBridgeContract {
 ```
 
 This bridge will be available once the `audit-log` capability ships. Check
-`backcap bridges` after installing `auth` and `audit-log` to see when it becomes available.
+`npx @backcap/cli bridges` after installing `auth` and `audit-log` to see when it becomes available.
 
 ---
 

@@ -118,7 +118,7 @@ Blog-specific rules:
 
 | Bridge | Description | Install |
 |---|---|---|
-| `blog-search` | Indexes published posts for full-text search | `backcap add bridge blog-search` |
+| `blog-search` | Indexes published posts for full-text search | `npx @backcap/cli add bridge blog-search` |
 
 See [`references/bridges.md`](references/bridges.md) for detailed bridge documentation.
 
@@ -126,8 +126,8 @@ See [`references/bridges.md`](references/bridges.md) for detailed bridge documen
 
 | Command | Description |
 |---|---|
-| `backcap init` | Scaffold `backcap.json` in the current project |
-| `backcap list` | List all available capabilities from the registry |
-| `backcap add blog` | Install the blog capability (prompts for adapter selection) |
-| `backcap bridges` | List bridges compatible with installed capabilities |
-| `backcap add bridge blog-search` | Install the blog-search bridge |
+| `npx @backcap/cli init` | Scaffold `backcap.json` in the current project |
+| `npx @backcap/cli list` | List all available capabilities from the registry |
+| `npx @backcap/cli add blog` | Install the blog capability (prompts for adapter selection) |
+| `npx @backcap/cli bridges` | List bridges compatible with installed capabilities |
+| `npx @backcap/cli add bridge blog-search` | Install the blog-search bridge |
