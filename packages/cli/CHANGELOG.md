@@ -1,5 +1,11 @@
 # @backcap/cli
 
+## 0.2.0
+
+### Minor Changes
+
+- Add --yes/-y flag to init and add commands for non-interactive mode
+
 ## 0.1.5
 
 ### Patch Changes
