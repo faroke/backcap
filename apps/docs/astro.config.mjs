@@ -2,7 +2,7 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 
 export default defineConfig({
-  site: "https://backcap.github.io",
+  site: "https://faroke.github.io",
   base: "/backcap",
   integrations: [
     starlight({
@@ -13,11 +13,11 @@ export default defineConfig({
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/backcap/backcap",
+          href: "https://github.com/faroke/backcap",
         },
       ],
       editLink: {
-        baseUrl: "https://github.com/backcap/backcap/edit/main/apps/docs/",
+        baseUrl: "https://github.com/faroke/backcap/edit/main/apps/docs/",
       },
       sidebar: [
         {

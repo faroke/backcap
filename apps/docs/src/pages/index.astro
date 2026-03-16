@@ -113,13 +113,20 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     .logo-text { font-weight: 700; font-size: 1.125rem; }
     .nav-links { display: flex; gap: 1.5rem; font-size: 0.875rem; color: var(--muted); }
     .nav-links a:hover { color: var(--fg); }
-    .github-btn {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.5rem 1rem; border-radius: 0.5rem;
-      border: 1px solid var(--border); font-size: 0.875rem; color: var(--muted);
-      transition: all 0.2s;
+    .github-star {
+      display: inline-flex; align-items: center; gap: 0.625rem;
+      padding: 0.4rem 0.875rem; border-radius: 0.5rem;
+      border: 1px solid var(--border); font-size: 0.8125rem; color: var(--muted);
+      transition: all 0.2s; font-weight: 500;
     }
-    .github-btn:hover { color: var(--fg); border-color: hsl(152 76% 52% / 0.3); }
+    .github-star:hover { color: var(--fg); border-color: hsl(152 76% 52% / 0.3); }
+    .github-star svg { flex-shrink: 0; }
+    .github-star-count {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      padding-left: 0.625rem; border-left: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      color: var(--fg); font-weight: 600;
+    }
 
     @media (max-width: 768px) {
       .nav-links { display: none; }
@@ -197,35 +204,46 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     /* ── Terminal ── */
     .terminal {
       max-width: 42rem; margin: 0 auto; border-radius: 0.75rem;
-      border: 1px solid var(--border); background: var(--card); overflow: hidden;
+      border: 1px solid var(--border); background: hsl(220 20% 3.5%); overflow: hidden;
+      box-shadow: 0 0 60px hsl(152 76% 52% / 0.08), 0 25px 50px -12px rgba(0,0,0,0.5);
     }
-    .terminal.glow-primary { box-shadow: 0 0 40px hsl(152 76% 52% / 0.15); }
     .terminal-bar {
       display: flex; align-items: center; gap: 0.5rem;
       padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+      background: hsl(220 18% 5.5%);
     }
     .terminal-dot { width: 0.75rem; height: 0.75rem; border-radius: 50%; }
-    .terminal-dot.red { background: hsl(0 84% 60% / 0.6); }
-    .terminal-dot.yellow { background: hsl(152 76% 52% / 0.3); }
-    .terminal-dot.green { background: hsl(152 76% 52% / 0.6); }
+    .terminal-dot.red { background: hsl(0 84% 50%); }
+    .terminal-dot.yellow { background: hsl(45 96% 58%); }
+    .terminal-dot.green { background: hsl(130 60% 46%); }
     .terminal-title {
-      margin-left: 0.75rem; font-size: 0.75rem; color: var(--muted);
+      flex: 1; text-align: center; font-size: 0.75rem; color: var(--muted);
       font-family: 'JetBrains Mono', monospace;
     }
     .terminal-body {
-      padding: 1.5rem; font-family: 'JetBrains Mono', monospace;
-      font-size: 0.875rem; line-height: 1.7; min-height: 320px;
+      padding: 1.25rem 1.5rem; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem; line-height: 1.6; min-height: 340px;
     }
-    .terminal-line { opacity: 0; transition: opacity 0.15s; }
+    .terminal-line { opacity: 0; transition: opacity 0.15s; white-space: pre; }
     .terminal-line.show { opacity: 1; }
-    .terminal-line.command { color: var(--fg); font-weight: 600; }
-    .terminal-line.prompt { color: var(--accent); }
-    .terminal-line.success { color: var(--primary); }
-    .terminal-line.file { color: var(--muted); }
-    .terminal-line.empty { height: 1rem; }
+    .tl-cmd { color: hsl(210 20% 70%); }
+    .tl-cmd .prompt-char { color: var(--muted); user-select: none; }
+    .tl-cmd strong { color: var(--fg); font-weight: 600; }
+    .tl-clack-intro { color: var(--primary); }
+    .tl-clack-bar { color: hsl(220 14% 25%); }
+    .tl-clack-select { color: var(--accent); }
+    .tl-clack-select .label { color: hsl(210 20% 70%); }
+    .tl-tag { color: hsl(152 76% 52% / 0.5); }
+    .tl-info { color: hsl(200 80% 65%); }
+    .tl-success { color: var(--primary); }
+    .tl-file { color: var(--muted); }
+    .tl-file .plus { color: var(--primary); }
+    .tl-empty { height: 0.5rem; }
+    .tl-outro { color: var(--primary); }
     .terminal-cursor {
       display: inline-block; width: 0.5rem; height: 1rem;
       background: var(--primary); animation: terminal-blink 1s step-end infinite;
+      vertical-align: text-bottom;
     }
 
     /* ── Section shared ── */
@@ -452,10 +470,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <a href={`${base}/getting-started/introduction`}>Docs</a>
         </div>
       </div>
-      <a href="https://github.com/backcap/backcap" target="_blank" rel="noopener noreferrer" class="github-btn">
+      <a href="https://github.com/faroke/backcap" target="_blank" rel="noopener noreferrer" class="github-star">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <span class="github-label">Star on GitHub</span>
+        Star
+        <span class="github-star-count" id="star-count">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span id="star-num">-</span>
+        </span>
       </a>
     </div>
   </nav>
@@ -483,7 +504,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
             Explore capabilities
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
-          <a href="https://github.com/backcap/backcap" target="_blank" rel="noopener noreferrer" class="btn-outline">
+          <a href="https://github.com/faroke/backcap" target="_blank" rel="noopener noreferrer" class="btn-outline">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
             View on GitHub
           </a>
@@ -499,12 +520,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </div>
       </div>
       <div class="anim visible d5">
-        <div class="terminal glow-primary" id="terminal">
+        <div class="terminal" id="terminal">
           <div class="terminal-bar">
             <div class="terminal-dot red"></div>
             <div class="terminal-dot yellow"></div>
             <div class="terminal-dot green"></div>
-            <span class="terminal-title">terminal</span>
+            <span class="terminal-title">~/my-app</span>
           </div>
           <div class="terminal-body" id="terminal-body"></div>
         </div>
@@ -706,7 +727,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </a>
         <a href="#capabilities" class="btn-outline">Explore Capabilities</a>
       </div>
-      <a href="https://github.com/backcap/backcap" target="_blank" rel="noopener noreferrer" class="cta-github">
+      <a href="https://github.com/faroke/backcap" target="_blank" rel="noopener noreferrer" class="cta-github">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
         View on GitHub
       </a>
@@ -733,29 +754,46 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     document.querySelectorAll('.anim:not(.visible)').forEach(el => observer.observe(el));
 
+    // ── GitHub star count ──
+    fetch('https://api.github.com/repos/faroke/backcap')
+      .then(r => r.json())
+      .then(d => {
+        const el = document.getElementById('star-num');
+        if (el && typeof d.stargazers_count === 'number') {
+          el.textContent = d.stargazers_count;
+        }
+      }).catch(() => {});
+
     // ── Terminal animation ──
+    // Realistic clack-style output matching the actual backcap CLI
     const lines = [
-      { text: '$ npx backcap init', type: 'command' },
-      { text: '? runtime › node', type: 'prompt' },
-      { text: '? framework › fastify', type: 'prompt' },
-      { text: '', type: 'empty' },
-      { text: '✓ Project initialized', type: 'success' },
-      { text: '', type: 'empty' },
-      { text: '$ npx backcap add auth', type: 'command' },
-      { text: '  ✓ core/domain/user.ts', type: 'file' },
-      { text: '  ✓ core/ports/auth-provider.ts', type: 'file' },
-      { text: '  ✓ core/usecases/sign-in.ts', type: 'file' },
-      { text: '  ✓ adapters/drizzle-user-repo.ts', type: 'file' },
-      { text: '  ✓ spec.yaml', type: 'file' },
-      { text: '', type: 'empty' },
-      { text: '✓ auth capability added', type: 'success' },
-      { text: '', type: 'empty' },
-      { text: '$ npx backcap add blog', type: 'command' },
-      { text: '  ✓ core/domain/post.ts', type: 'file' },
-      { text: '  ✓ core/usecases/publish-post.ts', type: 'file' },
-      { text: '  ✓ spec.yaml', type: 'file' },
-      { text: '', type: 'empty' },
-      { text: '✓ blog capability added', type: 'success' },
+      // Command 1: backcap init
+      { html: '<span class="prompt-char">$ </span><strong>npx backcap add auth</strong>', cls: 'tl-cmd', delay: 800 },
+      { html: '', cls: 'tl-empty', delay: 60 },
+      // clack intro
+      { html: '┌  <strong>backcap add</strong>', cls: 'tl-clack-intro', delay: 300 },
+      { html: '│', cls: 'tl-clack-bar', delay: 80 },
+      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Fetching auth...', cls: '', delay: 400 },
+      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Detected framework: fastify', cls: '', delay: 200 },
+      { html: '│', cls: 'tl-clack-bar', delay: 80 },
+      // files written
+      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Capability files written', cls: '', delay: 120 },
+      { html: '  <span class="plus">+</span> src/capabilities/auth/domain/user.ts', cls: 'tl-file', delay: 60 },
+      { html: '  <span class="plus">+</span> src/capabilities/auth/domain/session.ts', cls: 'tl-file', delay: 60 },
+      { html: '  <span class="plus">+</span> src/capabilities/auth/application/ports/auth-provider.port.ts', cls: 'tl-file', delay: 60 },
+      { html: '  <span class="plus">+</span> src/capabilities/auth/application/use-cases/sign-in.use-case.ts', cls: 'tl-file', delay: 60 },
+      { html: '  <span class="plus">+</span> src/capabilities/auth/application/use-cases/sign-up.use-case.ts', cls: 'tl-file', delay: 60 },
+      { html: '  <span class="plus">+</span> src/capabilities/auth/contracts/auth.contract.ts', cls: 'tl-file', delay: 60 },
+      { html: '│', cls: 'tl-clack-bar', delay: 80 },
+      // adapter
+      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Fetching adapter auth-prisma...', cls: '', delay: 300 },
+      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Adapter files written', cls: '', delay: 150 },
+      { html: '│', cls: 'tl-clack-bar', delay: 80 },
+      // skill
+      { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Skill installed to .claude/skills/backcap-auth/', cls: '', delay: 150 },
+      { html: '│', cls: 'tl-clack-bar', delay: 80 },
+      // outro
+      { html: '└  auth v1.0.0 installed successfully!', cls: 'tl-outro', delay: 0 },
     ];
 
     const body = document.getElementById('terminal-body');
@@ -765,24 +803,20 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       if (idx >= lines.length) return;
       const line = lines[idx];
       const div = document.createElement('div');
-      div.className = 'terminal-line show ' + line.type;
-      div.textContent = line.text;
-      // Remove cursor before adding new line
+      div.className = 'terminal-line show ' + line.cls;
+      div.innerHTML = line.html;
       const cursor = body.querySelector('.terminal-cursor');
       if (cursor) cursor.remove();
       body.appendChild(div);
       idx++;
       if (idx < lines.length) {
-        // Add cursor
         const c = document.createElement('span');
         c.className = 'terminal-cursor';
         body.appendChild(c);
-        const delay = lines[idx]?.type === 'command' ? 600 : 120;
-        setTimeout(addLine, delay);
+        setTimeout(addLine, lines[idx].delay);
       }
     }
 
-    // Start terminal animation when visible
     const terminalObs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
