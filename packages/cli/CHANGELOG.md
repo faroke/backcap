@@ -1,5 +1,11 @@
 # @backcap/cli
 
+## 0.1.3
+
+### Patch Changes
+
+- Fix workspace:\* dependency not being resolved during publish
+
 ## 0.1.2
 
 ### Patch Changes
