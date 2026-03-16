@@ -1,6 +1,6 @@
 {
   "name": "@backcap/shared",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "exports": {
     "./schemas/registry": {
@@ -44,6 +44,9 @@
   },
   "devDependencies": {
     "unbuild": "^2.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "engines": {
     "node": ">=18"
