@@ -25,8 +25,8 @@ Before making any architectural change to a Backcap project, load the relevant s
 Read the following skill files and use them as context for all
 subsequent work in this session:
 
-packages/registry/skills/backcap-core/SKILL.md
-packages/registry/skills/backcap-auth/SKILL.md
+skills/backcap-core/SKILL.md
+skills/backcap-auth/SKILL.md
 ```
 
 After loading the skills, the AI understands:

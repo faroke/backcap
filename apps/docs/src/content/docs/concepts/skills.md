@@ -89,8 +89,8 @@ This gives an AI assistant enough context to:
 When working in a Backcap project, ask Claude to read the relevant skill files before making changes:
 
 ```
-Read packages/registry/skills/backcap-core/SKILL.md and
-packages/registry/skills/backcap-auth/SKILL.md, then help me
+Read skills/backcap-core/SKILL.md and
+skills/backcap-auth/SKILL.md, then help me
 add an updatePassword use case to the auth capability.
 ```
 
@@ -139,4 +139,4 @@ When you [create a new capability](/guides/create-capability), you should create
 4. Document what `Result` error types each use case can return
 5. Reference the `backcap-core` skill for shared architecture rules
 
-See [backcap-core SKILL.md](https://github.com/backcap/backcap/blob/main/packages/registry/skills/backcap-core/SKILL.md) for a complete example.
+See [backcap-core SKILL.md](https://github.com/backcap/backcap/blob/main/skills/backcap-core/SKILL.md) for a complete example.

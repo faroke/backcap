@@ -283,7 +283,7 @@ This is the **only** barrel export in the capability. Do not create `index.ts` f
 
 ### 16. Create the SKILL.md
 
-Write a skill file at `packages/registry/skills/backcap-notifications/SKILL.md`. See the [Skills concept page](/concepts/skills) for the required format.
+Write a skill file at `skills/backcap-notifications/SKILL.md`. See the [Skills concept page](/concepts/skills) for the required format.
 
 ### 17. Bundle for the Registry
 
