@@ -35,13 +35,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           Auth, Blog, Search, Payments and more — ready for any TypeScript backend.
         </p>
         <div class="hero-ctas anim visible d3">
-          <a href="#capabilities" class="btn-primary">
-            Explore capabilities
+          <a href={`${base}/getting-started/introduction`} class="btn-primary">
+            Get Started
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="#capabilities" class="btn-outline">
+            Explore capabilities
           </a>
           <a href="https://github.com/faroke/backcap" target="_blank" rel="noopener noreferrer" class="btn-outline">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-            View on GitHub
+            GitHub
           </a>
         </div>
         <div class="anim visible d4" style="display:flex;justify-content:center;margin-bottom:4rem">
@@ -126,6 +129,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <p>Capabilities are added directly to your project with full source code. No vendor lock-in.</p>
         </div>
       </div>
+      <div class="section-cta anim">
+        <a href={`${base}/getting-started/introduction`} class="btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Read the getting started guide
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -182,6 +192,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </p>
       </div>
       <div class="cap-grid" id="cap-grid"></div>
+      <div class="section-cta anim">
+        <a href={`${base}/concepts/capabilities`} class="btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Learn how capabilities work
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -243,6 +260,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <h3>AI-friendly structure</h3>
           <p>Consistent architecture lets LLMs generate, modify and compose capabilities.</p>
         </div>
+      </div>
+      <div class="section-cta anim">
+        <a href={`${base}/concepts/skills`} class="btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          Explore AI skills
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
       </div>
     </div>
   </section>
@@ -432,7 +456,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   /* ── Terminal ── */
   .landing .terminal {
-    max-width: 42rem; margin: 0 auto; border-radius: 0.75rem;
+    max-width: min(42rem, calc(100vw - 2rem)); margin: 0 auto; border-radius: 0.75rem;
     border: 1px solid var(--lp-border); background: hsl(220 20% 3.5%); overflow: hidden;
     box-shadow: 0 0 60px hsl(152 76% 52% / 0.08), 0 25px 50px -12px rgba(0,0,0,0.5);
   }
@@ -452,9 +476,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .landing .terminal-body {
     padding: 1.25rem 1.5rem; font-family: 'JetBrains Mono', monospace;
     font-size: 0.8125rem; line-height: 1.6; min-height: 340px;
-    text-align: left;
+    text-align: left; overflow-x: auto;
   }
-  .landing .terminal-line { opacity: 0; transition: opacity 0.15s; white-space: pre; }
+  .landing .terminal-line { opacity: 0; transition: opacity 0.15s; white-space: pre; overflow-x: auto; }
   .landing .terminal-line.show { opacity: 1; }
   .landing .tl-cmd { color: hsl(210 20% 70%); }
   .landing .tl-cmd .prompt-char { color: var(--lp-muted); user-select: none; }
@@ -485,6 +509,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .landing .section-sub {
     color: var(--lp-muted); font-size: 1.125rem;
     max-width: 40rem; margin: 0 auto 4rem; text-align: center;
+  }
+
+  /* ── Section CTA ── */
+  .landing .section-cta {
+    text-align: center; margin-top: 3rem;
+  }
+  .landing .section-cta .btn-outline {
+    font-size: 0.9375rem; padding: 0.875rem 1.75rem;
   }
 
   /* ── Problem ── */
