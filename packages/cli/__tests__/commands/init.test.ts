@@ -83,7 +83,7 @@ describe("init command integration", () => {
         capabilities: "src/capabilities",
         adapters: "src/adapters",
         bridges: "src/bridges",
-        skills: "src/skills",
+        skills: ".claude/skills",
         shared: "src/shared",
       },
       installed: { capabilities: [], bridges: [] },

@@ -12,12 +12,14 @@ import { detectConflicts } from "../installer/conflict-detector.js";
 import { renderConflictSummary, renderDetailedDiffs } from "../installer/diff-renderer.js";
 import { selectiveInstall, InstallCancelledError } from "../installer/selective-installer.js";
 import { resolveSkillFiles } from "../installer/skill-resolver.js";
+import { installSkill, extractSkillFiles, resolveSkillsPath } from "../installer/skill-installer.js";
 import { reportInstallResult } from "../installer/install-reporter.js";
 import {
   promptAdapterSelection,
   promptInstallConfirm,
   promptConflictResolution,
   promptNewPath,
+  promptSkillConflict,
 } from "../lib/add-prompts.js";
 import { intro, outro, fail } from "../ui/prompts.js";
 import { log } from "../utils/logger.js";
@@ -264,6 +266,38 @@ export default defineCommand({
       } catch {
         log.warn(`Could not fetch adapter "${adapterName}", skipping.`);
       }
+    }
+
+    // Install skill files
+    const skillsPath = normalize(join(cwd, resolveSkillsPath(config)));
+    const capSkillFiles = extractSkillFiles(files);
+
+    if (capSkillFiles.length > 0) {
+      // Fetch core skill from registry
+      let coreSkillFiles: Array<{ path: string; content: string }> = [];
+      try {
+        const coreData = await ofetch(`${DEFAULT_REGISTRY_URL}/dist/skills/backcap-core.json`, {
+          timeout: 5000,
+        });
+        const coreParsed = registryItemSchema.safeParse(coreData);
+        if (coreParsed.success) {
+          coreSkillFiles = extractSkillFiles(
+            coreParsed.data.files as Array<{ path: string; content?: string; type?: string }>,
+          );
+        }
+      } catch {
+        // Core skill fetch failed — proceed without it
+      }
+
+      await installSkill({
+        skillsPath,
+        capabilityName,
+        skillFiles: capSkillFiles,
+        coreSkillFiles,
+        templateValues: markers,
+        onConflict: promptSkillConflict,
+      });
+      log.success(`Skill installed to ${skillsPath}/backcap-${capabilityName}/`);
     }
 
     // Install npm deps

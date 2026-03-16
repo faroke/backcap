@@ -7,7 +7,7 @@ vi.mock("node:fs/promises", () => ({
   stat: vi.fn(),
 }));
 
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, stat } from "node:fs/promises";
 import {
   installSkill,
   extractSkillFiles,
@@ -18,12 +18,15 @@ import {
 const mockReadFile = vi.mocked(readFile);
 const mockWriteFile = vi.mocked(writeFile);
 const mockMkdir = vi.mocked(mkdir);
+const mockStat = vi.mocked(stat);
 
 describe("installSkill", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockMkdir.mockResolvedValue(undefined);
     mockWriteFile.mockResolvedValue(undefined);
+    // Default: skill dir doesn't exist
+    mockStat.mockRejectedValue(new Error("ENOENT"));
   });
 
   it("installs skill files to skills path", async () => {
@@ -124,6 +127,99 @@ describe("installSkill", () => {
       "# Auth",
       "utf-8",
     );
+  });
+});
+
+describe("skill conflict detection", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockMkdir.mockResolvedValue(undefined);
+    mockWriteFile.mockResolvedValue(undefined);
+  });
+
+  it("prompts onConflict when skill dir already exists", async () => {
+    mockReadFile.mockResolvedValue("core exists");
+    mockStat.mockResolvedValue({ isDirectory: () => true } as any);
+    const onConflict = vi.fn().mockResolvedValue("overwrite");
+
+    await installSkill({
+      skillsPath: ".claude/skills",
+      capabilityName: "auth",
+      skillFiles: [{ path: "SKILL.md", content: "# Auth" }],
+      coreSkillFiles: [],
+      templateValues: {},
+      onConflict,
+    });
+
+    expect(onConflict).toHaveBeenCalledWith("backcap-auth");
+    expect(mockWriteFile).toHaveBeenCalledTimes(1);
+  });
+
+  it("skips installation when user chooses skip", async () => {
+    mockReadFile.mockResolvedValue("core exists");
+    mockStat.mockResolvedValue({ isDirectory: () => true } as any);
+    const onConflict = vi.fn().mockResolvedValue("skip");
+
+    await installSkill({
+      skillsPath: ".claude/skills",
+      capabilityName: "auth",
+      skillFiles: [{ path: "SKILL.md", content: "# Auth" }],
+      coreSkillFiles: [],
+      templateValues: {},
+      onConflict,
+    });
+
+    expect(onConflict).toHaveBeenCalledWith("backcap-auth");
+    expect(mockWriteFile).not.toHaveBeenCalled();
+  });
+
+  it("merges skill files when user chooses merge", async () => {
+    mockReadFile.mockImplementation(async (path) => {
+      const p = String(path);
+      if (p.includes("backcap-core")) return "core exists";
+      if (p.includes("SKILL.md")) return "## Domain Map\nExisting map";
+      throw new Error("ENOENT");
+    });
+    mockStat.mockResolvedValue({ isDirectory: () => true } as any);
+    const onConflict = vi.fn().mockResolvedValue("merge");
+
+    await installSkill({
+      skillsPath: ".claude/skills",
+      capabilityName: "auth",
+      skillFiles: [
+        { path: "SKILL.md", content: "## Domain Map\nNew map\n\n## Bridges\nBridge content" },
+      ],
+      coreSkillFiles: [],
+      templateValues: {},
+      onConflict,
+    });
+
+    expect(onConflict).toHaveBeenCalledWith("backcap-auth");
+    // Should write merged content (existing Domain Map + new Bridges section)
+    expect(mockWriteFile).toHaveBeenCalledTimes(1);
+    const writtenContent = mockWriteFile.mock.calls[0]![1] as string;
+    expect(writtenContent).toContain("Existing map");
+    expect(writtenContent).toContain("## Bridges");
+    expect(writtenContent).toContain("Bridge content");
+    expect(writtenContent).not.toContain("New map");
+  });
+
+  it("does not prompt when skill dir does not exist", async () => {
+    mockReadFile.mockResolvedValue("core exists");
+    mockStat.mockRejectedValue(new Error("ENOENT"));
+    const onConflict = vi.fn();
+
+    await installSkill({
+      skillsPath: ".claude/skills",
+      capabilityName: "auth",
+      skillFiles: [{ path: "SKILL.md", content: "# Auth" }],
+      coreSkillFiles: [],
+      templateValues: {},
+      onConflict,
+    });
+
+    expect(onConflict).not.toHaveBeenCalled();
+    expect(mockWriteFile).toHaveBeenCalledTimes(1);
   });
 });
 

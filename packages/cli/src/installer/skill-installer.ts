@@ -1,4 +1,4 @@
-import { readFile, mkdir, writeFile } from "node:fs/promises";
+import { readFile, mkdir, writeFile, stat } from "node:fs/promises";
 import { join, dirname } from "pathe";
 import { applyTemplateMarkers } from "../lib/template-transform.js";
 
@@ -13,17 +13,69 @@ export interface SkillInstallOptions {
   skillFiles: SkillFileEntry[];
   coreSkillFiles: SkillFileEntry[];
   templateValues: Record<string, string>;
+  onConflict?: (skillName: string) => Promise<"merge" | "overwrite" | "skip">;
 }
 
 export async function installSkill(options: SkillInstallOptions): Promise<void> {
-  const { skillsPath, capabilityName, skillFiles, coreSkillFiles, templateValues } = options;
+  const { skillsPath, capabilityName, skillFiles, coreSkillFiles, templateValues, onConflict } = options;
 
   // Auto-install core skill if absent
   await installCoreSkillIfAbsent(skillsPath, coreSkillFiles, templateValues);
 
-  // Install capability skill
-  const skillDir = join(skillsPath, `backcap-${capabilityName}`);
+  if (skillFiles.length === 0) return;
+
+  // Install capability skill with conflict detection
+  const skillDirName = `backcap-${capabilityName}`;
+  const skillDir = join(skillsPath, skillDirName);
+
+  const existing = await skillDirExists(skillDir);
+  if (existing && onConflict) {
+    const action = await onConflict(skillDirName);
+
+    if (action === "skip") return;
+
+    if (action === "merge") {
+      await mergeSkillDir(skillDir, skillFiles, templateValues);
+      return;
+    }
+    // "overwrite" falls through to normal write
+  }
+
   await writeSkillFiles(skillDir, skillFiles, templateValues);
+}
+
+async function skillDirExists(dir: string): Promise<boolean> {
+  try {
+    const s = await stat(dir);
+    return s.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+async function mergeSkillDir(
+  skillDir: string,
+  files: SkillFileEntry[],
+  templateValues: Record<string, string>,
+): Promise<void> {
+  for (const file of files) {
+    const destPath = join(skillDir, file.path);
+    const content = applyTemplateMarkers(file.content, templateValues);
+
+    try {
+      const existing = await readFile(destPath, "utf-8");
+      // Merge: append missing sections
+      const merged = mergeSkillFiles(existing, content);
+      if (merged !== existing) {
+        await writeFile(destPath, merged, "utf-8");
+      }
+    } catch {
+      // File doesn't exist, write it
+      const dir = dirname(destPath);
+      await mkdir(dir, { recursive: true });
+      await writeFile(destPath, content, "utf-8");
+    }
+  }
 }
 
 async function installCoreSkillIfAbsent(

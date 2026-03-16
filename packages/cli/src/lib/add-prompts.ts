@@ -77,6 +77,26 @@ export async function promptConflictResolution(): Promise<ConflictAction> {
   return value as ConflictAction;
 }
 
+export type SkillConflictAction = "merge" | "overwrite" | "skip";
+
+export async function promptSkillConflict(skillName: string): Promise<SkillConflictAction> {
+  const value = await clack.select({
+    message: `Skill "${skillName}" already exists. How would you like to proceed?`,
+    options: [
+      { value: "merge" as const, label: "Merge (add missing sections)" },
+      { value: "overwrite" as const, label: "Overwrite existing skill" },
+      { value: "skip" as const, label: "Skip skill installation" },
+    ],
+  });
+
+  if (clack.isCancel(value)) {
+    clack.cancel("Installation cancelled.");
+    process.exit(0);
+  }
+
+  return value as SkillConflictAction;
+}
+
 export async function promptNewPath(): Promise<string> {
   const value = await clack.text({
     message: "Enter a new target path for the capability:",
