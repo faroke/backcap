@@ -1,6 +1,6 @@
 {
   "name": "@backcap/shared",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "exports": {
     "./schemas/registry": {
@@ -32,7 +32,9 @@
       "types": "./dist/result.d.mts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "unbuild",
     "test": "vitest run"
