@@ -115,13 +115,14 @@ async function main(): Promise<void> {
     console.log(`[build] Written dist/skills/${item.name}.json`);
   }
 
-  // Write bridge catalog
+  // Write bridge catalog with sourceCapability/targetCapability/events from manifests
   const bridgeCatalog = {
-    bridges: bridgeItems.map((b) => ({
+    bridges: bridges.map((b) => ({
       name: b.name,
-      version: "0.1.0",
-      description: b.description,
-      dependencies: b.dependencies,
+      sourceCapability: b.sourceCapability ?? "",
+      targetCapability: b.targetCapability ?? "",
+      events: b.events ?? [],
+      version: "1.0.0",
     })),
   };
   await writeFile(join(bridgesDistDir, "index.json"), JSON.stringify(bridgeCatalog, null, 2) + "\n");

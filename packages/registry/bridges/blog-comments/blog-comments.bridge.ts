@@ -5,8 +5,15 @@ export interface IGetPost {
   execute(input: { postId: string }): Promise<{ authorId: string } | null>;
 }
 
+export interface SendNotificationInput {
+  channel: string;
+  recipient: string;
+  subject: string;
+  body: string;
+}
+
 export interface ISendNotification {
-  execute(input: { userId: string; message: string }): Promise<void>;
+  execute(input: SendNotificationInput): Promise<void>;
 }
 
 export interface BlogCommentsBridgeDeps {
@@ -37,8 +44,10 @@ export function createBridge(deps: BlogCommentsBridgeDeps): Bridge {
           }
 
           await deps.sendNotification.execute({
-            userId: post.authorId,
-            message: `New comment on your post`,
+            channel: "email",
+            recipient: post.authorId,
+            subject: "New comment on your post",
+            body: `A new comment was posted: ${event.body.slice(0, 200)}`,
           });
         } catch (error) {
           console.error("[blog-comments] Failed to handle CommentPosted:", error);

@@ -19,6 +19,7 @@ interface PostPublishedEvent {
   postId: string;
   title: string;
   slug: string;
+  content: string;
   authorId: string;
   publishedAt: string;
 }
@@ -34,6 +35,7 @@ export function createBridge(deps: BlogSearchBridgeDeps): Bridge {
             document: {
               title: event.title,
               slug: event.slug,
+              content: event.content,
               authorId: event.authorId,
               publishedAt: event.publishedAt,
             },

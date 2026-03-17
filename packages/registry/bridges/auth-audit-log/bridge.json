@@ -2,6 +2,6 @@
   "name": "auth-audit-log",
   "sourceCapability": "auth",
   "targetCapability": "audit-log",
-  "events": ["UserRegistered"],
+  "events": ["UserRegistered", "LoginSucceeded"],
   "version": "1.0.0"
 }

@@ -23,8 +23,10 @@ describe("blog-comments bridge", () => {
 
     expect(getPost.execute).toHaveBeenCalledWith({ postId: "p-1" });
     expect(sendNotification.execute).toHaveBeenCalledWith({
-      userId: "author-1",
-      message: "New comment on your post",
+      channel: "email",
+      recipient: "author-1",
+      subject: "New comment on your post",
+      body: "A new comment was posted: Great post!",
     });
   });
 

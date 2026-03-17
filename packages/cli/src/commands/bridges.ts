@@ -1,20 +1,45 @@
+import { readdir, readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { defineCommand } from "citty";
-import { ofetch } from "ofetch";
 import * as clack from "@clack/prompts";
 import { configExists, loadConfig } from "../config/loader.js";
 import { fail } from "../ui/prompts.js";
 
-const DEFAULT_REGISTRY_URL = "https://faroke.github.io/backcap";
-
-interface BridgeCatalogEntry {
+interface BridgeManifest {
   name: string;
+  sourceCapability: string;
+  targetCapability: string;
+  events: string[];
   version: string;
-  description: string;
-  dependencies: string[];
 }
 
-interface BridgeCatalog {
-  bridges: BridgeCatalogEntry[];
+async function discoverLocalBridgeManifests(
+  bridgesDir: string,
+): Promise<BridgeManifest[]> {
+  const manifests: BridgeManifest[] = [];
+
+  try {
+    const entries = await readdir(bridgesDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const manifestPath = join(bridgesDir, entry.name, "bridge.json");
+      try {
+        const raw = await readFile(manifestPath, "utf-8");
+        const manifest = JSON.parse(raw) as Partial<BridgeManifest>;
+        if (!manifest.name || !manifest.sourceCapability || !manifest.targetCapability || !Array.isArray(manifest.events)) {
+          console.warn(`[bridges] Skipping ${entry.name}: bridge.json missing required fields`);
+          continue;
+        }
+        manifests.push(manifest as BridgeManifest);
+      } catch {
+        console.warn(`[bridges] Skipping ${entry.name}: could not read bridge.json`);
+      }
+    }
+  } catch {
+    // bridges directory doesn't exist
+  }
+
+  return manifests;
 }
 
 export default defineCommand({
@@ -38,51 +63,26 @@ export default defineCommand({
     }
 
     const config = configResult.unwrap();
-    const installedCaps = config.installed?.capabilities ?? [];
-    const installedCapNames = new Set(installedCaps.map((c) => c.name));
+    const bridgesDir = join(cwd, config.paths.bridges);
+    const installedBridgeNames = new Set(
+      (config.installed?.bridges ?? []).map((b) => b.name),
+    );
 
-    if (installedCapNames.size === 0) {
-      clack.log.info("No capabilities installed yet. Run `backcap add <capability>` to get started.");
+    const manifests = await discoverLocalBridgeManifests(bridgesDir);
+
+    if (manifests.length === 0) {
+      clack.log.info("No bridge manifests found. Run `backcap add <bridge>` to install bridges.");
       clack.outro("No bridges available.");
       return;
     }
 
-    // Fetch bridge catalog
-    let catalog: BridgeCatalog;
-    try {
-      catalog = await ofetch(`${DEFAULT_REGISTRY_URL}/dist/bridges/index.json`, {
-        timeout: 5000,
-      });
-    } catch {
-      fail("Could not fetch bridge catalog from registry.");
-      return;
-    }
-
-    const compatible = catalog.bridges.filter((b) =>
-      b.dependencies.every((dep) => installedCapNames.has(dep)),
-    );
-
-    if (compatible.length === 0) {
-      clack.log.info("No compatible bridges found for your installed capabilities.");
-      clack.outro("Install more capabilities to unlock bridges.");
-      return;
-    }
-
-    const installedBridges = new Set(
-      (config.installed?.bridges ?? []).map((b) => b.name),
-    );
-
-    const lines = compatible.map((b) => {
-      const status = installedBridges.has(b.name) ? "installed" : "available";
-      return `  ${b.name} — ${b.description}\n    Dependencies: ${b.dependencies.join(", ")} | Status: ${status}`;
+    const lines = manifests.map((m) => {
+      const status = installedBridgeNames.has(m.name) ? "installed" : "available";
+      return `  ${m.name}\n    Source: ${m.sourceCapability} | Target: ${m.targetCapability}\n    Events: ${m.events.join(", ")} | Status: ${status}`;
     });
 
-    clack.note(lines.join("\n\n"), "Available Bridges");
+    clack.note(lines.join("\n\n"), "Bridges");
 
-    const availableCount = compatible.filter((b) => !installedBridges.has(b.name)).length;
-    if (availableCount > 0) {
-      clack.log.info(`Run \`backcap add <bridge-name>\` to install a bridge.`);
-    }
-    clack.outro(`${compatible.length} bridge(s) found.`);
+    clack.outro(`${manifests.length} bridge(s) found.`);
   },
 });

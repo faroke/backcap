@@ -113,12 +113,39 @@ export async function discoverBridges(
     const entries = await readdir(bridgesDir, { withFileTypes: true });
     for (const entry of entries) {
       if (!entry.isDirectory()) continue;
-      // Parse dependencies from bridge name (e.g., "auth-notifications" → ["auth", "notifications"])
-      const parts = entry.name.split("-");
+
+      // Read bridge.json manifest for metadata
+      let sourceCapability: string | undefined;
+      let targetCapability: string | undefined;
+      let events: string[] | undefined;
+      let dependencies: string[];
+
+      try {
+        const manifestPath = join(bridgesDir, entry.name, "bridge.json");
+        const raw = await readFile(manifestPath, "utf-8");
+        const manifest = JSON.parse(raw) as {
+          sourceCapability?: string;
+          targetCapability?: string;
+          events?: string[];
+        };
+        sourceCapability = manifest.sourceCapability;
+        targetCapability = manifest.targetCapability;
+        events = Array.isArray(manifest.events) ? manifest.events : undefined;
+        dependencies = [sourceCapability, targetCapability].filter(
+          (x): x is string => !!x,
+        );
+      } catch {
+        console.warn(`[generate] Bridge "${entry.name}" has no valid bridge.json — skipping metadata`);
+        dependencies = [];
+      }
+
       results.push({
         name: entry.name,
         path: join(bridgesDir, entry.name),
-        dependencies: parts,
+        dependencies,
+        sourceCapability,
+        targetCapability,
+        events,
       });
     }
   } catch {

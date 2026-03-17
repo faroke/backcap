@@ -14,6 +14,7 @@ describe("blog-search bridge", () => {
       postId: "p-1",
       title: "Hello World",
       slug: "hello-world",
+      content: "This is the post content",
       authorId: "u-1",
       publishedAt: "2026-03-16T00:00:00Z",
     });
@@ -25,6 +26,7 @@ describe("blog-search bridge", () => {
       document: {
         title: "Hello World",
         slug: "hello-world",
+        content: "This is the post content",
         authorId: "u-1",
         publishedAt: "2026-03-16T00:00:00Z",
       },
@@ -46,6 +48,7 @@ describe("blog-search bridge", () => {
         postId: "p-1",
         title: "Hello",
         slug: "hello",
+        content: "Some content",
         authorId: "u-1",
         publishedAt: "2026-03-16T00:00:00Z",
       }),

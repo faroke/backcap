@@ -149,7 +149,7 @@ auth-express     Express router for auth              adapter       available
 
 ## backcap bridges
 
-List available bridges between installed capabilities.
+List bridges installed in your project.
 
 ```bash
 npx @backcap/cli bridges
@@ -158,26 +158,28 @@ npx @backcap/cli bridges
 **What it does:**
 
 1. Verifies that `backcap.json` exists
-2. Loads the list of installed capabilities from `backcap.json`
-3. Fetches the bridge catalog from `https://faroke.github.io/backcap/dist/bridges/index.json`
-4. Filters bridges to show only those whose dependencies are all installed in the current project
-5. Displays compatible bridges with their description, dependencies, and installation status
+2. Reads all `bridge.json` manifests from your local `bridges/` directory
+3. Displays each bridge with its source capability, target capability, subscribed events, and installation status
 
 **Example output:**
 
 ```
-Available Bridges
+Bridges
 
-  auth-notifications — Sends a welcome email on UserRegistered
-    Dependencies: auth, notifications | Status: available
+  auth-audit-log
+    Source: auth | Target: audit-log
+    Events: UserRegistered, LoginSucceeded | Status: installed
 
-  auth-audit — Records login and registration events to the audit log
-    Dependencies: auth, audit-log | Status: installed
+  blog-search
+    Source: blog | Target: search
+    Events: PostPublished | Status: available
+
+  blog-comments
+    Source: comments | Target: blog
+    Events: CommentPosted | Status: installed
 ```
 
-If no capabilities are installed, the command suggests running `backcap add <capability>` first.
-
-If no compatible bridges are found (because the required capability pairs are not both installed), the command suggests installing more capabilities.
+If no bridge manifests are found, the command suggests running `backcap add <bridge>` to install bridges.
 
 ---
 
@@ -209,7 +211,7 @@ Common errors and their solutions:
 | `No backcap.json found` | Run `npx @backcap/cli init` first |
 | `Could not fetch capability from registry` | Check your internet connection; verify the capability name with `backcap list` |
 | `Invalid capability data` | The registry may be temporarily unavailable; try again |
-| `Could not fetch bridge catalog` | Check your internet connection |
+| `No bridge manifests found` | Install bridges with `backcap add <bridge>` |
 
 ---
 

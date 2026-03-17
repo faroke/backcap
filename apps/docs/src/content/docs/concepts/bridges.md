@@ -3,73 +3,114 @@ title: Bridges
 description: Cross-capability use cases that wire two or more capabilities together.
 ---
 
-A **bridge** is a standalone module that connects two or more capabilities. Bridges implement cross-cutting logic that does not belong inside any single capability — for example, sending a welcome email when a new user registers.
+A **bridge** is a standalone module that connects two or more capabilities. Bridges implement cross-cutting logic that does not belong inside any single capability — for example, recording an audit entry when a user registers, or indexing a blog post for search.
 
-Without bridges, you would have to modify the `auth` capability to import from `notifications`, violating the principle that each capability is self-contained. Bridges solve this by living outside both capabilities and importing from both of their public contracts.
+Without bridges, you would have to modify the `auth` capability to import from `audit-log`, violating the principle that each capability is self-contained. Bridges solve this by living outside both capabilities, subscribing to domain events via a shared event bus, and calling use cases from the target capability.
 
 ## Anatomy of a Bridge
 
-The `auth-notifications` bridge is the reference implementation. It responds to the `UserRegistered` domain event emitted by the `auth` capability and calls an `IEmailSender` port to deliver a welcome email.
+Each bridge lives in a directory under `bridges/` and contains:
 
 ```
-src/bridges/
-  auth-notifications/
-    domain/
-      events/
-        user-registered.event.ts    # Re-export / type import from auth
-    dto/
-      welcome-email.dto.ts
-    errors/
-      send-welcome-email.error.ts
-    use-cases/
-      send-welcome-email.use-case.ts
-    contracts/
-      auth-notifications.contract.ts
-      index.ts
-    shared/
-      result.ts
+bridges/auth-audit-log/
+  auth-audit-log.bridge.ts   # Factory + event subscriptions
+  bridge.json                # Machine-readable manifest
+  __tests__/
+    auth-audit-log.bridge.test.ts
 ```
 
-## The Bridge Use Case
+A `bridge.json` manifest declares the bridge metadata:
 
-A bridge use case consumes an event from one capability and calls a port from another:
-
-```typescript
-// src/bridges/auth-notifications/use-cases/send-welcome-email.use-case.ts
-export class SendWelcomeEmailUseCase {
-  constructor(private readonly emailSender: IEmailSender) {}
-
-  async execute(event: UserRegistered): Promise<Result<void, SendWelcomeEmailError>> {
-    try {
-      const dto: WelcomeEmailDto = {
-        recipientEmail: event.email,
-        userId: event.userId,
-        occurredAt: event.occurredAt,
-      };
-
-      await this.emailSender.sendEmail(dto);
-      return Result.ok(undefined);
-    } catch (err) {
-      return Result.fail(new SendWelcomeEmailError(err));
-    }
-  }
+```json
+{
+  "name": "auth-audit-log",
+  "sourceCapability": "auth",
+  "targetCapability": "audit-log",
+  "events": ["UserRegistered", "LoginSucceeded"],
+  "version": "1.0.0"
 }
 ```
 
-The bridge use case depends on `IEmailSender` — a port interface it defines itself. The actual email implementation (SendGrid, Resend, nodemailer) is provided by an adapter at wiring time.
+## The Bridge Factory Pattern
 
-## Installing a Bridge
+Every bridge exports a `createBridge(deps): Bridge` factory. The `Bridge` interface exposes a `wire(eventBus)` method that registers event subscriptions.
 
-Use `backcap bridges` to see which bridges are available for your installed capabilities:
+```typescript
+// bridges/auth-audit-log/auth-audit-log.bridge.ts
+import type { IEventBus } from "@backcap/shared/event-bus";
+import type { Bridge } from "@backcap/shared/bridge";
+
+export interface AuthAuditLogBridgeDeps {
+  recordEntry: IRecordAuditEntry;
+}
+
+export function createBridge(deps: AuthAuditLogBridgeDeps): Bridge {
+  return {
+    wire(eventBus: IEventBus): void {
+      eventBus.subscribe<UserRegisteredEvent>("UserRegistered", async (event) => {
+        await deps.recordEntry.execute({
+          actor: event.userId,
+          action: "USER.REGISTERED",
+          resource: event.email,
+        });
+      });
+    },
+  };
+}
+```
+
+Dependencies (use case instances) are injected via the factory — the bridge never calls capability factories directly. This makes testing trivial: swap `InMemoryEventBus` and mock use cases.
+
+## Error Isolation
+
+A bridge handler that fails must **not** re-throw. It logs the error and continues. Bridges are fire-and-observe, not fire-and-require:
+
+```typescript
+eventBus.subscribe("UserRegistered", async (event) => {
+  try {
+    await deps.recordEntry.execute({ ... });
+  } catch (error) {
+    console.error("[auth-audit-log] Failed:", error);
+  }
+});
+```
+
+## Available Bridges
+
+| Bridge | Source | Target | Events |
+|---|---|---|---|
+| `auth-notifications` | auth | notifications | UserRegistered |
+| `auth-audit-log` | auth | audit-log | UserRegistered, LoginSucceeded |
+| `blog-search` | blog | search | PostPublished |
+| `blog-comments` | comments | blog, notifications | CommentPosted |
+| `blog-tags` | blog | tags | PostPublished |
+
+## Discovering Bridges
+
+Use `backcap bridges` to see which bridges exist in your project:
 
 ```bash
 npx @backcap/cli bridges
 ```
 
-The CLI fetches the bridge catalog from the registry and filters it to show only bridges whose dependencies are all installed in your project. Install a bridge with:
+The CLI reads `bridge.json` manifests from your local `bridges/` directory and displays:
+
+```
+Bridges
+
+  auth-audit-log
+    Source: auth | Target: audit-log
+    Events: UserRegistered, LoginSucceeded | Status: installed
+
+  blog-search
+    Source: blog | Target: search
+    Events: PostPublished | Status: available
+```
+
+## Installing a Bridge
 
 ```bash
-npx @backcap/cli add auth-notifications
+npx @backcap/cli add auth-audit-log
 ```
 
 ## Wiring a Bridge
@@ -77,56 +118,31 @@ npx @backcap/cli add auth-notifications
 After installation, wire the bridge in your container:
 
 ```typescript
-// src/container.ts
-import { SendWelcomeEmailUseCase } from "./bridges/auth-notifications/use-cases/send-welcome-email.use-case";
-import { ResendEmailAdapter } from "./adapters/resend/email.adapter";
+import { createBridge } from "./bridges/auth-audit-log/auth-audit-log.bridge.js";
+import { InMemoryEventBus } from "@backcap/shared/in-memory-event-bus";
 
-const emailSender = new ResendEmailAdapter(process.env.RESEND_API_KEY!);
-const sendWelcomeEmail = new SendWelcomeEmailUseCase(emailSender);
-```
+const eventBus = new InMemoryEventBus();
+const bridge = createBridge({ recordEntry: auditLogService.recordEntry });
+bridge.wire(eventBus);
 
-Then call the bridge use case after a successful registration:
-
-```typescript
-const registerResult = await authService.register({ email, password });
-
-if (registerResult.isOk()) {
-  const { userId, event } = registerResult.unwrap();
-  // event is a UserRegistered domain event
-  await sendWelcomeEmail.execute(event);
-}
+// When auth emits events on this bus, the bridge reacts automatically
 ```
 
 ## Bridge vs. Capability
 
 | | Capability | Bridge |
 |---|---|---|
-| Purpose | Implements a bounded context | Connects two capabilities |
+| Purpose | Implements a bounded context | Connects two capabilities via events |
 | Location | `src/capabilities/<name>/` | `src/bridges/<name>/` |
-| Dependencies | Zero external imports in domain | Imports from multiple capabilities |
-| Port interfaces | Defines its own ports | Defines its own ports for external services |
+| Dependencies | Zero external imports in domain | Imports from shared event bus + use case ports |
+| Pattern | Use cases, entities, ports | Factory + `wire(eventBus)` subscriptions |
 | Installed via | `backcap add <name>` | `backcap add <bridge-name>` |
 
 ## Bridge Conventions
 
-- A bridge name uses the format `<cap-a>-<cap-b>` (e.g., `auth-notifications`)
-- A bridge has its own `shared/result.ts` copy
-- A bridge has its own `contracts/index.ts` for its public surface
-- A bridge defines its own port interfaces for any external services it needs
+- A bridge name uses the format `<source-cap>-<target-cap>` (e.g., `auth-audit-log`)
+- A bridge must include a `bridge.json` manifest
+- A bridge defines its own event shapes by duck-typing (event mirroring)
+- A bridge defines its own use case port interfaces — no direct imports from capability internals
 - A bridge has no knowledge of framework details — it only depends on port interfaces
-
-## Discovering Available Bridges
-
-The registry catalog tracks which bridges exist and what capabilities each bridge requires. Running `backcap bridges` will show:
-
-```
-Available Bridges
-
-  auth-notifications — Sends a welcome email on UserRegistered
-    Dependencies: auth, notifications | Status: available
-
-  auth-audit — Records login and registration events to the audit log
-    Dependencies: auth, audit-log | Status: available
-```
-
-The `Status` field shows `installed` if the bridge is already in your project, and `available` if it can be installed (all its dependencies are present).
+- Error handling: catch and log, never re-throw

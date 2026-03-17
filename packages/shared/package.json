@@ -30,6 +30,22 @@
     "./result": {
       "import": "./dist/result.mjs",
       "types": "./dist/result.d.mts"
+    },
+    "./event-bus": {
+      "import": "./dist/event-bus.port.mjs",
+      "types": "./dist/event-bus.port.d.mts"
+    },
+    "./in-memory-event-bus": {
+      "import": "./dist/in-memory-event-bus.mjs",
+      "types": "./dist/in-memory-event-bus.d.mts"
+    },
+    "./bridge": {
+      "import": "./dist/bridge.mjs",
+      "types": "./dist/bridge.d.mts"
+    },
+    "./types/bridge-catalog": {
+      "import": "./dist/types/bridge-catalog.types.mjs",
+      "types": "./dist/types/bridge-catalog.types.d.mts"
     }
   },
   "files": [

@@ -14,6 +14,9 @@ export interface BridgeMeta {
   name: string;
   path: string;
   dependencies: string[];
+  sourceCapability?: string;
+  targetCapability?: string;
+  events?: string[];
 }
 
 export interface SkillMeta {
