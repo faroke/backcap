@@ -1,0 +1,7 @@
+{
+  "name": "auth-notifications",
+  "sourceCapability": "auth",
+  "targetCapability": "notifications",
+  "events": ["UserRegistered"],
+  "version": "1.0.0"
+}

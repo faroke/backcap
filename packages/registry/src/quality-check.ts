@@ -1,6 +1,6 @@
-import { readdir, stat } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import { join, basename } from "pathe";
-import type { CapabilityMeta } from "./types.js";
+import type { CapabilityMeta, BridgeMeta } from "./types.js";
 
 const TYPED_SUFFIX_REGEX = /^[a-z0-9-]+\.(entity|vo|use-case|port|dto|event|error|contract|factory|test|mock|fixture|schema|adapter|middleware|router)\.ts$/;
 
@@ -125,6 +125,54 @@ export async function runQualityChecks(capabilities: CapabilityMeta[]): Promise<
       if (!TYPED_SUFFIX_REGEX.test(name)) {
         errors.push(`${cap.name}: invalid filename '${name}' — must be kebab-case with typed suffix`);
       }
+    }
+  }
+
+  return errors;
+}
+
+export async function runBridgeQualityChecks(bridges: BridgeMeta[]): Promise<string[]> {
+  const errors: string[] = [];
+
+  for (const bridge of bridges) {
+    const base = bridge.path;
+
+    // bridge.json must exist, be parseable JSON, and contain required fields
+    const manifestPath = join(base, "bridge.json");
+    if (!(await fileExists(manifestPath))) {
+      errors.push(`${bridge.name}: missing bridge.json manifest`);
+    } else {
+      try {
+        const raw = await readFile(manifestPath, "utf-8");
+        const parsed = JSON.parse(raw) as Record<string, unknown>;
+
+        const requiredFields = ["name", "sourceCapability", "targetCapability", "events", "version"] as const;
+        for (const field of requiredFields) {
+          if (!(field in parsed) || parsed[field] === undefined || parsed[field] === null) {
+            errors.push(`${bridge.name}: bridge.json missing required field '${field}'`);
+          }
+        }
+        if (Array.isArray(parsed.events) && parsed.events.length === 0) {
+          errors.push(`${bridge.name}: bridge.json 'events' must contain at least one event`);
+        }
+        if (typeof parsed.name === "string" && parsed.name !== bridge.name) {
+          errors.push(`${bridge.name}: bridge.json 'name' is '${parsed.name}' but expected '${bridge.name}'`);
+        }
+      } catch {
+        errors.push(`${bridge.name}: bridge.json is not parseable as valid JSON`);
+      }
+    }
+
+    // <name>.bridge.ts must exist
+    if (!(await fileExists(join(base, `${bridge.name}.bridge.ts`)))) {
+      errors.push(`${bridge.name}: missing ${bridge.name}.bridge.ts`);
+    }
+
+    // __tests__/ must exist with at least one .test.ts
+    if (!(await dirExists(join(base, "__tests__")))) {
+      errors.push(`${bridge.name}: missing __tests__/ directory`);
+    } else if (!(await hasFileWithSuffix(join(base, "__tests__"), ".test.ts"))) {
+      errors.push(`${bridge.name}: __tests__/ must contain at least one .test.ts file`);
     }
   }
 

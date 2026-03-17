@@ -2,7 +2,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { join } from "pathe";
 import { registrySchema } from "@backcap/shared/schemas/registry";
 import { registryItemSchema } from "@backcap/shared/schemas/registry-item";
-import { runQualityChecks } from "./src/quality-check.js";
+import { runQualityChecks, runBridgeQualityChecks } from "./src/quality-check.js";
 import {
   discoverCapabilities,
   discoverAdapters,
@@ -53,6 +53,17 @@ async function main(): Promise<void> {
   console.log("[build] Discovering bridges...");
   const bridges = await discoverBridges(registryRoot);
   console.log(`[build] Found ${bridges.length} bridges: ${bridges.map((b) => b.name).join(", ")}`);
+
+  console.log("[build] Running bridge quality checks...");
+  const bridgeQualityErrors = await runBridgeQualityChecks(bridges);
+  if (bridgeQualityErrors.length > 0) {
+    for (const e of bridgeQualityErrors) {
+      console.error(`[quality-check] ${e}`);
+    }
+    process.exit(1);
+  }
+  console.log("[build] Bridge quality checks passed");
+
   const bridgeItems = await Promise.all(
     bridges.map((bridge) => generateBridgeItemJson(bridge, resultTs)),
   );
