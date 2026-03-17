@@ -1,13 +1,26 @@
 // Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import type { IWebhookRepository } from "../ports/webhook-repository.port.js";
-import type { ListWebhooksOutput } from "../dto/list-webhooks-output.dto.js";
+import type { IWebhookDelivery } from "../ports/webhook-delivery.port.js";
+import type {
+  ListWebhooksInput,
+  ListWebhooksOutput,
+} from "../dto/list-webhooks.dto.js";
 
 export class ListWebhooks {
-  constructor(private readonly webhookRepository: IWebhookRepository) {}
+  constructor(
+    private readonly webhookRepository: IWebhookRepository,
+    private readonly webhookDelivery: IWebhookDelivery,
+  ) {}
 
-  async execute(): Promise<Result<ListWebhooksOutput, Error>> {
-    const webhooks = await this.webhookRepository.findAll();
+  async execute(
+    input: ListWebhooksInput,
+  ): Promise<Result<ListWebhooksOutput, Error>> {
+    const { webhooks, total } = await this.webhookRepository.findAll({
+      isActive: input.isActive,
+      limit: input.limit,
+      offset: input.offset,
+    });
 
     return Result.ok({
       webhooks: webhooks.map((w) => ({
@@ -17,6 +30,7 @@ export class ListWebhooks {
         isActive: w.isActive,
         createdAt: w.createdAt,
       })),
+      total,
     });
   }
 }

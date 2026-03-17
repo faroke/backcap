@@ -15,11 +15,25 @@ export function createTestWebhook(
     events: overrides?.events ?? ["user.created"],
     secret: overrides?.secret ?? "test-secret",
     isActive: overrides?.isActive ?? true,
+    allowPrivateUrl: true,
   });
 
   if (result.isFail()) {
-    throw new Error(`Failed to create test webhook: ${result.unwrapError().message}`);
+    throw new Error(
+      `Failed to create test webhook: ${result.unwrapError().message}`,
+    );
   }
 
   return result.unwrap();
+}
+
+export function createTestActiveWebhook(
+  overrides?: Partial<{
+    id: string;
+    url: string;
+    events: string[];
+    secret: string;
+  }>,
+): Webhook {
+  return createTestWebhook({ ...overrides, isActive: true });
 }

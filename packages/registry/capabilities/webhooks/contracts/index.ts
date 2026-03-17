@@ -1,12 +1,16 @@
 export type {
-  WebhookRegisterInput,
-  WebhookRegisterOutput,
-  WebhookTriggerInput,
-  WebhookTriggerOutput,
-  WebhookItem,
-  WebhookListOutput,
+  IWebhookDelivery,
+  IWebhookRepository,
+  Webhook,
+  WebhookUrl,
+  WebhooksRegisterInput,
+  WebhooksRegisterOutput,
+  WebhooksTriggerInput,
+  WebhooksTriggerOutput,
+  WebhooksListInput,
+  WebhooksListOutput,
   IWebhooksService,
 } from "./webhooks.contract.js";
 
-export { createWebhooksService } from "./webhooks.factory.js";
-export type { WebhooksServiceDeps } from "./webhooks.factory.js";
+export { createWebhooksCapability } from "./webhooks.factory.js";
+export type { WebhooksDeps } from "./webhooks.factory.js";

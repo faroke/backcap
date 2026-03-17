@@ -1,0 +1,10 @@
+model WebhookRecord {
+  id        String   @id @default(uuid())
+  url       String
+  events    Json
+  secret    String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@map("webhooks")
+}

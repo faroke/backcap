@@ -8,6 +8,7 @@ describe("Webhook entity", () => {
     url: "https://example.com/webhook",
     events: ["order.created", "order.updated"],
     secret: "super-secret",
+    allowPrivateUrl: true,
   };
 
   it("creates a valid webhook", () => {
@@ -44,20 +45,32 @@ describe("Webhook entity", () => {
     expect(result.unwrapError().message).toMatch(/at least one event/);
   });
 
-  it("activate returns a new webhook with isActive true", () => {
+  it("activate succeeds on inactive webhook", () => {
     const webhook = Webhook.create({ ...validParams, isActive: false }).unwrap();
-    const activated = webhook.activate();
-    expect(activated.isActive).toBe(true);
-    // Original unchanged
+    const result = webhook.activate();
+    expect(result.isOk()).toBe(true);
+    expect(webhook.isActive).toBe(true);
+  });
+
+  it("activate fails on already active webhook", () => {
+    const webhook = Webhook.create(validParams).unwrap();
+    const result = webhook.activate();
+    expect(result.isFail()).toBe(true);
+    expect(result.unwrapError().message).toMatch(/already active/);
+  });
+
+  it("deactivate succeeds on active webhook", () => {
+    const webhook = Webhook.create(validParams).unwrap();
+    const result = webhook.deactivate();
+    expect(result.isOk()).toBe(true);
     expect(webhook.isActive).toBe(false);
   });
 
-  it("deactivate returns a new webhook with isActive false", () => {
-    const webhook = Webhook.create(validParams).unwrap();
-    const deactivated = webhook.deactivate();
-    expect(deactivated.isActive).toBe(false);
-    // Original unchanged
-    expect(webhook.isActive).toBe(true);
+  it("deactivate fails on already inactive webhook", () => {
+    const webhook = Webhook.create({ ...validParams, isActive: false }).unwrap();
+    const result = webhook.deactivate();
+    expect(result.isFail()).toBe(true);
+    expect(result.unwrapError().message).toMatch(/already inactive/);
   });
 
   it("accepts http URL", () => {

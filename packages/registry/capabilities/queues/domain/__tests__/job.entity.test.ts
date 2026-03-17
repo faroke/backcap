@@ -5,7 +5,7 @@ import { MaxAttemptsExceeded } from "../errors/max-attempts-exceeded.error.js";
 describe("Job entity", () => {
   const validParams = {
     id: "job-1",
-    queue: "email",
+    type: "email",
     payload: { to: "user@example.com", subject: "Hello" },
   };
 
@@ -14,68 +14,94 @@ describe("Job entity", () => {
     expect(result.isOk()).toBe(true);
     const job = result.unwrap();
     expect(job.id).toBe("job-1");
-    expect(job.queue).toBe("email");
-    expect(job.payload).toEqual({ to: "user@example.com", subject: "Hello" });
+    expect(job.type).toBe("email");
+    expect(job.payload.value).toEqual({ to: "user@example.com", subject: "Hello" });
     expect(job.status).toBe("pending");
     expect(job.attempts).toBe(0);
-    expect(job.maxAttempts).toBe(3);
+    expect(job.scheduledAt).toBeInstanceOf(Date);
     expect(job.createdAt).toBeInstanceOf(Date);
-    expect(job.processedAt).toBeNull();
+    expect(job.failureReason).toBeUndefined();
   });
 
-  it("creates job with custom maxAttempts", () => {
-    const result = Job.create({ ...validParams, maxAttempts: 5 });
-    expect(result.unwrap().maxAttempts).toBe(5);
+  it("creates job with custom scheduledAt", () => {
+    const scheduled = new Date("2026-12-01");
+    const result = Job.create({ ...validParams, scheduledAt: scheduled });
+    expect(result.unwrap().scheduledAt).toEqual(scheduled);
   });
 
-  it("markProcessing increments attempts and sets status to processing", () => {
+  it("fails with null payload", () => {
+    const result = Job.create({ ...validParams, payload: null as any });
+    expect(result.isFail()).toBe(true);
+  });
+
+  it("start increments attempts and sets status to processing", () => {
     const job = Job.create(validParams).unwrap();
-    const result = job.markProcessing();
+    const result = job.start();
     expect(result.isOk()).toBe(true);
-    const processing = result.unwrap();
-    expect(processing.status).toBe("processing");
-    expect(processing.attempts).toBe(1);
-    expect(processing.processedAt).toBeInstanceOf(Date);
-    // Original unchanged
-    expect(job.status).toBe("pending");
-    expect(job.attempts).toBe(0);
+    expect(job.status).toBe("processing");
+    expect(job.attempts).toBe(1);
   });
 
-  it("markProcessing fails when max attempts exceeded", () => {
-    let job = Job.create({ ...validParams, maxAttempts: 2 }).unwrap();
-    // exhaust attempts
-    job = job.markProcessing().unwrap();
-    job = job.markFailed();
-    job = job.markProcessing().unwrap();
-    job = job.markFailed();
+  it("start fails when max attempts exceeded", () => {
+    const job = Job.create(validParams).unwrap();
+    job.start(2);
+    job.fail("first");
+    job.start(2);
+    job.fail("second");
 
-    const result = job.markProcessing();
+    const result = job.start(2);
     expect(result.isFail()).toBe(true);
     expect(result.unwrapError()).toBeInstanceOf(MaxAttemptsExceeded);
   });
 
-  it("markCompleted sets status to completed", () => {
+  it("start fails on completed job", () => {
     const job = Job.create(validParams).unwrap();
-    const processing = job.markProcessing().unwrap();
-    const completed = processing.markCompleted();
-    expect(completed.status).toBe("completed");
-    // Original unchanged
-    expect(processing.status).toBe("processing");
+    job.start();
+    job.complete();
+    const result = job.start();
+    expect(result.isFail()).toBe(true);
   });
 
-  it("markFailed sets status to failed", () => {
+  it("start fails on already processing job", () => {
     const job = Job.create(validParams).unwrap();
-    const processing = job.markProcessing().unwrap();
-    const failed = processing.markFailed();
-    expect(failed.status).toBe("failed");
-    // Original unchanged
-    expect(processing.status).toBe("processing");
+    job.start();
+    const result = job.start();
+    expect(result.isFail()).toBe(true);
   });
 
-  it("job payload is preserved through state transitions", () => {
+  it("complete sets status to completed", () => {
     const job = Job.create(validParams).unwrap();
-    const processing = job.markProcessing().unwrap();
-    const completed = processing.markCompleted();
-    expect(completed.payload).toEqual({ to: "user@example.com", subject: "Hello" });
+    job.start();
+    const result = job.complete();
+    expect(result.isOk()).toBe(true);
+    expect(job.status).toBe("completed");
+  });
+
+  it("complete fails if not processing", () => {
+    const job = Job.create(validParams).unwrap();
+    const result = job.complete();
+    expect(result.isFail()).toBe(true);
+  });
+
+  it("fail sets status to failed and stores reason", () => {
+    const job = Job.create(validParams).unwrap();
+    job.start();
+    const result = job.fail("some error");
+    expect(result.isOk()).toBe(true);
+    expect(job.status).toBe("failed");
+    expect(job.failureReason).toBe("some error");
+  });
+
+  it("fail fails if not processing", () => {
+    const job = Job.create(validParams).unwrap();
+    const result = job.fail("error");
+    expect(result.isFail()).toBe(true);
+  });
+
+  it("payload is preserved through state transitions", () => {
+    const job = Job.create(validParams).unwrap();
+    job.start();
+    job.complete();
+    expect(job.payload.value).toEqual({ to: "user@example.com", subject: "Hello" });
   });
 });

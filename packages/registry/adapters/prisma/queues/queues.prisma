@@ -1,0 +1,12 @@
+model JobRecord {
+  id          String   @id @default(uuid())
+  type        String
+  payload     Json
+  status      String   @default("pending")
+  attempts    Int      @default(0)
+  scheduledAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+  failureReason String?
+
+  @@map("jobs")
+}

@@ -5,19 +5,19 @@ import { TriggerWebhook } from "../application/use-cases/trigger-webhook.use-cas
 import { ListWebhooks } from "../application/use-cases/list-webhooks.use-case.js";
 import type { IWebhooksService } from "./webhooks.contract.js";
 
-export type WebhooksServiceDeps = {
+export type WebhooksDeps = {
   webhookRepository: IWebhookRepository;
   webhookDelivery: IWebhookDelivery;
 };
 
-export function createWebhooksService(deps: WebhooksServiceDeps): IWebhooksService {
-  const registerWebhook = new RegisterWebhook(deps.webhookRepository);
+export function createWebhooksCapability(deps: WebhooksDeps): IWebhooksService {
+  const registerWebhook = new RegisterWebhook(deps.webhookRepository, deps.webhookDelivery);
   const triggerWebhook = new TriggerWebhook(deps.webhookRepository, deps.webhookDelivery);
-  const listWebhooks = new ListWebhooks(deps.webhookRepository);
+  const listWebhooks = new ListWebhooks(deps.webhookRepository, deps.webhookDelivery);
 
   return {
     register: (input) => registerWebhook.execute(input),
     trigger: (input) => triggerWebhook.execute(input),
-    list: () => listWebhooks.execute(),
+    list: (input) => listWebhooks.execute(input),
   };
 }

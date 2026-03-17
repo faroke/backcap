@@ -1,11 +1,15 @@
 // Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
+import { WebhookNotFound } from "../../domain/errors/webhook-not-found.error.js";
+import { WebhookDeliveryFailed } from "../../domain/errors/webhook-delivery-failed.error.js";
 import { WebhookDelivered } from "../../domain/events/webhook-delivered.event.js";
 import { WebhookFailed } from "../../domain/events/webhook-failed.event.js";
 import type { IWebhookRepository } from "../ports/webhook-repository.port.js";
 import type { IWebhookDelivery } from "../ports/webhook-delivery.port.js";
-import type { TriggerWebhookInput } from "../dto/trigger-webhook-input.dto.js";
-import type { TriggerWebhookOutput } from "../dto/trigger-webhook-output.dto.js";
+import type {
+  TriggerWebhookInput,
+  TriggerWebhookOutput,
+} from "../dto/trigger-webhook.dto.js";
 
 export class TriggerWebhook {
   constructor(
@@ -15,39 +19,51 @@ export class TriggerWebhook {
 
   async execute(
     input: TriggerWebhookInput,
-  ): Promise<Result<TriggerWebhookOutput & { events: Array<WebhookDelivered | WebhookFailed> }, Error>> {
-    const webhooks = await this.webhookRepository.findAll();
-    const matching = webhooks.filter(
-      (w) => w.isActive && w.events.includes(input.eventType),
-    );
-
-    let delivered = 0;
-    let failed = 0;
-    const events: Array<WebhookDelivered | WebhookFailed> = [];
-
-    for (const webhook of matching) {
-      const result = await this.webhookDelivery.deliver({
-        url: webhook.url.value,
-        eventType: input.eventType,
-        payload: input.payload,
-        secret: webhook.secret,
-      });
-
-      if (result.success) {
-        delivered++;
-        events.push(new WebhookDelivered(webhook.id, input.eventType, result.statusCode));
-      } else {
-        failed++;
-        events.push(
-          new WebhookFailed(
-            webhook.id,
-            input.eventType,
-            `HTTP ${result.statusCode}`,
-          ),
-        );
-      }
+  ): Promise<
+    Result<
+      TriggerWebhookOutput & { event: WebhookDelivered },
+      WebhookNotFound | WebhookDeliveryFailed
+    >
+  > {
+    const webhook = await this.webhookRepository.findById(input.webhookId);
+    if (!webhook) {
+      return Result.fail(WebhookNotFound.create(input.webhookId));
     }
 
-    return Result.ok({ delivered, failed, events });
+    if (!webhook.isActive) {
+      return Result.fail(
+        WebhookDeliveryFailed.create("Webhook is not active"),
+      );
+    }
+
+    if (!webhook.events.includes(input.eventType)) {
+      return Result.fail(
+        WebhookDeliveryFailed.create(
+          `Webhook is not subscribed to event type "${input.eventType}"`,
+        ),
+      );
+    }
+
+    const { statusCode } = await this.webhookDelivery.deliver(
+      webhook.url.value,
+      webhook.secret,
+      input.eventType,
+      input.payload,
+    );
+
+    if (statusCode >= 400) {
+      return Result.fail(
+        WebhookDeliveryFailed.create(`HTTP ${statusCode}`),
+      );
+    }
+
+    const deliveredAt = new Date();
+    const event = new WebhookDelivered(
+      webhook.id,
+      input.eventType,
+      statusCode,
+    );
+
+    return Result.ok({ deliveredAt, statusCode, event });
   }
 }

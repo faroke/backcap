@@ -1,38 +1,47 @@
 import type { Result } from "../shared/result.js";
+import type { Job } from "../domain/entities/job.entity.js";
+import type { JobPayload } from "../domain/value-objects/job-payload.vo.js";
+import type { IJobRepository } from "../application/ports/job-repository.port.js";
 
-export interface JobEnqueueInput {
-  queue: string;
+export type { Job, JobPayload, IJobRepository };
+
+export interface QueuesEnqueueInput {
+  type: string;
   payload: Record<string, unknown>;
-  priority?: string;
-  maxAttempts?: number;
+  scheduledAt?: Date;
 }
 
-export interface JobEnqueueOutput {
+export interface QueuesEnqueueOutput {
+  jobId: string;
+  scheduledAt: Date;
+}
+
+export interface QueuesProcessInput {
   jobId: string;
 }
 
-export interface JobProcessInput {
-  jobId: string;
-  handler: (payload: Record<string, unknown>) => Promise<void>;
-}
-
-export interface JobProcessOutput {
-  jobId: string;
+export interface QueuesProcessOutput {
   status: "completed" | "failed";
+  completedAt: Date | null;
 }
 
-export interface JobStatusOutput {
+export interface QueuesGetStatusInput {
+  jobId: string;
+}
+
+export interface QueuesGetStatusOutput {
   id: string;
-  queue: string;
+  type: string;
+  payload: Record<string, unknown>;
   status: string;
   attempts: number;
-  maxAttempts: number;
+  scheduledAt: Date;
   createdAt: Date;
-  processedAt: Date | null;
+  failureReason?: string;
 }
 
 export interface IQueuesService {
-  enqueue(input: JobEnqueueInput): Promise<Result<JobEnqueueOutput, Error>>;
-  process(input: JobProcessInput): Promise<Result<JobProcessOutput, Error>>;
-  getStatus(jobId: string): Promise<Result<JobStatusOutput, Error>>;
+  enqueue(input: QueuesEnqueueInput): Promise<Result<QueuesEnqueueOutput, Error>>;
+  process(input: QueuesProcessInput): Promise<Result<QueuesProcessOutput, Error>>;
+  getStatus(input: QueuesGetStatusInput): Promise<Result<QueuesGetStatusOutput, Error>>;
 }

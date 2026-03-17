@@ -8,11 +8,13 @@ export class InMemoryJobRepository implements IJobRepository {
     this.store.set(job.id, job);
   }
 
-  async findById(id: string): Promise<Job | null> {
-    return this.store.get(id) ?? null;
+  async findById(id: string): Promise<Job | undefined> {
+    return this.store.get(id);
   }
 
-  async findByQueue(queue: string): Promise<Job[]> {
-    return [...this.store.values()].filter((j) => j.queue === queue);
+  async findPending(type: string): Promise<Job[]> {
+    return [...this.store.values()].filter(
+      (j) => j.type === type && j.status === "pending",
+    );
   }
 }

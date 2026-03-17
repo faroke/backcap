@@ -1,8 +1,15 @@
 import type { Webhook } from "../../domain/entities/webhook.entity.js";
 
+export interface WebhookFilters {
+  isActive?: boolean;
+  limit?: number;
+  offset?: number;
+}
+
 export interface IWebhookRepository {
-  findById(id: string): Promise<Webhook | null>;
-  findAll(): Promise<Webhook[]>;
   save(webhook: Webhook): Promise<void>;
-  delete(id: string): Promise<void>;
+  findById(id: string): Promise<Webhook | undefined>;
+  findAll(
+    filters: WebhookFilters,
+  ): Promise<{ webhooks: Webhook[]; total: number }>;
 }

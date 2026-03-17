@@ -3,3 +3,8 @@ export interface RegisterWebhookInput {
   events: string[];
   secret: string;
 }
+
+export interface RegisterWebhookOutput {
+  webhookId: string;
+  createdAt: Date;
+}

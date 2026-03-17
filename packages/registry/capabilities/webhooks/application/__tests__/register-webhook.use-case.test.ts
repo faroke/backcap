@@ -1,14 +1,18 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { RegisterWebhook } from "../use-cases/register-webhook.use-case.js";
-import { InMemoryWebhookRepository } from "./mocks/webhook-repository.mock.js";
+import { InMemoryWebhookRepository } from "./mocks/in-memory-webhook-repository.mock.js";
+import { InMemoryWebhookDelivery } from "./mocks/in-memory-webhook-delivery.mock.js";
+import { InvalidWebhookUrl } from "../../domain/errors/invalid-webhook-url.error.js";
 
 describe("RegisterWebhook use case", () => {
   let webhookRepo: InMemoryWebhookRepository;
+  let webhookDelivery: InMemoryWebhookDelivery;
   let registerWebhook: RegisterWebhook;
 
   beforeEach(() => {
     webhookRepo = new InMemoryWebhookRepository();
-    registerWebhook = new RegisterWebhook(webhookRepo);
+    webhookDelivery = new InMemoryWebhookDelivery();
+    registerWebhook = new RegisterWebhook(webhookRepo, webhookDelivery);
   });
 
   it("registers a webhook successfully", async () => {
@@ -21,9 +25,10 @@ describe("RegisterWebhook use case", () => {
     expect(result.isOk()).toBe(true);
     const output = result.unwrap();
     expect(output.webhookId).toBeDefined();
+    expect(output.createdAt).toBeInstanceOf(Date);
 
     const saved = await webhookRepo.findById(output.webhookId);
-    expect(saved).not.toBeNull();
+    expect(saved).toBeDefined();
     expect(saved!.url.value).toBe("https://example.com/hook");
   });
 
@@ -35,6 +40,7 @@ describe("RegisterWebhook use case", () => {
     });
 
     expect(result.isFail()).toBe(true);
+    expect(result.unwrapError()).toBeInstanceOf(InvalidWebhookUrl);
   });
 
   it("rejects empty events array", async () => {

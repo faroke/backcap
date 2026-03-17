@@ -37,9 +37,49 @@ describe("WebhookUrl VO", () => {
     expect(result.unwrapError()).toBeInstanceOf(InvalidWebhookUrl);
   });
 
-  it("rejects malformed URL", () => {
-    const result = WebhookUrl.create("https://");
+  it("rejects localhost by default", () => {
+    const result = WebhookUrl.create("http://localhost:3000/webhook");
     expect(result.isFail()).toBe(true);
+    expect(result.unwrapError()).toBeInstanceOf(InvalidWebhookUrl);
+  });
+
+  it("rejects 127.0.0.1 by default", () => {
+    const result = WebhookUrl.create("http://127.0.0.1/webhook");
+    expect(result.isFail()).toBe(true);
+  });
+
+  it("rejects 10.x.x.x private range by default", () => {
+    const result = WebhookUrl.create("http://10.0.0.1/webhook");
+    expect(result.isFail()).toBe(true);
+  });
+
+  it("rejects 172.16-31.x.x private range by default", () => {
+    const result = WebhookUrl.create("http://172.16.0.1/webhook");
+    expect(result.isFail()).toBe(true);
+  });
+
+  it("rejects 192.168.x.x private range by default", () => {
+    const result = WebhookUrl.create("http://192.168.1.1/webhook");
+    expect(result.isFail()).toBe(true);
+  });
+
+  it("rejects ::1 IPv6 loopback by default", () => {
+    const result = WebhookUrl.create("http://[::1]/webhook");
+    expect(result.isFail()).toBe(true);
+  });
+
+  it("allows localhost with allowPrivate option", () => {
+    const result = WebhookUrl.create("http://localhost:3000/webhook", {
+      allowPrivate: true,
+    });
+    expect(result.isOk()).toBe(true);
+  });
+
+  it("allows private IPs with allowPrivate option", () => {
+    const result = WebhookUrl.create("http://192.168.1.1/webhook", {
+      allowPrivate: true,
+    });
+    expect(result.isOk()).toBe(true);
   });
 
   it("is immutable (readonly value)", () => {

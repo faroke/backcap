@@ -4,9 +4,9 @@ export class WebhookDeliveryFailed extends Error {
     this.name = "WebhookDeliveryFailed";
   }
 
-  static create(webhookId: string, reason: string): WebhookDeliveryFailed {
+  static create(reason: string): WebhookDeliveryFailed {
     return new WebhookDeliveryFailed(
-      `Webhook delivery failed for id: "${webhookId}": ${reason}`,
+      `Webhook delivery failed: ${reason}`,
     );
   }
 }
