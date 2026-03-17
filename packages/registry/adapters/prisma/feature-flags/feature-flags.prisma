@@ -1,0 +1,7 @@
+model FeatureFlagRecord {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  isEnabled Boolean  @default(false)
+  conditions Json?
+  createdAt DateTime @default(now())
+}

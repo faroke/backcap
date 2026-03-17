@@ -98,6 +98,15 @@ describe("QueryAuditLog use case", () => {
     expect(output.total).toBe(3);
   });
 
+  it("returns empty result when no entries match", async () => {
+    const result = await queryAuditLog.execute({ actor: "nonexistent-user" });
+
+    expect(result.isOk()).toBe(true);
+    const output = result.unwrap();
+    expect(output.entries).toHaveLength(0);
+    expect(output.total).toBe(0);
+  });
+
   it("returns entries with correct shape", async () => {
     const result = await queryAuditLog.execute({ actor: "user-123" });
     const entry = result.unwrap().entries[0];

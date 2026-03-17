@@ -35,6 +35,19 @@ describe("EvaluateFlag use case", () => {
     expect(result.unwrap().isEnabled).toBe(false);
   });
 
+  it("returns enabled for a flag with conditions", async () => {
+    const conditions = { percentage: 50, segment: "beta-users" };
+    const flag = createTestEnabledFlag({ key: "rollout-flag", conditions });
+    await flagStore.save(flag);
+
+    const result = await evaluateFlag.execute({ key: "rollout-flag" });
+
+    expect(result.isOk()).toBe(true);
+    const output = result.unwrap();
+    expect(output.isEnabled).toBe(true);
+    expect(output.key).toBe("rollout-flag");
+  });
+
   it("fails when flag is not found", async () => {
     const result = await evaluateFlag.execute({ key: "nonexistent" });
 

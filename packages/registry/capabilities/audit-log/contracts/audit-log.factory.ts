@@ -18,7 +18,7 @@ export function createAuditLogCapability(
     record: async (input) => {
       const result = await recordEntry.execute(input);
       if (result.isFail()) {
-        return result;
+        return Result.fail(result.unwrapError());
       }
       const { output } = result.unwrap();
       return Result.ok(output);

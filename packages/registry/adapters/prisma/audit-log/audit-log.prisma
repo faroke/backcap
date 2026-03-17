@@ -1,0 +1,13 @@
+model AuditEntryRecord {
+  id        String   @id @default(uuid())
+  actor     String
+  action    String
+  resource  String
+  metadata  Json?
+  timestamp DateTime @default(now())
+
+  @@index([actor, timestamp])
+  @@index([action, timestamp])
+  @@index([resource])
+  @@index([timestamp])
+}
