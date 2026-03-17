@@ -58,6 +58,8 @@ export default defineConfig({
           items: [
             { label: "Auth", slug: "capabilities/auth" },
             { label: "Blog", slug: "capabilities/blog" },
+            { label: "Files", slug: "capabilities/files" },
+            { label: "Notifications", slug: "capabilities/notifications" },
             { label: "Search", slug: "capabilities/search" },
           ],
         },
