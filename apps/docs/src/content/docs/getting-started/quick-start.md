@@ -47,6 +47,12 @@ src/capabilities/auth/
       user-already-exists.error.ts
     events/
       user-registered.event.ts
+    __tests__/
+      user.entity.test.ts
+      email.vo.test.ts
+      password.vo.test.ts
+      errors.test.ts
+      user-registered.event.test.ts
   application/
     use-cases/
       register-user.use-case.ts
@@ -59,6 +65,15 @@ src/capabilities/auth/
       register-input.dto.ts
       login-input.dto.ts
       login-output.dto.ts
+    __tests__/
+      register-user.use-case.test.ts
+      login-user.use-case.test.ts
+      mocks/
+        user-repository.mock.ts
+        password-hasher.mock.ts
+        token-service.mock.ts
+      fixtures/
+        user.fixture.ts
   contracts/
     auth.contract.ts            # IAuthService interface
     auth.factory.ts             # createAuthService() factory
@@ -122,12 +137,16 @@ import type { ITokenService } from "../../capabilities/auth/application/ports/to
 export class JwtTokenService implements ITokenService {
   constructor(private readonly secret: string) {}
 
-  async sign(payload: { userId: string }): Promise<string> {
-    return jwt.sign(payload, this.secret, { expiresIn: "7d" });
+  async generate(userId: string, roles: string[]): Promise<string> {
+    return jwt.sign({ userId, roles }, this.secret, { expiresIn: "7d" });
   }
 
-  async verify(token: string): Promise<{ userId: string }> {
-    return jwt.verify(token, this.secret) as { userId: string };
+  async verify(token: string): Promise<{ userId: string } | null> {
+    try {
+      return jwt.verify(token, this.secret) as { userId: string };
+    } catch {
+      return null;
+    }
   }
 }
 ```
@@ -206,7 +225,10 @@ createAuthRouter(authService, router);
 app.use(router);
 ```
 
-This adds `POST /auth/register` and `POST /auth/login` routes with proper HTTP status code mapping.
+This installs two files:
+
+- `auth.router.ts` — adds `POST /auth/register` and `POST /auth/login` routes with proper HTTP status code mapping
+- `auth.middleware.ts` — provides `createAuthMiddleware(tokenService)` for protecting routes with Bearer token authentication
 
 ## Next Steps
 

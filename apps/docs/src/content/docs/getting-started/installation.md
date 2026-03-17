@@ -9,7 +9,7 @@ Backcap is a CLI tool that scaffolds backend capabilities into your existing Typ
 
 - **Node.js** 18 or later (or Bun / Deno with Node compatibility)
 - A TypeScript project with a `package.json`
-- One of the following package managers: `npm`, `pnpm`, or `yarn`
+- One of the following package managers: `npm`, `pnpm`, `yarn`, or `bun`
 
 ## Initialize Your Project
 
@@ -21,8 +21,8 @@ npx @backcap/cli init
 
 The CLI will:
 
-1. Detect your framework automatically (Next.js, Express, Fastify, NestJS)
-2. Detect your package manager (npm, pnpm, yarn)
+1. Detect your framework automatically (Next.js, Express, Fastify, Hono, NestJS)
+2. Detect your package manager (npm, pnpm, yarn, bun)
 3. Prompt you to confirm or override the detected values
 4. Write a `backcap.json` configuration file
 
@@ -40,10 +40,13 @@ After running `init`, a `backcap.json` is written to your project root:
     "capabilities": "src/capabilities",
     "adapters": "src/adapters",
     "bridges": "src/bridges",
-    "skills": "src/skills",
+    "skills": ".claude/skills",
     "shared": "src/shared"
   },
-  "installed": []
+  "installed": {
+    "capabilities": [],
+    "bridges": []
+  }
 }
 ```
 
@@ -58,7 +61,7 @@ After running `init`, a `backcap.json` is written to your project root:
 | `paths.bridges` | Where bridge source files are written |
 | `paths.skills` | Where agent skill files are written |
 | `paths.shared` | Where shared utilities (like `Result`) are written |
-| `installed` | List of capability names installed in this project |
+| `installed` | Structured record of installed capabilities and bridges |
 
 ### Customizing Paths
 
@@ -84,6 +87,7 @@ The `init` command inspects your `package.json` dependencies to detect the frame
 | `express` | `express` |
 | `fastify` | `fastify` |
 | `@nestjs/core` | `nestjs` |
+| `hono` | `hono` |
 
 If no framework is detected, the CLI prompts you to select one from a list.
 

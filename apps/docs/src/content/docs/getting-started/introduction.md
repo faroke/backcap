@@ -66,7 +66,7 @@ This makes error handling explicit, typed, and impossible to forget.
 Backcap capabilities work with any TypeScript runtime and framework:
 
 - **Runtimes**: Node.js, Bun, Deno
-- **Frameworks**: Express, Fastify, Next.js, NestJS, or any HTTP layer
+- **Frameworks**: Express, Fastify, Hono, Next.js, NestJS, or any HTTP layer
 
 The core domain and application code has no framework imports. Framework integration is handled by the adapter layer, which you install separately.
 
