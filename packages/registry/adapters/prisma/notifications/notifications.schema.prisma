@@ -1,0 +1,20 @@
+// ============================================================
+// Notifications Capability — Prisma Schema Fragment
+// ============================================================
+// INSTRUCTIONS:
+// 1. Copy the model below into your main schema.prisma file
+// 2. Run: npx prisma migrate dev --name notifications
+// 3. Run: npx prisma generate
+// ============================================================
+
+model NotificationRecord {
+  id        String    @id @default(uuid())
+  channel   String
+  recipient String
+  subject   String
+  body      String
+  status    String    @default("pending")
+  sentAt    DateTime?
+
+  @@index([recipient])
+}

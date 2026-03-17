@@ -1,0 +1,17 @@
+// ============================================================
+// Files Capability — Prisma Schema Fragment
+// ============================================================
+// INSTRUCTIONS:
+// 1. Copy the model below into your main schema.prisma file
+// 2. Run: npx prisma migrate dev --name files
+// 3. Run: npx prisma generate
+// ============================================================
+
+model FileRecord {
+  id         String   @id @default(uuid())
+  name       String
+  path       String
+  mimeType   String
+  size       BigInt
+  uploadedAt DateTime @default(now())
+}
