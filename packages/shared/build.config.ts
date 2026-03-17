@@ -9,6 +9,10 @@ export default defineBuildConfig({
     "src/types/config.types",
     "src/types/capability.types",
     "src/result",
+    "src/event-bus.port",
+    "src/in-memory-event-bus",
+    "src/bridge",
+    "src/types/bridge-catalog.types",
   ],
   declaration: true,
   rollup: {
