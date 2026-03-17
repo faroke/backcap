@@ -5,6 +5,6 @@ export class FormNotFound extends Error {
   }
 
   static create(formId: string): FormNotFound {
-    return new FormNotFound(`Form not found: "${formId}"`);
+    return new FormNotFound(`Form not found with id: "${formId}"`);
   }
 }

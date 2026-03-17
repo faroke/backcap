@@ -1,34 +1,17 @@
 import type { Result } from "../shared/result.js";
-import type { AnalyticsEvent } from "../domain/entities/analytics-event.entity.js";
-import type { AnalyticsMetrics } from "../application/ports/analytics-store.port.js";
+import type { TrackEventInput, TrackEventOutput } from "../application/dto/track-event.dto.js";
+import type { QueryEventsInput, QueryEventsOutput } from "../application/dto/query-events.dto.js";
+import type { GetMetricsInput, GetMetricsOutput } from "../application/dto/get-metrics.dto.js";
 
-export interface AnalyticsTrackInput {
-  trackingId: string;
-  name: string;
-  properties?: Record<string, unknown>;
-  userId?: string;
-  sessionId?: string;
-}
+export type { TrackEventInput, TrackEventOutput };
+export type { QueryEventsInput, QueryEventsOutput };
+export type { GetMetricsInput, GetMetricsOutput };
 
-export interface AnalyticsQueryInput {
-  trackingId?: string;
-  name?: string;
-  userId?: string;
-  sessionId?: string;
-  from?: Date;
-  to?: Date;
-}
-
-export interface AnalyticsMetricsInput {
-  trackingId?: string;
-  name?: string;
-  userId?: string;
-  from?: Date;
-  to?: Date;
-}
+export { AnalyticsEvent } from "../domain/entities/analytics-event.entity.js";
+export { TrackingId } from "../domain/value-objects/tracking-id.vo.js";
 
 export interface IAnalyticsService {
-  track(input: AnalyticsTrackInput): Promise<Result<{ eventId: string }, Error>>;
-  query(input: AnalyticsQueryInput): Promise<Result<AnalyticsEvent[], Error>>;
-  getMetrics(input: AnalyticsMetricsInput): Promise<Result<AnalyticsMetrics, Error>>;
+  trackEvent(input: TrackEventInput): Promise<Result<TrackEventOutput, Error>>;
+  queryEvents(input: QueryEventsInput): Promise<Result<QueryEventsOutput, Error>>;
+  getMetrics(input: GetMetricsInput): Promise<Result<GetMetricsOutput, Error>>;
 }

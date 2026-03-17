@@ -1,16 +1,15 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { AnalyticsEvent } from "../../domain/entities/analytics-event.entity.js";
 import { EventTracked } from "../../domain/events/event-tracked.event.js";
 import type { IAnalyticsStore } from "../ports/analytics-store.port.js";
-import type { TrackEventInput } from "../dto/track-event.dto.js";
+import type { TrackEventInput, TrackEventOutput } from "../dto/track-event.dto.js";
 
 export class TrackEvent {
   constructor(private readonly analyticsStore: IAnalyticsStore) {}
 
   async execute(
     input: TrackEventInput,
-  ): Promise<Result<{ eventId: string; event: EventTracked }, Error>> {
+  ): Promise<Result<{ output: TrackEventOutput; event: EventTracked }, Error>> {
     const id = crypto.randomUUID();
     const eventResult = AnalyticsEvent.create({
       id,
@@ -32,9 +31,11 @@ export class TrackEvent {
       analyticsEvent.id,
       analyticsEvent.trackingId.value,
       analyticsEvent.name,
-      analyticsEvent.occurredAt,
     );
 
-    return Result.ok({ eventId: analyticsEvent.id, event: domainEvent });
+    return Result.ok({
+      output: { eventId: analyticsEvent.id, occurredAt: analyticsEvent.occurredAt },
+      event: domainEvent,
+    });
   }
 }

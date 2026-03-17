@@ -1,16 +1,23 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { Comment } from "../../domain/entities/comment.entity.js";
 import { CommentPosted } from "../../domain/events/comment-posted.event.js";
+import { CommentNotFound } from "../../domain/errors/comment-not-found.error.js";
 import type { ICommentRepository } from "../ports/comment-repository.port.js";
-import type { PostCommentInput } from "../dto/post-comment.dto.js";
+import type { PostCommentInput, PostCommentOutput } from "../dto/post-comment.dto.js";
 
 export class PostComment {
   constructor(private readonly commentRepository: ICommentRepository) {}
 
   async execute(
     input: PostCommentInput,
-  ): Promise<Result<{ commentId: string; event: CommentPosted }, Error>> {
+  ): Promise<Result<{ output: PostCommentOutput; event: CommentPosted }, Error>> {
+    if (input.parentId) {
+      const parent = await this.commentRepository.findById(input.parentId);
+      if (!parent) {
+        return Result.fail(CommentNotFound.create(input.parentId));
+      }
+    }
+
     const id = crypto.randomUUID();
     const commentResult = Comment.create({
       id,
@@ -35,6 +42,9 @@ export class PostComment {
       comment.resourceType,
     );
 
-    return Result.ok({ commentId: comment.id, event });
+    return Result.ok({
+      output: { commentId: comment.id, createdAt: comment.createdAt },
+      event,
+    });
   }
 }

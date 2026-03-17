@@ -1,0 +1,27 @@
+// ============================================================
+// Tags Capability — Prisma Schema Fragment
+// ============================================================
+// INSTRUCTIONS:
+// 1. Copy the models below into your main schema.prisma file
+// 2. Run: npx prisma migrate dev --name tags
+// 3. Run: npx prisma generate
+// ============================================================
+
+model TagRecord {
+  id        String        @id @default(uuid())
+  name      String
+  slug      String        @unique
+  createdAt DateTime      @default(now())
+  resources ResourceTag[]
+}
+
+model ResourceTag {
+  tagId        String
+  resourceId   String
+  resourceType String
+  taggedAt     DateTime  @default(now())
+  tag          TagRecord @relation(fields: [tagId], references: [id])
+
+  @@id([tagId, resourceId, resourceType])
+  @@unique([tagId, resourceId, resourceType])
+}

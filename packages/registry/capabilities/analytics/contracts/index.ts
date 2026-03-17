@@ -1,9 +1,14 @@
 export type {
-  AnalyticsTrackInput,
-  AnalyticsQueryInput,
-  AnalyticsMetricsInput,
   IAnalyticsService,
+  TrackEventInput,
+  TrackEventOutput,
+  QueryEventsInput,
+  QueryEventsOutput,
+  GetMetricsInput,
+  GetMetricsOutput,
 } from "./analytics.contract.js";
 
-export { createAnalyticsService } from "./analytics.factory.js";
-export type { AnalyticsServiceDeps } from "./analytics.factory.js";
+export { AnalyticsEvent, TrackingId } from "./analytics.contract.js";
+
+export { createAnalyticsCapability } from "./analytics.factory.js";
+export type { AnalyticsDeps } from "./analytics.factory.js";

@@ -3,3 +3,7 @@ export interface TagResourceInput {
   resourceId: string;
   resourceType: string;
 }
+
+export interface TagResourceOutput {
+  taggedAt: Date;
+}

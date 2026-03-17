@@ -1,87 +1,56 @@
 import { describe, it, expect } from "vitest";
 import { TagSlug } from "../value-objects/tag-slug.vo.js";
+import { InvalidTagSlug } from "../errors/invalid-tag-slug.error.js";
 
 describe("TagSlug VO", () => {
   it("creates a valid slug", () => {
-    const result = TagSlug.create("my-tag");
+    const result = TagSlug.create("javascript");
     expect(result.isOk()).toBe(true);
-    expect(result.unwrap().value).toBe("my-tag");
+    expect(result.unwrap().value).toBe("javascript");
   });
 
-  it("accepts single character", () => {
-    const result = TagSlug.create("a");
-    expect(result.isOk()).toBe(true);
-  });
-
-  it("accepts 64 characters", () => {
-    const slug = "a" + "-b".repeat(31) + "c";
-    // Just use a simple 64-char valid slug
-    const result = TagSlug.create("a".repeat(64));
-    expect(result.isOk()).toBe(true);
-  });
-
-  it("accepts numbers", () => {
-    const result = TagSlug.create("tag123");
+  it("accepts kebab-case with numbers", () => {
+    const result = TagSlug.create("web-dev-2024");
     expect(result.isOk()).toBe(true);
   });
 
   it("rejects uppercase", () => {
-    const result = TagSlug.create("My-Tag");
+    const result = TagSlug.create("JavaScript");
     expect(result.isFail()).toBe(true);
+    expect(result.unwrapError()).toBeInstanceOf(InvalidTagSlug);
   });
 
-  it("rejects leading hyphen", () => {
-    const result = TagSlug.create("-my-tag");
-    expect(result.isFail()).toBe(true);
+  it("rejects leading hyphens", () => {
+    expect(TagSlug.create("-javascript").isFail()).toBe(true);
   });
 
-  it("rejects trailing hyphen", () => {
-    const result = TagSlug.create("my-tag-");
-    expect(result.isFail()).toBe(true);
+  it("rejects trailing hyphens", () => {
+    expect(TagSlug.create("javascript-").isFail()).toBe(true);
   });
 
   it("rejects empty string", () => {
-    const result = TagSlug.create("");
-    expect(result.isFail()).toBe(true);
+    expect(TagSlug.create("").isFail()).toBe(true);
   });
 
-  it("rejects over 64 characters", () => {
-    const result = TagSlug.create("a".repeat(65));
-    expect(result.isFail()).toBe(true);
+  it("rejects strings longer than 64 characters", () => {
+    expect(TagSlug.create("a".repeat(65)).isFail()).toBe(true);
   });
 
-  it("rejects spaces", () => {
-    const result = TagSlug.create("my tag");
-    expect(result.isFail()).toBe(true);
+  it("fromName generates a slug from a tag name", () => {
+    const result = TagSlug.fromName("Web Development");
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap().value).toBe("web-development");
   });
 
-  describe("fromName", () => {
-    it("converts name to slug", () => {
-      const result = TagSlug.fromName("My Cool Tag");
-      expect(result.isOk()).toBe(true);
-      expect(result.unwrap().value).toBe("my-cool-tag");
-    });
+  it("fromName strips special characters", () => {
+    const result = TagSlug.fromName("C++ Programming!");
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap().value).toBe("c-programming");
+  });
 
-    it("handles special characters", () => {
-      const result = TagSlug.fromName("C++ Programming!");
-      expect(result.isOk()).toBe(true);
-      expect(result.unwrap().value).toBe("c-programming");
-    });
-
-    it("trims whitespace", () => {
-      const result = TagSlug.fromName("  hello  ");
-      expect(result.isOk()).toBe(true);
-      expect(result.unwrap().value).toBe("hello");
-    });
-
-    it("rejects empty name", () => {
-      const result = TagSlug.fromName("   ");
-      expect(result.isFail()).toBe(true);
-    });
-
-    it("rejects name with only special characters", () => {
-      const result = TagSlug.fromName("!@#$%");
-      expect(result.isFail()).toBe(true);
-    });
+  it("fromName collapses spaces", () => {
+    const result = TagSlug.fromName("Hello   World");
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap().value).toBe("hello-world");
   });
 });

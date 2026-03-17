@@ -1,0 +1,26 @@
+// ============================================================
+// Forms Capability — Prisma Schema Fragment
+// ============================================================
+// INSTRUCTIONS:
+// 1. Copy the models below into your main schema.prisma file
+// 2. Run: npx prisma migrate dev --name forms
+// 3. Run: npx prisma generate
+// ============================================================
+
+model FormRecord {
+  id        String           @id @default(uuid())
+  name      String
+  fields    Json
+  createdAt DateTime         @default(now())
+  submissions FormSubmission[]
+}
+
+model FormSubmission {
+  id          String     @id @default(uuid())
+  formId      String
+  data        Json
+  submittedAt DateTime   @default(now())
+  form        FormRecord @relation(fields: [formId], references: [id])
+
+  @@index([formId])
+}

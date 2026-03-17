@@ -5,6 +5,6 @@ export class CommentNotFound extends Error {
   }
 
   static create(commentId: string): CommentNotFound {
-    return new CommentNotFound(`Comment not found: "${commentId}"`);
+    return new CommentNotFound(`Comment not found with id: "${commentId}"`);
   }
 }

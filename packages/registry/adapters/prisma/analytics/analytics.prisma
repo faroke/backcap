@@ -1,0 +1,22 @@
+// ============================================================
+// Analytics Capability — Prisma Schema Fragment
+// ============================================================
+// INSTRUCTIONS:
+// 1. Copy the model below into your main schema.prisma file
+// 2. Run: npx prisma migrate dev --name analytics
+// 3. Run: npx prisma generate
+// ============================================================
+
+model AnalyticsEventRecord {
+  id         String   @id @default(uuid())
+  trackingId String
+  name       String
+  properties Json?
+  userId     String?
+  sessionId  String?
+  occurredAt DateTime @default(now())
+
+  @@index([trackingId])
+  @@index([name])
+  @@index([occurredAt])
+}

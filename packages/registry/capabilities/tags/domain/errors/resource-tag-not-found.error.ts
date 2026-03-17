@@ -4,9 +4,9 @@ export class ResourceTagNotFound extends Error {
     this.name = "ResourceTagNotFound";
   }
 
-  static create(resourceId: string, tagSlug: string): ResourceTagNotFound {
+  static create(tagSlug: string, resourceId: string, resourceType: string): ResourceTagNotFound {
     return new ResourceTagNotFound(
-      `Resource "${resourceId}" does not have tag "${tagSlug}"`,
+      `Resource tag not found: tag "${tagSlug}" is not associated with ${resourceType} "${resourceId}"`,
     );
   }
 }

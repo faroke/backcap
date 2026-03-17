@@ -1,15 +1,23 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
-import type { IAnalyticsStore, AnalyticsMetrics } from "../ports/analytics-store.port.js";
-import type { GetMetricsInput } from "../dto/get-metrics.dto.js";
+import type { IAnalyticsStore } from "../ports/analytics-store.port.js";
+import type { GetMetricsInput, GetMetricsOutput } from "../dto/get-metrics.dto.js";
 
 export class GetMetrics {
   constructor(private readonly analyticsStore: IAnalyticsStore) {}
 
   async execute(
     input: GetMetricsInput,
-  ): Promise<Result<AnalyticsMetrics, Error>> {
-    const metrics = await this.analyticsStore.aggregate(input);
-    return Result.ok(metrics);
+  ): Promise<Result<GetMetricsOutput, Error>> {
+    const metrics = await this.analyticsStore.aggregate(
+      input.trackingId,
+      input.fromDate,
+      input.toDate,
+    );
+
+    return Result.ok({
+      totalEvents: metrics.totalEvents,
+      uniqueUsers: metrics.uniqueUsers,
+      eventBreakdown: metrics.eventBreakdown,
+    });
   }
 }

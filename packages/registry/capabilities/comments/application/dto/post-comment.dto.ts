@@ -5,3 +5,8 @@ export interface PostCommentInput {
   resourceType: string;
   parentId?: string;
 }
+
+export interface PostCommentOutput {
+  commentId: string;
+  createdAt: Date;
+}

@@ -1,7 +1,11 @@
 export interface GetMetricsInput {
-  trackingId?: string;
-  name?: string;
-  userId?: string;
-  from?: Date;
-  to?: Date;
+  trackingId: string;
+  fromDate: Date;
+  toDate: Date;
+}
+
+export interface GetMetricsOutput {
+  totalEvents: number;
+  uniqueUsers: number;
+  eventBreakdown: Array<{ name: string; count: number }>;
 }

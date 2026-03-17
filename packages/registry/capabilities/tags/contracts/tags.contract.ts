@@ -1,29 +1,17 @@
 import type { Result } from "../shared/result.js";
-import type { ResourceTag } from "../application/ports/tag-repository.port.js";
+import type { CreateTagInput, CreateTagOutput } from "../application/dto/create-tag.dto.js";
+import type { TagResourceInput, TagResourceOutput } from "../application/dto/tag-resource.dto.js";
+import type { UntagResourceInput, UntagResourceOutput } from "../application/dto/untag-resource.dto.js";
+import type { ListByTagInput, ListByTagOutput } from "../application/dto/list-by-tag.dto.js";
 
-export interface TagsCreateInput {
-  name: string;
-}
-
-export interface TagsTagResourceInput {
-  tagSlug: string;
-  resourceId: string;
-  resourceType: string;
-}
-
-export interface TagsUntagResourceInput {
-  tagSlug: string;
-  resourceId: string;
-  resourceType: string;
-}
-
-export interface TagsListByTagInput {
-  tagSlug: string;
-}
+export type { CreateTagInput, CreateTagOutput };
+export type { TagResourceInput, TagResourceOutput };
+export type { UntagResourceInput, UntagResourceOutput };
+export type { ListByTagInput, ListByTagOutput };
 
 export interface ITagsService {
-  createTag(input: TagsCreateInput): Promise<Result<{ tagId: string; slug: string }, Error>>;
-  tagResource(input: TagsTagResourceInput): Promise<Result<{ tagId: string; resourceId: string }, Error>>;
-  untagResource(input: TagsUntagResourceInput): Promise<Result<{ tagId: string; resourceId: string }, Error>>;
-  listByTag(input: TagsListByTagInput): Promise<Result<ResourceTag[], Error>>;
+  createTag(input: CreateTagInput): Promise<Result<CreateTagOutput, Error>>;
+  tagResource(input: TagResourceInput): Promise<Result<TagResourceOutput, Error>>;
+  untagResource(input: UntagResourceInput): Promise<Result<UntagResourceOutput, Error>>;
+  listByTag(input: ListByTagInput): Promise<Result<ListByTagOutput, Error>>;
 }

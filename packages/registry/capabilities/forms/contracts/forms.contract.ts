@@ -1,30 +1,14 @@
 import type { Result } from "../shared/result.js";
-import type { FormFieldType } from "../domain/value-objects/form-field.vo.js";
-import type { FormSubmission } from "../application/ports/form-store.port.js";
+import type { CreateFormInput, CreateFormOutput } from "../application/dto/create-form.dto.js";
+import type { SubmitFormInput, SubmitFormOutput } from "../application/dto/submit-form.dto.js";
+import type { GetSubmissionsInput, GetSubmissionsOutput } from "../application/dto/get-submissions.dto.js";
 
-export interface FormsCreateFieldInput {
-  name: string;
-  type: FormFieldType;
-  required: boolean;
-  options?: string[];
-}
-
-export interface FormsCreateInput {
-  name: string;
-  fields: FormsCreateFieldInput[];
-}
-
-export interface FormsSubmitInput {
-  formId: string;
-  data: Record<string, unknown>;
-}
-
-export interface FormsGetSubmissionsInput {
-  formId: string;
-}
+export type { CreateFormInput, CreateFormOutput };
+export type { SubmitFormInput, SubmitFormOutput };
+export type { GetSubmissionsInput, GetSubmissionsOutput };
 
 export interface IFormsService {
-  createForm(input: FormsCreateInput): Promise<Result<{ formId: string }, Error>>;
-  submitForm(input: FormsSubmitInput): Promise<Result<{ submissionId: string }, Error>>;
-  getSubmissions(input: FormsGetSubmissionsInput): Promise<Result<FormSubmission[], Error>>;
+  createForm(input: CreateFormInput): Promise<Result<CreateFormOutput, Error>>;
+  submitForm(input: SubmitFormInput): Promise<Result<SubmitFormOutput, Error>>;
+  getSubmissions(input: GetSubmissionsInput): Promise<Result<GetSubmissionsOutput, Error>>;
 }

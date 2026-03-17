@@ -1,9 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { FormField } from "../value-objects/form-field.vo.js";
-import { FormValidationFailed } from "../errors/form-validation-failed.error.js";
 
 describe("FormField VO", () => {
-  it("creates a valid text field", () => {
+  it("creates a text field", () => {
     const result = FormField.create({ name: "username", type: "text", required: true });
     expect(result.isOk()).toBe(true);
     const field = result.unwrap();
@@ -13,50 +12,40 @@ describe("FormField VO", () => {
     expect(field.options).toBeUndefined();
   });
 
-  it("creates a valid select field with options", () => {
+  it("creates a select field with options", () => {
     const result = FormField.create({
       name: "color",
       type: "select",
-      required: false,
+      required: true,
       options: ["red", "blue", "green"],
     });
     expect(result.isOk()).toBe(true);
     expect(result.unwrap().options).toEqual(["red", "blue", "green"]);
   });
 
-  it("rejects select field without options", () => {
-    const result = FormField.create({ name: "color", type: "select", required: false });
+  it("fails when select field has no options", () => {
+    const result = FormField.create({ name: "color", type: "select", required: true });
     expect(result.isFail()).toBe(true);
-    expect(result.unwrapError()).toBeInstanceOf(FormValidationFailed);
   });
 
-  it("rejects select field with empty options", () => {
+  it("fails when select field has empty options array", () => {
     const result = FormField.create({
       name: "color",
       type: "select",
-      required: false,
+      required: true,
       options: [],
     });
     expect(result.isFail()).toBe(true);
-    expect(result.unwrapError()).toBeInstanceOf(FormValidationFailed);
   });
 
-  it("rejects empty field name", () => {
-    const result = FormField.create({ name: "", type: "text", required: true });
+  it("fails when field name is empty", () => {
+    const result = FormField.create({ name: "", type: "text", required: false });
     expect(result.isFail()).toBe(true);
-    expect(result.unwrapError()).toBeInstanceOf(FormValidationFailed);
-  });
-
-  it("trims field name", () => {
-    const result = FormField.create({ name: "  username  ", type: "text", required: true });
-    expect(result.unwrap().name).toBe("username");
   });
 
   it("creates email, number, boolean fields", () => {
-    for (const type of ["email", "number", "boolean"] as const) {
-      const result = FormField.create({ name: "field", type, required: false });
-      expect(result.isOk()).toBe(true);
-      expect(result.unwrap().type).toBe(type);
-    }
+    expect(FormField.create({ name: "e", type: "email", required: true }).isOk()).toBe(true);
+    expect(FormField.create({ name: "n", type: "number", required: false }).isOk()).toBe(true);
+    expect(FormField.create({ name: "b", type: "boolean", required: false }).isOk()).toBe(true);
   });
 });

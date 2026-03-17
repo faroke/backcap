@@ -56,14 +56,18 @@ export default defineConfig({
         {
           label: "Capabilities",
           items: [
+            { label: "Analytics", slug: "capabilities/analytics" },
             { label: "Audit Log", slug: "capabilities/audit-log" },
             { label: "Auth", slug: "capabilities/auth" },
             { label: "Blog", slug: "capabilities/blog" },
+            { label: "Comments", slug: "capabilities/comments" },
             { label: "Feature Flags", slug: "capabilities/feature-flags" },
             { label: "Files", slug: "capabilities/files" },
+            { label: "Forms", slug: "capabilities/forms" },
             { label: "Notifications", slug: "capabilities/notifications" },
             { label: "Queues", slug: "capabilities/queues" },
             { label: "Search", slug: "capabilities/search" },
+            { label: "Tags", slug: "capabilities/tags" },
             { label: "Webhooks", slug: "capabilities/webhooks" },
           ],
         },

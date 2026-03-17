@@ -1,10 +1,14 @@
 export type {
-  TagsCreateInput,
-  TagsTagResourceInput,
-  TagsUntagResourceInput,
-  TagsListByTagInput,
   ITagsService,
+  CreateTagInput,
+  CreateTagOutput,
+  TagResourceInput,
+  TagResourceOutput,
+  UntagResourceInput,
+  UntagResourceOutput,
+  ListByTagInput,
+  ListByTagOutput,
 } from "./tags.contract.js";
 
 export { createTagsService } from "./tags.factory.js";
-export type { TagsServiceDeps } from "./tags.factory.js";
+export type { TagsDeps } from "./tags.factory.js";

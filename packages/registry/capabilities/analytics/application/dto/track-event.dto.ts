@@ -5,3 +5,8 @@ export interface TrackEventInput {
   userId?: string;
   sessionId?: string;
 }
+
+export interface TrackEventOutput {
+  eventId: string;
+  occurredAt: Date;
+}

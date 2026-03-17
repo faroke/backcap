@@ -4,9 +4,9 @@ export class InvalidTrackingId extends Error {
     this.name = "InvalidTrackingId";
   }
 
-  static create(trackingId: string): InvalidTrackingId {
+  static create(value: string): InvalidTrackingId {
     return new InvalidTrackingId(
-      `Invalid tracking ID: "${trackingId}". Must be alphanumeric, 8-64 characters.`,
+      `Invalid tracking ID: "${value}". Must be a non-empty alphanumeric string of 8–64 characters.`,
     );
   }
 }

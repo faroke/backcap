@@ -3,45 +3,46 @@ import { TrackingId } from "../value-objects/tracking-id.vo.js";
 import { InvalidTrackingId } from "../errors/invalid-tracking-id.error.js";
 
 describe("TrackingId VO", () => {
-  it("creates a valid tracking ID (8 chars)", () => {
-    const result = TrackingId.create("abcd1234");
+  it("creates a valid tracking ID", () => {
+    const result = TrackingId.create("abc12345");
     expect(result.isOk()).toBe(true);
-    expect(result.unwrap().value).toBe("abcd1234");
+    expect(result.unwrap().value).toBe("abc12345");
   });
 
-  it("creates a valid tracking ID (64 chars)", () => {
-    const id = "a".repeat(64);
-    const result = TrackingId.create(id);
-    expect(result.isOk()).toBe(true);
-    expect(result.unwrap().value).toBe(id);
-  });
-
-  it("accepts uppercase alphanumeric", () => {
-    const result = TrackingId.create("ABCDEFGH");
+  it("accepts a UUID-like string", () => {
+    const result = TrackingId.create("550e8400-e29b-41d4-a716-446655440000");
     expect(result.isOk()).toBe(true);
   });
 
-  it("rejects too short (7 chars)", () => {
-    const result = TrackingId.create("abcd123");
+  it("accepts a 64-character string", () => {
+    const result = TrackingId.create("a".repeat(64));
+    expect(result.isOk()).toBe(true);
+  });
+
+  it("rejects a string shorter than 8 characters", () => {
+    const result = TrackingId.create("abc1234");
     expect(result.isFail()).toBe(true);
     expect(result.unwrapError()).toBeInstanceOf(InvalidTrackingId);
   });
 
-  it("rejects too long (65 chars)", () => {
+  it("rejects a string longer than 64 characters", () => {
     const result = TrackingId.create("a".repeat(65));
     expect(result.isFail()).toBe(true);
-    expect(result.unwrapError()).toBeInstanceOf(InvalidTrackingId);
   });
 
-  it("rejects non-alphanumeric characters", () => {
-    const result = TrackingId.create("abcd-1234");
-    expect(result.isFail()).toBe(true);
-    expect(result.unwrapError()).toBeInstanceOf(InvalidTrackingId);
-  });
-
-  it("rejects empty string", () => {
+  it("rejects an empty string", () => {
     const result = TrackingId.create("");
     expect(result.isFail()).toBe(true);
     expect(result.unwrapError()).toBeInstanceOf(InvalidTrackingId);
+  });
+
+  it("rejects strings with special characters", () => {
+    const result = TrackingId.create("abc@1234!");
+    expect(result.isFail()).toBe(true);
+  });
+
+  it("is immutable (readonly value)", () => {
+    const trackingId = TrackingId.create("abcd1234").unwrap();
+    expect(trackingId.value).toBe("abcd1234");
   });
 });

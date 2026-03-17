@@ -4,7 +4,7 @@ export class FormValidationFailed extends Error {
     this.name = "FormValidationFailed";
   }
 
-  static create(reason: string): FormValidationFailed {
-    return new FormValidationFailed(`Form validation failed: ${reason}`);
+  static create(details: string): FormValidationFailed {
+    return new FormValidationFailed(`Form validation failed: ${details}`);
   }
 }

@@ -3,3 +3,7 @@ export interface UntagResourceInput {
   resourceId: string;
   resourceType: string;
 }
+
+export interface UntagResourceOutput {
+  untaggedAt: Date;
+}

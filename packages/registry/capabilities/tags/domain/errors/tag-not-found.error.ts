@@ -5,6 +5,6 @@ export class TagNotFound extends Error {
   }
 
   static create(slug: string): TagNotFound {
-    return new TagNotFound(`Tag not found: "${slug}"`);
+    return new TagNotFound(`Tag not found with slug: "${slug}"`);
   }
 }

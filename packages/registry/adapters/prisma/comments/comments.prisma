@@ -1,0 +1,21 @@
+// ============================================================
+// Comments Capability — Prisma Schema Fragment
+// ============================================================
+// INSTRUCTIONS:
+// 1. Copy the model below into your main schema.prisma file
+// 2. Run: npx prisma migrate dev --name comments
+// 3. Run: npx prisma generate
+// ============================================================
+
+model CommentRecord {
+  id           String    @id @default(uuid())
+  content      String
+  authorId     String
+  resourceId   String
+  resourceType String
+  parentId     String?
+  createdAt    DateTime  @default(now())
+  deletedAt    DateTime?
+
+  @@index([resourceId, resourceType])
+}
