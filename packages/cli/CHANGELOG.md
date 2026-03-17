@@ -1,5 +1,12 @@
 # @backcap/cli
 
+## 0.2.2
+
+### Patch Changes
+
+- adc2323: Add feature-flags and audit-log capabilities with Prisma and Express adapters, documentation, and AI skills
+- e908998: Add webhooks and queues capabilities with Prisma and Express adapters
+
 ## 0.2.1
 
 ### Patch Changes
