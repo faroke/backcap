@@ -180,7 +180,7 @@ export async function generateBridgeItemJson(
 export async function discoverSkills(
   registryRoot: string,
 ): Promise<SkillMeta[]> {
-  const skillsDir = join(registryRoot, "../../skills");
+  const skillsDir = join(registryRoot, "skills");
   const results: SkillMeta[] = [];
 
   try {
