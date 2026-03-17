@@ -1,5 +1,11 @@
 # @backcap/cli
 
+## 0.2.1
+
+### Patch Changes
+
+- 207b0fc: Add files and notifications capabilities with Prisma and Express adapters
+
 ## 0.2.0
 
 ### Minor Changes
