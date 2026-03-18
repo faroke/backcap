@@ -19,6 +19,7 @@ interface PrismaSubscriptionRecord {
 
 interface PrismaSubscriptionDelegate {
   findUnique(args: { where: { id: string } }): Promise<PrismaSubscriptionRecord | null>;
+  findFirst(args: { where: { externalId?: string } }): Promise<PrismaSubscriptionRecord | null>;
   findMany(args: { where: { customerId: string } }): Promise<PrismaSubscriptionRecord[]>;
   create(args: { data: PrismaSubscriptionRecord }): Promise<PrismaSubscriptionRecord>;
   update(args: { where: { id: string }; data: Partial<PrismaSubscriptionRecord> }): Promise<PrismaSubscriptionRecord>;
@@ -34,6 +35,11 @@ export class PrismaSubscriptionRepository implements ISubscriptionRepository {
 
   async findById(id: string): Promise<Subscription | null> {
     const record = await this.prisma.billingSubscription.findUnique({ where: { id } });
+    return record ? this.toDomain(record) : null;
+  }
+
+  async findByExternalId(externalId: string): Promise<Subscription | null> {
+    const record = await this.prisma.billingSubscription.findFirst({ where: { externalId } });
     return record ? this.toDomain(record) : null;
   }
 

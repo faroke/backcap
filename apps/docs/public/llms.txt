@@ -41,13 +41,15 @@ const { userId } = result.unwrap();
 ## Available Capabilities
 
 - **auth** — User registration and login. Domain: User entity, Email/Password value objects, 4 typed errors, UserRegistered event. Application: RegisterUser and LoginUser use cases, IUserRepository/IPasswordHasher/ITokenService ports. Public API: IAuthService and createAuthService().
-
-Planned: blog, search, notifications, payments, audit-log, feature-flags.
+- **billing** — Payments, subscriptions, and invoicing. Domain: Customer/Subscription/Invoice/PaymentMethod entities, Money VO, SubscriptionStatus VO, BillingPeriod VO, 5 domain events. Application: 10 use cases (CreateSubscription, ProcessPayment, RefundPayment, GenerateInvoice, etc.), IPaymentProvider/ICustomerRepository/ISubscriptionRepository/IInvoiceRepository ports. Public API: IBillingService and createBillingService().
 
 ## Adapters
 
 - **auth-prisma** — PrismaUserRepository implements IUserRepository
 - **auth-express** — createAuthRouter() adds POST /auth/register and POST /auth/login; createAuthMiddleware() verifies Bearer tokens
+- **billing-prisma** — PrismaCustomerRepository, PrismaSubscriptionRepository, PrismaInvoiceRepository
+- **billing-express** — createBillingRouter() REST API for subscriptions, payments, and invoices
+- **billing-stripe** — StripePaymentProvider implements IPaymentProvider with hand-typed Stripe interfaces (stripe is a peerDependency). StripeWebhookHandler handles payment_intent.succeeded, invoice.paid, customer.subscription.updated with idempotency via IWebhookEventStore.
 
 ## Bridges
 

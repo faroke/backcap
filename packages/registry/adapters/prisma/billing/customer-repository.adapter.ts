@@ -12,6 +12,7 @@ interface PrismaCustomerRecord {
 
 interface PrismaCustomerDelegate {
   findUnique(args: { where: { id?: string; email?: string } }): Promise<PrismaCustomerRecord | null>;
+  findFirst(args: { where: { externalId?: string } }): Promise<PrismaCustomerRecord | null>;
   create(args: { data: PrismaCustomerRecord }): Promise<PrismaCustomerRecord>;
   update(args: { where: { id: string }; data: Partial<PrismaCustomerRecord> }): Promise<PrismaCustomerRecord>;
   upsert(args: { where: { id: string }; create: PrismaCustomerRecord; update: PrismaCustomerRecord }): Promise<PrismaCustomerRecord>;
@@ -26,6 +27,11 @@ export class PrismaCustomerRepository implements ICustomerRepository {
 
   async findById(id: string): Promise<Customer | null> {
     const record = await this.prisma.billingCustomer.findUnique({ where: { id } });
+    return record ? this.toDomain(record) : null;
+  }
+
+  async findByExternalId(externalId: string): Promise<Customer | null> {
+    const record = await this.prisma.billingCustomer.findFirst({ where: { externalId } });
     return record ? this.toDomain(record) : null;
   }
 

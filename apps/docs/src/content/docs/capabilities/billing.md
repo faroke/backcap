@@ -153,3 +153,42 @@ const result = await billing.createSubscription({
 
 - **Prisma**: `PrismaCustomerRepository`, `PrismaSubscriptionRepository`, `PrismaInvoiceRepository`
 - **Express**: `createBillingRouter(billingService, router)` — REST API for subscriptions, payments, and invoices
+- **Stripe**: `StripePaymentProvider` — implements `IPaymentProvider` with Stripe SDK, `StripeWebhookHandler` — handles `payment_intent.succeeded`, `invoice.paid`, `customer.subscription.updated`
+
+### Stripe Adapter
+
+Install the Stripe payment adapter:
+
+```bash
+npx @backcap/cli add billing-stripe
+```
+
+The Stripe adapter uses hand-typed interfaces so the `stripe` npm package is a peer dependency, not bundled with the registry. Provide a Stripe client instance at construction time:
+
+```typescript
+import Stripe from "stripe";
+import { StripePaymentProvider } from "./adapters/stripe/billing/stripe-payment-provider.adapter";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const paymentProvider = new StripePaymentProvider(stripe);
+```
+
+The `StripeWebhookHandler` requires an `IWebhookEventStore` for idempotency (backed by the `StripeWebhookEvent` Prisma model). It uses `findByExternalId` on repository ports to map Stripe IDs to internal domain entities:
+
+```typescript
+import { StripeWebhookHandler } from "./adapters/stripe/billing/stripe-webhook-handler";
+
+const webhookHandler = new StripeWebhookHandler(
+  customerRepository,
+  subscriptionRepository,
+  invoiceRepository,
+  webhookEventStore,
+);
+
+// In your webhook endpoint (after verifying the Stripe signature):
+const result = await webhookHandler.handle(event);
+```
+
+### Swapping Providers
+
+To use a different payment provider (e.g. Paddle, Braintree), implement `IPaymentProvider` with that provider's SDK. No changes to domain or application layers are needed — just inject the new adapter through the factory.

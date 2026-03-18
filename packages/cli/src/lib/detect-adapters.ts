@@ -12,6 +12,7 @@ const KNOWN_ADAPTERS: AdapterMapping[] = [
   { npmPackage: "fastify", adapterSuffix: "fastify", category: "http" },
   { npmPackage: "@nestjs/core", adapterSuffix: "nestjs", category: "http" },
   { npmPackage: "hono", adapterSuffix: "hono", category: "http" },
+  { npmPackage: "stripe", adapterSuffix: "stripe", category: "external" },
 ];
 
 export interface DetectedAdapter {

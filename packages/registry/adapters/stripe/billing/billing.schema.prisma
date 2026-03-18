@@ -1,0 +1,21 @@
+// ============================================================
+// Billing / Stripe Adapter — Prisma Schema Fragment
+// ============================================================
+// INSTRUCTIONS:
+// 1. Copy the model below into your main schema.prisma file
+// 2. Run: npx prisma migrate dev --name billing-stripe
+// 3. Run: npx prisma generate
+// ============================================================
+// This model stores processed Stripe webhook events for
+// idempotency and audit purposes.  The core billing tables
+// (Customer, Subscription, Invoice) live in the persistence
+// adapter schema, not here.
+// ============================================================
+
+model StripeWebhookEvent {
+  id        String   @id
+  type      String
+  processed Boolean  @default(false)
+  payload   String   @db.Text
+  createdAt DateTime @default(now())
+}
