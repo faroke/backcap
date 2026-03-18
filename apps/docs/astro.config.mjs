@@ -65,6 +65,7 @@ export default defineConfig({
             { label: "Files", slug: "capabilities/files" },
             { label: "Forms", slug: "capabilities/forms" },
             { label: "Notifications", slug: "capabilities/notifications" },
+            { label: "Organizations", slug: "capabilities/organizations" },
             { label: "Queues", slug: "capabilities/queues" },
             { label: "RBAC", slug: "capabilities/rbac" },
             { label: "Search", slug: "capabilities/search" },
