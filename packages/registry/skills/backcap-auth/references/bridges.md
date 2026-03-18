@@ -129,6 +129,137 @@ bridge.wire(eventBus);
 
 ---
 
+## `auth-rbac`
+
+**Status**: available
+
+**Source**: auth | **Target**: rbac
+
+**Events**: `UserRegistered`
+
+**Purpose**: Assigns a default RBAC role to every newly registered user.
+
+### Install
+
+```bash
+npx @backcap/cli add auth-rbac
+```
+
+### Directory Structure
+
+```
+bridges/auth-rbac/
+  auth-rbac.bridge.ts
+  bridge.json
+  __tests__/
+    auth-rbac.bridge.test.ts
+```
+
+### Bridge Factory
+
+```typescript
+import type { IEventBus } from "@backcap/shared/event-bus";
+import type { Bridge } from "@backcap/shared/bridge";
+
+export interface AuthRbacBridgeDeps {
+  assignRole: IAssignRole;
+  defaultRoleId: string;
+}
+
+export function createBridge(deps: AuthRbacBridgeDeps): Bridge;
+```
+
+### Event Shapes (duck-typed)
+
+```typescript
+interface UserRegisteredEvent {
+  userId: string;
+  email: string;
+  occurredAt: Date;
+}
+```
+
+### Behavior
+
+- On `UserRegistered`: calls `assignRole.execute({ userId: event.userId, roleId: deps.defaultRoleId })`
+- Errors are caught and logged with prefix `[auth-rbac]`, never re-thrown
+
+### Wiring
+
+```typescript
+import { createBridge } from './bridges/auth-rbac/auth-rbac.bridge.js';
+
+const bridge = createBridge({ assignRole: authorizationService.assignRole, defaultRoleId: 'role-user' });
+bridge.wire(eventBus);
+```
+
+---
+
+## `auth-organizations`
+
+**Status**: available
+
+**Source**: auth | **Target**: organizations
+
+**Events**: `UserRegistered`
+
+**Purpose**: Creates a personal organization for every newly registered user.
+
+### Install
+
+```bash
+npx @backcap/cli add auth-organizations
+```
+
+### Directory Structure
+
+```
+bridges/auth-organizations/
+  auth-organizations.bridge.ts
+  bridge.json
+  __tests__/
+    auth-organizations.bridge.test.ts
+```
+
+### Bridge Factory
+
+```typescript
+import type { IEventBus } from "@backcap/shared/event-bus";
+import type { Bridge } from "@backcap/shared/bridge";
+
+export interface AuthOrganizationsBridgeDeps {
+  createOrganization: ICreateOrganization;
+}
+
+export function createBridge(deps: AuthOrganizationsBridgeDeps): Bridge;
+```
+
+### Event Shapes (duck-typed)
+
+```typescript
+interface UserRegisteredEvent {
+  userId: string;
+  email: string;
+  occurredAt: Date;
+}
+```
+
+### Behavior
+
+- On `UserRegistered`: calls `createOrganization.execute({ name: "Personal", slug: "personal-{userId}", plan: "personal", settings: {}, ownerId: event.userId })`
+- Errors are caught and logged with prefix `[auth-organizations]`, never re-thrown
+
+### Wiring
+
+```typescript
+import { createBridge } from './bridges/auth-organizations/auth-organizations.bridge.js';
+
+const bridge = createBridge({ createOrganization: orgService.createOrganization });
+bridge.wire(eventBus);
+```
+
+---
+
 ## Bridge Conventions
 
 | Rule | Detail |

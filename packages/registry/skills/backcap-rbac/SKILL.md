@@ -92,6 +92,15 @@ See [references/domain-map.md](references/domain-map.md) for complete file-by-fi
 | createRbacRouter         | `adapters/express/rbac/rbac.router.ts`                   | Express CRUD routes for roles            |
 | requirePermission        | `adapters/express/rbac/rbac.middleware.ts`                | Express middleware: `requirePermission(service, 'posts', 'create')` |
 
+## Bridges
+
+See [references/bridges.md](references/bridges.md) for detailed bridge documentation.
+
+| Bridge | Source | Target | Events |
+|---|---|---|---|
+| `auth-rbac` | auth | rbac | UserRegistered |
+| `rbac-organizations` | organizations | rbac | MemberJoined |
+
 ## Extension Guide
 
 See [references/extension-guide.md](references/extension-guide.md) for step-by-step instructions.

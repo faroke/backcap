@@ -14,8 +14,13 @@ describe("Domain events", () => {
 
     it("creates with custom occurredAt", () => {
       const date = new Date("2026-01-01");
-      const event = new RoleAssigned("user-1", "role-1", date);
+      const event = new RoleAssigned("user-1", "role-1", undefined, date);
       expect(event.occurredAt).toBe(date);
+    });
+
+    it("creates with organizationId", () => {
+      const event = new RoleAssigned("user-1", "role-1", "org-1");
+      expect(event.organizationId).toBe("org-1");
     });
   });
 

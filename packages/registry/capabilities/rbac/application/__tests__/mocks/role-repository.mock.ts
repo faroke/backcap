@@ -32,7 +32,7 @@ export class InMemoryRoleRepository implements IRoleRepository {
     return [...this.store.values()];
   }
 
-  async assignToUser(userId: string, roleId: string): Promise<void> {
+  async assignToUser(userId: string, roleId: string, _organizationId?: string): Promise<void> {
     if (!this.userRoles.has(userId)) {
       this.userRoles.set(userId, new Set());
     }

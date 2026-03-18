@@ -284,6 +284,28 @@ app.use("/orgs/:orgId/*", createOrgScopeMiddleware(orgService));
 | `GET` | `/organizations/:id/members` | — | `200 OrgMemberOutput[]` |
 | `DELETE` | `/organizations/:orgId/members/:userId` | — | `204` |
 
+## Bridges
+
+### auth-organizations
+
+Creates a personal organization for newly registered users. When `UserRegistered` fires, the bridge calls `CreateOrganization` with a personal workspace scoped to the user.
+
+```bash
+npx @backcap/cli add auth-organizations
+```
+
+**Requires**: auth, organizations
+
+### rbac-organizations
+
+Assigns an org-scoped default role when a member joins an organization. When `MemberJoined` fires, the bridge calls `AssignRole` with the `organizationId` from the event.
+
+```bash
+npx @backcap/cli add rbac-organizations
+```
+
+**Requires**: rbac, organizations
+
 ## File Map
 
 ```

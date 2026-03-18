@@ -1,0 +1,7 @@
+{
+  "name": "rbac-organizations",
+  "sourceCapability": "organizations",
+  "targetCapability": "rbac",
+  "events": ["MemberJoined"],
+  "version": "1.0.0"
+}

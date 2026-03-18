@@ -1,0 +1,7 @@
+{
+  "name": "auth-organizations",
+  "sourceCapability": "auth",
+  "targetCapability": "organizations",
+  "events": ["UserRegistered"],
+  "version": "1.0.0"
+}

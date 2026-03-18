@@ -10,6 +10,7 @@ export interface RbacCreateRoleInput {
 export interface RbacAssignRoleInput {
   userId: string;
   roleId: string;
+  organizationId?: string;
 }
 
 export interface RbacRevokeRoleInput {

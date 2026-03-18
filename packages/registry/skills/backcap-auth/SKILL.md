@@ -125,8 +125,10 @@ Auth-specific rules:
 
 | Bridge | Description | Install |
 |---|---|---|
-| `auth-notifications` | Sends a welcome email when a user registers | `npx @backcap/cli add bridge auth-notifications` |
-| `auth-audit-log` | Logs login, registration, and failed-login events | `npx @backcap/cli add bridge auth-audit-log` (planned) |
+| `auth-notifications` | Sends a welcome email when a user registers | `npx @backcap/cli add auth-notifications` |
+| `auth-audit-log` | Logs login, registration, and failed-login events | `npx @backcap/cli add auth-audit-log` |
+| `auth-rbac` | Assigns a default role to new users | `npx @backcap/cli add auth-rbac` |
+| `auth-organizations` | Creates a personal organization for new users | `npx @backcap/cli add auth-organizations` |
 
 See [`references/bridges.md`](references/bridges.md) for detailed bridge documentation.
 

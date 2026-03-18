@@ -97,6 +97,15 @@ See [references/domain-map.md](references/domain-map.md) for complete file-by-fi
 | createOrganizationsRouter    | `adapters/express/organizations/organizations.router.ts`                | Express CRUD routes for organizations           |
 | createOrgScopeMiddleware     | `adapters/express/organizations/organizations.middleware.ts`             | Express middleware: org-scoped request context  |
 
+## Bridges
+
+See [references/bridges.md](references/bridges.md) for detailed bridge documentation.
+
+| Bridge | Source | Target | Events |
+|---|---|---|---|
+| `auth-organizations` | auth | organizations | UserRegistered |
+| `rbac-organizations` | organizations | rbac | MemberJoined |
+
 ## Extension Guide
 
 See [references/extension-guide.md](references/extension-guide.md) for step-by-step instructions.

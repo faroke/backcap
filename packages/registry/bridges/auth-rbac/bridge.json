@@ -1,0 +1,7 @@
+{
+  "name": "auth-rbac",
+  "sourceCapability": "auth",
+  "targetCapability": "rbac",
+  "events": ["UserRegistered"],
+  "version": "1.0.0"
+}

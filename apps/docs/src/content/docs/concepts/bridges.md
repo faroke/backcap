@@ -81,6 +81,9 @@ eventBus.subscribe("UserRegistered", async (event) => {
 |---|---|---|---|
 | `auth-notifications` | auth | notifications | UserRegistered |
 | `auth-audit-log` | auth | audit-log | UserRegistered, LoginSucceeded |
+| `auth-rbac` | auth | rbac | UserRegistered |
+| `auth-organizations` | auth | organizations | UserRegistered |
+| `rbac-organizations` | organizations | rbac | MemberJoined |
 | `blog-search` | blog | search | PostPublished |
 | `blog-comments` | comments | blog, notifications | CommentPosted |
 | `blog-tags` | blog | tags | PostPublished |

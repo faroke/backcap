@@ -94,7 +94,7 @@ Validates resource names against `^[a-z][a-z0-9]*(-[a-z0-9]+)*$`. Examples: `pos
 
 | Event | Emitted By | Payload |
 |---|---|---|
-| `RoleAssigned` | `AssignRole` use case | `userId`, `roleId`, `occurredAt` |
+| `RoleAssigned` | `AssignRole` use case | `userId`, `roleId`, `organizationId?`, `occurredAt` |
 | `RoleRevoked` | `RevokeRole` use case | `userId`, `roleId`, `occurredAt` |
 | `PermissionGranted` | `CreateRole` use case | `roleId`, `permissionId`, `action`, `resource`, `occurredAt` |
 
@@ -132,7 +132,7 @@ Assigns a role to a user.
 import { AssignRole } from "./capabilities/rbac/application/use-cases/assign-role.use-case";
 
 const assignRole = new AssignRole(roleRepository);
-const result = await assignRole.execute({ userId: "user-1", roleId: "role-1" });
+const result = await assignRole.execute({ userId: "user-1", roleId: "role-1", organizationId: "org-1" });
 // Result<{ event: RoleAssigned }, Error>
 ```
 
@@ -190,7 +190,7 @@ export interface IRoleRepository {
   findAll(): Promise<Role[]>;
   save(role: Role): Promise<void>;
   delete(id: string): Promise<void>;
-  assignToUser(userId: string, roleId: string): Promise<void>;
+  assignToUser(userId: string, roleId: string, organizationId?: string): Promise<void>;
   revokeFromUser(userId: string, roleId: string): Promise<void>;
 }
 ```
@@ -306,6 +306,28 @@ app.get("/admin/posts", requirePermission(authorizationService, "posts", "manage
 | `GET` | `/roles` | — | `200 [{ id, name, description, permissions }]` |
 | `POST` | `/roles/assign` | `{ userId, roleId }` | `200` or error |
 | `POST` | `/roles/revoke` | `{ userId, roleId }` | `200` or error |
+
+## Bridges
+
+### auth-rbac
+
+Assigns a default role to newly registered users. When `UserRegistered` fires, the bridge calls `AssignRole` with a configurable `defaultRoleId`.
+
+```bash
+npx @backcap/cli add auth-rbac
+```
+
+**Requires**: auth, rbac
+
+### rbac-organizations
+
+Assigns an org-scoped default role when a member joins an organization. When `MemberJoined` fires, the bridge calls `AssignRole` with the `organizationId` from the event.
+
+```bash
+npx @backcap/cli add rbac-organizations
+```
+
+**Requires**: rbac, organizations
 
 ## File Map
 

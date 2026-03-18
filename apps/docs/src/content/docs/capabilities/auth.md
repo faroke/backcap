@@ -247,7 +247,25 @@ Sends a welcome email when a new user registers.
 npx @backcap/cli add auth-notifications
 ```
 
-See the [auth-notifications bridge](/concepts/bridges#the-auth-notifications-bridge) documentation for wiring instructions.
+### auth-rbac
+
+Assigns a default role to newly registered users. When `UserRegistered` fires, the bridge calls `AssignRole` with a configurable `defaultRoleId`.
+
+```bash
+npx @backcap/cli add auth-rbac
+```
+
+**Requires**: auth, rbac
+
+### auth-organizations
+
+Creates a personal organization for newly registered users. When `UserRegistered` fires, the bridge calls `CreateOrganization` with a personal workspace scoped to the user.
+
+```bash
+npx @backcap/cli add auth-organizations
+```
+
+**Requires**: auth, organizations
 
 ## File Map
 

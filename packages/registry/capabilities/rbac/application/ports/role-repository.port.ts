@@ -7,6 +7,6 @@ export interface IRoleRepository {
   save(role: Role): Promise<void>;
   delete(id: string): Promise<void>;
   findAll(): Promise<Role[]>;
-  assignToUser(userId: string, roleId: string): Promise<void>;
+  assignToUser(userId: string, roleId: string, organizationId?: string): Promise<void>;
   revokeFromUser(userId: string, roleId: string): Promise<void>;
 }

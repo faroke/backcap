@@ -15,9 +15,9 @@ export class AssignRole {
       return Result.fail(RoleNotFound.create(input.roleId));
     }
 
-    await this.roleRepository.assignToUser(input.userId, input.roleId);
+    await this.roleRepository.assignToUser(input.userId, input.roleId, input.organizationId);
 
-    const event = new RoleAssigned(input.userId, input.roleId);
+    const event = new RoleAssigned(input.userId, input.roleId, input.organizationId);
     return Result.ok({ event });
   }
 }
