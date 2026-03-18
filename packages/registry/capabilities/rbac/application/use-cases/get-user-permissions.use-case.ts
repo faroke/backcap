@@ -11,6 +11,7 @@ export class GetUserPermissions {
   ): Promise<Result<Permission[], Error>> {
     const permissions = await this.permissionResolver.getUserPermissions(
       input.userId,
+      input.organizationId || undefined,
     );
     return Result.ok(permissions);
   }

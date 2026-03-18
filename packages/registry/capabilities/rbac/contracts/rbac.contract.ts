@@ -22,6 +22,7 @@ export interface RbacCheckPermissionInput {
   userId: string;
   action: string;
   resource: string;
+  organizationId?: string;
 }
 
 export interface RbacRoleOutput {
@@ -44,5 +45,5 @@ export interface IAuthorizationService {
   revokeRole(input: RbacRevokeRoleInput): Promise<Result<{ event: unknown }, Error>>;
   checkPermission(input: RbacCheckPermissionInput): Promise<Result<boolean, PermissionDenied>>;
   listRoles(): Promise<Result<RbacRoleOutput[], Error>>;
-  getUserPermissions(userId: string): Promise<Result<RbacPermissionOutput[], Error>>;
+  getUserPermissions(userId: string, organizationId?: string): Promise<Result<RbacPermissionOutput[], Error>>;
 }

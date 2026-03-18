@@ -3,7 +3,7 @@ import type { ITokenService } from "../../../capabilities/auth/application/ports
 
 interface Request {
   headers: Record<string, string | undefined>;
-  user?: { userId: string };
+  user?: { userId: string; organizationId?: string };
 }
 
 interface Response {
@@ -30,7 +30,7 @@ export function createAuthMiddleware(tokenService: ITokenService): RequestHandle
       return;
     }
 
-    req.user = { userId: payload.userId };
+    req.user = { userId: payload.userId, organizationId: payload.organizationId };
     next();
   };
 }

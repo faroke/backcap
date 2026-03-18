@@ -154,7 +154,7 @@ const result = await revokeRole.execute({ userId: "user-1", roleId: "role-1" });
 
 #### CheckPermission
 
-Checks if a user has a specific permission.
+Checks if a user has a specific permission. Optionally scoped to an organization.
 
 ```typescript
 import { CheckPermission } from "./capabilities/rbac/application/use-cases/check-permission.use-case";
@@ -164,9 +164,12 @@ const result = await checkPermission.execute({
   userId: "user-1",
   action: "update",
   resource: "posts",
+  organizationId: "org-1", // optional — checks org-scoped permissions
 });
-// Result<{ allowed: boolean }, Error>
+// Result<boolean, PermissionDenied>
 ```
+
+When `organizationId` is provided, only permissions assigned within that organization are considered. A user with `admin` role in org A has no admin privileges in org B.
 
 **Possible failures**: `PermissionDenied` (invalid action or resource)
 
@@ -186,7 +189,7 @@ Returns all permissions for a given user.
 export interface IRoleRepository {
   findById(id: string): Promise<Role | null>;
   findByName(name: string): Promise<Role | null>;
-  findByUserId(userId: string): Promise<Role[]>;
+  findByUserId(userId: string, organizationId?: string): Promise<Role[]>;
   findAll(): Promise<Role[]>;
   save(role: Role): Promise<void>;
   delete(id: string): Promise<void>;
@@ -199,10 +202,12 @@ export interface IRoleRepository {
 
 ```typescript
 export interface IPermissionResolver {
-  getUserPermissions(userId: string): Promise<Permission[]>;
-  hasPermission(userId: string, action: string, resource: string): Promise<boolean>;
+  getUserPermissions(userId: string, organizationId?: string): Promise<Permission[]>;
+  hasPermission(userId: string, action: string, resource: string, organizationId?: string): Promise<boolean>;
 }
 ```
+
+When `organizationId` is provided, the resolver filters permissions to those assigned within the specified organization scope. Without it, global (non-org-scoped) permissions are returned.
 
 ## Public API (contracts/)
 
@@ -221,9 +226,9 @@ const authorizationService: IAuthorizationService = createAuthorizationService({
 // createRole(input): Promise<Result<{ roleId: string }, Error>>
 // assignRole(input): Promise<Result<{ event: RoleAssigned }, Error>>
 // revokeRole(input): Promise<Result<{ event: RoleRevoked }, Error>>
-// checkPermission(input): Promise<Result<{ allowed: boolean }, Error>>
+// checkPermission(input): Promise<Result<boolean, PermissionDenied>>
 // listRoles(): Promise<Result<RoleDTO[], Error>>
-// getUserPermissions(userId): Promise<Result<PermissionDTO[], Error>>
+// getUserPermissions(userId, organizationId?): Promise<Result<PermissionDTO[], Error>>
 ```
 
 This is the only import consumers need. The internal use case classes are implementation details.
@@ -312,6 +317,20 @@ app.get("/admin/posts", requirePermission(authorizationService, "posts", "manage
 ### auth-rbac
 
 Assigns a default role to newly registered users. When `UserRegistered` fires, the bridge calls `AssignRole` with a configurable `defaultRoleId`.
+
+Also provides a combined `requireAuth()` middleware that validates the auth token and checks permissions in a single call:
+
+```typescript
+import { requireAuth } from "./bridges/auth-rbac";
+
+// Auth + permission check in one middleware
+app.post("/posts", requireAuth(tokenService, authorizationService, {
+  permission: "posts:create",
+}), handler);
+
+// Auth-only (no permission check)
+app.get("/profile", requireAuth(tokenService, authorizationService), handler);
+```
 
 ```bash
 npx @backcap/cli add auth-rbac

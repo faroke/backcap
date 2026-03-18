@@ -29,7 +29,7 @@ export class LoginUser {
       return Result.fail(InvalidCredentials.create());
     }
 
-    const token = await this.tokenService.generate(user.id, user.roles);
+    const token = await this.tokenService.generate(user.id, user.roles, input.organizationId || undefined);
 
     return Result.ok({ token, userId: user.id });
   }

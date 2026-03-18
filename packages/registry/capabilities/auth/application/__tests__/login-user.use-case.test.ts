@@ -40,6 +40,24 @@ describe("LoginUser use case", () => {
     expect(output.userId).toBe("test-user-1");
   });
 
+  it("passes organizationId to token service when provided", async () => {
+    const result = await loginUser.execute({
+      email: "user@example.com",
+      password: "correct-password",
+      organizationId: "org-123",
+    });
+
+    expect(result.isOk()).toBe(true);
+    const output = result.unwrap();
+    expect(output.token).toBeDefined();
+    expect(output.userId).toBe("test-user-1");
+
+    // Verify the token actually contains the organizationId
+    const payload = await tokenService.verify(output.token);
+    expect(payload).not.toBeNull();
+    expect(payload!.organizationId).toBe("org-123");
+  });
+
   it("rejects unknown email", async () => {
     const result = await loginUser.execute({
       email: "unknown@example.com",

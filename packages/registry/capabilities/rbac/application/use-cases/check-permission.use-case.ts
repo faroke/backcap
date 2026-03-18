@@ -32,6 +32,7 @@ export class CheckPermission {
       input.userId,
       normalizedAction,
       normalizedResource,
+      input.organizationId || undefined,
     );
 
     if (!hasPermission) {

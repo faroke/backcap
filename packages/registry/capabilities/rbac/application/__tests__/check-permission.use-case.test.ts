@@ -62,6 +62,49 @@ describe("CheckPermission use case", () => {
     expect(result.unwrapError()).toBeInstanceOf(PermissionDenied);
   });
 
+  it("checks permission within organization scope", async () => {
+    const perm = createTestPermission({ action: "read", resource: "posts" });
+    permissionResolver.setPermissions("user-1", [perm], "org-1");
+
+    const result = await checkPermission.execute({
+      userId: "user-1",
+      action: "read",
+      resource: "posts",
+      organizationId: "org-1",
+    });
+
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap()).toBe(true);
+  });
+
+  it("denies permission in org where user has no roles", async () => {
+    const perm = createTestPermission({ action: "manage", resource: "posts" });
+    permissionResolver.setPermissions("user-1", [perm], "org-1");
+
+    const result = await checkPermission.execute({
+      userId: "user-1",
+      action: "read",
+      resource: "posts",
+      organizationId: "org-2",
+    });
+
+    expect(result.isFail()).toBe(true);
+    expect(result.unwrapError()).toBeInstanceOf(PermissionDenied);
+  });
+
+  it("global roles still work without organizationId", async () => {
+    const perm = createTestPermission({ action: "read", resource: "posts" });
+    permissionResolver.setPermissions("user-1", [perm]);
+
+    const result = await checkPermission.execute({
+      userId: "user-1",
+      action: "read",
+      resource: "posts",
+    });
+
+    expect(result.isOk()).toBe(true);
+  });
+
   it("manage permission grants access to any action", async () => {
     const perm = createTestPermission({ action: "manage", resource: "posts" });
     permissionResolver.setPermissions("user-1", [perm]);

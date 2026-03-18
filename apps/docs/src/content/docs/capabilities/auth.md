@@ -112,7 +112,7 @@ const result = await registerUser.execute({
 
 #### LoginUser
 
-Authenticates a user by email and password. Returns a signed token on success.
+Authenticates a user by email and password. Returns a signed token on success. Optionally accepts `organizationId` to include the active organization in the token.
 
 ```typescript
 import { LoginUser } from "./capabilities/auth/application/use-cases/login-user.use-case";
@@ -122,6 +122,7 @@ const loginUser = new LoginUser(userRepository, tokenService, passwordHasher);
 const result = await loginUser.execute({
   email: "user@example.com",
   password: "securepass1",
+  organizationId: "org-1", // optional — includes org context in token
 });
 // Result<{ token: string; userId: string }, Error>
 ```
@@ -153,10 +154,12 @@ export interface IPasswordHasher {
 
 ```typescript
 export interface ITokenService {
-  sign(payload: { userId: string }): Promise<string>;
-  verify(token: string): Promise<{ userId: string }>;
+  generate(userId: string, roles: string[], organizationId?: string): Promise<string>;
+  verify(token: string): Promise<{ userId: string; organizationId?: string } | null>;
 }
 ```
+
+When `organizationId` is provided to `generate()`, the token includes the active organization context. The `verify()` method returns the `organizationId` if present in the token, enabling tenant-scoped downstream middleware.
 
 ## Public API (contracts/)
 

@@ -46,8 +46,8 @@ export function createAuthorizationService(
           })),
         ),
       ),
-    getUserPermissions: (userId) =>
-      getUserPermissions.execute({ userId }).then((result) =>
+    getUserPermissions: (userId, organizationId) =>
+      getUserPermissions.execute({ userId, organizationId }).then((result) =>
         result.map((perms) =>
           perms.map((p) => ({
             id: p.id,

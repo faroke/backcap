@@ -3,12 +3,21 @@ import type { IPermissionResolver } from "../../ports/permission-resolver.port.j
 
 export class InMemoryPermissionResolver implements IPermissionResolver {
   private userPermissions = new Map<string, Permission[]>();
+  private orgPermissions = new Map<string, Permission[]>();
 
-  setPermissions(userId: string, permissions: Permission[]): void {
-    this.userPermissions.set(userId, permissions);
+  setPermissions(userId: string, permissions: Permission[], organizationId?: string): void {
+    const key = organizationId ? `${userId}:${organizationId}` : userId;
+    if (organizationId) {
+      this.orgPermissions.set(key, permissions);
+    } else {
+      this.userPermissions.set(userId, permissions);
+    }
   }
 
-  async getUserPermissions(userId: string): Promise<Permission[]> {
+  async getUserPermissions(userId: string, organizationId?: string): Promise<Permission[]> {
+    if (organizationId) {
+      return this.orgPermissions.get(`${userId}:${organizationId}`) ?? [];
+    }
     return this.userPermissions.get(userId) ?? [];
   }
 
@@ -16,8 +25,9 @@ export class InMemoryPermissionResolver implements IPermissionResolver {
     userId: string,
     action: string,
     resource: string,
+    organizationId?: string,
   ): Promise<boolean> {
-    const permissions = this.userPermissions.get(userId) ?? [];
+    const permissions = await this.getUserPermissions(userId, organizationId);
     return permissions.some(
       (p) =>
         (p.action.value === action || p.action.value === "manage") &&
