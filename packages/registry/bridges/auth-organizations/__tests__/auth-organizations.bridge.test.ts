@@ -5,8 +5,12 @@ import { createBridge } from "../auth-organizations.bridge.js";
 describe("auth-organizations bridge", () => {
   it("calls createOrganization on UserRegistered with personal org", async () => {
     const bus = new InMemoryEventBus();
+    const orgEvent = { organizationId: "org-1", name: "Personal", slug: "personal-u-1", ownerId: "u-1" };
     const createOrganization = {
-      execute: vi.fn().mockResolvedValue({ isFail: () => false }),
+      execute: vi.fn().mockResolvedValue({
+        isFail: () => false,
+        unwrap: () => ({ organizationId: "org-1", event: orgEvent }),
+      }),
     };
     const bridge = createBridge({ createOrganization });
 
@@ -28,7 +32,38 @@ describe("auth-organizations bridge", () => {
     });
   });
 
-  it("logs error when use case returns failure result", async () => {
+  it("publishes OrganizationCreated event on success", async () => {
+    const bus = new InMemoryEventBus();
+    const orgEvent = { organizationId: "org-1", name: "Personal", slug: "personal-u-1", ownerId: "u-1" };
+    const createOrganization = {
+      execute: vi.fn().mockResolvedValue({
+        isFail: () => false,
+        unwrap: () => ({ organizationId: "org-1", event: orgEvent }),
+      }),
+    };
+    const bridge = createBridge({ createOrganization });
+
+    const published: { event: string; payload: unknown }[] = [];
+    const originalPublish = bus.publish.bind(bus);
+    vi.spyOn(bus, "publish").mockImplementation(async (event, payload) => {
+      published.push({ event, payload });
+      return originalPublish(event, payload);
+    });
+
+    bridge.wire(bus);
+
+    await originalPublish("UserRegistered", {
+      userId: "u-1",
+      email: "user@example.com",
+      occurredAt: new Date("2026-01-01"),
+    });
+
+    const orgCreatedPublish = published.find((p) => p.event === "OrganizationCreated");
+    expect(orgCreatedPublish).toBeDefined();
+    expect(orgCreatedPublish!.payload).toEqual(orgEvent);
+  });
+
+  it("does not publish event on failure result", async () => {
     const bus = new InMemoryEventBus();
     const createOrganization = {
       execute: vi.fn().mockResolvedValue({
@@ -39,14 +74,22 @@ describe("auth-organizations bridge", () => {
     const bridge = createBridge({ createOrganization });
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
+    const published: string[] = [];
+    const originalPublish = bus.publish.bind(bus);
+    vi.spyOn(bus, "publish").mockImplementation(async (event, payload) => {
+      published.push(event);
+      return originalPublish(event, payload);
+    });
+
     bridge.wire(bus);
 
-    await bus.publish("UserRegistered", {
+    await originalPublish("UserRegistered", {
       userId: "u-1",
       email: "user@example.com",
       occurredAt: new Date("2026-01-01"),
     });
 
+    expect(published).not.toContain("OrganizationCreated");
     expect(consoleSpy).toHaveBeenCalledWith(
       "[auth-organizations] CreateOrganization failed:",
       expect.any(Error),

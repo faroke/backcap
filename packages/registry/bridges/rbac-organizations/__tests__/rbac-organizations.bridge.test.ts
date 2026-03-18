@@ -3,19 +3,78 @@ import { InMemoryEventBus } from "../../../../shared/src/in-memory-event-bus.js"
 import { createBridge } from "../rbac-organizations.bridge.js";
 
 describe("rbac-organizations bridge", () => {
-  it("calls assignRole on MemberJoined with org-scoped role", async () => {
+  it("uses roleMapping to resolve roleId from event.role", async () => {
     const bus = new InMemoryEventBus();
     const assignRole = {
       execute: vi.fn().mockResolvedValue({ isFail: () => false }),
     };
-    const bridge = createBridge({ assignRole, defaultRoleId: "role-member" });
+    const bridge = createBridge({
+      assignRole,
+      defaultRoleId: "role-member",
+      roleMapping: { admin: "role-admin", member: "role-member", viewer: "role-viewer" },
+    });
 
     bridge.wire(bus);
 
     await bus.publish("MemberJoined", {
       organizationId: "org-1",
       userId: "u-1",
-      role: "member",
+      role: "admin",
+      occurredAt: new Date("2026-01-01"),
+    });
+
+    expect(assignRole.execute).toHaveBeenCalledOnce();
+    expect(assignRole.execute).toHaveBeenCalledWith({
+      userId: "u-1",
+      roleId: "role-admin",
+      organizationId: "org-1",
+    });
+  });
+
+  it("falls back to defaultRoleId when event.role is not in roleMapping", async () => {
+    const bus = new InMemoryEventBus();
+    const assignRole = {
+      execute: vi.fn().mockResolvedValue({ isFail: () => false }),
+    };
+    const bridge = createBridge({
+      assignRole,
+      defaultRoleId: "role-member",
+      roleMapping: { admin: "role-admin" },
+    });
+
+    bridge.wire(bus);
+
+    await bus.publish("MemberJoined", {
+      organizationId: "org-1",
+      userId: "u-1",
+      role: "viewer",
+      occurredAt: new Date("2026-01-01"),
+    });
+
+    expect(assignRole.execute).toHaveBeenCalledOnce();
+    expect(assignRole.execute).toHaveBeenCalledWith({
+      userId: "u-1",
+      roleId: "role-member",
+      organizationId: "org-1",
+    });
+  });
+
+  it("uses defaultRoleId when no roleMapping is provided", async () => {
+    const bus = new InMemoryEventBus();
+    const assignRole = {
+      execute: vi.fn().mockResolvedValue({ isFail: () => false }),
+    };
+    const bridge = createBridge({
+      assignRole,
+      defaultRoleId: "role-member",
+    });
+
+    bridge.wire(bus);
+
+    await bus.publish("MemberJoined", {
+      organizationId: "org-1",
+      userId: "u-1",
+      role: "admin",
       occurredAt: new Date("2026-01-01"),
     });
 

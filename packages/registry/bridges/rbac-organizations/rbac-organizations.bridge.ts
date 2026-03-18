@@ -24,6 +24,7 @@ export interface IAssignRole {
 export interface RbacOrganizationsBridgeDeps {
   assignRole: IAssignRole;
   defaultRoleId: string;
+  roleMapping?: Record<string, string>;
 }
 
 export function createBridge(deps: RbacOrganizationsBridgeDeps): Bridge {
@@ -31,9 +32,10 @@ export function createBridge(deps: RbacOrganizationsBridgeDeps): Bridge {
     wire(eventBus: IEventBus): void {
       eventBus.subscribe<MemberJoinedEvent>("MemberJoined", async (event) => {
         try {
+          const roleId = deps.roleMapping?.[event.role] ?? deps.defaultRoleId;
           const result = await deps.assignRole.execute({
             userId: event.userId,
-            roleId: deps.defaultRoleId,
+            roleId,
             organizationId: event.organizationId,
           });
           if (result.isFail()) {
