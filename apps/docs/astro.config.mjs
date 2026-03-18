@@ -59,6 +59,7 @@ export default defineConfig({
             { label: "Analytics", slug: "capabilities/analytics" },
             { label: "Audit Log", slug: "capabilities/audit-log" },
             { label: "Auth", slug: "capabilities/auth" },
+            { label: "Billing", slug: "capabilities/billing" },
             { label: "Blog", slug: "capabilities/blog" },
             { label: "Comments", slug: "capabilities/comments" },
             { label: "Feature Flags", slug: "capabilities/feature-flags" },
