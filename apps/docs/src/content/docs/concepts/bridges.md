@@ -93,6 +93,8 @@ eventBus.subscribe("UserRegistered", async (event) => {
 | `cart-orders` | cart | orders | CartConverted |
 | `orders-billing` | orders | billing | OrderPlaced, PaymentSucceeded, PaymentFailed, PaymentRetryRequested |
 | `catalog-search` | catalog | search | ProductPublished |
+| `blog-media` | media | blog | MediaDeleted |
+| `media-files` | media | files | MediaUploaded |
 
 ## Discovering Bridges
 

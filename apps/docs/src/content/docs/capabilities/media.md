@@ -303,11 +303,41 @@ app.use(router);
 | `UnsupportedFormat` | `400 Bad Request` |
 | `ProcessingFailed` | `422 Unprocessable Entity` |
 
+## Bridges
+
+### blog-media
+
+When both `blog` and `media` are installed, the `blog-media` bridge connects them:
+
+- **Event-driven:** `MediaDeleted` triggers cleanup of blog post media references (featured images, inline images)
+- **DI factory:** `createBlogMediaResolver()` provides an `IBlogMediaResolver` that wraps `IMediaService.getMediaUrl()` — use it to resolve media URLs for blog post featured images or inline content
+
+```typescript
+import { createBlogMediaResolver } from "./bridges/blog-media/blog-media.bridge.js";
+
+const resolver = createBlogMediaResolver({ getMediaUrl: mediaService });
+const url = await resolver.getMediaUrl("media-123", "thumbnail");
+```
+
+### media-files
+
+When both `media` and `files` are installed, the `media-files` bridge connects them:
+
+- **DI factory:** `createFileBackedMediaStorage()` creates an `IMediaStorage` adapter that delegates to the files capability's `IFileStorage` — raw file storage and variant persistence go through the files layer
+- **Event-driven:** `MediaUploaded` triggers `ProcessMedia` to generate variants after storage confirms success
+
+```typescript
+import { createFileBackedMediaStorage } from "./bridges/media-files/media-files.bridge.js";
+
+const mediaStorage = createFileBackedMediaStorage({ fileStorage });
+// Use mediaStorage as the IMediaStorage implementation
+```
+
 ## Distinction from Files Capability
 
 - **files** = raw upload/download/delete — no processing, no variants, no metadata enrichment
 - **media** = processing-aware — thumbnails, format conversion, dimensions, variants, CDN URLs
-- When both are installed, the `media-files` bridge can delegate raw storage to files' `IFileStorage`
+- When both are installed, the `media-files` bridge delegates raw storage to files' `IFileStorage`
 
 ## File Map
 

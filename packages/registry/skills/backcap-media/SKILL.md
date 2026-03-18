@@ -112,11 +112,18 @@ For Backcap-wide architecture rules, naming conventions, and the Result pattern,
 | `adapters/prisma/media/prisma-media-repository.ts` | `PrismaMediaRepository` | `IMediaRepository` backed by Prisma |
 | `adapters/prisma/media/media.schema.prisma` | — | Prisma `MediaAssetRecord` + `MediaVariantRecord` model fragments to merge into `schema.prisma` |
 
+## Bridges
+
+| Bridge | Source | Target | Events | DI Exports |
+|---|---|---|---|---|
+| `blog-media` | media | blog | `MediaDeleted` → cleanup blog post media refs | `createBlogMediaResolver(deps): IBlogMediaResolver` — resolves media URLs for blog posts |
+| `media-files` | media | files | `MediaUploaded` → triggers `ProcessMedia` | `createFileBackedMediaStorage(deps): IMediaStorageAdapter` — wraps `IFileStorage` as `IMediaStorage` |
+
 ## Distinction from `files` Capability
 
 - `files` = raw upload/download/delete (no processing, no variants, no metadata)
 - `media` = processing-aware (thumbnails, format conversion, dimensions, variants, CDN URLs)
-- When both are installed, `media-files` bridge can delegate raw storage to files' `IFileStorage`
+- When both are installed, `media-files` bridge delegates raw storage to files' `IFileStorage`
 
 ## CLI Commands
 
