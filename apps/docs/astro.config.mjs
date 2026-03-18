@@ -61,6 +61,7 @@ export default defineConfig({
             { label: "Auth", slug: "capabilities/auth" },
             { label: "Billing", slug: "capabilities/billing" },
             { label: "Blog", slug: "capabilities/blog" },
+            { label: "Cart", slug: "capabilities/cart" },
             { label: "Catalog", slug: "capabilities/catalog" },
             { label: "Comments", slug: "capabilities/comments" },
             { label: "Feature Flags", slug: "capabilities/feature-flags" },
