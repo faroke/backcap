@@ -1,0 +1,7 @@
+{
+  "name": "organizations-billing",
+  "sourceCapability": "organizations",
+  "targetCapability": "billing",
+  "events": ["OrganizationCreated"],
+  "version": "1.0.0"
+}

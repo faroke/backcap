@@ -1,0 +1,7 @@
+{
+  "name": "auth-billing",
+  "sourceCapability": "auth",
+  "targetCapability": "billing",
+  "events": ["UserRegistered"],
+  "version": "1.0.0"
+}

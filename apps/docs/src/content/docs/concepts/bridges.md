@@ -79,10 +79,12 @@ eventBus.subscribe("UserRegistered", async (event) => {
 
 | Bridge | Source | Target | Events |
 |---|---|---|---|
+| `auth-billing` | auth | billing | UserRegistered |
 | `auth-notifications` | auth | notifications | UserRegistered |
 | `auth-audit-log` | auth | audit-log | UserRegistered, LoginSucceeded |
 | `auth-rbac` | auth | rbac | UserRegistered |
 | `auth-organizations` | auth | organizations | UserRegistered |
+| `organizations-billing` | organizations | billing | OrganizationCreated |
 | `rbac-organizations` | organizations | rbac | MemberJoined |
 | `blog-search` | blog | search | PostPublished |
 | `blog-comments` | comments | blog, notifications | CommentPosted |

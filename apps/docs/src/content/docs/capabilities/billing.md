@@ -192,3 +192,29 @@ const result = await webhookHandler.handle(event);
 ### Swapping Providers
 
 To use a different payment provider (e.g. Paddle, Braintree), implement `IPaymentProvider` with that provider's SDK. No changes to domain or application layers are needed — just inject the new adapter through the factory.
+
+## Bridges
+
+### auth-billing
+
+When a user registers, automatically create a billing customer profile.
+
+| Source Event | Target Action |
+|-------------|---------------|
+| `UserRegistered` | `CreateCustomer` — creates a billing customer with the user's ID and email |
+
+```bash
+npx @backcap/cli bridges auth-billing
+```
+
+### organizations-billing
+
+When an organization is created, create a billing customer scoped to the organization for team billing.
+
+| Source Event | Target Action |
+|-------------|---------------|
+| `OrganizationCreated` | `CreateCustomer` — creates a billing customer with the organization's ID and name |
+
+```bash
+npx @backcap/cli bridges organizations-billing
+```
