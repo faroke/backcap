@@ -7,9 +7,17 @@ interface UserRegisteredEvent {
   occurredAt: Date;
 }
 
+interface OrganizationCreatedEvent {
+  organizationId: string;
+  name: string;
+  slug: string;
+  ownerId: string;
+  occurredAt?: Date;
+}
+
 interface CreateOrganizationResult {
   isFail(): boolean;
-  unwrap(): { organizationId: string; event: unknown };
+  unwrap(): { organizationId: string; event: OrganizationCreatedEvent };
   error?: Error;
 }
 
@@ -42,8 +50,12 @@ export function createBridge(deps: AuthOrganizationsBridgeDeps): Bridge {
           if (result.isFail()) {
             console.error("[auth-organizations] CreateOrganization failed:", result.error);
           } else {
-            const { event: orgEvent } = result.unwrap();
-            await eventBus.publish("OrganizationCreated", orgEvent);
+            try {
+              const { event: orgEvent } = result.unwrap();
+              await eventBus.publish("OrganizationCreated", orgEvent);
+            } catch (publishError) {
+              console.error("[auth-organizations] Failed to publish OrganizationCreated:", publishError);
+            }
           }
         } catch (error) {
           console.error("[auth-organizations] Failed to create personal organization:", error);
