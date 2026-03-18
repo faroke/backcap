@@ -1,0 +1,30 @@
+// ============================================================
+// Media Capability — Prisma Schema Fragment
+// ============================================================
+// INSTRUCTIONS:
+// 1. Copy the models below into your main schema.prisma file
+// 2. Run: npx prisma migrate dev --name media
+// 3. Run: npx prisma generate
+// ============================================================
+
+model MediaAssetRecord {
+  id          String               @id @default(uuid())
+  originalUrl String
+  mimeType    String
+  width       Int?
+  height      Int?
+  size        Int
+  uploadedAt  DateTime             @default(now())
+  variants    MediaVariantRecord[]
+}
+
+model MediaVariantRecord {
+  id           String           @id @default(uuid())
+  mediaAssetId String
+  url          String
+  width        Int
+  height       Int
+  format       String
+  purpose      String
+  mediaAsset   MediaAssetRecord @relation(fields: [mediaAssetId], references: [id])
+}

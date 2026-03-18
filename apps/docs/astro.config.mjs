@@ -67,6 +67,7 @@ export default defineConfig({
             { label: "Feature Flags", slug: "capabilities/feature-flags" },
             { label: "Files", slug: "capabilities/files" },
             { label: "Forms", slug: "capabilities/forms" },
+            { label: "Media", slug: "capabilities/media" },
             { label: "Notifications", slug: "capabilities/notifications" },
             { label: "Orders", slug: "capabilities/orders" },
             { label: "Organizations", slug: "capabilities/organizations" },
