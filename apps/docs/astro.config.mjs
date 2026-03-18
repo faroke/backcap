@@ -66,6 +66,7 @@ export default defineConfig({
             { label: "Forms", slug: "capabilities/forms" },
             { label: "Notifications", slug: "capabilities/notifications" },
             { label: "Queues", slug: "capabilities/queues" },
+            { label: "RBAC", slug: "capabilities/rbac" },
             { label: "Search", slug: "capabilities/search" },
             { label: "Tags", slug: "capabilities/tags" },
             { label: "Webhooks", slug: "capabilities/webhooks" },

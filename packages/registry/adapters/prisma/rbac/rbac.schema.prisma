@@ -1,0 +1,41 @@
+// ============================================================
+// RBAC Capability — Prisma Schema Fragment
+// ============================================================
+// INSTRUCTIONS:
+// 1. Copy the models below into your main schema.prisma file
+// 2. Run: npx prisma migrate dev --name rbac
+// 3. Run: npx prisma generate
+// ============================================================
+
+model Role {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  description String
+  permissions Permission[]
+  users       UserRole[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Permission {
+  id         String   @id @default(uuid())
+  action     String
+  resource   String
+  conditions Json     @default("{}")
+  role       Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId     String
+  createdAt  DateTime @default(now())
+
+  @@index([action, resource])
+}
+
+model UserRole {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, roleId])
+}
