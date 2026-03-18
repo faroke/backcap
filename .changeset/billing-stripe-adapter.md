@@ -1,6 +1,5 @@
 ---
 "@backcap/registry": minor
-"@backcap/cli": patch
 ---
 
 Billing Stripe adapter: payment provider, webhook handler with idempotency (story 9.2)
