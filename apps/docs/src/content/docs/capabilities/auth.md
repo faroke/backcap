@@ -259,7 +259,7 @@ npx @backcap/cli add auth-rbac
 
 ### auth-organizations
 
-Creates a personal organization for newly registered users. When `UserRegistered` fires, the bridge calls `CreateOrganization` with a personal workspace scoped to the user.
+Creates a personal organization for newly registered users. When `UserRegistered` fires, the bridge calls `CreateOrganization` with a personal workspace scoped to the user. On success, it publishes `OrganizationCreated` on the event bus for downstream subscribers.
 
 ```bash
 npx @backcap/cli add auth-organizations

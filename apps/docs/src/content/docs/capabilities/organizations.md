@@ -288,7 +288,7 @@ app.use("/orgs/:orgId/*", createOrgScopeMiddleware(orgService));
 
 ### auth-organizations
 
-Creates a personal organization for newly registered users. When `UserRegistered` fires, the bridge calls `CreateOrganization` with a personal workspace scoped to the user.
+Creates a personal organization for newly registered users. When `UserRegistered` fires, the bridge calls `CreateOrganization` with a personal workspace scoped to the user. On success, it publishes `OrganizationCreated` on the event bus for downstream subscribers.
 
 ```bash
 npx @backcap/cli add auth-organizations
@@ -298,7 +298,7 @@ npx @backcap/cli add auth-organizations
 
 ### rbac-organizations
 
-Assigns an org-scoped default role when a member joins an organization. When `MemberJoined` fires, the bridge calls `AssignRole` with the `organizationId` from the event.
+Assigns an org-scoped default role when a member joins an organization. When `MemberJoined` fires, the bridge resolves the RBAC role via an optional `roleMapping` (falling back to a `defaultRoleId`) and calls `AssignRole` with the `organizationId` from the event.
 
 ```bash
 npx @backcap/cli add rbac-organizations

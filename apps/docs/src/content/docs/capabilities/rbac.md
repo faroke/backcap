@@ -321,7 +321,7 @@ npx @backcap/cli add auth-rbac
 
 ### rbac-organizations
 
-Assigns an org-scoped default role when a member joins an organization. When `MemberJoined` fires, the bridge calls `AssignRole` with the `organizationId` from the event.
+Assigns an org-scoped default role when a member joins an organization. When `MemberJoined` fires, the bridge resolves the RBAC role via an optional `roleMapping` (falling back to a `defaultRoleId`) and calls `AssignRole` with the `organizationId` from the event.
 
 ```bash
 npx @backcap/cli add rbac-organizations

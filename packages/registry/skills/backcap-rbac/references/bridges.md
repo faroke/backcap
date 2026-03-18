@@ -89,6 +89,7 @@ bridges/rbac-organizations/
 export interface RbacOrganizationsBridgeDeps {
   assignRole: IAssignRole;
   defaultRoleId: string;
+  roleMapping?: Record<string, string>;
 }
 
 export function createBridge(deps: RbacOrganizationsBridgeDeps): Bridge;
@@ -96,7 +97,8 @@ export function createBridge(deps: RbacOrganizationsBridgeDeps): Bridge;
 
 ### Behavior
 
-- On `MemberJoined`: calls `assignRole.execute({ userId: event.userId, roleId: deps.defaultRoleId, organizationId: event.organizationId })`
+- On `MemberJoined`: resolves `roleId` from `deps.roleMapping[event.role]`, falling back to `deps.defaultRoleId` if the role is not mapped or `roleMapping` is not provided
+- Calls `assignRole.execute({ userId: event.userId, roleId, organizationId: event.organizationId })`
 - Errors are caught and logged with prefix `[rbac-organizations]`, never re-thrown
 
 ### Wiring
@@ -104,7 +106,11 @@ export function createBridge(deps: RbacOrganizationsBridgeDeps): Bridge;
 ```typescript
 import { createBridge } from './bridges/rbac-organizations/rbac-organizations.bridge.js';
 
-const bridge = createBridge({ assignRole: authorizationService.assignRole, defaultRoleId: 'role-member' });
+const bridge = createBridge({
+  assignRole: authorizationService.assignRole,
+  defaultRoleId: 'role-member',
+  roleMapping: { owner: 'role-admin', admin: 'role-admin', member: 'role-member', viewer: 'role-viewer' },
+});
 bridge.wire(eventBus);
 ```
 

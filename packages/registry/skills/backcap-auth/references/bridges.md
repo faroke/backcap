@@ -247,6 +247,7 @@ interface UserRegisteredEvent {
 ### Behavior
 
 - On `UserRegistered`: calls `createOrganization.execute({ name: "Personal", slug: "personal-{userId}", plan: "personal", settings: {}, ownerId: event.userId })`
+- On success: publishes `OrganizationCreated` event on the event bus for downstream subscribers
 - Errors are caught and logged with prefix `[auth-organizations]`, never re-thrown
 
 ### Wiring
