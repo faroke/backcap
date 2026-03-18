@@ -1,5 +1,15 @@
 # @backcap/registry
 
+## 0.5.0
+
+### Minor Changes
+
+- 30938c7: feat(registry): orders capability — order lifecycle with state machine, fulfillment tracking (story 10.3)
+
+### Patch Changes
+
+- 4d6552a: fix(registry): cart capability code review fixes — variantId+productId match, domain errors→400, price upper bound, $transaction required, Quantity.max stored, Cart.create validation
+
 ## 0.4.0
 
 ### Minor Changes
