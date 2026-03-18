@@ -1,5 +1,11 @@
 # @backcap/registry
 
+## 0.4.0
+
+### Minor Changes
+
+- e81fb1c: feat(registry): cart capability — aggregate-based shopping cart with price verification, quantity validation, currency enforcement, and lifecycle management (story 10.2)
+
 ## 0.3.0
 
 ### Minor Changes
