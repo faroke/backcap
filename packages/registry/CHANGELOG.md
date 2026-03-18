@@ -1,5 +1,11 @@
 # @backcap/registry
 
+## 0.2.0
+
+### Minor Changes
+
+- 361c159: feat(registry): catalog capability — products, variants, categories and pricing (story 10.1)
+
 ## 0.1.0
 
 ### Minor Changes
