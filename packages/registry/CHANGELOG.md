@@ -1,5 +1,11 @@
 # @backcap/registry
 
+## 0.7.0
+
+### Minor Changes
+
+- 81aa1a6: feat(registry): media capability — asset management with processing, variant generation, and CDN-aware URL resolution (story 11.1)
+
 ## 0.6.0
 
 ### Minor Changes
