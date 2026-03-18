@@ -1,0 +1,7 @@
+{
+  "name": "cart-orders",
+  "sourceCapability": "cart",
+  "targetCapability": "orders",
+  "events": ["CartConverted"],
+  "version": "1.0.0"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "orders-billing",
+  "sourceCapability": "orders",
+  "targetCapability": "billing",
+  "events": ["OrderPlaced", "PaymentSucceeded", "PaymentFailed", "PaymentRetryRequested"],
+  "version": "1.0.0"
+}

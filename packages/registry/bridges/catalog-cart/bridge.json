@@ -1,0 +1,7 @@
+{
+  "name": "catalog-cart",
+  "sourceCapability": "catalog",
+  "targetCapability": "cart",
+  "events": [],
+  "version": "1.0.0"
+}

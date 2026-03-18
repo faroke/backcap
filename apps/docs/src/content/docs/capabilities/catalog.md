@@ -121,6 +121,13 @@ const result = await catalog.createProduct({
 });
 ```
 
+## Bridges
+
+| Bridge | Target | Description |
+|---|---|---|
+| `catalog-cart` | cart | Dependency-injection bridge — provides `IProductPriceLookup` to validate product existence and current price when adding to cart |
+| `catalog-search` | search | `ProductPublished` → indexes product data (name, description, price, variants) in the search engine |
+
 ## Adapters
 
 ### Prisma

@@ -136,6 +136,13 @@ const order = await orders.getOrder("order-id");
 const all = await orders.listOrders();
 ```
 
+## Bridges
+
+| Bridge | Source/Target | Description |
+|---|---|---|
+| `cart-orders` | cart → orders | `CartConverted` → retrieves cart items and places a new order, then publishes `OrderPlaced` |
+| `orders-billing` | orders → billing | `OrderPlaced` → processes payment and confirms order; `PaymentFailed` → publishes `PaymentRetryRequested` |
+
 ## Ports
 
 | Port | Description |

@@ -1,0 +1,7 @@
+{
+  "name": "catalog-search",
+  "sourceCapability": "catalog",
+  "targetCapability": "search",
+  "events": ["ProductPublished"],
+  "version": "1.0.0"
+}

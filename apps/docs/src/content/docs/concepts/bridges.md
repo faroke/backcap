@@ -89,6 +89,10 @@ eventBus.subscribe("UserRegistered", async (event) => {
 | `blog-search` | blog | search | PostPublished |
 | `blog-comments` | comments | blog, notifications | CommentPosted |
 | `blog-tags` | blog | tags | PostPublished |
+| `catalog-cart` | catalog | cart | *(DI bridge)* |
+| `cart-orders` | cart | orders | CartConverted |
+| `orders-billing` | orders | billing | OrderPlaced, PaymentSucceeded, PaymentFailed, PaymentRetryRequested |
+| `catalog-search` | catalog | search | ProductPublished |
 
 ## Discovering Bridges
 
