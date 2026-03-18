@@ -6,6 +6,7 @@ export function createTestCart(
     userId: string | null;
     status: string;
     maxItems: number;
+    currency: string;
   }>,
 ): Cart {
   const result = Cart.create({
@@ -13,6 +14,7 @@ export function createTestCart(
     userId: overrides?.userId ?? null,
     status: overrides?.status ?? "active",
     maxItems: overrides?.maxItems ?? 50,
+    currency: overrides?.currency ?? "USD",
   });
 
   if (result.isFail()) {

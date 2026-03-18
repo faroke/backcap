@@ -57,8 +57,8 @@ export class CartItem {
     if (!params.variantId || params.variantId.trim().length === 0) {
       return Result.fail(new Error("Variant ID is required"));
     }
-    if (!Number.isInteger(params.unitPriceCents) || params.unitPriceCents < 0) {
-      return Result.fail(new Error("Unit price must be a non-negative integer (cents)"));
+    if (!Number.isInteger(params.unitPriceCents) || params.unitPriceCents < 0 || params.unitPriceCents > 99_999_999_99) {
+      return Result.fail(new Error("Unit price must be a non-negative integer (cents) up to 99999999999"));
     }
 
     const currency = (params.currency ?? "USD").toUpperCase();
@@ -106,8 +106,8 @@ export class CartItem {
   }
 
   updatePrice(newPriceCents: number, newCurrency: string): Result<CartItem, Error> {
-    if (!Number.isInteger(newPriceCents) || newPriceCents < 0) {
-      return Result.fail(new Error("Unit price must be a non-negative integer (cents)"));
+    if (!Number.isInteger(newPriceCents) || newPriceCents < 0 || newPriceCents > 99_999_999_99) {
+      return Result.fail(new Error("Unit price must be a non-negative integer (cents) up to 99999999999"));
     }
     const upper = newCurrency.toUpperCase();
     if (!CURRENCY_REGEX.test(upper)) {

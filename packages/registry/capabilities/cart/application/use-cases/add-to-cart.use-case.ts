@@ -42,7 +42,12 @@ export class AddToCart {
     const updatedCart = addResult.unwrap();
     await this.cartRepository.update(updatedCart);
 
-    const updatedItem = updatedCart.items.find((i) => i.variantId === input.variantId)!;
+    const updatedItem = updatedCart.items.find(
+      (i) => i.variantId === input.variantId && i.productId === input.productId,
+    );
+    if (!updatedItem) {
+      return Result.fail(new Error("Unexpected: item not found in cart after add"));
+    }
     const event = new ItemAddedToCart(input.cartId, input.variantId, updatedItem.quantity.value);
     return Result.ok({ event });
   }

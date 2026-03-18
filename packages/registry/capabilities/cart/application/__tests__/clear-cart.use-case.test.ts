@@ -44,6 +44,17 @@ describe("ClearCart use case", () => {
     expect(saved!.totalCents).toBe(0);
   });
 
+  it("clears an already-empty cart", async () => {
+    const emptyCart = createTestCart({ id: "empty-cart" });
+    await cartRepo.save(emptyCart);
+
+    const result = await clearCart.execute("empty-cart");
+    expect(result.isOk()).toBe(true);
+
+    const saved = await cartRepo.findById("empty-cart");
+    expect(saved!.itemCount).toBe(0);
+  });
+
   it("fails for non-existent cart", async () => {
     const result = await clearCart.execute("no-cart");
     expect(result.isFail()).toBe(true);

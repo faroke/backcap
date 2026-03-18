@@ -26,7 +26,8 @@ interface PrismaCartRecord {
 }
 
 interface PrismaCartDelegate {
-  findUnique(args: { where: { id?: string; userId?: string }; include?: { items: boolean } }): Promise<PrismaCartRecord | null>;
+  findUnique(args: { where: { id?: string }; include?: { items: boolean } }): Promise<PrismaCartRecord | null>;
+  findFirst(args: { where: { userId?: string }; include?: { items: boolean } }): Promise<PrismaCartRecord | null>;
   create(args: { data: Omit<PrismaCartRecord, "items">; include?: { items: boolean } }): Promise<PrismaCartRecord>;
   update(args: { where: { id: string }; data: Omit<PrismaCartRecord, "items">; include?: { items: boolean } }): Promise<PrismaCartRecord>;
 }
@@ -39,7 +40,7 @@ interface PrismaCartItemDelegate {
 interface PrismaClient {
   cart: PrismaCartDelegate;
   cartItem: PrismaCartItemDelegate;
-  $transaction?: (fn: (tx: PrismaClient) => Promise<void>) => Promise<void>;
+  $transaction: (fn: (tx: PrismaClient) => Promise<void>) => Promise<void>;
 }
 
 export class PrismaCartRepository implements ICartRepository {
@@ -54,7 +55,7 @@ export class PrismaCartRepository implements ICartRepository {
   }
 
   async findByUserId(userId: string): Promise<Cart | null> {
-    const record = await this.prisma.cart.findUnique({
+    const record = await this.prisma.cart.findFirst({
       where: { userId },
       include: { items: true },
     });
@@ -65,40 +66,25 @@ export class PrismaCartRepository implements ICartRepository {
     const data = this.toPrisma(cart);
     const itemData = cart.items.map((i) => this.toItemPrisma(cart.id, i));
 
-    if (this.prisma.$transaction) {
-      await this.prisma.$transaction(async (tx) => {
-        await tx.cart.create({ data });
-        if (itemData.length > 0) {
-          await tx.cartItem.createMany({ data: itemData });
-        }
-      });
-    } else {
-      await this.prisma.cart.create({ data });
+    await this.prisma.$transaction(async (tx) => {
+      await tx.cart.create({ data });
       if (itemData.length > 0) {
-        await this.prisma.cartItem.createMany({ data: itemData });
+        await tx.cartItem.createMany({ data: itemData });
       }
-    }
+    });
   }
 
   async update(cart: Cart): Promise<void> {
     const data = this.toPrisma(cart);
     const itemData = cart.items.map((i) => this.toItemPrisma(cart.id, i));
 
-    if (this.prisma.$transaction) {
-      await this.prisma.$transaction(async (tx) => {
-        await tx.cart.update({ where: { id: cart.id }, data });
-        await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
-        if (itemData.length > 0) {
-          await tx.cartItem.createMany({ data: itemData });
-        }
-      });
-    } else {
-      await this.prisma.cart.update({ where: { id: cart.id }, data });
-      await this.prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
+    await this.prisma.$transaction(async (tx) => {
+      await tx.cart.update({ where: { id: cart.id }, data });
+      await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
       if (itemData.length > 0) {
-        await this.prisma.cartItem.createMany({ data: itemData });
+        await tx.cartItem.createMany({ data: itemData });
       }
-    }
+    });
   }
 
   private toDomain(record: PrismaCartRecord): Cart {

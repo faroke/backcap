@@ -80,13 +80,23 @@ export class Cart {
       return Result.fail(new Error(`Invalid ISO 4217 currency code: "${params.currency}"`));
     }
 
+    const items = params.items ?? [];
+    if (items.length > maxItems) {
+      return Result.fail(CartLimitExceeded.create(maxItems));
+    }
+    for (const item of items) {
+      if (item.currency !== currency) {
+        return Result.fail(new Error(`Currency mismatch: cart uses ${currency} but item uses ${item.currency}`));
+      }
+    }
+
     const now = new Date();
     return Result.ok(
       new Cart(
         params.id,
         params.userId ?? null,
         status,
-        [...(params.items ?? [])],
+        [...items],
         maxItems,
         currency,
         params.createdAt ?? now,
@@ -112,7 +122,9 @@ export class Cart {
       return Result.fail(new Error(`Currency mismatch: cart uses ${this.currency} but item uses ${itemCurrency}`));
     }
 
-    const existing = this.items.find((i) => i.variantId === params.variantId);
+    const existing = this.items.find(
+      (i) => i.variantId === params.variantId && i.productId === params.productId,
+    );
 
     if (existing) {
       const newQty = existing.quantity.value + params.quantity;
@@ -131,7 +143,7 @@ export class Cart {
       }
 
       const updatedItems = this.items.map((i) =>
-        i.variantId === params.variantId ? updated : i,
+        i.variantId === params.variantId && i.productId === params.productId ? updated : i,
       );
 
       return Result.ok(

@@ -33,6 +33,7 @@ function toHttpError(error: Error): { status: number; message: string } {
   if (error.name === "ItemNotInCart") return { status: 404, message: error.message };
   if (error.name === "CartLimitExceeded") return { status: 422, message: error.message };
   if (error.name === "InvalidQuantity") return { status: 400, message: error.message };
+  if (error.message) return { status: 400, message: error.message };
   return { status: 500, message: "Internal server error" };
 }
 
@@ -83,7 +84,7 @@ export function createCartRouter(cartService: ICartService, router: Router): Rou
       return;
     }
 
-    res.status(200).json({ success: true });
+    res.status(201).json({ success: true });
   }));
 
   router.delete("/carts/:id/items/:variantId", asyncHandler(async (req: Request, res: Response) => {
