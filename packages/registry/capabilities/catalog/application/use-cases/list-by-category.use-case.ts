@@ -3,7 +3,7 @@ import { Result } from "../../shared/result.js";
 import type { IProductRepository } from "../ports/product-repository.port.js";
 import type { ICategoryRepository } from "../ports/category-repository.port.js";
 import type { ProductOutput } from "../dto/product-output.dto.js";
-import { toProductOutput } from "./mappers.js";
+import { toProductOutput } from "./mappers.adapter.js";
 
 export class ListByCategory {
   constructor(

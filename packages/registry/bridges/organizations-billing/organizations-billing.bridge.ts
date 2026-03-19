@@ -2,8 +2,8 @@
 import type { IEventBus } from "../../../shared/src/event-bus.port.js";
 // Template: import type { Bridge } from "{{shared_rel}}/bridge.js";
 import type { Bridge } from "../../../shared/src/bridge.js";
-// Template: import type { ICreateCustomer } from "{{cap_rel}}/billing/contracts/create-customer.types.js";
-import type { ICreateCustomer } from "../../capabilities/billing/contracts/create-customer.types.js";
+// Template: import type { ICreateCustomer } from "{{cap_rel}}/billing/contracts/create-customer.contract.js";
+import type { ICreateCustomer } from "../../capabilities/billing/contracts/create-customer.contract.js";
 
 interface OrganizationCreatedEvent {
   organizationId: string;

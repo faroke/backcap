@@ -2,6 +2,6 @@
   "name": "catalog-cart",
   "sourceCapability": "catalog",
   "targetCapability": "cart",
-  "events": [],
+  "events": ["PriceLookup"],
   "version": "1.0.0"
 }

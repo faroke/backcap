@@ -2,7 +2,7 @@ import { Result } from "../../shared/result.js";
 import { OrderNotFound } from "../../domain/errors/order-not-found.error.js";
 import type { IOrderRepository } from "../ports/order-repository.port.js";
 import type { OrderOutput } from "../dto/order-output.dto.js";
-import { toOrderOutput } from "./mappers.js";
+import { toOrderOutput } from "./mappers.adapter.js";
 
 export class GetOrder {
   constructor(private readonly orderRepository: IOrderRepository) {}

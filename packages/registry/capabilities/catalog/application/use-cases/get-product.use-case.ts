@@ -3,7 +3,7 @@ import { Result } from "../../shared/result.js";
 import { ProductNotFound } from "../../domain/errors/product-not-found.error.js";
 import type { IProductRepository } from "../ports/product-repository.port.js";
 import type { ProductOutput } from "../dto/product-output.dto.js";
-import { toProductOutput } from "./mappers.js";
+import { toProductOutput } from "./mappers.adapter.js";
 
 export class GetProduct {
   constructor(private readonly productRepository: IProductRepository) {}

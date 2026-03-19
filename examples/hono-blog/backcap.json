@@ -1,0 +1,37 @@
+{
+  "framework": "hono",
+  "packageManager": "pnpm",
+  "paths": {
+    "capabilities": "src/capabilities",
+    "adapters": "src/adapters",
+    "bridges": "src/bridges",
+    "skills": ".claude/skills",
+    "shared": "src/shared"
+  },
+  "installed": {
+    "capabilities": [
+      {
+        "name": "blog",
+        "version": "1.0.0",
+        "adapters": [
+          "blog-prisma",
+          "blog-hono"
+        ]
+      },
+      {
+        "name": "search",
+        "version": "1.0.0",
+        "adapters": [
+          "search-prisma",
+          "search-hono"
+        ]
+      }
+    ],
+    "bridges": [
+      {
+        "name": "blog-search",
+        "version": "0.1.0"
+      }
+    ]
+  }
+}

@@ -64,6 +64,10 @@ export default defineConfig({
               label: "Fastify Blog",
               slug: "guides/fastify-blog-example",
             },
+            {
+              label: "Hono Blog",
+              slug: "guides/hono-blog-example",
+            },
           ],
         },
         {
@@ -97,6 +101,7 @@ export default defineConfig({
             { label: "Prisma", slug: "adapters/prisma" },
             { label: "Express", slug: "adapters/express" },
             { label: "Fastify", slug: "adapters/fastify" },
+            { label: "Hono", slug: "adapters/hono" },
           ],
         },
       ],

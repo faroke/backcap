@@ -1,0 +1,7 @@
+{
+  "name": "blog-search",
+  "sourceCapability": "blog",
+  "targetCapability": "search",
+  "events": ["PostPublished"],
+  "version": "1.0.0"
+}

@@ -12,7 +12,7 @@ export type {
   CreateCustomerInput,
   CreateCustomerOutput,
   ICreateCustomer,
-} from "./create-customer.types.js";
+} from "./create-customer.contract.js";
 
 export { createBillingService } from "./billing.factory.js";
 export type { BillingServiceDeps } from "./billing.factory.js";
