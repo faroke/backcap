@@ -232,7 +232,7 @@ This installs two files:
 
 ## Next Steps
 
-- Read the [Auth capability reference](/capabilities/auth) for the full API
-- Learn about the [Result pattern](/concepts/capabilities#the-result-pattern)
-- Explore [Bridges](/concepts/bridges) to connect auth with notifications
-- See how to [create your own capability](/guides/create-capability)
+- Read the [Auth capability reference](/backcap/capabilities/auth) for the full API
+- Learn about the [Result pattern](/backcap/concepts/capabilities#the-result-pattern)
+- Explore [Bridges](/backcap/concepts/bridges) to connect auth with notifications
+- See how to [create your own capability](/backcap/guides/create-capability)

@@ -9,6 +9,34 @@
   --sl-font-mono: 'JetBrains Mono', monospace;
 }
 
+/* ── Push search bar to the right, next to GitHub icon ── */
+header .header {
+  display: flex;
+  align-items: center;
+}
+header .header > .sl-flex.print\:hidden {
+  order: 1;
+  margin-left: auto;
+}
+header .header > .right-group {
+  order: 2;
+  margin-left: 0;
+}
+header site-search button[data-open-modal] {
+  min-width: 14rem;
+  display: flex;
+  align-items: center;
+}
+header site-search button[data-open-modal] svg {
+  flex-shrink: 0;
+  display: block;
+}
+header site-search button[data-open-modal] kbd {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
 :root[data-theme='dark'] {
   --sl-color-bg: hsl(220 20% 4%);
   --sl-color-bg-nav: hsl(220 20% 4% / 0.8);

@@ -99,4 +99,4 @@ Once your project is initialized, install your first capability:
 npx @backcap/cli add auth
 ```
 
-See the [Quick Start](/getting-started/quick-start) guide for a step-by-step walkthrough.
+See the [Quick Start](/backcap/getting-started/quick-start) guide for a step-by-step walkthrough.

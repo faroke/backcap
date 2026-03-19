@@ -154,7 +154,7 @@ When a new capability needs an Express HTTP layer:
 5. Map domain errors to HTTP status codes using a `toHttpError()` helper
 6. Write route handler tests using a mock service
 
-See the [Create an Adapter guide](/guides/create-adapter) for a detailed walkthrough.
+See the [Create an Adapter guide](/backcap/guides/create-adapter) for a detailed walkthrough.
 
 ## Testing
 

@@ -14,7 +14,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   next: false,
 }}>
 
-<div class="landing" data-base={base}>
+<div class="landing not-content" data-base={base}>
 
   <!-- Hero -->
   <section class="lp-hero">
@@ -316,9 +316,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   main:has(.landing) { padding: 0 !important; }
   main:has(.landing) > .content-panel:first-child { display: none !important; }
   main:has(.landing) .content-panel { padding: 0 !important; border: none !important; }
-  main:has(.landing) .sl-container { max-width: none !important; }
+  main:has(.landing) .content-panel .sl-container { max-width: none !important; }
   main:has(.landing) .sl-container > * + * { margin-top: 0 !important; }
-  main:has(.landing) .sl-markdown-content > * + * { margin-top: 0 !important; }
   main:has(.landing) footer { display: none !important; }
 
   /* ── Landing page variables ── */
@@ -527,6 +526,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .landing .section-cta .btn-outline {
     font-size: 0.9375rem; padding: 0.875rem 1.75rem;
   }
+  .landing .btn-primary svg,
+  .landing .btn-outline svg {
+    flex-shrink: 0; display: block;
+  }
 
   /* ── Problem ── */
   .landing .problem-grid {
@@ -598,7 +601,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .landing .example-list .plus { color: var(--lp-primary); }
 
   /* ── Capabilities ── */
-  .landing .cap-section { position: relative; overflow: hidden; }
+  .landing .cap-section { position: relative; overflow: hidden; max-width: 100%; }
   .landing .cap-badge {
     display: inline-block; font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
@@ -607,7 +610,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     border: 1px solid hsl(152 76% 52% / 0.2); background: hsl(152 76% 52% / 0.05);
   }
   .landing .cap-grid {
-    display: grid; gap: 0.75rem; max-width: 72rem; margin: 0 auto;
+    display: grid; gap: 0.75rem; max-width: 100%; margin: 0 auto;
   }
   @media (min-width: 640px) { .landing .cap-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 1024px) { .landing .cap-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -619,6 +622,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     background: hsl(220 20% 7%);
     transition: border-color 0.2s, background 0.2s, transform 0.2s;
     text-decoration: none; color: inherit;
+    min-width: 0; overflow: hidden;
   }
   .landing .cap-card:hover {
     transform: translateY(-2px);
@@ -742,10 +746,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     { html: '<span class="prompt-char">$ </span><strong>npx @backcap/cli add auth</strong>', cls: 'tl-cmd', delay: 800 },
     { html: '', cls: 'tl-empty', delay: 60 },
     { html: '┌  <strong>backcap add</strong>', cls: 'tl-clack-intro', delay: 300 },
-    { html: '│', cls: 'tl-clack-bar', delay: 80 },
     { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Fetching auth...', cls: '', delay: 400 },
     { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Detected framework: fastify', cls: '', delay: 200 },
-    { html: '│', cls: 'tl-clack-bar', delay: 80 },
+    { html: '', cls: 'tl-empty', delay: 60 },
     { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Capability files written', cls: '', delay: 120 },
     { html: '  <span class="plus">+</span> src/capabilities/auth/domain/user.ts', cls: 'tl-file', delay: 60 },
     { html: '  <span class="plus">+</span> src/capabilities/auth/domain/session.ts', cls: 'tl-file', delay: 60 },
@@ -753,12 +756,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     { html: '  <span class="plus">+</span> src/capabilities/auth/application/use-cases/sign-in.use-case.ts', cls: 'tl-file', delay: 60 },
     { html: '  <span class="plus">+</span> src/capabilities/auth/application/use-cases/sign-up.use-case.ts', cls: 'tl-file', delay: 60 },
     { html: '  <span class="plus">+</span> src/capabilities/auth/contracts/auth.contract.ts', cls: 'tl-file', delay: 60 },
-    { html: '│', cls: 'tl-clack-bar', delay: 80 },
+    { html: '', cls: 'tl-empty', delay: 60 },
     { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Fetching adapter auth-prisma...', cls: '', delay: 300 },
     { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Adapter files written', cls: '', delay: 150 },
-    { html: '│', cls: 'tl-clack-bar', delay: 80 },
+    { html: '', cls: 'tl-empty', delay: 60 },
     { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Skill installed to .claude/skills/backcap-auth/', cls: '', delay: 150 },
-    { html: '│', cls: 'tl-clack-bar', delay: 80 },
+    { html: '', cls: 'tl-empty', delay: 60 },
     { html: '└  auth v1.0.0 installed successfully!', cls: 'tl-outro', delay: 0 },
   ];
 

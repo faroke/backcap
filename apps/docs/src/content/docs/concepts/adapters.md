@@ -161,7 +161,7 @@ To write a custom adapter:
 3. Implement the interface with your technology of choice
 4. Wire it into the `createAuthService()` factory call in your container
 
-See the [Create an Adapter guide](/guides/create-adapter) for a step-by-step walkthrough.
+See the [Create an Adapter guide](/backcap/guides/create-adapter) for a step-by-step walkthrough.
 
 ## Why This Matters
 

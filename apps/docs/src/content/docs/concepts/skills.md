@@ -131,7 +131,7 @@ These tables make it fast for an AI to locate the right file when making a chang
 
 ## Creating Skills for Your Own Capabilities
 
-When you [create a new capability](/guides/create-capability), you should create a corresponding `SKILL.md`. The file should:
+When you [create a new capability](/backcap/guides/create-capability), you should create a corresponding `SKILL.md`. The file should:
 
 1. Have a one-paragraph `description` in the YAML frontmatter dense enough to be used as a prompt prefix
 2. List every file in a table with its export and responsibility

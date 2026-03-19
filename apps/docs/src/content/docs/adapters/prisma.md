@@ -128,7 +128,7 @@ When a new capability is added that requires a persistence adapter, follow these
 6. Add the corresponding model to `prisma/schema.prisma`
 7. Write an integration test
 
-See the [Create an Adapter guide](/guides/create-adapter) for a detailed walkthrough.
+See the [Create an Adapter guide](/backcap/guides/create-adapter) for a detailed walkthrough.
 
 ## Testing
 

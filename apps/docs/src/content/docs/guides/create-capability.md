@@ -7,7 +7,7 @@ This guide walks through creating a new capability for the Backcap registry. We'
 
 ## Before You Start
 
-A capability is a vertical slice of backend business logic structured in four layers: `domain/`, `application/`, `contracts/`, and an optional `adapters/` tree. Read the [Capabilities concept page](/concepts/capabilities) and the [Architecture page](/concepts/architecture) before proceeding.
+A capability is a vertical slice of backend business logic structured in four layers: `domain/`, `application/`, `contracts/`, and an optional `adapters/` tree. Read the [Capabilities concept page](/backcap/concepts/capabilities) and the [Architecture page](/backcap/concepts/architecture) before proceeding.
 
 ## Checklist
 
@@ -283,7 +283,7 @@ This is the **only** barrel export in the capability. Do not create `index.ts` f
 
 ### 16. Create the SKILL.md
 
-Write a skill file at `skills/backcap-notifications/SKILL.md`. See the [Skills concept page](/concepts/skills) for the required format.
+Write a skill file at `skills/backcap-notifications/SKILL.md`. See the [Skills concept page](/backcap/concepts/skills) for the required format.
 
 ### 17. Bundle for the Registry
 

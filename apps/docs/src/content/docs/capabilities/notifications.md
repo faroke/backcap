@@ -251,7 +251,7 @@ Sends a welcome email when a new user registers.
 npx @backcap/cli add bridge auth-notifications
 ```
 
-See the [auth-notifications bridge](/concepts/bridges#the-auth-notifications-bridge) documentation for wiring instructions.
+See the [auth-notifications bridge](/backcap/concepts/bridges#the-auth-notifications-bridge) documentation for wiring instructions.
 
 ## File Map
 
