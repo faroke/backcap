@@ -1,7 +1,12 @@
+// Template: import type { ICartService } from "{{cap_rel}}/cart/contracts/index.js";
 import type { ICartService } from "../../../capabilities/cart/contracts/index.js";
+// Template: import { CartNotFound } from "{{cap_rel}}/cart/domain/errors/cart-not-found.error.js";
 import { CartNotFound } from "../../../capabilities/cart/domain/errors/cart-not-found.error.js";
+// Template: import { ItemNotInCart } from "{{cap_rel}}/cart/domain/errors/item-not-in-cart.error.js";
 import { ItemNotInCart } from "../../../capabilities/cart/domain/errors/item-not-in-cart.error.js";
+// Template: import { CartLimitExceeded } from "{{cap_rel}}/cart/domain/errors/cart-limit-exceeded.error.js";
 import { CartLimitExceeded } from "../../../capabilities/cart/domain/errors/cart-limit-exceeded.error.js";
+// Template: import { InvalidQuantity } from "{{cap_rel}}/cart/domain/errors/invalid-quantity.error.js";
 import { InvalidQuantity } from "../../../capabilities/cart/domain/errors/invalid-quantity.error.js";
 
 interface Request {

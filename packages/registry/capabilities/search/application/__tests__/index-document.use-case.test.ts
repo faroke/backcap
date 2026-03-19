@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { IndexDocument } from "../use-cases/index-document.use-case.js";
 import { InMemorySearchEngine } from "./mocks/search-engine.mock.js";
-import { IndexNotFound } from "../../domain/errors/index-not-found.error.js";
 
 describe("IndexDocument use case", () => {
   let searchEngine: InMemorySearchEngine;
@@ -27,15 +26,17 @@ describe("IndexDocument use case", () => {
     expect(output.indexedAt).toBeInstanceOf(Date);
   });
 
-  it("returns IndexNotFound error when index does not exist", async () => {
+  it("auto-creates index when it does not exist", async () => {
     const result = await indexDocument.execute({
-      indexName: "nonexistent",
+      indexName: "new-index",
       documentId: "doc-1",
       document: { title: "Laptop" },
     });
 
-    expect(result.isFail()).toBe(true);
-    expect(result.unwrapError()).toBeInstanceOf(IndexNotFound);
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap().documentId).toBe("doc-1");
+    const exists = await searchEngine.documentExists("new-index", "doc-1");
+    expect(exists).toBe(true);
   });
 
   it("document is retrievable after indexing", async () => {

@@ -1,4 +1,6 @@
+// Template: import type { IEventBus } from "{{shared_rel}}/event-bus.port.js";
 import type { IEventBus } from "../../../shared/src/event-bus.port.js";
+// Template: import type { Bridge } from "{{shared_rel}}/bridge.js";
 import type { Bridge } from "../../../shared/src/bridge.js";
 
 // --- Event-driven types ---

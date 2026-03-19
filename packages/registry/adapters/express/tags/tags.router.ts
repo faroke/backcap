@@ -1,8 +1,14 @@
+// Template: import type { ITagsService } from "{{cap_rel}}/tags/contracts/index.js";
 import type { ITagsService } from "../../../capabilities/tags/contracts/index.js";
+// Template: import { TagNotFound } from "{{cap_rel}}/tags/domain/errors/tag-not-found.error.js";
 import { TagNotFound } from "../../../capabilities/tags/domain/errors/tag-not-found.error.js";
+// Template: import { ResourceTagNotFound } from "{{cap_rel}}/tags/domain/errors/resource-tag-not-found.error.js";
 import { ResourceTagNotFound } from "../../../capabilities/tags/domain/errors/resource-tag-not-found.error.js";
+// Template: import { InvalidTagSlug } from "{{cap_rel}}/tags/domain/errors/invalid-tag-slug.error.js";
 import { InvalidTagSlug } from "../../../capabilities/tags/domain/errors/invalid-tag-slug.error.js";
+// Template: import { TagAlreadyExists } from "{{cap_rel}}/tags/domain/errors/tag-already-exists.error.js";
 import { TagAlreadyExists } from "../../../capabilities/tags/domain/errors/tag-already-exists.error.js";
+// Template: import { ResourceAlreadyTagged } from "{{cap_rel}}/tags/domain/errors/resource-already-tagged.error.js";
 import { ResourceAlreadyTagged } from "../../../capabilities/tags/domain/errors/resource-already-tagged.error.js";
 
 interface Request {

@@ -1,4 +1,6 @@
+// Template: import type { IInvoiceRepository } from "{{cap_rel}}/billing/application/ports/invoice-repository.port.js";
 import type { IInvoiceRepository } from "../../../capabilities/billing/application/ports/invoice-repository.port.js";
+// Template: import { Invoice, type InvoiceStatus } from "{{cap_rel}}/billing/domain/entities/invoice.entity.js";
 import { Invoice, type InvoiceStatus } from "../../../capabilities/billing/domain/entities/invoice.entity.js";
 
 interface PrismaInvoiceRecord {

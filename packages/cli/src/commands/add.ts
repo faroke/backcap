@@ -5,7 +5,7 @@ import { registryItemSchema } from "@backcap/shared/schemas/registry-item";
 import { configExists, loadConfig } from "../config/loader.js";
 import { detectAdapters } from "../lib/detect-adapters.js";
 import { detectPM } from "../lib/detect-pm.js";
-import { writeCapabilityFiles } from "../lib/write-capability.js";
+import { writeCapabilityFiles, resolveFileMarkers } from "../lib/write-capability.js";
 import { installDeps } from "../lib/install-deps.js";
 import { updateConfigCapability, updateConfigBridge } from "../lib/update-config.js";
 import { detectConflicts } from "../installer/conflict-detector.js";
@@ -133,19 +133,18 @@ export default defineCommand({
       adapters_path: config.paths.adapters,
       bridges_path: config.paths.bridges,
       skills_path: config.paths.skills,
+      shared_config_path: config.paths.shared ?? "src/shared",
     };
 
     // Conflict detection for capability files
     let capRoot = normalize(join(cwd, config.paths.capabilities, capabilityName));
 
-    const incomingFiles = filesToWrite.map((f) => ({
-      relativePath: f.path,
-      content: f.content,
-    }));
-
     let useSelectiveInstall = false;
     let resolved = false;
     while (!resolved) {
+      // Recompute markers each iteration (capRoot may change via "different_path")
+      const incomingFiles = resolveFileMarkers(filesToWrite, capRoot, markers, cwd);
+
       let report;
       try {
         report = await detectConflicts(capRoot, incomingFiles);
@@ -195,7 +194,7 @@ export default defineCommand({
           const selectedPaths = new Set([...installResult.installed, ...installResult.alwaysInstalled]);
           const selectedFiles = filesToWrite.filter((f) => selectedPaths.has(f.path));
 
-          await writeCapabilityFiles(selectedFiles, { capabilityRoot: capRoot, markers });
+          await writeCapabilityFiles(selectedFiles, { capabilityRoot: capRoot, markers, cwd });
 
           reportInstallResult(installResult);
           useSelectiveInstall = true;
@@ -240,7 +239,7 @@ export default defineCommand({
       }
 
       // Write all capability files
-      await writeCapabilityFiles(filesToWrite, { capabilityRoot: capRoot, markers });
+      await writeCapabilityFiles(filesToWrite, { capabilityRoot: capRoot, markers, cwd });
       log.success(`Capability files written to ${capRoot}`);
 
       // Update backcap.json
@@ -273,7 +272,7 @@ export default defineCommand({
         const category = adapterType === "prisma" ? "persistence" : "http";
         const adapterRoot = normalize(join(cwd, config.paths.adapters, category, adapterType, capabilityName));
 
-        await writeCapabilityFiles(adapterFiles, { capabilityRoot: adapterRoot, markers });
+        await writeCapabilityFiles(adapterFiles, { capabilityRoot: adapterRoot, markers, cwd });
         log.success(`Adapter files written to ${adapterRoot}`);
       } catch {
         log.warn(`Could not fetch adapter "${adapterName}", skipping.`);
@@ -391,15 +390,13 @@ async function installBridge(
     adapters_path: config.paths.adapters,
     bridges_path: config.paths.bridges,
     skills_path: config.paths.skills,
+    shared_config_path: config.paths.shared ?? "src/shared",
   };
 
   const bridgeRoot = normalize(join(cwd, config.paths.bridges, bridgeName));
 
-  // Conflict detection
-  const incomingFiles = filesToWrite.map((f) => ({
-    relativePath: f.path,
-    content: f.content,
-  }));
+  // Conflict detection — resolve markers before comparing
+  const incomingFiles = resolveFileMarkers(filesToWrite, bridgeRoot, markers, cwd);
 
   try {
     const report = await detectConflicts(bridgeRoot, incomingFiles);
@@ -444,7 +441,7 @@ async function installBridge(
   }
 
   // Write bridge files
-  await writeCapabilityFiles(filesToWrite, { capabilityRoot: bridgeRoot, markers });
+  await writeCapabilityFiles(filesToWrite, { capabilityRoot: bridgeRoot, markers, cwd });
   log.success(`Bridge files written to ${bridgeRoot}`);
 
   // Update config

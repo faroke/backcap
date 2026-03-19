@@ -1,5 +1,6 @@
-// Template: import type { IPaymentProvider } from "{{capabilities_path}}/billing/application/ports/payment-provider.port";
+// Template: import type { IPaymentProvider } from "{{cap_rel}}/billing/application/ports/payment-provider.port.js";
 import type { IPaymentProvider } from "../../../capabilities/billing/application/ports/payment-provider.port.js";
+// Template: import type { Money } from "{{cap_rel}}/billing/domain/value-objects/money.vo.js";
 import type { Money } from "../../../capabilities/billing/domain/value-objects/money.vo.js";
 
 // --- Adapter Swap Pattern ---

@@ -1,4 +1,4 @@
-// Template: import type { IAuthorizationService } from "{{capabilities_path}}/rbac/contracts";
+// Template: import type { IAuthorizationService } from "{{cap_rel}}/rbac/contracts/index.js";
 import type { IAuthorizationService } from "../../../capabilities/rbac/contracts/index.js";
 
 interface Request {

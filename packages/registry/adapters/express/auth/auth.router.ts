@@ -1,8 +1,12 @@
-// Template: import type { IAuthService } from "{{capabilities_path}}/auth/contracts";
+// Template: import type { IAuthService } from "{{cap_rel}}/auth/contracts/index.js";
 import type { IAuthService } from "../../../capabilities/auth/contracts/index.js";
+// Template: import { UserAlreadyExists } from "{{cap_rel}}/auth/domain/errors/user-already-exists.error.js";
 import { UserAlreadyExists } from "../../../capabilities/auth/domain/errors/user-already-exists.error.js";
+// Template: import { UserNotFound } from "{{cap_rel}}/auth/domain/errors/user-not-found.error.js";
 import { UserNotFound } from "../../../capabilities/auth/domain/errors/user-not-found.error.js";
+// Template: import { InvalidCredentials } from "{{cap_rel}}/auth/domain/errors/invalid-credentials.error.js";
 import { InvalidCredentials } from "../../../capabilities/auth/domain/errors/invalid-credentials.error.js";
+// Template: import { InvalidEmail } from "{{cap_rel}}/auth/domain/errors/invalid-email.error.js";
 import { InvalidEmail } from "../../../capabilities/auth/domain/errors/invalid-email.error.js";
 
 interface Request {

@@ -1,5 +1,6 @@
-// Template: import type { IOrganizationRepository } from "{{capabilities_path}}/organizations/application/ports/organization-repository.port";
+// Template: import type { IOrganizationRepository } from "{{cap_rel}}/organizations/application/ports/organization-repository.port.js";
 import type { IOrganizationRepository } from "../../../capabilities/organizations/application/ports/organization-repository.port.js";
+// Template: import { Organization } from "{{cap_rel}}/organizations/domain/entities/organization.entity.js";
 import { Organization } from "../../../capabilities/organizations/domain/entities/organization.entity.js";
 
 interface PrismaOrganizationRecord {

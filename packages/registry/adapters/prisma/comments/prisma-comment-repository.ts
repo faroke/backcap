@@ -1,4 +1,6 @@
+// Template: import type { ICommentRepository, CommentFilters } from "{{cap_rel}}/comments/application/ports/comment-repository.port.js";
 import type { ICommentRepository, CommentFilters } from "../../../capabilities/comments/application/ports/comment-repository.port.js";
+// Template: import { Comment } from "{{cap_rel}}/comments/domain/entities/comment.entity.js";
 import { Comment } from "../../../capabilities/comments/domain/entities/comment.entity.js";
 
 interface PrismaCommentRecord {

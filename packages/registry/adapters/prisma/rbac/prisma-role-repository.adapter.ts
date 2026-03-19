@@ -1,6 +1,8 @@
-// Template: import type { IRoleRepository } from "{{capabilities_path}}/rbac/application/ports/role-repository.port";
+// Template: import type { IRoleRepository } from "{{cap_rel}}/rbac/application/ports/role-repository.port.js";
 import type { IRoleRepository } from "../../../capabilities/rbac/application/ports/role-repository.port.js";
+// Template: import { Role } from "{{cap_rel}}/rbac/domain/entities/role.entity.js";
 import { Role } from "../../../capabilities/rbac/domain/entities/role.entity.js";
+// Template: import { Permission } from "{{cap_rel}}/rbac/domain/entities/permission.entity.js";
 import { Permission } from "../../../capabilities/rbac/domain/entities/permission.entity.js";
 
 interface PrismaPermissionRecord {

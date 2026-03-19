@@ -1,4 +1,6 @@
+// Template: import type { IAnalyticsService } from "{{cap_rel}}/analytics/contracts/index.js";
 import type { IAnalyticsService } from "../../../capabilities/analytics/contracts/index.js";
+// Template: import { InvalidTrackingId } from "{{cap_rel}}/analytics/domain/errors/invalid-tracking-id.error.js";
 import { InvalidTrackingId } from "../../../capabilities/analytics/domain/errors/invalid-tracking-id.error.js";
 
 interface Request {

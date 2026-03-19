@@ -1,5 +1,6 @@
-// Template: import type { IUserRepository } from "{{capabilities_path}}/auth/application/ports/user-repository.port";
+// Template: import type { IUserRepository } from "{{cap_rel}}/auth/application/ports/user-repository.port.js";
 import type { IUserRepository } from "../../../capabilities/auth/application/ports/user-repository.port.js";
+// Template: import { User } from "{{cap_rel}}/auth/domain/entities/user.entity.js";
 import { User } from "../../../capabilities/auth/domain/entities/user.entity.js";
 
 interface PrismaUserRecord {

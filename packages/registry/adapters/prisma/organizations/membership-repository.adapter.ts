@@ -1,5 +1,6 @@
-// Template: import type { IMembershipRepository } from "{{capabilities_path}}/organizations/application/ports/membership-repository.port";
+// Template: import type { IMembershipRepository } from "{{cap_rel}}/organizations/application/ports/membership-repository.port.js";
 import type { IMembershipRepository } from "../../../capabilities/organizations/application/ports/membership-repository.port.js";
+// Template: import { Membership } from "{{cap_rel}}/organizations/domain/entities/membership.entity.js";
 import { Membership } from "../../../capabilities/organizations/domain/entities/membership.entity.js";
 
 interface PrismaMembershipRecord {

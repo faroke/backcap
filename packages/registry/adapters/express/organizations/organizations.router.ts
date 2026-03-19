@@ -1,8 +1,12 @@
-// Template: import type { IOrganizationService } from "{{capabilities_path}}/organizations/contracts";
+// Template: import type { IOrganizationService } from "{{cap_rel}}/organizations/contracts/index.js";
 import type { IOrganizationService } from "../../../capabilities/organizations/contracts/index.js";
+// Template: import { OrgNotFound } from "{{cap_rel}}/organizations/domain/errors/org-not-found.error.js";
 import { OrgNotFound } from "../../../capabilities/organizations/domain/errors/org-not-found.error.js";
+// Template: import { OrgSlugTaken } from "{{cap_rel}}/organizations/domain/errors/org-slug-taken.error.js";
 import { OrgSlugTaken } from "../../../capabilities/organizations/domain/errors/org-slug-taken.error.js";
+// Template: import { MemberAlreadyExists } from "{{cap_rel}}/organizations/domain/errors/member-already-exists.error.js";
 import { MemberAlreadyExists } from "../../../capabilities/organizations/domain/errors/member-already-exists.error.js";
+// Template: import { CannotRemoveOwner } from "{{cap_rel}}/organizations/domain/errors/cannot-remove-owner.error.js";
 import { CannotRemoveOwner } from "../../../capabilities/organizations/domain/errors/cannot-remove-owner.error.js";
 
 interface Request {

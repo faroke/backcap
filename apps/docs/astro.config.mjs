@@ -54,6 +54,15 @@ export default defineConfig({
           ],
         },
         {
+          label: "Examples",
+          items: [
+            {
+              label: "Express Blog",
+              slug: "guides/express-blog-example",
+            },
+          ],
+        },
+        {
           label: "Capabilities",
           items: [
             { label: "Analytics", slug: "capabilities/analytics" },

@@ -164,6 +164,7 @@ import { createBlogService, IBlogService } from "./capabilities/blog/contracts";
 
 const blogService: IBlogService = createBlogService({
   postRepository,
+  eventBus, // optional — when provided, PostCreated and PostPublished events are published automatically
 });
 
 // IBlogService interface:
@@ -173,7 +174,7 @@ const blogService: IBlogService = createBlogService({
 // listPosts(input): Promise<Result<ListPostsOutput, Error>>
 ```
 
-Events are stripped at the service boundary — `IBlogService` returns only output DTOs.
+The `eventBus` dependency is optional. When provided, the factory automatically publishes `PostCreated` and `PostPublished` domain events after successful operations. This enables bridges (like `blog-search`) to react to blog events without manual wiring.
 
 ## Bridges
 

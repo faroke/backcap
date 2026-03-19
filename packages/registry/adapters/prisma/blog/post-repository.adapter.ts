@@ -1,5 +1,6 @@
-// Template: import type { IPostRepository } from "{{capabilities_path}}/blog/application/ports/post-repository.port";
+// Template: import type { IPostRepository } from "{{cap_rel}}/blog/application/ports/post-repository.port.js";
 import type { IPostRepository } from "../../../capabilities/blog/application/ports/post-repository.port.js";
+// Template: import { Post } from "{{cap_rel}}/blog/domain/entities/post.entity.js";
 import { Post } from "../../../capabilities/blog/domain/entities/post.entity.js";
 
 interface PrismaPostRecord {

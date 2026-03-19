@@ -1,6 +1,8 @@
-// Template: import type { ICustomerRepository } from "{{capabilities_path}}/billing/application/ports/customer-repository.port";
+// Template: import type { ICustomerRepository } from "{{cap_rel}}/billing/application/ports/customer-repository.port.js";
 import type { ICustomerRepository } from "../../../capabilities/billing/application/ports/customer-repository.port.js";
+// Template: import type { ISubscriptionRepository } from "{{cap_rel}}/billing/application/ports/subscription-repository.port.js";
 import type { ISubscriptionRepository } from "../../../capabilities/billing/application/ports/subscription-repository.port.js";
+// Template: import type { IInvoiceRepository } from "{{cap_rel}}/billing/application/ports/invoice-repository.port.js";
 import type { IInvoiceRepository } from "../../../capabilities/billing/application/ports/invoice-repository.port.js";
 
 // Hand-typed Stripe event structures — no hard dependency on `stripe` package.

@@ -85,7 +85,7 @@ Validation: query must be non-empty, page >= 1, pageSize capped at 100.
 
 #### IndexDocument
 
-Adds or updates a document in a search index.
+Adds or updates a document in a search index. If the index does not exist, the search engine creates it automatically.
 
 ```typescript
 import { IndexDocument } from "./capabilities/search/application/use-cases/index-document.use-case";

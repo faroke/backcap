@@ -1,6 +1,10 @@
+// Template: import type { IQueuesService } from "{{cap_rel}}/queues/contracts/index.js";
 import type { IQueuesService } from "../../../capabilities/queues/contracts/index.js";
+// Template: import { JobNotFound } from "{{cap_rel}}/queues/domain/errors/job-not-found.error.js";
 import { JobNotFound } from "../../../capabilities/queues/domain/errors/job-not-found.error.js";
+// Template: import { MaxAttemptsExceeded } from "{{cap_rel}}/queues/domain/errors/max-attempts-exceeded.error.js";
 import { MaxAttemptsExceeded } from "../../../capabilities/queues/domain/errors/max-attempts-exceeded.error.js";
+// Template: import { InvalidJobPayload } from "{{cap_rel}}/queues/domain/errors/invalid-job-payload.error.js";
 import { InvalidJobPayload } from "../../../capabilities/queues/domain/errors/invalid-job-payload.error.js";
 
 interface Request {

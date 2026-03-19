@@ -1,4 +1,4 @@
-// Template: import type { IOrganizationService } from "{{capabilities_path}}/organizations/contracts";
+// Template: import type { IOrganizationService } from "{{cap_rel}}/organizations/contracts/index.js";
 import type { IOrganizationService } from "../../../capabilities/organizations/contracts/index.js";
 
 interface Request {

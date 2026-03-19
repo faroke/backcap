@@ -1,5 +1,8 @@
+// Template: import type { ICommentsService } from "{{cap_rel}}/comments/contracts/index.js";
 import type { ICommentsService } from "../../../capabilities/comments/contracts/index.js";
+// Template: import { CommentNotFound } from "{{cap_rel}}/comments/domain/errors/comment-not-found.error.js";
 import { CommentNotFound } from "../../../capabilities/comments/domain/errors/comment-not-found.error.js";
+// Template: import { UnauthorizedDelete } from "{{cap_rel}}/comments/domain/errors/unauthorized-delete.error.js";
 import { UnauthorizedDelete } from "../../../capabilities/comments/domain/errors/unauthorized-delete.error.js";
 
 interface Request {

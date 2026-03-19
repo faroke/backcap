@@ -1,4 +1,6 @@
+// Template: import type { IAnalyticsStore, AnalyticsFilters, AnalyticsMetrics } from "{{cap_rel}}/analytics/application/ports/analytics-store.port.js";
 import type { IAnalyticsStore, AnalyticsFilters, AnalyticsMetrics } from "../../../capabilities/analytics/application/ports/analytics-store.port.js";
+// Template: import { AnalyticsEvent } from "{{cap_rel}}/analytics/domain/entities/analytics-event.entity.js";
 import { AnalyticsEvent } from "../../../capabilities/analytics/domain/entities/analytics-event.entity.js";
 
 interface PrismaAnalyticsEventRecord {

@@ -1,7 +1,9 @@
+// Template: import type { IWebhookRepository, WebhookFilters } from "{{cap_rel}}/webhooks/application/ports/webhook-repository.port.js";
 import type {
   IWebhookRepository,
   WebhookFilters,
 } from "../../../capabilities/webhooks/application/ports/webhook-repository.port.js";
+// Template: import { Webhook } from "{{cap_rel}}/webhooks/domain/entities/webhook.entity.js";
 import { Webhook } from "../../../capabilities/webhooks/domain/entities/webhook.entity.js";
 
 interface PrismaWebhookRecord {

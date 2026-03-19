@@ -1,6 +1,8 @@
-// Template: import type { INotificationRepository } from "{{capabilities_path}}/notifications/application/ports/notification-repository.port";
+// Template: import type { INotificationRepository } from "{{cap_rel}}/notifications/application/ports/notification-repository.port.js";
 import type { INotificationRepository } from "../../../capabilities/notifications/application/ports/notification-repository.port.js";
+// Template: import { Notification } from "{{cap_rel}}/notifications/domain/entities/notification.entity.js";
 import { Notification } from "../../../capabilities/notifications/domain/entities/notification.entity.js";
+// Template: import type { NotificationStatus } from "{{cap_rel}}/notifications/domain/entities/notification.entity.js";
 import type { NotificationStatus } from "../../../capabilities/notifications/domain/entities/notification.entity.js";
 
 interface PrismaNotificationRecord {

@@ -1,5 +1,8 @@
+// Template: import type { ICartRepository } from "{{cap_rel}}/cart/application/ports/cart-repository.port.js";
 import type { ICartRepository } from "../../../capabilities/cart/application/ports/cart-repository.port.js";
+// Template: import { Cart } from "{{cap_rel}}/cart/domain/entities/cart.entity.js";
 import { Cart } from "../../../capabilities/cart/domain/entities/cart.entity.js";
+// Template: import { CartItem } from "{{cap_rel}}/cart/domain/entities/cart-item.entity.js";
 import { CartItem } from "../../../capabilities/cart/domain/entities/cart-item.entity.js";
 
 interface PrismaCartItemRecord {

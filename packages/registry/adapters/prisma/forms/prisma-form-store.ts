@@ -1,5 +1,8 @@
+// Template: import type { IFormStore } from "{{cap_rel}}/forms/application/ports/form-store.port.js";
 import type { IFormStore } from "../../../capabilities/forms/application/ports/form-store.port.js";
+// Template: import { Form } from "{{cap_rel}}/forms/domain/entities/form.entity.js";
 import { Form } from "../../../capabilities/forms/domain/entities/form.entity.js";
+// Template: import { FormField, type FormFieldType } from "{{cap_rel}}/forms/domain/value-objects/form-field.vo.js";
 import { FormField, type FormFieldType } from "../../../capabilities/forms/domain/value-objects/form-field.vo.js";
 
 interface PrismaFormRecord {

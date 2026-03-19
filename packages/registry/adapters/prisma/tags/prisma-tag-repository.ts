@@ -1,4 +1,6 @@
+// Template: import type { ITagRepository, TagResourceFilters } from "{{cap_rel}}/tags/application/ports/tag-repository.port.js";
 import type { ITagRepository, TagResourceFilters } from "../../../capabilities/tags/application/ports/tag-repository.port.js";
+// Template: import { Tag } from "{{cap_rel}}/tags/domain/entities/tag.entity.js";
 import { Tag } from "../../../capabilities/tags/domain/entities/tag.entity.js";
 
 interface PrismaTagRecord {

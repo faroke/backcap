@@ -1,6 +1,10 @@
+// Template: import type { IOrderService } from "{{cap_rel}}/orders/contracts/index.js";
 import type { IOrderService } from "../../../capabilities/orders/contracts/index.js";
+// Template: import { OrderNotFound } from "{{cap_rel}}/orders/domain/errors/order-not-found.error.js";
 import { OrderNotFound } from "../../../capabilities/orders/domain/errors/order-not-found.error.js";
+// Template: import { InvalidOrderTransition } from "{{cap_rel}}/orders/domain/errors/invalid-order-transition.error.js";
 import { InvalidOrderTransition } from "../../../capabilities/orders/domain/errors/invalid-order-transition.error.js";
+// Template: import { OrderAlreadyCanceled } from "{{cap_rel}}/orders/domain/errors/order-already-canceled.error.js";
 import { OrderAlreadyCanceled } from "../../../capabilities/orders/domain/errors/order-already-canceled.error.js";
 
 interface Request {

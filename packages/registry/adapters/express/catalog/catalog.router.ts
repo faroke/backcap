@@ -1,6 +1,10 @@
+// Template: import type { ICatalogService } from "{{cap_rel}}/catalog/contracts/index.js";
 import type { ICatalogService } from "../../../capabilities/catalog/contracts/index.js";
+// Template: import { ProductNotFound } from "{{cap_rel}}/catalog/domain/errors/product-not-found.error.js";
 import { ProductNotFound } from "../../../capabilities/catalog/domain/errors/product-not-found.error.js";
+// Template: import { DuplicateSKU } from "{{cap_rel}}/catalog/domain/errors/duplicate-sku.error.js";
 import { DuplicateSKU } from "../../../capabilities/catalog/domain/errors/duplicate-sku.error.js";
+// Template: import { InvalidPrice } from "{{cap_rel}}/catalog/domain/errors/invalid-price.error.js";
 import { InvalidPrice } from "../../../capabilities/catalog/domain/errors/invalid-price.error.js";
 
 interface Request {

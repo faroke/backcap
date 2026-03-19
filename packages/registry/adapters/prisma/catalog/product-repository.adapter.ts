@@ -1,5 +1,8 @@
+// Template: import type { IProductRepository } from "{{cap_rel}}/catalog/application/ports/product-repository.port.js";
 import type { IProductRepository } from "../../../capabilities/catalog/application/ports/product-repository.port.js";
+// Template: import { Product } from "{{cap_rel}}/catalog/domain/entities/product.entity.js";
 import { Product } from "../../../capabilities/catalog/domain/entities/product.entity.js";
+// Template: import { ProductVariant } from "{{cap_rel}}/catalog/domain/entities/product-variant.entity.js";
 import { ProductVariant } from "../../../capabilities/catalog/domain/entities/product-variant.entity.js";
 
 interface PrismaProductVariantRecord {

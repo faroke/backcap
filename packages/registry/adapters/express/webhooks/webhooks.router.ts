@@ -1,6 +1,10 @@
+// Template: import type { IWebhooksService } from "{{cap_rel}}/webhooks/contracts/index.js";
 import type { IWebhooksService } from "../../../capabilities/webhooks/contracts/index.js";
+// Template: import { WebhookNotFound } from "{{cap_rel}}/webhooks/domain/errors/webhook-not-found.error.js";
 import { WebhookNotFound } from "../../../capabilities/webhooks/domain/errors/webhook-not-found.error.js";
+// Template: import { WebhookDeliveryFailed } from "{{cap_rel}}/webhooks/domain/errors/webhook-delivery-failed.error.js";
 import { WebhookDeliveryFailed } from "../../../capabilities/webhooks/domain/errors/webhook-delivery-failed.error.js";
+// Template: import { InvalidWebhookUrl } from "{{cap_rel}}/webhooks/domain/errors/invalid-webhook-url.error.js";
 import { InvalidWebhookUrl } from "../../../capabilities/webhooks/domain/errors/invalid-webhook-url.error.js";
 
 interface Request {

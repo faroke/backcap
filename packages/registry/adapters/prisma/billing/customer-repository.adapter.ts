@@ -1,4 +1,6 @@
+// Template: import type { ICustomerRepository } from "{{cap_rel}}/billing/application/ports/customer-repository.port.js";
 import type { ICustomerRepository } from "../../../capabilities/billing/application/ports/customer-repository.port.js";
+// Template: import { Customer } from "{{cap_rel}}/billing/domain/entities/customer.entity.js";
 import { Customer } from "../../../capabilities/billing/domain/entities/customer.entity.js";
 
 interface PrismaCustomerRecord {

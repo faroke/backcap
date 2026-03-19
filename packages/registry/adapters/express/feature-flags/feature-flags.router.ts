@@ -1,7 +1,12 @@
+// Template: import type { IFeatureFlagsService } from "{{cap_rel}}/feature-flags/contracts/index.js";
 import type { IFeatureFlagsService } from "../../../capabilities/feature-flags/contracts/index.js";
+// Template: import { FlagNotFound } from "{{cap_rel}}/feature-flags/domain/errors/flag-not-found.error.js";
 import { FlagNotFound } from "../../../capabilities/feature-flags/domain/errors/flag-not-found.error.js";
+// Template: import { FlagAlreadyInState } from "{{cap_rel}}/feature-flags/domain/errors/flag-already-in-state.error.js";
 import { FlagAlreadyInState } from "../../../capabilities/feature-flags/domain/errors/flag-already-in-state.error.js";
+// Template: import { FlagAlreadyExists } from "{{cap_rel}}/feature-flags/domain/errors/flag-already-exists.error.js";
 import { FlagAlreadyExists } from "../../../capabilities/feature-flags/domain/errors/flag-already-exists.error.js";
+// Template: import { InvalidFlagKey } from "{{cap_rel}}/feature-flags/domain/errors/invalid-flag-key.error.js";
 import { InvalidFlagKey } from "../../../capabilities/feature-flags/domain/errors/invalid-flag-key.error.js";
 
 interface Request {

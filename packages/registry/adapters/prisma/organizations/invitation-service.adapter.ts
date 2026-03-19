@@ -1,4 +1,4 @@
-// Template: import type { IInvitationService } from "{{capabilities_path}}/organizations/application/ports/invitation-service.port";
+// Template: import type { IInvitationService, Invitation } from "{{cap_rel}}/organizations/application/ports/invitation-service.port.js";
 import type {
   IInvitationService,
   Invitation,

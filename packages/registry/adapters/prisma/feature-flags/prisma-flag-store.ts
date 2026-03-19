@@ -1,4 +1,6 @@
+// Template: import type { IFlagStore } from "{{cap_rel}}/feature-flags/application/ports/flag-store.port.js";
 import type { IFlagStore } from "../../../capabilities/feature-flags/application/ports/flag-store.port.js";
+// Template: import { FeatureFlag } from "{{cap_rel}}/feature-flags/domain/entities/feature-flag.entity.js";
 import { FeatureFlag } from "../../../capabilities/feature-flags/domain/entities/feature-flag.entity.js";
 
 interface FeatureFlagRecord {

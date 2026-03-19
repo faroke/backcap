@@ -1,8 +1,12 @@
-// Template: import type { IMediaService } from "{{capabilities_path}}/media/contracts";
+// Template: import type { IMediaService } from "{{cap_rel}}/media/contracts/index.js";
 import type { IMediaService } from "../../../capabilities/media/contracts/index.js";
+// Template: import { MediaNotFound } from "{{cap_rel}}/media/domain/errors/media-not-found.error.js";
 import { MediaNotFound } from "../../../capabilities/media/domain/errors/media-not-found.error.js";
+// Template: import { UnsupportedFormat } from "{{cap_rel}}/media/domain/errors/unsupported-format.error.js";
 import { UnsupportedFormat } from "../../../capabilities/media/domain/errors/unsupported-format.error.js";
+// Template: import { FileTooLarge } from "{{cap_rel}}/media/domain/errors/file-too-large.error.js";
 import { FileTooLarge } from "../../../capabilities/media/domain/errors/file-too-large.error.js";
+// Template: import { ProcessingFailed } from "{{cap_rel}}/media/domain/errors/processing-failed.error.js";
 import { ProcessingFailed } from "../../../capabilities/media/domain/errors/processing-failed.error.js";
 
 interface Request {

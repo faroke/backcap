@@ -1,7 +1,10 @@
-// Template: import type { IAuthorizationService } from "{{capabilities_path}}/rbac/contracts";
+// Template: import type { IAuthorizationService } from "{{cap_rel}}/rbac/contracts/index.js";
 import type { IAuthorizationService } from "../../../capabilities/rbac/contracts/index.js";
+// Template: import { RoleNotFound } from "{{cap_rel}}/rbac/domain/errors/role-not-found.error.js";
 import { RoleNotFound } from "../../../capabilities/rbac/domain/errors/role-not-found.error.js";
+// Template: import { DuplicateRole } from "{{cap_rel}}/rbac/domain/errors/duplicate-role.error.js";
 import { DuplicateRole } from "../../../capabilities/rbac/domain/errors/duplicate-role.error.js";
+// Template: import { PermissionDenied } from "{{cap_rel}}/rbac/domain/errors/permission-denied.error.js";
 import { PermissionDenied } from "../../../capabilities/rbac/domain/errors/permission-denied.error.js";
 
 interface Request {

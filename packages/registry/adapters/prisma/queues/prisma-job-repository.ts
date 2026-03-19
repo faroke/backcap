@@ -1,5 +1,8 @@
+// Template: import type { IJobRepository } from "{{cap_rel}}/queues/application/ports/job-repository.port.js";
 import type { IJobRepository } from "../../../capabilities/queues/application/ports/job-repository.port.js";
+// Template: import { Job } from "{{cap_rel}}/queues/domain/entities/job.entity.js";
 import { Job } from "../../../capabilities/queues/domain/entities/job.entity.js";
+// Template: import type { JobStatus } from "{{cap_rel}}/queues/domain/entities/job.entity.js";
 import type { JobStatus } from "../../../capabilities/queues/domain/entities/job.entity.js";
 
 interface PrismaJobRecord {

@@ -1,4 +1,6 @@
+// Template: import type { ITokenService } from "{{cap_rel}}/auth/application/ports/token-service.port.js";
 import type { ITokenService } from "../../../../capabilities/auth/application/ports/token-service.port.js";
+// Template: import type { IAuthorizationService } from "{{cap_rel}}/rbac/contracts/rbac.contract.js";
 import type { IAuthorizationService } from "../../../../capabilities/rbac/contracts/rbac.contract.js";
 
 interface Request {

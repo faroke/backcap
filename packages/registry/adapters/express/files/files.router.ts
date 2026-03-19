@@ -1,7 +1,10 @@
-// Template: import type { IFilesService } from "{{capabilities_path}}/files/contracts";
+// Template: import type { IFilesService } from "{{cap_rel}}/files/contracts/index.js";
 import type { IFilesService } from "../../../capabilities/files/contracts/index.js";
+// Template: import { FileNotFound } from "{{cap_rel}}/files/domain/errors/file-not-found.error.js";
 import { FileNotFound } from "../../../capabilities/files/domain/errors/file-not-found.error.js";
+// Template: import { InvalidFilePath } from "{{cap_rel}}/files/domain/errors/invalid-file-path.error.js";
 import { InvalidFilePath } from "../../../capabilities/files/domain/errors/invalid-file-path.error.js";
+// Template: import { FileTooLarge } from "{{cap_rel}}/files/domain/errors/file-too-large.error.js";
 import { FileTooLarge } from "../../../capabilities/files/domain/errors/file-too-large.error.js";
 
 interface Request {

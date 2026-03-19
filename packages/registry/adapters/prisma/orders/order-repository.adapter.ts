@@ -1,6 +1,10 @@
+// Template: import type { IOrderRepository } from "{{cap_rel}}/orders/application/ports/order-repository.port.js";
 import type { IOrderRepository } from "../../../capabilities/orders/application/ports/order-repository.port.js";
+// Template: import { Order } from "{{cap_rel}}/orders/domain/entities/order.entity.js";
 import { Order } from "../../../capabilities/orders/domain/entities/order.entity.js";
+// Template: import { OrderItem } from "{{cap_rel}}/orders/domain/entities/order-item.entity.js";
 import { OrderItem } from "../../../capabilities/orders/domain/entities/order-item.entity.js";
+// Template: import { Address } from "{{cap_rel}}/orders/domain/value-objects/address.vo.js";
 import { Address } from "../../../capabilities/orders/domain/value-objects/address.vo.js";
 
 interface PrismaOrderItemRecord {

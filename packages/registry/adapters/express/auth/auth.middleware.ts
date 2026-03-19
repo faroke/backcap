@@ -1,4 +1,4 @@
-// Template: import type { ITokenService } from "{{capabilities_path}}/auth/application/ports/token-service.port";
+// Template: import type { ITokenService } from "{{cap_rel}}/auth/application/ports/token-service.port.js";
 import type { ITokenService } from "../../../capabilities/auth/application/ports/token-service.port.js";
 
 interface Request {
