@@ -1,0 +1,19 @@
+// ============================================================
+// Blog Capability — Prisma Schema Fragment
+// ============================================================
+// INSTRUCTIONS:
+// 1. Copy the model below into your main schema.prisma file
+// 2. Run: npx prisma migrate dev --name blog
+// 3. Run: npx prisma generate
+// ============================================================
+
+model Post {
+  id          String    @id @default(uuid())
+  title       String
+  slug        String    @unique
+  content     String
+  authorId    String
+  status      String    @default("draft")
+  createdAt   DateTime  @default(now())
+  publishedAt DateTime?
+}

@@ -72,6 +72,10 @@ export default defineConfig({
               label: "NestJS Blog",
               slug: "guides/nestjs-blog-example",
             },
+            {
+              label: "Next.js Blog",
+              slug: "guides/nextjs-blog-example",
+            },
           ],
         },
         {
@@ -107,6 +111,7 @@ export default defineConfig({
             { label: "Fastify", slug: "adapters/fastify" },
             { label: "Hono", slug: "adapters/hono" },
             { label: "NestJS", slug: "adapters/nestjs" },
+            { label: "Next.js", slug: "adapters/nextjs" },
           ],
         },
       ],
