@@ -1,5 +1,11 @@
 # @backcap/registry
 
+## 0.9.1
+
+### Patch Changes
+
+- f804c40: Fastify HTTP adapter for blog capability with plugin pattern and JSON schema validation
+
 ## 0.9.0
 
 ### Minor Changes
