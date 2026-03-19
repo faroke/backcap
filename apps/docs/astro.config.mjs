@@ -60,6 +60,10 @@ export default defineConfig({
               label: "Express Blog",
               slug: "guides/express-blog-example",
             },
+            {
+              label: "Fastify Blog",
+              slug: "guides/fastify-blog-example",
+            },
           ],
         },
         {
@@ -92,6 +96,7 @@ export default defineConfig({
           items: [
             { label: "Prisma", slug: "adapters/prisma" },
             { label: "Express", slug: "adapters/express" },
+            { label: "Fastify", slug: "adapters/fastify" },
           ],
         },
       ],

@@ -1,0 +1,37 @@
+{
+  "framework": "fastify",
+  "packageManager": "pnpm",
+  "paths": {
+    "capabilities": "src/capabilities",
+    "adapters": "src/adapters",
+    "bridges": "src/bridges",
+    "skills": ".claude/skills",
+    "shared": "src/shared"
+  },
+  "installed": {
+    "capabilities": [
+      {
+        "name": "blog",
+        "version": "1.0.0",
+        "adapters": [
+          "blog-prisma",
+          "blog-fastify"
+        ]
+      },
+      {
+        "name": "search",
+        "version": "1.0.0",
+        "adapters": [
+          "search-prisma",
+          "search-fastify"
+        ]
+      }
+    ],
+    "bridges": [
+      {
+        "name": "blog-search",
+        "version": "0.1.0"
+      }
+    ]
+  }
+}
