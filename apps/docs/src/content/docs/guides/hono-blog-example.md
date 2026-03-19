@@ -153,6 +153,7 @@ See [`examples/hono-blog/FRICTION.md`](https://github.com/faroke/backcap/tree/ma
 
 - [Express Blog example](/backcap/guides/express-blog-example) — Same capabilities with Express adapter
 - [Fastify Blog example](/backcap/guides/fastify-blog-example) — Same capabilities with Fastify adapter
+- [NestJS Blog example](/backcap/guides/nestjs-blog-example) — Same capabilities with NestJS DI bridge
 - [Hono adapter](/backcap/adapters/hono) — Adapter API reference
 - [Blog capability](/backcap/capabilities/blog) — Full domain model and API reference
 - [Bridges concept](/backcap/concepts/bridges) — How bridges connect capabilities

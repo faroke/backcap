@@ -68,6 +68,10 @@ export default defineConfig({
               label: "Hono Blog",
               slug: "guides/hono-blog-example",
             },
+            {
+              label: "NestJS Blog",
+              slug: "guides/nestjs-blog-example",
+            },
           ],
         },
         {
@@ -102,6 +106,7 @@ export default defineConfig({
             { label: "Express", slug: "adapters/express" },
             { label: "Fastify", slug: "adapters/fastify" },
             { label: "Hono", slug: "adapters/hono" },
+            { label: "NestJS", slug: "adapters/nestjs" },
           ],
         },
       ],

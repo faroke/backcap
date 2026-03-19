@@ -124,6 +124,9 @@ GET /api/search?q=hello
 
 ## See Also
 
+- [Fastify Blog example](/backcap/guides/fastify-blog-example) — Same capabilities with Fastify adapter
+- [Hono Blog example](/backcap/guides/hono-blog-example) — Same capabilities with Hono adapter
+- [NestJS Blog example](/backcap/guides/nestjs-blog-example) — Same capabilities with NestJS DI bridge
 - [Blog capability](/backcap/capabilities/blog) — Full domain model and API reference
 - [Search capability](/backcap/capabilities/search) — Search engine port and use cases
 - [Bridges concept](/backcap/concepts/bridges) — How bridges connect capabilities
