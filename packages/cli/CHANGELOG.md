@@ -1,5 +1,11 @@
 # @backcap/cli
 
+## 0.4.1
+
+### Patch Changes
+
+- 404f6c7: Next.js Blog example with stop-and-fix methodology (story 12.5): Next.js App Router adapter for blog capability, working example project, documentation pages.
+
 ## 0.4.0
 
 ### Minor Changes
