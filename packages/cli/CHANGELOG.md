@@ -1,5 +1,34 @@
 # @backcap/cli
 
+## 0.4.0
+
+### Minor Changes
+
+- feat: Express blog example with stop-and-fix methodology (story 12.1)
+
+  CLI improvements:
+
+  - Package manager detection now traverses parent directories (monorepo support)
+  - Template markers resolved before conflict detection (eliminates false conflicts)
+  - Bridge conflict detection uses resolved markers (parity with capabilities)
+  - `incomingFiles` recomputed after `capRoot` change in different-path flow
+  - New `processTemplateComments` resolves `// Template:` lines during installation
+  - New per-file markers: `cap_rel`, `shared_rel`, `bridges_rel` for cross-module imports
+
+  Registry improvements:
+
+  - Blog factory accepts optional `eventBus` — publishes PostCreated/PostPublished automatically
+  - IndexDocument use case no longer requires pre-existing index (auto-create)
+  - All adapter templates (48 files) updated with `{{cap_rel}}` markers
+  - All bridge templates (17 files) updated with `{{shared_rel}}` markers
+
+  Example:
+
+  - Working Express blog in `examples/express-blog/` with blog, search, and blog-search bridge
+  - Full CRUD + event-driven search indexing
+  - 11 tests (9 blog + 2 bridge)
+  - FRICTION.md documents 8 friction points encountered and fixed
+
 ## 0.3.0
 
 ### Minor Changes
