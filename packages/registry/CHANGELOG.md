@@ -1,5 +1,11 @@
 # @backcap/registry
 
+## 0.9.2
+
+### Patch Changes
+
+- 4a16362: Hono blog adapter and example with stop-and-fix methodology (story 12.3). Fix registry quality check naming errors in billing, catalog, and orders capabilities.
+
 ## 0.9.1
 
 ### Patch Changes
