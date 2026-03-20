@@ -12,6 +12,8 @@ import {
   promptFramework,
   promptPackageManager,
   promptOverwriteConfirm,
+  promptCustomizePaths,
+  promptPath,
 } from "../ui/prompts.js";
 import { log } from "../utils/logger.js";
 
@@ -127,8 +129,19 @@ export default defineCommand({
       }
     }
 
-    // Build and write config
+    // Build config with optional path customization
     const config = buildDefaultConfig(framework, pm);
+
+    if (!args.yes) {
+      const customize = await promptCustomizePaths();
+      if (customize) {
+        config.paths.domains = await promptPath("Domains folder", config.paths.domains);
+        config.paths.adapters = await promptPath("Adapters folder", config.paths.adapters);
+        config.paths.bridges = await promptPath("Bridges folder", config.paths.bridges);
+        config.alias = await promptPath("Tsconfig alias", config.alias);
+      }
+    }
+
     const writeResult = await writeConfig(config, cwd);
 
     if (writeResult.isFail()) {

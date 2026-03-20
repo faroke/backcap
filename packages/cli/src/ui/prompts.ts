@@ -53,6 +53,33 @@ export async function promptPackageManager(): Promise<PackageManagerId> {
   return value as PackageManagerId;
 }
 
+export async function promptCustomizePaths(): Promise<boolean> {
+  const value = await clack.confirm({
+    message: "Would you like to customize installation paths?",
+    initialValue: false,
+  });
+
+  if (clack.isCancel(value)) {
+    process.exit(0);
+  }
+
+  return value;
+}
+
+export async function promptPath(label: string, defaultValue: string): Promise<string> {
+  const value = await clack.text({
+    message: `${label}:`,
+    placeholder: defaultValue,
+    defaultValue,
+  });
+
+  if (clack.isCancel(value)) {
+    process.exit(0);
+  }
+
+  return value;
+}
+
 export async function promptOverwriteConfirm(
   existingConfig: BackcapConfig,
 ): Promise<boolean> {

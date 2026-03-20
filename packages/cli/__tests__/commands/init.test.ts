@@ -37,6 +37,8 @@ vi.mock("../../src/ui/prompts.js", () => ({
   promptFramework: vi.fn(),
   promptPackageManager: vi.fn(),
   promptOverwriteConfirm: vi.fn(),
+  promptCustomizePaths: vi.fn().mockResolvedValue(false),
+  promptPath: vi.fn(),
 }));
 
 import { readPackageJSON } from "pkg-types";
@@ -45,13 +47,15 @@ import { detectFramework } from "../../src/detection/framework.js";
 import { detectPackageManager } from "../../src/detection/package-manager.js";
 import { configExists, writeConfig } from "../../src/config/loader.js";
 import { buildDefaultConfig } from "../../src/config/defaults.js";
-import { fail as mockFailFn } from "../../src/ui/prompts.js";
+import { fail as mockFailFn, promptCustomizePaths, promptPath } from "../../src/ui/prompts.js";
 
 const mockReadPkg = vi.mocked(readPackageJSON);
 const mockStat = vi.mocked(stat);
 const mockReadFile = vi.mocked(readFile);
 const mockWriteFile = vi.mocked(writeFile);
 const mockFail = vi.mocked(mockFailFn);
+const mockCustomizePaths = vi.mocked(promptCustomizePaths);
+const mockPromptPath = vi.mocked(promptPath);
 
 describe("init command integration", () => {
   beforeEach(() => {
@@ -321,5 +325,106 @@ describe("init tsconfig prerequisite", () => {
     expect(writtenTsconfig.compilerOptions.paths["@domains/*"]).toEqual(["domains/*"]);
     // Original fields preserved
     expect(writtenTsconfig.include).toEqual(["src"]);
+  });
+});
+
+describe("init path customization", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockWriteFile.mockResolvedValue(undefined);
+  });
+
+  it("uses custom paths when user opts to customize", async () => {
+    mockStat.mockImplementation((path) => {
+      const p = String(path);
+      if (p.includes("tsconfig.json") || p.includes("package-lock.json")) {
+        return Promise.resolve({} as any);
+      }
+      return Promise.reject(new Error("ENOENT"));
+    });
+
+    mockReadPkg.mockResolvedValue({
+      dependencies: { express: "^4.18.0" },
+    } as any);
+
+    mockReadFile.mockImplementation((path) => {
+      if (String(path).includes("tsconfig.json")) {
+        return Promise.resolve(JSON.stringify({ compilerOptions: {} }));
+      }
+      return Promise.reject(new Error("ENOENT"));
+    });
+
+    mockCustomizePaths.mockResolvedValue(true);
+    mockPromptPath
+      .mockResolvedValueOnce("src/domains")
+      .mockResolvedValueOnce("src/adapters")
+      .mockResolvedValueOnce("src/bridges")
+      .mockResolvedValueOnce("@app");
+
+    const initCommand = await import("../../src/commands/init.js");
+    const originalCwd = process.cwd;
+    process.cwd = () => "/project";
+
+    try {
+      await initCommand.default.run!({ args: { yes: false } } as any);
+    } finally {
+      process.cwd = originalCwd;
+    }
+
+    const configWriteCall = mockWriteFile.mock.calls.find((call) =>
+      String(call[0]).includes("backcap.json"),
+    );
+    expect(configWriteCall).toBeDefined();
+    const writtenConfig = JSON.parse(configWriteCall![1] as string);
+    expect(writtenConfig.paths.domains).toBe("src/domains");
+    expect(writtenConfig.paths.adapters).toBe("src/adapters");
+    expect(writtenConfig.paths.bridges).toBe("src/bridges");
+    expect(writtenConfig.alias).toBe("@app");
+
+    const tsconfigWriteCall = mockWriteFile.mock.calls.find((call) =>
+      String(call[0]).includes("tsconfig.json"),
+    );
+    const writtenTsconfig = JSON.parse(tsconfigWriteCall![1] as string);
+    expect(writtenTsconfig.compilerOptions.paths["@app/*"]).toEqual(["src/domains/*"]);
+  });
+
+  it("skips path prompts with --yes flag", async () => {
+    mockStat.mockImplementation((path) => {
+      const p = String(path);
+      if (p.includes("tsconfig.json") || p.includes("package-lock.json")) {
+        return Promise.resolve({} as any);
+      }
+      return Promise.reject(new Error("ENOENT"));
+    });
+
+    mockReadPkg.mockResolvedValue({
+      dependencies: { express: "^4.18.0" },
+    } as any);
+
+    mockReadFile.mockImplementation((path) => {
+      if (String(path).includes("tsconfig.json")) {
+        return Promise.resolve(JSON.stringify({ compilerOptions: {} }));
+      }
+      return Promise.reject(new Error("ENOENT"));
+    });
+
+    const initCommand = await import("../../src/commands/init.js");
+    const originalCwd = process.cwd;
+    process.cwd = () => "/project";
+
+    try {
+      await initCommand.default.run!({ args: { yes: true } } as any);
+    } finally {
+      process.cwd = originalCwd;
+    }
+
+    expect(mockCustomizePaths).not.toHaveBeenCalled();
+
+    const configWriteCall = mockWriteFile.mock.calls.find((call) =>
+      String(call[0]).includes("backcap.json"),
+    );
+    const writtenConfig = JSON.parse(configWriteCall![1] as string);
+    expect(writtenConfig.paths.domains).toBe("domains");
+    expect(writtenConfig.alias).toBe("@domains");
   });
 });
