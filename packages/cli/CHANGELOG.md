@@ -1,5 +1,11 @@
 # @backcap/cli
 
+## 0.4.2
+
+### Patch Changes
+
+- ccd2759: Fix bridge conflict prompt showing unusable "selective" and "different_path" options, and align no-bridges message with documentation.
+
 ## 0.4.1
 
 ### Patch Changes
