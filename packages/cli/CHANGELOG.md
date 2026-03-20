@@ -1,5 +1,15 @@
 # @backcap/cli
 
+## 0.4.5
+
+### Patch Changes
+
+- feat(cli): add path customization prompts to init command
+
+  `backcap init` now asks whether the user wants to customize installation paths
+  (domains, adapters, bridges folders and tsconfig alias). Defaults are unchanged.
+  Skipped in non-interactive mode (`--yes`).
+
 ## 0.4.4
 
 ### Patch Changes
