@@ -40,7 +40,10 @@ export default defineConfig({
         },
         {
           label: "CLI Reference",
-          items: [{ label: "Commands", slug: "cli/commands" }],
+          items: [
+            { label: "Commands", slug: "cli/commands" },
+            { label: "Configuration", slug: "cli/configuration" },
+          ],
         },
         {
           label: "Guides",
