@@ -50,9 +50,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <div class="anim visible d4" style="display:flex;justify-content:center;margin-bottom:4rem">
           <div class="cmd-box">
             <span class="dollar">$</span>
-            <span>npx @backcap/cli add auth</span>
-            <button class="cmd-copy" onclick="navigator.clipboard.writeText('npx @backcap/cli add auth')" title="Copy">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            <span>npx @backcap/cli init</span>
+            <button class="cmd-copy" title="Copy">
+              <svg class="cmd-copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              <svg class="cmd-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
           </div>
         </div>
@@ -458,9 +459,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .landing .cmd-box .dollar { color: var(--lp-muted); user-select: none; }
   .landing .cmd-copy {
     background: none; border: none; color: var(--lp-muted); cursor: pointer;
-    padding: 0; margin-left: 0.5rem; transition: color 0.2s;
+    padding: 0; margin-left: 0.5rem; transition: color 0.2s; position: relative;
   }
   .landing .cmd-copy:hover { color: var(--lp-fg); }
+  .landing .cmd-copy .cmd-check-icon { display: none; }
+  .landing .cmd-copy.copied { color: hsl(152 76% 52%); }
+  .landing .cmd-copy.copied .cmd-copy-icon { display: none; }
+  .landing .cmd-copy.copied .cmd-check-icon { display: block; }
 
   /* ── Terminal ── */
   .landing .terminal {
@@ -492,9 +497,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .landing .tl-cmd .prompt-char { color: var(--lp-muted); user-select: none; }
   .landing .tl-cmd strong { color: var(--lp-fg); font-weight: 600; }
   .landing .tl-clack-intro { color: var(--lp-primary); }
-  .landing .tl-clack-bar { color: hsl(220 14% 25%); }
-  .landing .tl-clack-select { color: var(--lp-accent); }
-  .landing .tl-clack-select .label { color: hsl(210 20% 70%); }
+  .landing .tl-clack { color: hsl(220 14% 40%); }
+  .landing .tl-clack strong { color: var(--lp-fg); }
+  .landing .tl-muted { color: var(--lp-muted); }
   .landing .tl-tag { color: hsl(152 76% 52% / 0.5); }
   .landing .tl-info { color: hsl(200 80% 65%); }
   .landing .tl-success { color: var(--lp-primary); }
@@ -742,27 +747,38 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   document.querySelectorAll('.landing .anim:not(.visible)').forEach(el => observer.observe(el));
 
   // ── Terminal animation ──
+  // ── Copy button handler ──
+  document.querySelectorAll('.cmd-copy').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.closest('.cmd-box')?.querySelector('span:not(.dollar)')?.textContent || '';
+      navigator.clipboard.writeText(text);
+      btn.classList.add('copied');
+      setTimeout(() => btn.classList.remove('copied'), 1500);
+    });
+  });
+
   const lines = [
-    { html: '<span class="prompt-char">$ </span><strong>npx @backcap/cli add auth</strong>', cls: 'tl-cmd', delay: 800 },
+    { html: '<span class="prompt-char">$ </span><strong>npx @backcap/cli init</strong>', cls: 'tl-cmd', delay: 800 },
     { html: '', cls: 'tl-empty', delay: 60 },
-    { html: '┌  <strong>backcap add</strong>', cls: 'tl-clack-intro', delay: 300 },
-    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Fetching auth...', cls: '', delay: 400 },
-    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Detected framework: fastify', cls: '', delay: 200 },
+    { html: '┌  <strong>backcap init</strong>', cls: 'tl-clack-intro', delay: 300 },
+    { html: '│', cls: 'tl-clack', delay: 100 },
+    { html: '◆  Which framework are you using?', cls: 'tl-clack', delay: 400 },
+    { html: '│  ○ Next.js', cls: 'tl-clack tl-muted', delay: 80 },
+    { html: '│  ○ Express', cls: 'tl-clack tl-muted', delay: 80 },
+    { html: '│  <span class="tl-success">●</span> <strong>Fastify</strong>', cls: 'tl-clack', delay: 600 },
+    { html: '│  ○ NestJS', cls: 'tl-clack tl-muted', delay: 80 },
+    { html: '│  ○ Hono', cls: 'tl-clack tl-muted', delay: 80 },
+    { html: '│', cls: 'tl-clack', delay: 200 },
+    { html: '◆  Which package manager are you using?', cls: 'tl-clack', delay: 400 },
+    { html: '│  ○ npm', cls: 'tl-clack tl-muted', delay: 80 },
+    { html: '│  <span class="tl-success">●</span> <strong>pnpm</strong>', cls: 'tl-clack', delay: 500 },
+    { html: '│  ○ yarn', cls: 'tl-clack tl-muted', delay: 80 },
+    { html: '│  ○ bun', cls: 'tl-clack tl-muted', delay: 80 },
+    { html: '│', cls: 'tl-clack', delay: 200 },
+    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> backcap.json created', cls: '', delay: 300 },
+    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> tsconfig.json paths updated', cls: '', delay: 150 },
     { html: '', cls: 'tl-empty', delay: 60 },
-    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Capability files written', cls: '', delay: 120 },
-    { html: '  <span class="plus">+</span> src/capabilities/auth/domain/user.ts', cls: 'tl-file', delay: 60 },
-    { html: '  <span class="plus">+</span> src/capabilities/auth/domain/session.ts', cls: 'tl-file', delay: 60 },
-    { html: '  <span class="plus">+</span> src/capabilities/auth/application/ports/auth-provider.port.ts', cls: 'tl-file', delay: 60 },
-    { html: '  <span class="plus">+</span> src/capabilities/auth/application/use-cases/sign-in.use-case.ts', cls: 'tl-file', delay: 60 },
-    { html: '  <span class="plus">+</span> src/capabilities/auth/application/use-cases/sign-up.use-case.ts', cls: 'tl-file', delay: 60 },
-    { html: '  <span class="plus">+</span> src/capabilities/auth/contracts/auth.contract.ts', cls: 'tl-file', delay: 60 },
-    { html: '', cls: 'tl-empty', delay: 60 },
-    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-info">ℹ</span> Fetching adapter auth-prisma...', cls: '', delay: 300 },
-    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Adapter files written', cls: '', delay: 150 },
-    { html: '', cls: 'tl-empty', delay: 60 },
-    { html: '<span class="tl-tag">[backcap]</span> <span class="tl-success">✓</span> Skill installed to .claude/skills/backcap-auth/', cls: '', delay: 150 },
-    { html: '', cls: 'tl-empty', delay: 60 },
-    { html: '└  auth v1.0.0 installed successfully!', cls: 'tl-outro', delay: 0 },
+    { html: '└  backcap.json created successfully!', cls: 'tl-outro', delay: 0 },
   ];
 
   const body = document.getElementById('terminal-body');
