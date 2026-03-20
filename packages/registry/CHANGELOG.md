@@ -1,5 +1,11 @@
 # @backcap/registry
 
+## 0.9.5
+
+### Patch Changes
+
+- c6aaadd: Remove template markers from capability and bridge source files, convert cross-domain imports to @domains/ alias, and update skill references to use new paths.domains config.
+
 ## 0.9.4
 
 ### Patch Changes
