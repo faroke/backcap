@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { defineCommand } from "citty";
 import * as clack from "@clack/prompts";
 import { configExists, loadConfig } from "../config/loader.js";
+import { detectInstalledDomains } from "../detection/installed.js";
 import { fail } from "../ui/prompts.js";
 
 interface BridgeManifest {
@@ -64,9 +65,10 @@ export default defineCommand({
 
     const config = configResult.unwrap();
     const bridgesDir = join(cwd, config.paths.bridges);
-    const installedBridgeNames = new Set(
-      (config.installed?.bridges ?? []).map((b) => b.name),
-    );
+    const domainsPath = join(cwd, config.paths.domains);
+
+    // Detect installed domains from filesystem
+    const installedDomains = new Set(await detectInstalledDomains(domainsPath));
 
     const manifests = await discoverLocalBridgeManifests(bridgesDir);
 
@@ -77,7 +79,8 @@ export default defineCommand({
     }
 
     const lines = manifests.map((m) => {
-      const status = installedBridgeNames.has(m.name) ? "installed" : "available";
+      const bothInstalled = installedDomains.has(m.sourceCapability) && installedDomains.has(m.targetCapability);
+      const status = bothInstalled ? "ready" : "missing dependencies";
       return `  ${m.name}\n    Source: ${m.sourceCapability} | Target: ${m.targetCapability}\n    Events: ${m.events.join(", ")} | Status: ${status}`;
     });
 

@@ -5,9 +5,8 @@ import { registryItemSchema } from "@backcap/shared/schemas/registry-item";
 import { configExists, loadConfig } from "../config/loader.js";
 import { detectAdapters } from "../lib/detect-adapters.js";
 import { detectPM } from "../lib/detect-pm.js";
-import { writeCapabilityFiles, resolveFileMarkers } from "../lib/write-capability.js";
+import { writeCapabilityFiles } from "../lib/write-capability.js";
 import { installDeps } from "../lib/install-deps.js";
-import { updateConfigCapability, updateConfigBridge } from "../lib/update-config.js";
 import { detectConflicts } from "../installer/conflict-detector.js";
 import { renderConflictSummary, renderDetailedDiffs } from "../installer/diff-renderer.js";
 import { selectiveInstall, InstallCancelledError } from "../installer/selective-installer.js";
@@ -26,6 +25,7 @@ import { log } from "../utils/logger.js";
 import { ConflictDetectionError } from "../errors/conflict-detection.error.js";
 import { FileWriteError } from "../installer/file-writer.js";
 import { MissingDependencyError } from "../errors/bridge.error.js";
+import { detectInstalledDomains } from "../detection/installed.js";
 
 const DEFAULT_REGISTRY_URL = "https://faroke.github.io/backcap";
 
@@ -128,22 +128,16 @@ export default defineCommand({
     const filesToWrite = files
       .filter((f): f is { path: string; content: string } => typeof f.content === "string");
 
-    const markers = {
-      capabilities_path: config.paths.capabilities,
-      adapters_path: config.paths.adapters,
-      bridges_path: config.paths.bridges,
-      skills_path: config.paths.skills,
-      shared_config_path: config.paths.shared ?? "src/shared",
-    };
-
     // Conflict detection for capability files
-    let capRoot = normalize(join(cwd, config.paths.capabilities, capabilityName));
+    let capRoot = normalize(join(cwd, config.paths.domains, capabilityName));
 
     let useSelectiveInstall = false;
     let resolved = false;
     while (!resolved) {
-      // Recompute markers each iteration (capRoot may change via "different_path")
-      const incomingFiles = resolveFileMarkers(filesToWrite, capRoot, markers, cwd);
+      const incomingFiles = filesToWrite.map((f) => ({
+        relativePath: f.path,
+        content: f.content,
+      }));
 
       let report;
       try {
@@ -194,20 +188,11 @@ export default defineCommand({
           const selectedPaths = new Set([...installResult.installed, ...installResult.alwaysInstalled]);
           const selectedFiles = filesToWrite.filter((f) => selectedPaths.has(f.path));
 
-          await writeCapabilityFiles(selectedFiles, { capabilityRoot: capRoot, markers, cwd });
+          await writeCapabilityFiles(selectedFiles, { capabilityRoot: capRoot });
 
           reportInstallResult(installResult);
           useSelectiveInstall = true;
           resolved = true;
-
-          // Track partial install
-          const version = itemVersion ?? "1.0.0";
-          await updateConfigCapability(cwd, {
-            name: capabilityName,
-            version,
-            adapters: selectedAdapters,
-            partial: installResult.skipped.length > 0,
-          });
         } catch (err) {
           if (err instanceof InstallCancelledError) {
             outro("Installation cancelled. No files were written.");
@@ -239,16 +224,8 @@ export default defineCommand({
       }
 
       // Write all capability files
-      await writeCapabilityFiles(filesToWrite, { capabilityRoot: capRoot, markers, cwd });
+      await writeCapabilityFiles(filesToWrite, { capabilityRoot: capRoot });
       log.success(`Capability files written to ${capRoot}`);
-
-      // Update backcap.json
-      const version = itemVersion ?? "1.0.0";
-      await updateConfigCapability(cwd, {
-        name: capabilityName,
-        version,
-        adapters: selectedAdapters,
-      });
     }
 
     // Fetch and write adapter files (always, regardless of selective install)
@@ -272,7 +249,7 @@ export default defineCommand({
         const category = adapterType === "prisma" ? "persistence" : "http";
         const adapterRoot = normalize(join(cwd, config.paths.adapters, category, adapterType, capabilityName));
 
-        await writeCapabilityFiles(adapterFiles, { capabilityRoot: adapterRoot, markers, cwd });
+        await writeCapabilityFiles(adapterFiles, { capabilityRoot: adapterRoot });
         log.success(`Adapter files written to ${adapterRoot}`);
       } catch {
         log.warn(`Could not fetch adapter "${adapterName}", skipping.`);
@@ -300,12 +277,20 @@ export default defineCommand({
         // Core skill fetch failed — proceed without it
       }
 
+      const templateValues = {
+        domains_path: config.paths.domains,
+        adapters_path: config.paths.adapters,
+        bridges_path: config.paths.bridges,
+        skills_path: config.paths.skills,
+        shared_config_path: config.paths.shared ?? "src/shared",
+      };
+
       await installSkill({
         skillsPath,
         capabilityName,
         skillFiles: capSkillFiles,
         coreSkillFiles,
-        templateValues: markers,
+        templateValues,
         onConflict: args.yes ? async () => "overwrite" as const : promptSkillConflict,
       });
       log.success(`Skill installed to ${skillsPath}/backcap-${capabilityName}/`);
@@ -337,7 +322,7 @@ export default defineCommand({
         lines.push(`  Adapters:   ${selectedAdapters.join(", ")}`);
       }
       lines.push("", "  Next steps:");
-      lines.push(`  1. Review the installed files in ${config.paths.capabilities}/${capabilityName}/`);
+      lines.push(`  1. Review the installed files in ${config.paths.domains}/${capabilityName}/`);
       lines.push("  2. Run the test suite to verify: npx vitest run");
       lines.push("  3. Check available bridges: backcap bridges");
       outro(lines.join("\n"));
@@ -348,7 +333,7 @@ export default defineCommand({
 // --- Bridge installation flow ---
 async function installBridge(
   cwd: string,
-  config: { paths: { capabilities: string; adapters: string; bridges: string; skills: string }; installed: { capabilities: Array<{ name: string }>; bridges: Array<{ name: string }> } },
+  config: { paths: { domains: string; adapters: string; bridges: string; skills: string; shared?: string } },
   item: { name: string; type: string; files: Array<Record<string, unknown>>; dependencies?: Record<string, string> | string[] },
   itemVersion: string | undefined,
   yes = false,
@@ -356,22 +341,16 @@ async function installBridge(
   const bridgeName = item.name;
   const version = itemVersion ?? "0.1.0";
 
-  // Check if already installed
-  const installedBridgeNames = new Set(config.installed.bridges.map((b) => b.name));
-  if (installedBridgeNames.has(bridgeName)) {
-    log.info(`Bridge "${bridgeName}" is already installed.`);
-    outro("Nothing to update.");
-    return;
-  }
-
-  // Validate dependencies — all required capabilities must be installed
+  // Validate dependencies — all required domains must exist on disk
   const requiredDeps = Array.isArray(item.dependencies)
     ? item.dependencies
     : item.dependencies ? Object.keys(item.dependencies) : [];
 
   if (requiredDeps.length > 0) {
-    const installedCapNames = new Set(config.installed.capabilities.map((c) => c.name));
-    const missing = requiredDeps.filter((dep) => !installedCapNames.has(dep));
+    const domainsPath = join(cwd, config.paths.domains);
+    const installedDomains = await detectInstalledDomains(domainsPath);
+    const installedDomainSet = new Set(installedDomains);
+    const missing = requiredDeps.filter((dep) => !installedDomainSet.has(dep));
 
     if (missing.length > 0) {
       const err = new MissingDependencyError(missing);
@@ -385,18 +364,13 @@ async function installBridge(
   const filesToWrite = files
     .filter((f): f is { path: string; content: string } => typeof f.content === "string");
 
-  const markers = {
-    capabilities_path: config.paths.capabilities,
-    adapters_path: config.paths.adapters,
-    bridges_path: config.paths.bridges,
-    skills_path: config.paths.skills,
-    shared_config_path: config.paths.shared ?? "src/shared",
-  };
-
   const bridgeRoot = normalize(join(cwd, config.paths.bridges, bridgeName));
 
-  // Conflict detection — resolve markers before comparing
-  const incomingFiles = resolveFileMarkers(filesToWrite, bridgeRoot, markers, cwd);
+  // Conflict detection
+  const incomingFiles = filesToWrite.map((f) => ({
+    relativePath: f.path,
+    content: f.content,
+  }));
 
   try {
     const report = await detectConflicts(bridgeRoot, incomingFiles);
@@ -436,11 +410,8 @@ async function installBridge(
   }
 
   // Write bridge files
-  await writeCapabilityFiles(filesToWrite, { capabilityRoot: bridgeRoot, markers, cwd });
+  await writeCapabilityFiles(filesToWrite, { capabilityRoot: bridgeRoot });
   log.success(`Bridge files written to ${bridgeRoot}`);
-
-  // Update config
-  await updateConfigBridge(cwd, { name: bridgeName, version });
 
   // Success message
   const lines = [

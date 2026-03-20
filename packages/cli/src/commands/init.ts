@@ -1,3 +1,5 @@
+import { readFile, writeFile, stat } from "node:fs/promises";
+import { join } from "pathe";
 import { defineCommand } from "citty";
 import { detectFramework } from "../detection/framework.js";
 import { detectPackageManager } from "../detection/package-manager.js";
@@ -12,6 +14,40 @@ import {
   promptOverwriteConfirm,
 } from "../ui/prompts.js";
 import { log } from "../utils/logger.js";
+
+async function tsconfigExists(cwd: string): Promise<boolean> {
+  try {
+    await stat(join(cwd, "tsconfig.json"));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function stripJsonComments(text: string): string {
+  return text.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
+}
+
+async function injectTsconfigAlias(cwd: string, alias: string, domainsPath: string): Promise<void> {
+  const tsconfigPath = join(cwd, "tsconfig.json");
+  const raw = await readFile(tsconfigPath, "utf-8");
+  const tsconfig = JSON.parse(stripJsonComments(raw)) as Record<string, unknown>;
+
+  if (!tsconfig.compilerOptions || typeof tsconfig.compilerOptions !== "object") {
+    tsconfig.compilerOptions = {};
+  }
+
+  const compilerOptions = tsconfig.compilerOptions as Record<string, unknown>;
+
+  if (!compilerOptions.paths || typeof compilerOptions.paths !== "object") {
+    compilerOptions.paths = {};
+  }
+
+  const paths = compilerOptions.paths as Record<string, string[]>;
+  paths[`${alias}/*`] = [`${domainsPath}/*`];
+
+  await writeFile(tsconfigPath, JSON.stringify(tsconfig, null, 2) + "\n", "utf-8");
+}
 
 export default defineCommand({
   meta: {
@@ -29,6 +65,12 @@ export default defineCommand({
   async run({ args }) {
     const cwd = process.cwd();
     intro();
+
+    // Check tsconfig.json prerequisite
+    if (!(await tsconfigExists(cwd))) {
+      fail("tsconfig.json not found. Backcap requires a TypeScript project with tsconfig.json.");
+      return;
+    }
 
     // Detect framework
     const frameworkResult = await detectFramework(cwd);
@@ -85,6 +127,14 @@ export default defineCommand({
 
     if (writeResult.isFail()) {
       fail(writeResult.unwrapError().message);
+      return;
+    }
+
+    // Inject alias into tsconfig.json
+    try {
+      await injectTsconfigAlias(cwd, config.alias, config.paths.domains);
+    } catch (err) {
+      fail(`Failed to update tsconfig.json: ${err instanceof Error ? err.message : String(err)}`);
       return;
     }
 

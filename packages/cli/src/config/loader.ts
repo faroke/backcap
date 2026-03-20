@@ -42,7 +42,7 @@ function normalizePaths(config: BackcapConfig): BackcapConfig {
   return {
     ...config,
     paths: {
-      capabilities: normalize(config.paths.capabilities),
+      domains: normalize(config.paths.domains),
       adapters: normalize(config.paths.adapters),
       bridges: normalize(config.paths.bridges),
       skills: normalize(config.paths.skills),

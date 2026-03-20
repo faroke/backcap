@@ -17,13 +17,13 @@ const validConfig = {
   framework: "express",
   packageManager: "npm",
   paths: {
-    capabilities: "src/capabilities",
-    adapters: "src/adapters",
+    domains: "domains",
+    adapters: "adapters",
     bridges: "src/bridges",
     skills: "src/skills",
     shared: "src/shared",
   },
-  installed: [],
+  alias: "@domains",
 };
 
 describe("configExists", () => {
@@ -86,7 +86,7 @@ describe("writeConfig", () => {
       (mockWriteFile.mock.calls[0]![1] as string).trim(),
     );
     expect(written.framework).toBe("express");
-    expect(written.paths.capabilities).toBe("src/capabilities");
+    expect(written.paths.domains).toBe("domains");
   });
 
   it("returns fail when write throws", async () => {

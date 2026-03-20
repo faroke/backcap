@@ -1,7 +1,9 @@
+import { join } from "pathe";
 import { defineCommand } from "citty";
 import { fetchRegistry } from "../lib/registry-fetch.js";
 import { renderCapabilityTable } from "../lib/render-table.js";
 import { configExists, loadConfig } from "../config/loader.js";
+import { detectInstalledDomains } from "../detection/installed.js";
 import { log } from "../utils/logger.js";
 
 const DEFAULT_REGISTRY_URL = "https://faroke.github.io/backcap/dist/registry.json";
@@ -20,8 +22,9 @@ export default defineCommand({
       const configResult = await loadConfig(cwd);
       if (configResult.isOk()) {
         const config = configResult.unwrap();
-        const caps = config.installed?.capabilities ?? [];
-        installed = new Set(caps.map((c) => c.name));
+        const domainsPath = join(cwd, config.paths.domains);
+        const domains = await detectInstalledDomains(domainsPath);
+        installed = new Set(domains);
       }
     } else {
       log.info("Run `backcap init` to configure your project.");

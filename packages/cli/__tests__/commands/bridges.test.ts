@@ -28,18 +28,22 @@ vi.mock("../../src/ui/prompts.js", () => ({
   fail: vi.fn(),
 }));
 
+vi.mock("../../src/detection/installed.js", () => ({
+  detectInstalledDomains: vi.fn(),
+}));
+
 import * as clack from "@clack/prompts";
-import { ofetch } from "ofetch";
 import { readdir, readFile, stat } from "node:fs/promises";
 import { configExists, loadConfig } from "../../src/config/loader.js";
+import { detectInstalledDomains } from "../../src/detection/installed.js";
 import { MissingDependencyError, BridgeNotFoundError } from "../../src/errors/bridge.error.js";
 
 const mockReaddir = vi.mocked(readdir);
 const mockReadFile = vi.mocked(readFile);
 const mockStat = vi.mocked(stat);
-const mockOfetch = vi.mocked(ofetch);
 const mockConfigExists = vi.mocked(configExists);
 const mockLoadConfig = vi.mocked(loadConfig);
+const mockDetectInstalledDomains = vi.mocked(detectInstalledDomains);
 
 describe("MissingDependencyError", () => {
   it("contains missing capabilities and suggestion", () => {
@@ -63,43 +67,43 @@ describe("bridges command logic", () => {
     vi.clearAllMocks();
   });
 
-  it("filters bridges by installed capabilities", () => {
-    const installed = new Set(["auth", "notifications"]);
+  it("filters bridges by installed domains from filesystem", () => {
+    const installedDomains = new Set(["auth", "notifications"]);
     const bridges = [
-      { name: "auth-notifications", dependencies: ["auth", "notifications"] },
-      { name: "auth-payments", dependencies: ["auth", "payments"] },
+      { name: "auth-notifications", source: "auth", target: "notifications" },
+      { name: "auth-payments", source: "auth", target: "payments" },
     ];
 
     const compatible = bridges.filter((b) =>
-      b.dependencies.every((dep) => installed.has(dep)),
+      installedDomains.has(b.source) && installedDomains.has(b.target),
     );
 
     expect(compatible).toHaveLength(1);
     expect(compatible[0]!.name).toBe("auth-notifications");
   });
 
-  it("returns empty when no capabilities installed", () => {
-    const installed = new Set<string>();
+  it("returns empty when no domains installed", () => {
+    const installedDomains = new Set<string>();
     const bridges = [
-      { name: "auth-notifications", dependencies: ["auth", "notifications"] },
+      { name: "auth-notifications", source: "auth", target: "notifications" },
     ];
 
     const compatible = bridges.filter((b) =>
-      b.dependencies.every((dep) => installed.has(dep)),
+      installedDomains.has(b.source) && installedDomains.has(b.target),
     );
 
     expect(compatible).toHaveLength(0);
   });
 
-  it("returns all bridges when all dependencies are met", () => {
-    const installed = new Set(["auth", "notifications", "payments"]);
+  it("returns all bridges when all domains are present", () => {
+    const installedDomains = new Set(["auth", "notifications", "payments"]);
     const bridges = [
-      { name: "auth-notifications", dependencies: ["auth", "notifications"] },
-      { name: "auth-payments", dependencies: ["auth", "payments"] },
+      { name: "auth-notifications", source: "auth", target: "notifications" },
+      { name: "auth-payments", source: "auth", target: "payments" },
     ];
 
     const compatible = bridges.filter((b) =>
-      b.dependencies.every((dep) => installed.has(dep)),
+      installedDomains.has(b.source) && installedDomains.has(b.target),
     );
 
     expect(compatible).toHaveLength(2);
@@ -107,47 +111,24 @@ describe("bridges command logic", () => {
 });
 
 describe("bridge dependency validation", () => {
-  it("detects missing dependencies for bridge installation", () => {
-    const installedCapNames = new Set(["auth"]);
+  it("detects missing dependencies via filesystem scan", () => {
+    const installedDomains = new Set(["auth"]);
     const bridgeDeps = ["auth", "notifications"];
 
-    const missing = bridgeDeps.filter((dep) => !installedCapNames.has(dep));
+    const missing = bridgeDeps.filter((dep) => !installedDomains.has(dep));
 
     expect(missing).toEqual(["notifications"]);
     const err = new MissingDependencyError(missing);
     expect(err.message).toContain("notifications");
   });
 
-  it("passes when all dependencies are installed", () => {
-    const installedCapNames = new Set(["auth", "notifications"]);
+  it("passes when all domains are present on disk", () => {
+    const installedDomains = new Set(["auth", "notifications"]);
     const bridgeDeps = ["auth", "notifications"];
 
-    const missing = bridgeDeps.filter((dep) => !installedCapNames.has(dep));
+    const missing = bridgeDeps.filter((dep) => !installedDomains.has(dep));
 
     expect(missing).toHaveLength(0);
-  });
-});
-
-describe("installed config structure", () => {
-  it("reads capability names from structured installed config", () => {
-    const config = {
-      installed: {
-        capabilities: [
-          { name: "auth", version: "1.0.0", adapters: ["auth-prisma"] },
-          { name: "notifications", version: "1.0.0", adapters: [] },
-        ],
-        bridges: [
-          { name: "auth-notifications", version: "0.1.0" },
-        ],
-      },
-    };
-
-    const capNames = new Set(config.installed.capabilities.map((c) => c.name));
-    expect(capNames.has("auth")).toBe(true);
-    expect(capNames.has("notifications")).toBe(true);
-
-    const bridgeNames = new Set(config.installed.bridges.map((b) => b.name));
-    expect(bridgeNames.has("auth-notifications")).toBe(true);
   });
 });
 
@@ -162,10 +143,13 @@ describe("bridges command no-manifests output", () => {
       isOk: () => true,
       isFail: () => false,
       unwrap: () => ({
-        paths: { capabilities: "src/capabilities", adapters: "src/adapters", bridges: "src/bridges", skills: ".claude/skills" },
-        installed: { capabilities: [], bridges: [] },
+        paths: { domains: "domains", adapters: "adapters", bridges: "src/bridges", skills: ".claude/skills", shared: "src/shared" },
+        alias: "@domains",
       }),
     } as ReturnType<typeof loadConfig> extends Promise<infer R> ? R : never);
+
+    // Filesystem scan returns no installed domains
+    mockDetectInstalledDomains.mockResolvedValue([]);
 
     // Empty bridges directory
     mockReaddir.mockResolvedValue([]);

@@ -1,6 +1,15 @@
 import { readFile, mkdir, writeFile, stat } from "node:fs/promises";
 import { join, dirname } from "pathe";
-import { applyTemplateMarkers } from "../lib/template-transform.js";
+
+function applyTemplateMarkers(
+  content: string,
+  markers: Record<string, string>,
+): string {
+  return Object.entries(markers).reduce(
+    (acc, [key, value]) => acc.replaceAll(`{{${key}}}`, value),
+    content,
+  );
+}
 
 export interface SkillFileEntry {
   path: string;
