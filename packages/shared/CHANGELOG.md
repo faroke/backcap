@@ -1,5 +1,20 @@
 # @backcap/shared
 
+## 0.2.1
+
+### Patch Changes
+
+- fix(shared): align published config schema with DX model pivot
+
+  The published config schema still expected `paths.capabilities` and an `installed` tracking object,
+  while the CLI already generates `paths.domains` after the DX model pivot. This mismatch caused
+  `backcap add` to reject any config produced by `backcap init`.
+
+  - Rename `paths.capabilities` to `paths.domains` in config schema
+  - Remove `installed` / `installedSchema` (FR12 removal)
+  - Update default alias from `@domains` (already correct)
+  - Fix registry test fixture referencing `paths.capabilities`
+
 ## 0.2.0
 
 ### Minor Changes

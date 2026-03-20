@@ -1,6 +1,6 @@
 {
   "name": "@backcap/cli",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "type": "module",
   "bin": {
     "backcap": "./dist/index.mjs"

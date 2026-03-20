@@ -20,7 +20,7 @@ describe("registryItemSchema", () => {
       ...validItem,
       dependencies: { zod: "^3.22" },
       peerDependencies: { express: "^4.0" },
-      templateMarkers: [{ key: "{{capabilities_path}}", configPath: "paths.capabilities" }],
+      templateMarkers: [{ key: "{{domains_path}}", configPath: "paths.domains" }],
     });
     expect(result.dependencies).toEqual({ zod: "^3.22" });
     expect(result.templateMarkers).toHaveLength(1);
