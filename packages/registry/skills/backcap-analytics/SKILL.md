@@ -11,7 +11,7 @@ metadata:
 ## Domain Map
 
 ```
-capabilities/analytics/
+domains/analytics/
 ├── domain/
 │   ├── entities/analytics-event.entity.ts    # AnalyticsEvent — immutable event aggregate
 │   ├── value-objects/tracking-id.vo.ts       # TrackingId — validated site/project identifier (8-64 chars)

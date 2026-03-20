@@ -1,7 +1,7 @@
 # Auth Capability — Extension Guide
 
 Step-by-step instructions for extending the `auth` capability with new use cases, entities,
-value objects, and DTOs. All steps assume the capability lives at `src/capabilities/auth/`
+value objects, and DTOs. All steps assume the capability lives at `domains/auth/`
 (the default Backcap path).
 
 ---

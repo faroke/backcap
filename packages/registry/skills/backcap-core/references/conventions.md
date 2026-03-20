@@ -34,8 +34,7 @@ All files use **kebab-case** with a mandatory typed suffix that signals the role
 ### `domain/`
 
 - Contains: entities, value objects, domain errors, domain events.
-- **No external imports** — the only permitted import is `../../shared/result.ts` (or the
-  project-local equivalent after template substitution).
+- **No external imports** — the only permitted import is `../../shared/result.ts`.
 - No framework code, no ORM types, no `node:` modules.
 - All constructors are `private`; creation goes through `static create(...)` returning
   `Result<Self, Error>`.

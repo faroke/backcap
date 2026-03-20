@@ -11,7 +11,7 @@ metadata:
 ## Domain Map
 
 ```
-capabilities/comments/
+domains/comments/
 ├── domain/
 │   ├── entities/comment.entity.ts             # Comment — aggregate with softDelete()
 │   ├── value-objects/comment-content.vo.ts    # CommentContent — validated 1-10000 chars

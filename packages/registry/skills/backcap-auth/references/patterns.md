@@ -159,7 +159,7 @@ The `createAuthService` factory is the **only** place where concrete classes are
 and dependencies are wired. Adapters and the host application call the factory once at startup:
 
 ```typescript
-import { createAuthService } from './capabilities/auth/contracts/index.js';
+import { createAuthService } from './domains/auth/contracts/index.js';
 import { PrismaUserRepository } from './adapters/prisma/auth/user-repository.adapter.js';
 import { BcryptPasswordHasher }  from './adapters/bcrypt/password-hasher.adapter.js';
 import { JwtTokenService }       from './adapters/jwt/token-service.adapter.js';

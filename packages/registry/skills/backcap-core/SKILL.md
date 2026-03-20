@@ -43,7 +43,7 @@ typed error handling without exceptions.
 ## Domain Map
 
 ```
-capabilities/
+domains/
   <name>/
     domain/
       entities/          # Aggregate roots and entities (.entity.ts)
@@ -109,7 +109,7 @@ bridges/
 
 1. Create `adapters/<framework>/<capability>/<name>.adapter.ts`.
 2. Implement the port interface from `application/ports/`.
-3. Import only from `capabilities/<name>/application/ports/` and `capabilities/<name>/domain/`.
+3. Import only from `domains/<name>/application/ports/` and `domains/<name>/domain/`.
 4. Do not export from a barrel; adapters are wired by the consuming application.
 
 ## Conventions
@@ -157,11 +157,12 @@ Config file written to `backcap.json` with default paths:
 ```json
 {
   "paths": {
-    "capabilities": "src/capabilities",
-    "adapters":     "src/adapters",
-    "bridges":      "src/bridges",
-    "skills":       "src/skills",
-    "shared":       "src/shared"
-  }
+    "domains":  "domains",
+    "adapters": "adapters",
+    "bridges":  "bridges",
+    "skills":   ".claude/skills",
+    "shared":   "src/shared"
+  },
+  "alias": "@domains"
 }
 ```

@@ -11,7 +11,7 @@ metadata:
 ## Domain Map
 
 ```
-capabilities/forms/
+domains/forms/
 ├── domain/
 │   ├── entities/form.entity.ts               # Form — aggregate with addField()
 │   ├── value-objects/form-field.vo.ts         # FormField — typed field with validation (text/email/number/boolean/select)

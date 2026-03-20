@@ -7,7 +7,7 @@ Complete file-by-file reference for the `search` capability.
 ## Directory Tree
 
 ```
-capabilities/search/
+domains/search/
   domain/
     entities/
       search-index.entity.ts

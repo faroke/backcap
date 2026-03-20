@@ -11,7 +11,7 @@ metadata:
 ## Domain Map
 
 ```
-capabilities/billing/
+domains/billing/
 ├── domain/
 │   ├── entities/
 │   │   ├── customer.entity.ts        → Customer (id, email, name, externalId)

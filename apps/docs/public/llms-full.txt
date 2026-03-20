@@ -72,7 +72,7 @@ Key patterns:
 
 Contents: concrete implementations of port interfaces.
 
-Location: `src/adapters/<category>/<technology>/<capability>/` — outside the capability directory. Category is `persistence/` (e.g., prisma) or `http/` (e.g., express).
+Location: `adapters/<category>/<technology>/<capability>/` — outside the capability directory. Category is `persistence/` (e.g., prisma) or `http/` (e.g., express).
 
 Import rule: imports from `application/ports/` (for the interface) and `domain/` entities (for mapping). Never imports from `contracts/`.
 
@@ -147,7 +147,7 @@ npx @backcap/cli add <capability>
 4. For capabilities: detects compatible adapters based on project package.json
 5. Runs conflict detection (identical → skip, no conflicts → proceed, conflicts → prompt)
 6. Conflict options: abort, different path, selective install (capabilities only), compare diffs and continue
-7. Writes files to `<paths.capabilities>/<capability>/`
+7. Writes files to `<paths.domains>/<capability>/`
 8. Writes adapter files to `<paths.adapters>/<category>/<technology>/<capability>/`
 9. Installs npm deps
 10. Updates `backcap.json` installed list
@@ -325,7 +325,7 @@ function createAuthService(deps: {
 
 `PrismaUserRepository implements IUserRepository`
 
-File: `src/adapters/persistence/prisma/auth/user-repository.adapter.ts`
+File: `adapters/persistence/prisma/auth/user-repository.adapter.ts`
 
 Constructor: `new PrismaUserRepository(prisma: PrismaClient)`
 
@@ -343,7 +343,7 @@ model User {
 
 #### auth-express
 
-**createAuthRouter** (`src/adapters/http/express/auth/auth.router.ts`):
+**createAuthRouter** (`adapters/http/express/auth/auth.router.ts`):
 ```typescript
 function createAuthRouter(authService: IAuthService, router: Router): Router
 ```
@@ -351,7 +351,7 @@ Adds: `POST /auth/register` → 201 `{ userId }` or error; `POST /auth/login` �
 
 Error mapping: UserAlreadyExists → 409, InvalidCredentials/UserNotFound → 401, InvalidEmail → 400, other → 500.
 
-**createAuthMiddleware** (`src/adapters/http/express/auth/auth.middleware.ts`):
+**createAuthMiddleware** (`adapters/http/express/auth/auth.middleware.ts`):
 ```typescript
 function createAuthMiddleware(tokenService: ITokenService): RequestHandler
 ```
@@ -361,7 +361,7 @@ Reads `Authorization: Bearer <token>`, verifies with tokenService, sets `req.use
 
 ## Bridges
 
-A bridge is a standalone module in `src/bridges/<name>/` that connects two capabilities via domain events. It defines its own port interfaces and has its own `shared/result.ts`.
+A bridge is a standalone module in `bridges/<name>/` that connects two capabilities via domain events. It defines its own port interfaces and has its own `shared/result.ts`.
 
 ### Bridge Structure
 
@@ -439,12 +439,13 @@ Load these files as AI context before making changes to a Backcap project. The `
 {
   "framework": "express",
   "packageManager": "pnpm",
+  "alias": "@domains",
   "paths": {
-    "capabilities": "src/capabilities",
-    "adapters": "src/adapters",
-    "bridges": "src/bridges",
+    "domains": "domains",
+    "adapters": "adapters",
+    "bridges": "bridges",
     "skills": ".claude/skills",
-    "shared": "src/shared"
+    "shared": "shared"
   },
   "installed": {
     "capabilities": [{ "name": "auth", "version": "1.0.0", "adapters": ["auth-prisma", "auth-express"] }],

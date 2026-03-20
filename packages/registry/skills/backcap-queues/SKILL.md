@@ -11,7 +11,7 @@ metadata:
 ## Domain Map
 
 ```
-capabilities/queues/
+domains/queues/
 ├── domain/
 │   ├── entities/job.entity.ts           → Job (id, type, payload, status, attempts, failureReason, scheduledAt, createdAt)
 │   ├── value-objects/job-payload.vo.ts  → JobPayload (validates non-null plain object)

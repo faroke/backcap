@@ -85,7 +85,7 @@ const { output } = result.unwrap();
 The `createBlogService` factory is the **only** place where use cases are instantiated:
 
 ```typescript
-import { createBlogService } from './capabilities/blog/contracts/index.js';
+import { createBlogService } from './domains/blog/contracts/index.js';
 
 const blogService = createBlogService({
   postRepository: new PrismaPostRepository(prisma),

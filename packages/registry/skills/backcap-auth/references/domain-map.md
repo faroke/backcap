@@ -7,7 +7,7 @@ Complete file-by-file reference for the `auth` capability.
 ## Directory Tree
 
 ```
-capabilities/auth/
+domains/auth/
   domain/
     entities/
       user.entity.ts
@@ -390,7 +390,7 @@ type AuthServiceDeps = {
 The single barrel for the capability. Import everything from here:
 
 ```typescript
-import { createAuthService, type IAuthService } from './capabilities/auth/contracts'
+import { createAuthService, type IAuthService } from './domains/auth/contracts'
 ```
 
 ---

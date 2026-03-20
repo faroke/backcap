@@ -7,7 +7,7 @@ Complete file-by-file reference for the `blog` capability.
 ## Directory Tree
 
 ```
-capabilities/blog/
+domains/blog/
   domain/
     entities/
       post.entity.ts

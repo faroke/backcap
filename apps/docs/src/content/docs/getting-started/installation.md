@@ -25,6 +25,7 @@ The CLI will:
 2. Detect your package manager (npm, pnpm, yarn, bun)
 3. Prompt you to confirm or override the detected values
 4. Write a `backcap.json` configuration file
+5. Configure a `@domains/*` path alias in your `tsconfig.json`
 
 If a `backcap.json` already exists, the CLI will show the existing configuration and ask whether you want to overwrite it.
 
@@ -36,12 +37,13 @@ After running `init`, a `backcap.json` is written to your project root:
 {
   "framework": "express",
   "packageManager": "pnpm",
+  "alias": "@domains",
   "paths": {
-    "capabilities": "src/capabilities",
-    "adapters": "src/adapters",
-    "bridges": "src/bridges",
+    "domains": "domains",
+    "adapters": "adapters",
+    "bridges": "bridges",
     "skills": ".claude/skills",
-    "shared": "src/shared"
+    "shared": "shared"
   },
   "installed": {
     "capabilities": [],
@@ -56,7 +58,8 @@ After running `init`, a `backcap.json` is written to your project root:
 |---|---|
 | `framework` | The detected or selected framework identifier |
 | `packageManager` | The package manager used to install dependencies |
-| `paths.capabilities` | Where capability source files are written |
+| `alias` | The tsconfig path alias prefix for domains (default: `"@domains"`) |
+| `paths.domains` | Where capability source files are written |
 | `paths.adapters` | Where adapter source files are written |
 | `paths.bridges` | Where bridge source files are written |
 | `paths.skills` | Where agent skill files are written |
@@ -67,12 +70,12 @@ After running `init`, a `backcap.json` is written to your project root:
 
 You can edit `backcap.json` manually to change any output path. The CLI reads this file before writing any files, so all subsequent `backcap add` commands will respect your custom paths.
 
-For example, to place capabilities under `lib/capabilities` instead of `src/capabilities`:
+For example, to place domains under `lib/domains` instead of `domains`:
 
 ```json
 {
   "paths": {
-    "capabilities": "lib/capabilities"
+    "domains": "lib/domains"
   }
 }
 ```

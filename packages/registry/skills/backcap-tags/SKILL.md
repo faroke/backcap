@@ -11,7 +11,7 @@ metadata:
 ## Domain Map
 
 ```
-capabilities/tags/
+domains/tags/
 ├── domain/
 │   ├── entities/tag.entity.ts                # Tag — aggregate with auto-slug generation
 │   ├── value-objects/tag-slug.vo.ts          # TagSlug — validated kebab-case 1-64 chars, fromName() generator

@@ -11,7 +11,7 @@ metadata:
 ## Domain Map
 
 ```
-capabilities/webhooks/
+domains/webhooks/
 ├── domain/
 │   ├── entities/webhook.entity.ts       → Webhook (id, url, events, secret, isActive, createdAt)
 │   ├── value-objects/webhook-url.vo.ts  → WebhookUrl (validates URL, rejects private IPs)

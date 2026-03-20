@@ -3,7 +3,7 @@
 ## Directory Tree
 
 ```
-capabilities/rbac/
+domains/rbac/
 ├── domain/
 │   ├── entities/
 │   │   ├── role.entity.ts          # Role aggregate root

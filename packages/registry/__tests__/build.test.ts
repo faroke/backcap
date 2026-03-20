@@ -31,15 +31,13 @@ describe("registry build output", () => {
     expect(resultFile.content).toContain("class Result");
   });
 
-  it("template markers are preserved in generated content", async () => {
+  it("source files contain no template markers", async () => {
     const raw = await readFile(join(DIST, "auth.json"), "utf-8");
     const item = JSON.parse(raw);
-    // Check that template marker comments are preserved in source files
-    const entityFile = item.files.find((f: { path: string }) =>
-      f.path.includes("user.entity.ts"),
-    );
-    expect(entityFile).toBeDefined();
-    expect(entityFile.content).toContain("{{shared_path}}");
+    for (const file of item.files) {
+      expect(file.content).not.toContain("// Template:");
+      expect(file.content).not.toContain("{{shared_path}}");
+    }
   });
 
   it("adapter JSONs have correct category", async () => {

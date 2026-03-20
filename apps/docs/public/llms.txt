@@ -6,7 +6,7 @@ Backcap is a registry of composable backend capabilities for TypeScript. It lets
 
 ## Core Concept
 
-Run `npx @backcap/cli add auth` and Backcap fetches the auth capability from the registry, writes TypeScript source files to `src/capabilities/auth/`, installs npm dependencies, and records it in `backcap.json`. No runtime library — the code is yours.
+Run `npx @backcap/cli add auth` and Backcap fetches the auth capability from the registry, writes TypeScript source files to `domains/auth/`, installs npm dependencies, and records it in `backcap.json`. No runtime library — the code is yours.
 
 ## Four-Layer Architecture
 
@@ -15,7 +15,7 @@ Every Backcap capability uses strict Clean Architecture layering:
 - **domain/** — Entities, value objects, domain errors, domain events. Zero external imports. No framework code.
 - **application/** — Use cases, port interfaces (TypeScript interfaces), DTOs. Imports domain/ only.
 - **contracts/** — Public service interface and factory function. The only barrel index.ts. Imports application/ only.
-- **adapters/** — Framework and persistence implementations of port interfaces. Live outside the capability in src/adapters/.
+- **adapters/** — Framework and persistence implementations of port interfaces. Live outside the capability in adapters/.
 
 Import rule: dependencies point inward only. domain/ never imports from application/. application/ never imports from adapters/.
 
@@ -48,7 +48,7 @@ Each capability follows the same four-layer architecture. Install any with `npx 
 
 ## Adapters
 
-Live in `src/adapters/<category>/<technology>/<capability>/` (category: `persistence/` or `http/`):
+Live in `adapters/<category>/<technology>/<capability>/` (category: `persistence/` or `http/`):
 
 - **auth-prisma** — PrismaUserRepository implements IUserRepository
 - **auth-express** — createAuthRouter(), createAuthMiddleware() (sets `req.user.userId`)
@@ -77,12 +77,13 @@ Configuration file written by `backcap init`:
 {
   "framework": "express",
   "packageManager": "pnpm",
+  "alias": "@domains",
   "paths": {
-    "capabilities": "src/capabilities",
-    "adapters": "src/adapters",
-    "bridges": "src/bridges",
+    "domains": "domains",
+    "adapters": "adapters",
+    "bridges": "bridges",
     "skills": ".claude/skills",
-    "shared": "src/shared"
+    "shared": "shared"
   },
   "installed": {
     "capabilities": [],

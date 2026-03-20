@@ -11,7 +11,7 @@ metadata:
 ## Domain Map
 
 ```
-capabilities/feature-flags/
+domains/feature-flags/
 ├── domain/
 │   ├── entities/feature-flag.entity.ts    # FeatureFlag — core aggregate with enable()/disable()
 │   ├── value-objects/flag-key.vo.ts       # FlagKey — validated lowercase key (2-64 chars)

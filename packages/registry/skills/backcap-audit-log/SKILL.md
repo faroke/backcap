@@ -11,7 +11,7 @@ metadata:
 ## Domain Map
 
 ```
-capabilities/audit-log/
+domains/audit-log/
 ├── domain/
 │   ├── entities/audit-entry.entity.ts       # AuditEntry — immutable, append-only aggregate
 │   ├── value-objects/audit-action.vo.ts     # AuditAction — validated NOUN.VERB format
