@@ -85,8 +85,8 @@ const authMiddleware = createAuthMiddleware(tokenService);
 
 // Protect a specific route
 app.get("/profile", authMiddleware, (req, res) => {
-  // req.userId is available after successful authentication
-  res.json({ userId: req.userId });
+  // req.user.userId is available after successful authentication
+  res.json({ userId: req.user.userId });
 });
 
 // Protect a group of routes
@@ -97,21 +97,18 @@ app.use("/api/protected", authMiddleware);
 
 - Reads the `Authorization: Bearer <token>` header
 - Verifies the token using the `ITokenService` port
-- On success: sets `req.userId` and calls `next()`
-- On failure: responds with `401 { "error": "Unauthorized" }`
+- On success: sets `req.user = { userId, organizationId? }` and calls `next()`
+- On failure: responds with `401 { "error": "..." }`
 
-### TypeScript Declaration Augmentation
+### TypeScript Request Interface
 
-The middleware adds `userId` to the Express `Request` type. The adapter includes a type augmentation:
+The middleware defines a local `Request` interface rather than augmenting the global Express namespace. This avoids side effects and keeps the adapter self-contained:
 
 ```typescript
-// Included in auth.middleware.ts
-declare global {
-  namespace Express {
-    interface Request {
-      userId?: string;
-    }
-  }
+// Defined in auth.middleware.ts
+interface Request {
+  headers: Record<string, string | undefined>;
+  user?: { userId: string; organizationId?: string };
 }
 ```
 
@@ -137,7 +134,7 @@ app.use(authRouter);
 // Protected routes
 const authMiddleware = createAuthMiddleware(tokenService);
 app.get("/me", authMiddleware, (req, res) => {
-  res.json({ userId: req.userId });
+  res.json({ userId: req.user.userId });
 });
 
 export default app;
@@ -156,40 +153,50 @@ When a new capability needs an Express HTTP layer:
 
 See the [Create an Adapter guide](/backcap/guides/create-adapter) for a detailed walkthrough.
 
+## Capability Support
+
+19 out of 20 capabilities ship with Express adapters. The `search` capability has no Express adapter because it defines its own search-engine port instead.
+
 ## Testing
 
-The Express adapter tests use a mock `IAuthService` to test the HTTP layer in isolation:
+The Express adapter tests use mock router and response objects (via `vi.fn()`) to test the HTTP layer in isolation — no real Express server is started:
 
 ```typescript
-describe("createAuthRouter — POST /auth/register", () => {
-  it("returns 201 on success", async () => {
-    const mockService: IAuthService = {
-      register: async () => Result.ok({ userId: "user-1" }),
-      login: async () => Result.ok({ token: "tok", userId: "user-1" }),
-    };
+function createMockRouter() {
+  const handlers = new Map<string, Function>();
+  return {
+    post: vi.fn((path: string, handler: Function) => handlers.set(path, handler)),
+    getHandler: (path: string) => handlers.get(path)!,
+  };
+}
 
-    const app = express();
-    app.use(express.json());
-    const router = Router();
-    createAuthRouter(mockService, router);
-    app.use(router);
+function createMockRes() {
+  const res: any = {};
+  res.status = vi.fn().mockReturnValue(res);
+  res.json = vi.fn().mockReturnValue(res);
+  return res;
+}
 
-    const response = await request(app)
-      .post("/auth/register")
-      .send({ email: "test@example.com", password: "pass1234" });
+function createMockAuthService() {
+  return {
+    register: vi.fn(),
+    login: vi.fn(),
+  };
+}
 
-    expect(response.status).toBe(201);
-    expect(response.body.userId).toBe("user-1");
-  });
+describe("auth.router", () => {
+  it("POST /auth/register returns 201 on success", async () => {
+    const authService = createMockAuthService();
+    authService.register.mockResolvedValue(Result.ok({ userId: "user-1" }));
+    const router = createMockRouter();
+    createAuthRouter(authService, router as any);
 
-  it("returns 409 when user already exists", async () => {
-    const mockService: IAuthService = {
-      register: async () => Result.fail(UserAlreadyExists.create("test@example.com")),
-      login: async () => Result.ok({ token: "tok", userId: "user-1" }),
-    };
+    const handler = router.getHandler("/auth/register");
+    const res = createMockRes();
+    await handler({ body: { email: "a@b.com", password: "pass1234" } }, res, vi.fn());
 
-    // ... test setup and assertions
-    expect(response.status).toBe(409);
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({ userId: "user-1" });
   });
 });
 ```

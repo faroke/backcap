@@ -241,7 +241,7 @@ Common errors and their solutions:
 | `No backcap.json found` | Run `npx @backcap/cli init` first |
 | `Could not fetch "<name>" from registry` | Check your internet connection; verify the name with `backcap list` |
 | `Invalid data received from registry` | The registry may be temporarily unavailable; try again |
-| `No bridges available` | Install capabilities first — bridges appear automatically between installed capabilities |
+| `No bridges available` | Install capabilities first — bridges appear automatically between installed capabilities. |
 
 ---
 

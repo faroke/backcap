@@ -283,13 +283,17 @@ This is the **only** barrel export in the capability. Do not create `index.ts` f
 
 ### 16. Create the SKILL.md
 
-Write a skill file at `skills/backcap-notifications/SKILL.md`. See the [Skills concept page](/backcap/concepts/skills) for the required format.
+Write a skill file at `packages/registry/skills/backcap-notifications/SKILL.md`. See the [Skills concept page](/backcap/concepts/skills) for the required format.
 
 ### 17. Bundle for the Registry
 
-Add a build step that produces a JSON bundle (`notifications.json`) containing all source files as content strings. The CLI fetches this bundle when users run `npx @backcap/cli add notifications`.
+Build the registry to produce a JSON bundle (`notifications.json`) containing all source files as content strings. The CLI fetches this bundle when users run `npx @backcap/cli add notifications`.
 
-The bundle format matches the `registryItemSchema` in `packages/shared/`.
+```bash
+pnpm --filter @backcap/registry build
+```
+
+The bundle format matches the `registryItemSchema` in `packages/shared/`. The build step runs `runQualityChecks()` from `quality-check.ts`, which enforces the capability directory structure and naming conventions at build time.
 
 ## Checklist Summary
 

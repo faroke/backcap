@@ -50,19 +50,19 @@ Add the following model to your `prisma/schema.prisma`:
 
 ```prisma
 model User {
-  id           String   @id
+  id           String   @id @default(uuid())
   email        String   @unique
   passwordHash String
   roles        String[]
-  createdAt    DateTime
-  updatedAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 ```
 
 Run the Prisma migration after adding the schema:
 
 ```bash
-npx prisma migrate dev --name add-users
+npx prisma migrate dev --name auth
 ```
 
 ### Mapping Between Domain and Prisma
@@ -130,44 +130,61 @@ When a new capability is added that requires a persistence adapter, follow these
 
 See the [Create an Adapter guide](/backcap/guides/create-adapter) for a detailed walkthrough.
 
+## Capability Support
+
+19 out of 20 capabilities ship with Prisma adapters. The `search` capability has no Prisma adapter because it defines its own search-engine port instead.
+
 ## Testing
 
-The Prisma adapter test file uses a real Prisma client pointed at a test database. It tests:
-
-- Saving a new user succeeds
-- Finding a user by email returns the correct domain entity
-- Finding by ID returns the correct domain entity
-- Finding a missing email returns `null`
+The Prisma adapter tests use mock `PrismaClient` objects (via `vi.fn()`) to test the repository logic in isolation — no real database is required:
 
 ```typescript
 // src/adapters/prisma/auth/__tests__/user-repository.adapter.test.ts
-describe("PrismaUserRepository", () => {
-  let prisma: PrismaClient;
-  let repository: PrismaUserRepository;
+function createMockPrisma() {
+  return {
+    user: {
+      findUnique: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+    },
+  };
+}
 
-  beforeAll(async () => {
-    prisma = new PrismaClient({
-      datasources: { db: { url: process.env.TEST_DATABASE_URL } },
-    });
-    repository = new PrismaUserRepository(prisma);
+const dbRecord = {
+  id: "user-1",
+  email: "test@example.com",
+  passwordHash: "hashed",
+  roles: [],
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
+describe("PrismaUserRepository", () => {
+  let prisma: ReturnType<typeof createMockPrisma>;
+  let repo: PrismaUserRepository;
+
+  beforeEach(() => {
+    prisma = createMockPrisma();
+    repo = new PrismaUserRepository(prisma);
   });
 
-  afterAll(() => prisma.$disconnect());
-  afterEach(() => prisma.user.deleteMany());
+  it("findByEmail returns user when found", async () => {
+    prisma.user.findUnique.mockResolvedValue(dbRecord);
+    const user = await repo.findByEmail("test@example.com");
+    expect(user).not.toBeNull();
+    expect(user!.email.value).toBe("test@example.com");
+  });
 
-  it("saves and retrieves a user by email", async () => {
+  it("save persists user via prisma.user.create", async () => {
+    prisma.user.create.mockResolvedValue(dbRecord);
     const user = User.create({
-      id: "test-id",
+      id: "user-1",
       email: "test@example.com",
-      passwordHash: "hash",
+      passwordHash: "hashed",
     }).unwrap();
 
-    await repository.save(user);
-    const found = await repository.findByEmail("test@example.com");
-
-    expect(found).not.toBeNull();
-    expect(found!.id).toBe("test-id");
-    expect(found!.email.value).toBe("test@example.com");
+    await repo.save(user);
+    expect(prisma.user.create).toHaveBeenCalledOnce();
   });
 });
 ```

@@ -25,14 +25,14 @@ Each port file contains a TypeScript interface. Your adapter must satisfy that i
 **Step 1 — Create the adapter file**
 
 ```
-src/adapters/mongodb/auth/user-repository.adapter.ts
+src/adapters/persistence/mongodb/auth/user-repository.adapter.ts
 ```
 
 **Step 2 — Import the port interface and domain entity**
 
 ```typescript
-import type { IUserRepository } from "../../capabilities/auth/application/ports/user-repository.port";
-import { User } from "../../capabilities/auth/domain/entities/user.entity";
+import type { IUserRepository } from "../../../../capabilities/auth/application/ports/user-repository.port";
+import { User } from "../../../../capabilities/auth/domain/entities/user.entity";
 ```
 
 The adapter imports the interface (to satisfy the contract) and the domain entity (to translate between the database model and the domain model).
@@ -100,7 +100,7 @@ export class MongoUserRepository implements IUserRepository {
 **Step 5 — Write an integration test**
 
 ```typescript
-// src/adapters/mongodb/auth/__tests__/user-repository.adapter.test.ts
+// src/adapters/persistence/mongodb/auth/__tests__/user-repository.adapter.test.ts
 describe("MongoUserRepository", () => {
   let repository: MongoUserRepository;
   // Setup: connect to a test MongoDB instance
@@ -131,7 +131,7 @@ describe("MongoUserRepository", () => {
 ```typescript
 // src/container.ts
 import { createAuthService } from "./capabilities/auth/contracts";
-import { MongoUserRepository } from "./adapters/mongodb/auth/user-repository.adapter";
+import { MongoUserRepository } from "./adapters/persistence/mongodb/auth/user-repository.adapter";
 
 export const authService = createAuthService({
   userRepository: new MongoUserRepository(db.collection("users")),
@@ -147,7 +147,7 @@ export const authService = createAuthService({
 **Step 1 — Create the adapter file**
 
 ```
-src/adapters/fastify/auth/auth.routes.ts
+src/adapters/http/fastify/auth/auth.routes.ts
 ```
 
 **Step 2 — Import the contracts layer**
@@ -155,10 +155,10 @@ src/adapters/fastify/auth/auth.routes.ts
 HTTP adapters depend on the capability's public contract, not on internal use cases:
 
 ```typescript
-import type { IAuthService } from "../../capabilities/auth/contracts";
-import { UserAlreadyExists } from "../../capabilities/auth/domain/errors/user-already-exists.error";
-import { InvalidCredentials } from "../../capabilities/auth/domain/errors/invalid-credentials.error";
-import { InvalidEmail } from "../../capabilities/auth/domain/errors/invalid-email.error";
+import type { IAuthService } from "../../../../capabilities/auth/contracts";
+import { UserAlreadyExists } from "../../../../capabilities/auth/domain/errors/user-already-exists.error";
+import { InvalidCredentials } from "../../../../capabilities/auth/domain/errors/invalid-credentials.error";
+import { InvalidEmail } from "../../../../capabilities/auth/domain/errors/invalid-email.error";
 ```
 
 **Step 3 — Implement the routes**
@@ -218,7 +218,7 @@ export async function registerAuthRoutes(
 ```typescript
 // src/app.ts
 import Fastify from "fastify";
-import { registerAuthRoutes } from "./adapters/fastify/auth/auth.routes";
+import { registerAuthRoutes } from "./adapters/http/fastify/auth/auth.routes";
 import { authService } from "./container";
 
 const app = Fastify();
@@ -238,7 +238,7 @@ await registerAuthRoutes(app, authService);
 ## Checklist
 
 - [ ] Port interface identified in `application/ports/`
-- [ ] Adapter file created in `src/adapters/<technology>/<capability>/`
+- [ ] Adapter file created in `src/adapters/<category>/<technology>/<capability>/`
 - [ ] Class implements the port interface with the `implements` keyword
 - [ ] `toDomain()` and `toStorage()` mappers written (for persistence adapters)
 - [ ] Integration test written
