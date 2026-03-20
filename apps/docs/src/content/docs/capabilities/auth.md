@@ -199,18 +199,18 @@ Requires a Prisma schema with a `User` model:
 
 ```prisma
 model User {
-  id           String   @id
+  id           String   @id @default(uuid())
   email        String   @unique
   passwordHash String
   roles        String[]
-  createdAt    DateTime
-  updatedAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 ```
 
 ### auth-express
 
-Provides `createAuthRouter()` and a Bearer token middleware.
+Provides `createAuthRouter()` and `createAuthMiddleware()`.
 
 ```bash
 npx @backcap/cli add auth-express
@@ -223,6 +223,20 @@ const router = express.Router();
 createAuthRouter(authService, router);
 app.use(router);
 ```
+
+#### createAuthMiddleware
+
+Bearer token middleware that validates the `Authorization` header and populates `req.user`.
+
+```typescript
+import { createAuthMiddleware } from "./adapters/express/auth/auth.middleware";
+
+const authMiddleware = createAuthMiddleware(tokenService);
+app.use("/protected", authMiddleware);
+// req.user = { userId: string; organizationId?: string }
+```
+
+Returns `401` if the token is missing, malformed, or invalid.
 
 **Routes added:**
 
@@ -259,6 +273,16 @@ npx @backcap/cli add auth-rbac
 ```
 
 **Requires**: auth, rbac
+
+### auth-audit-log
+
+Records audit entries when users register or log in. When `UserRegistered` fires, it records a `USER.REGISTERED` action. When `LoginSucceeded` fires, it records a `USER.LOGIN` action.
+
+```bash
+npx @backcap/cli add auth-audit-log
+```
+
+**Requires**: auth, audit-log
 
 ### auth-organizations
 

@@ -193,12 +193,19 @@ npx @backcap/cli add files-express
 
 ```typescript
 import { createFilesRouter } from "./adapters/express/files/files.router";
+
+const router = express.Router();
+createFilesRouter(filesService, router); // works without upload middleware
+app.use(router);
+```
+
+The `uploadMiddleware` parameter is optional. When provided, it handles multipart parsing on the upload route:
+
+```typescript
 import multer from "multer";
 
 const upload = multer({ dest: "uploads/" });
-const router = express.Router();
 createFilesRouter(filesService, router, upload.single("file"));
-app.use(router);
 ```
 
 **Routes added:**

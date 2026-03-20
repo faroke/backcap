@@ -155,7 +155,46 @@ export interface IPostRepository {
 }
 ```
 
-No registry adapter is provided — implement this port for your database of choice.
+## Adapters
+
+### blog-prisma
+
+Provides `PrismaPostRepository` which implements `IPostRepository`.
+
+```bash
+npx @backcap/cli add blog-prisma
+```
+
+```typescript
+import { PrismaPostRepository } from "./adapters/prisma/blog/post-repository.adapter";
+
+const postRepository = new PrismaPostRepository(prisma);
+```
+
+### blog-express
+
+Provides `createBlogRouter(service, router)` for HTTP access.
+
+```bash
+npx @backcap/cli add blog-express
+```
+
+```typescript
+import { createBlogRouter } from "./adapters/express/blog/blog.router";
+
+const router = express.Router();
+createBlogRouter(blogService, router);
+app.use(router);
+```
+
+**Routes added:**
+
+| Method | Path | Body | Response |
+|---|---|---|---|
+| `POST` | `/posts` | `{ title, content, authorId, slug? }` | `201 { postId, slug }` or error |
+| `PUT` | `/posts/:id/publish` | — | `200 { postId, slug, publishedAt }` or error |
+| `GET` | `/posts/:id` | — | `200 { id, title, ... }` or `404` |
+| `GET` | `/posts` | — | `200 { posts }` |
 
 ## Public API (contracts/)
 

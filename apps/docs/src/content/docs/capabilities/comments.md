@@ -144,11 +144,15 @@ const commentsService: ICommentsService = createCommentsService({ commentReposit
 
 ### comments-prisma
 
+Provides `PrismaCommentRepository` which implements `ICommentRepository`.
+
 ```bash
 npx @backcap/cli add comments-prisma
 ```
 
 ### comments-express
+
+Provides `createCommentsRouter(service, router)` for HTTP access.
 
 ```bash
 npx @backcap/cli add comments-express

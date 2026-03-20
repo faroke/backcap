@@ -71,7 +71,8 @@ const bad = FlagKey.create("INVALID!");  // Fail
 |---|---|---|
 | `FlagNotFound` | `create(key)` | Flag lookup by key returns nothing |
 | `InvalidFlagKey` | `create(reason)` | Key format validation fails |
-| `FlagAlreadyInState` | `create(key, state)` | Toggle to current state (e.g., enable an already-enabled flag) |
+| `FlagAlreadyExists` | `create(key)` | A flag with the given key already exists (thrown by `CreateFlag`) |
+| `FlagAlreadyInState` | `create(key, state)` | Toggle to current state (thrown by `ToggleFlag` use case, not domain methods) |
 
 ## Use Cases
 

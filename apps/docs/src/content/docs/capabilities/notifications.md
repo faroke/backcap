@@ -124,7 +124,7 @@ const result = await getNotifications.execute({ recipient: "user@example.com" })
 
 #### MarkAsRead
 
-Marks a notification as read by its ID.
+Marks a notification as sent by transitioning its status to `"sent"` via `markSent()`. Despite its name, it sets the status to `"sent"` (not `"read"`) — there is no separate read state in the domain model.
 
 ```typescript
 import { MarkAsRead } from "./capabilities/notifications/application/use-cases/mark-as-read.use-case";
@@ -248,7 +248,7 @@ app.use(router);
 Sends a welcome email when a new user registers.
 
 ```bash
-npx @backcap/cli add bridge auth-notifications
+npx @backcap/cli add auth-notifications
 ```
 
 See the [auth-notifications bridge](/backcap/concepts/bridges#the-auth-notifications-bridge) documentation for wiring instructions.

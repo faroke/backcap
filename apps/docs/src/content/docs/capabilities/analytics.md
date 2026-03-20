@@ -144,11 +144,15 @@ const analyticsService: IAnalyticsService = createAnalyticsCapability({ analytic
 
 ### analytics-prisma
 
+Provides `PrismaAnalyticsStore` which implements `IAnalyticsStore`.
+
 ```bash
 npx @backcap/cli add analytics-prisma
 ```
 
 ### analytics-express
+
+Provides `createAnalyticsRouter(service, router)` for HTTP access.
 
 ```bash
 npx @backcap/cli add analytics-express

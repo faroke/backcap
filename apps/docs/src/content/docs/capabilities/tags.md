@@ -146,11 +146,15 @@ const tagsService: ITagsService = createTagsService({ tagRepository });
 
 ### tags-prisma
 
+Provides `PrismaTagRepository` which implements `ITagRepository`.
+
 ```bash
 npx @backcap/cli add tags-prisma
 ```
 
 ### tags-express
+
+Provides `createTagsRouter(service, router)` for HTTP access.
 
 ```bash
 npx @backcap/cli add tags-express

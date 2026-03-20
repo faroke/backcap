@@ -148,6 +148,18 @@ interface AuditFilters {
 
 No `DELETE` or `PUT` routes — audit logs are read-only via HTTP.
 
+## Bridges
+
+### auth-audit-log
+
+Records audit entries for authentication events. When `UserRegistered` fires, it records a `USER.REGISTERED` action. When `LoginSucceeded` fires, it records a `USER.LOGIN` action.
+
+```bash
+npx @backcap/cli add auth-audit-log
+```
+
+**Requires**: auth, audit-log
+
 ## Retention Policies
 
 The audit log stores entries indefinitely by default. To implement retention, create a scheduled job outside the domain layer using direct database access. Consider archiving entries to cold storage before purging.

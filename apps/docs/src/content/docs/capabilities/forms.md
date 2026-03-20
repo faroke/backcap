@@ -138,11 +138,15 @@ const formsService: IFormsService = createFormsService({ formStore });
 
 ### forms-prisma
 
+Provides `PrismaFormStore` which implements `IFormStore`.
+
 ```bash
 npx @backcap/cli add forms-prisma
 ```
 
 ### forms-express
+
+Provides `createFormsRouter(service, router)` for HTTP access.
 
 ```bash
 npx @backcap/cli add forms-express

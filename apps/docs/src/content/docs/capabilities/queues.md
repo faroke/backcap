@@ -251,7 +251,7 @@ app.use(router);
 |---|---|
 | `JobNotFound` | `404 Not Found` |
 | `InvalidJobPayload` | `400 Bad Request` |
-| `MaxAttemptsExceeded` | `409 Conflict` |
+| `MaxAttemptsExceeded` | `429 Too Many Requests` |
 
 ## File Map
 
