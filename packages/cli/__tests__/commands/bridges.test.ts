@@ -14,18 +14,32 @@ vi.mock("ofetch", () => ({
 
 vi.mock("node:fs/promises", () => ({
   stat: vi.fn(),
+  readdir: vi.fn(),
   readFile: vi.fn(),
   writeFile: vi.fn(),
 }));
 
+vi.mock("../../src/config/loader.js", () => ({
+  configExists: vi.fn(),
+  loadConfig: vi.fn(),
+}));
+
+vi.mock("../../src/ui/prompts.js", () => ({
+  fail: vi.fn(),
+}));
+
 import * as clack from "@clack/prompts";
 import { ofetch } from "ofetch";
-import { readFile, stat } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
+import { configExists, loadConfig } from "../../src/config/loader.js";
 import { MissingDependencyError, BridgeNotFoundError } from "../../src/errors/bridge.error.js";
 
+const mockReaddir = vi.mocked(readdir);
 const mockReadFile = vi.mocked(readFile);
 const mockStat = vi.mocked(stat);
 const mockOfetch = vi.mocked(ofetch);
+const mockConfigExists = vi.mocked(configExists);
+const mockLoadConfig = vi.mocked(loadConfig);
 
 describe("MissingDependencyError", () => {
   it("contains missing capabilities and suggestion", () => {
@@ -134,5 +148,34 @@ describe("installed config structure", () => {
 
     const bridgeNames = new Set(config.installed.bridges.map((b) => b.name));
     expect(bridgeNames.has("auth-notifications")).toBe(true);
+  });
+});
+
+describe("bridges command no-manifests output", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("shows install-capabilities hint when no bridge manifests found", async () => {
+    mockConfigExists.mockResolvedValue(true);
+    mockLoadConfig.mockResolvedValue({
+      isOk: () => true,
+      isFail: () => false,
+      unwrap: () => ({
+        paths: { capabilities: "src/capabilities", adapters: "src/adapters", bridges: "src/bridges", skills: ".claude/skills" },
+        installed: { capabilities: [], bridges: [] },
+      }),
+    } as ReturnType<typeof loadConfig> extends Promise<infer R> ? R : never);
+
+    // Empty bridges directory
+    mockReaddir.mockResolvedValue([]);
+
+    const bridgesCommand = await import("../../src/commands/bridges.js");
+    await bridgesCommand.default.run!({ args: {} } as Parameters<NonNullable<typeof bridgesCommand.default.run>>[0]);
+
+    expect(clack.log.info).toHaveBeenCalledWith(
+      "Install capabilities first — bridges appear automatically between installed capabilities.",
+    );
+    expect(clack.outro).toHaveBeenCalledWith("No bridges available.");
   });
 });

@@ -409,18 +409,13 @@ async function installBridge(
 
     if (report.hasConflicts) {
       renderConflictSummary(report);
-      const action = yes ? "compare_and_continue" : await promptConflictResolution();
+      const action = yes ? "compare_and_continue" : await promptConflictResolution(["selective", "different_path"]);
       if (action === "abort") {
         outro("Installation cancelled. No files were written.");
         return;
       }
       if (action === "compare_and_continue") {
         renderDetailedDiffs(report);
-      }
-      if (action === "different_path") {
-        // For bridges, just abort — different path is less useful
-        outro("Bridge installation cancelled.");
-        return;
       }
     }
   } catch (err) {

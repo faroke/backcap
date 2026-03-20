@@ -99,10 +99,10 @@ npx @backcap/cli add <name>
 5. Runs conflict detection against your existing files:
    - If all incoming files are identical to existing files, exits early (nothing to do)
    - If there are no conflicts, proceeds directly to the install prompt
-   - If there are conflicts, shows a summary and offers four options:
+   - If there are conflicts, shows a summary and offers resolution options:
      - **Compare and continue** — shows detailed diffs, then overwrites all conflicting files
-     - **Select files individually** — pick which files to write
-     - **Choose a different path** — prompts for a new base path
+     - **Select files individually** — pick which files to write (capabilities only)
+     - **Choose a different path** — prompts for a new base path (capabilities only)
      - **Abort installation** — cancel, no files written
 6. Prompts for final confirmation before writing files
 7. Writes source files to the appropriate directory (`capabilities/`, `bridges/`, or `adapters/`)
@@ -241,7 +241,7 @@ Common errors and their solutions:
 | `No backcap.json found` | Run `npx @backcap/cli init` first |
 | `Could not fetch "<name>" from registry` | Check your internet connection; verify the name with `backcap list` |
 | `Invalid data received from registry` | The registry may be temporarily unavailable; try again |
-| `No bridges available` | Install capabilities first, then bridges will appear between them |
+| `No bridges available` | Install capabilities first — bridges appear automatically between installed capabilities |
 
 ---
 

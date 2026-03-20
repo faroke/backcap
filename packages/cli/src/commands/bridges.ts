@@ -71,7 +71,7 @@ export default defineCommand({
     const manifests = await discoverLocalBridgeManifests(bridgesDir);
 
     if (manifests.length === 0) {
-      clack.log.info("No bridge manifests found. Run `backcap add <bridge>` to install bridges.");
+      clack.log.info("Install capabilities first — bridges appear automatically between installed capabilities.");
       clack.outro("No bridges available.");
       return;
     }
