@@ -1,10 +1,12 @@
 # Backcap
 
-Backcap is a registry of composable backend capabilities for TypeScript. It lets you install production-ready backend features — authentication, search, blog, payments, notifications — the same way you install npm packages, with full source code written directly into your project. You own every file.
+Backcap is a registry of composable backend capabilities for TypeScript. It lets you install production-ready backend features — authentication, search, blog, billing, notifications — the same way you install npm packages, with full source code written directly into your project. You own every file.
+
+> For the full API reference, see [llms-full.txt](https://faroke.github.io/backcap/llms-full.txt).
 
 ## Core Concept
 
-Run `npx @backcap/cli add auth` and Backcap fetches the auth capability bundle from the registry, writes all TypeScript source files to `src/capabilities/auth/`, installs required npm dependencies, and records the capability in `backcap.json`. There is no opaque runtime library. The code is yours.
+Run `npx @backcap/cli add auth` and Backcap fetches the auth capability from the registry, writes TypeScript source files to `src/capabilities/auth/`, installs npm dependencies, and records it in `backcap.json`. No runtime library — the code is yours.
 
 ## Four-Layer Architecture
 
@@ -29,35 +31,40 @@ if (result.isFail()) {
 const { userId } = result.unwrap();
 ```
 
-`Result.ok(value)` wraps a success. `Result.fail(error)` wraps a failure. `isOk()`, `isFail()`, `unwrap()`, `unwrapError()`, and `map()` are the main methods.
+`Result.ok(value)` / `Result.fail(error)`. Methods: `isOk()`, `isFail()`, `unwrap()`, `unwrapError()`, `map()`.
 
 ## CLI Commands
 
 - `npx @backcap/cli init` — Detects framework and package manager, writes backcap.json
 - `npx @backcap/cli add <capability>` — Fetches and installs a capability with conflict detection
 - `npx @backcap/cli list` — Lists available capabilities from the registry
-- `npx @backcap/cli bridges` — Lists bridges compatible with installed capabilities
+- `npx @backcap/cli bridges` — Reads local bridge.json manifests and lists locally discovered bridges with install status
 
-## Available Capabilities
+## Available Capabilities (20)
 
-- **auth** — User registration and login. Domain: User entity, Email/Password value objects, 4 typed errors, UserRegistered event. Application: RegisterUser and LoginUser use cases, IUserRepository/IPasswordHasher/ITokenService ports. Public API: IAuthService and createAuthService().
-- **billing** — Payments, subscriptions, and invoicing. Domain: Customer/Subscription/Invoice/PaymentMethod entities, Money VO, SubscriptionStatus VO, BillingPeriod VO, 5 domain events. Application: 10 use cases (CreateSubscription, ProcessPayment, RefundPayment, GenerateInvoice, etc.), IPaymentProvider/ICustomerRepository/ISubscriptionRepository/IInvoiceRepository ports. Public API: IBillingService and createBillingService().
+analytics, audit-log, auth, billing, blog, cart, catalog, comments, feature-flags, files, forms, media, notifications, orders, organizations, queues, rbac, search, tags, webhooks
+
+Each capability follows the same four-layer architecture. Install any with `npx @backcap/cli add <name>`.
 
 ## Adapters
 
+Live in `src/adapters/<category>/<technology>/<capability>/` (category: `persistence/` or `http/`):
+
 - **auth-prisma** — PrismaUserRepository implements IUserRepository
-- **auth-express** — createAuthRouter() adds POST /auth/register and POST /auth/login; createAuthMiddleware() verifies Bearer tokens
+- **auth-express** — createAuthRouter(), createAuthMiddleware() (sets `req.user.userId`)
 - **billing-prisma** — PrismaCustomerRepository, PrismaSubscriptionRepository, PrismaInvoiceRepository
 - **billing-express** — createBillingRouter() REST API for subscriptions, payments, and invoices
-- **billing-stripe** — StripePaymentProvider implements IPaymentProvider with hand-typed Stripe interfaces (stripe is a peerDependency). StripeWebhookHandler handles payment_intent.succeeded, invoice.paid, customer.subscription.updated with idempotency via IWebhookEventStore.
+- **billing-stripe** — StripePaymentProvider implements IPaymentProvider
 
-## Bridges
+## Bridges (16)
 
-Bridges connect two capabilities. auth-notifications listens for UserRegistered events and calls an IEmailSender port. Install with `npx @backcap/cli add auth-notifications`.
+Bridges connect two capabilities via domain events. Each bridge has a `bridge.json` manifest and a `<name>.bridge.ts` entry point. Install with `npx @backcap/cli add <bridge-name>` (type auto-detected from registry JSON).
+
+auth-audit-log, auth-billing, auth-notifications, auth-organizations, auth-rbac, blog-comments, blog-media, blog-search, blog-tags, cart-orders, catalog-cart, catalog-search, media-files, orders-billing, organizations-billing, rbac-organizations
 
 ## Skills (AI Documentation)
 
-Each capability and adapter has a SKILL.md file with structured frontmatter and file-by-file tables. Load `packages/registry/skills/backcap-core/SKILL.md` and `packages/registry/skills/backcap-auth/SKILL.md` as context before making architectural changes to a Backcap project.
+Each capability has a SKILL.md with structured frontmatter and file-by-file tables. Load these as AI context before making architectural changes.
 
 ## File Naming Conventions
 
@@ -74,9 +81,12 @@ Configuration file written by `backcap init`:
     "capabilities": "src/capabilities",
     "adapters": "src/adapters",
     "bridges": "src/bridges",
-    "skills": "src/skills",
+    "skills": ".claude/skills",
     "shared": "src/shared"
   },
-  "installed": []
+  "installed": {
+    "capabilities": [],
+    "bridges": []
+  }
 }
 ```

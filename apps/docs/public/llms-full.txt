@@ -8,7 +8,7 @@ Backcap is a registry of composable backend capabilities for TypeScript. Capabil
 
 ### What is a Capability?
 
-A capability is a vertical slice of backend business logic — authentication, blog, search, notifications, payments — implemented in strict Clean Architecture layers. When you install a capability, you receive all source files. You own and can modify every file.
+A capability is a vertical slice of backend business logic — authentication, blog, search, notifications, billing — implemented in strict Clean Architecture layers. When you install a capability, you receive all source files. You own and can modify every file.
 
 ### Installation Model
 
@@ -72,7 +72,7 @@ Key patterns:
 
 Contents: concrete implementations of port interfaces.
 
-Location: `src/adapters/<technology>/<capability>/` — outside the capability directory.
+Location: `src/adapters/<category>/<technology>/<capability>/` — outside the capability directory. Category is `persistence/` (e.g., prisma) or `http/` (e.g., express).
 
 Import rule: imports from `application/ports/` (for the interface) and `domain/` entities (for mapping). Never imports from `contracts/`.
 
@@ -142,13 +142,15 @@ npx @backcap/cli add <capability>
 ```
 
 1. Loads backcap.json (fails if not present)
-2. Fetches `https://faroke.github.io/backcap/dist/<capability>.json`
-3. Detects compatible adapters based on project package.json
-4. Runs conflict detection (identical → skip, no conflicts → proceed, conflicts → prompt)
-5. Conflict options: abort, different path, compare diffs and continue
-6. Writes files to `<paths.capabilities>/<capability>/`
-7. Installs npm deps
-8. Updates `backcap.json` installed list
+2. Fetches `https://faroke.github.io/backcap/dist/<name>.json` — if not found, falls back to `https://faroke.github.io/backcap/dist/bridges/<name>.json` (bridge auto-detection)
+3. If type is "bridge", routes to bridge installation flow (validates dependencies, writes to `<paths.bridges>/<name>/`)
+4. For capabilities: detects compatible adapters based on project package.json
+5. Runs conflict detection (identical → skip, no conflicts → proceed, conflicts → prompt)
+6. Conflict options: abort, different path, selective install (capabilities only), compare diffs and continue
+7. Writes files to `<paths.capabilities>/<capability>/`
+8. Writes adapter files to `<paths.adapters>/<category>/<technology>/<capability>/`
+9. Installs npm deps
+10. Updates `backcap.json` installed list
 
 ### backcap list
 
@@ -156,7 +158,7 @@ npx @backcap/cli add <capability>
 npx @backcap/cli list
 ```
 
-Fetches `https://faroke.github.io/backcap/registry.json`. Renders a table of capabilities with name, description, type, and installed status.
+Fetches `https://faroke.github.io/backcap/dist/registry.json`. Renders a table of capabilities with name, description, type, and installed status.
 
 ### backcap bridges
 
@@ -164,7 +166,36 @@ Fetches `https://faroke.github.io/backcap/registry.json`. Renders a table of cap
 npx @backcap/cli bridges
 ```
 
-Fetches `https://faroke.github.io/backcap/dist/bridges/index.json`. Filters to bridges whose dependencies are all installed. Shows name, description, dependencies, status (installed / available).
+Reads local `bridge.json` manifests from the project's bridges directory (`<paths.bridges>/*/bridge.json`). Lists discovered bridges with source capability, target capability, events, and status (installed / available). No remote fetch — only locally installed bridge manifests are shown.
+
+---
+
+## Available Capabilities (20)
+
+All capabilities follow the same four-layer Clean Architecture. Install any with `npx @backcap/cli add <name>`.
+
+| Capability | Description |
+|---|---|
+| analytics | Event tracking and analytics pipelines |
+| audit-log | Audit trail and activity logging |
+| auth | User registration, login, and token management |
+| billing | Payments, subscriptions, and invoicing |
+| blog | Blog posts, publishing, and content management |
+| cart | Shopping cart management |
+| catalog | Product catalog and inventory |
+| comments | Commenting system for any content type |
+| feature-flags | Feature flag management and evaluation |
+| files | File upload, storage, and retrieval |
+| forms | Dynamic form creation and submission |
+| media | Media asset management and processing |
+| notifications | Multi-channel notification delivery |
+| orders | Order processing and fulfillment |
+| organizations | Multi-tenant organization management |
+| queues | Background job queues and task processing |
+| rbac | Role-based access control |
+| search | Full-text search indexing and querying |
+| tags | Tagging and categorization system |
+| webhooks | Webhook registration and delivery |
 
 ---
 
@@ -250,8 +281,8 @@ interface IPasswordHasher {
 **ITokenService** (`application/ports/token-service.port.ts`):
 ```typescript
 interface ITokenService {
-  sign(payload: { userId: string }): Promise<string>;
-  verify(token: string): Promise<{ userId: string }>;
+  generate(userId: string, roles: string[], organizationId?: string): Promise<string>;
+  verify(token: string): Promise<{ userId: string; organizationId?: string } | null>;
 }
 ```
 
@@ -294,7 +325,7 @@ function createAuthService(deps: {
 
 `PrismaUserRepository implements IUserRepository`
 
-File: `src/adapters/prisma/auth/user-repository.adapter.ts`
+File: `src/adapters/persistence/prisma/auth/user-repository.adapter.ts`
 
 Constructor: `new PrismaUserRepository(prisma: PrismaClient)`
 
@@ -312,7 +343,7 @@ model User {
 
 #### auth-express
 
-**createAuthRouter** (`src/adapters/express/auth/auth.router.ts`):
+**createAuthRouter** (`src/adapters/http/express/auth/auth.router.ts`):
 ```typescript
 function createAuthRouter(authService: IAuthService, router: Router): Router
 ```
@@ -320,27 +351,55 @@ Adds: `POST /auth/register` → 201 `{ userId }` or error; `POST /auth/login` �
 
 Error mapping: UserAlreadyExists → 409, InvalidCredentials/UserNotFound → 401, InvalidEmail → 400, other → 500.
 
-**createAuthMiddleware** (`src/adapters/express/auth/auth.middleware.ts`):
+**createAuthMiddleware** (`src/adapters/http/express/auth/auth.middleware.ts`):
 ```typescript
 function createAuthMiddleware(tokenService: ITokenService): RequestHandler
 ```
-Reads `Authorization: Bearer <token>`, verifies with tokenService, sets `req.userId`, calls next(). Returns 401 on failure.
+Reads `Authorization: Bearer <token>`, verifies with tokenService, sets `req.user.userId` (and `req.user.organizationId` if present), calls next(). Returns 401 on failure.
 
 ---
 
 ## Bridges
 
-A bridge is a standalone module in `src/bridges/<name>/` that connects two capabilities. It defines its own port interfaces and has its own `shared/result.ts`.
+A bridge is a standalone module in `src/bridges/<name>/` that connects two capabilities via domain events. It defines its own port interfaces and has its own `shared/result.ts`.
 
-### auth-notifications
+### Bridge Structure
+
+Each bridge directory contains:
+- `bridge.json` — Manifest with name, sourceCapability, targetCapability, events, and version
+- `<name>.bridge.ts` — Entry point that wires the bridge
+- Standard Clean Architecture layers (domain/, application/, contracts/)
+
+Install any bridge: `npx @backcap/cli add <bridge-name>` (type auto-detected from registry JSON, no `bridge` subcommand needed).
+
+### Available Bridges (16)
+
+| Bridge | Source → Target |
+|---|---|
+| auth-audit-log | auth → audit-log |
+| auth-billing | auth → billing |
+| auth-notifications | auth → notifications |
+| auth-organizations | auth → organizations |
+| auth-rbac | auth → rbac |
+| blog-comments | blog → comments |
+| blog-media | blog → media |
+| blog-search | blog → search |
+| blog-tags | blog → tags |
+| cart-orders | cart → orders |
+| catalog-cart | catalog → cart |
+| catalog-search | catalog → search |
+| media-files | media → files |
+| orders-billing | orders → billing |
+| organizations-billing | organizations → billing |
+| rbac-organizations | rbac → organizations |
+
+### Example: auth-notifications
 
 Responds to `UserRegistered` from auth, calls `IEmailSender` port to send a welcome email.
 
 Use case: `SendWelcomeEmailUseCase.execute(event: UserRegistered): Promise<Result<void, SendWelcomeEmailError>>`
 
 Port: `IEmailSender { sendEmail(dto: WelcomeEmailDto): Promise<void> }`
-
-Install: `npx @backcap/cli add auth-notifications`
 
 ---
 
@@ -384,10 +443,13 @@ Load these files as AI context before making changes to a Backcap project. The `
     "capabilities": "src/capabilities",
     "adapters": "src/adapters",
     "bridges": "src/bridges",
-    "skills": "src/skills",
+    "skills": ".claude/skills",
     "shared": "src/shared"
   },
-  "installed": ["auth"]
+  "installed": {
+    "capabilities": [{ "name": "auth", "version": "1.0.0", "adapters": ["auth-prisma", "auth-express"] }],
+    "bridges": []
+  }
 }
 ```
 
