@@ -37,8 +37,8 @@ Every bridge exports a `createBridge(deps): Bridge` factory. The `Bridge` interf
 
 ```typescript
 // bridges/auth-audit-log/auth-audit-log.bridge.ts
-import type { IEventBus } from "@backcap/shared/event-bus";
-import type { Bridge } from "@backcap/shared/bridge";
+import type { IEventBus } from "../../shared/event-bus.port.js";
+import type { Bridge } from "../../shared/bridge.js";
 
 export interface AuthAuditLogBridgeDeps {
   recordEntry: IRecordAuditEntry;
@@ -87,7 +87,7 @@ eventBus.subscribe("UserRegistered", async (event) => {
 | `organizations-billing` | organizations | billing | OrganizationCreated |
 | `rbac-organizations` | organizations | rbac | MemberJoined |
 | `blog-search` | blog | search | PostPublished |
-| `blog-comments` | comments | blog, notifications | CommentPosted |
+| `blog-comments` | comments | blog | CommentPosted |
 | `blog-tags` | blog | tags | PostPublished |
 | `catalog-cart` | catalog | cart | *(DI bridge)* |
 | `cart-orders` | cart | orders | CartConverted |
@@ -130,7 +130,7 @@ After installation, wire the bridge in your container:
 
 ```typescript
 import { createBridge } from "./bridges/auth-audit-log/auth-audit-log.bridge.js";
-import { InMemoryEventBus } from "@backcap/shared/in-memory-event-bus";
+import { InMemoryEventBus } from "./shared/in-memory-event-bus.js";
 
 const eventBus = new InMemoryEventBus();
 const bridge = createBridge({ recordEntry: auditLogService.recordEntry });

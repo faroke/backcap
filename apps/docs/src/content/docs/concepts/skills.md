@@ -13,7 +13,7 @@ A skill is a `SKILL.md` file inside a capability or adapter directory. It contai
 - A prose explanation of the module's purpose and structure
 - Tables mapping every file to its exported type and responsibility
 - Explicit import rules and naming conventions
-- Usage examples and constraint summaries
+- Extension guides and constraint summaries
 
 Skills are located at:
 
@@ -89,8 +89,8 @@ This gives an AI assistant enough context to:
 When working in a Backcap project, ask Claude to read the relevant skill files before making changes:
 
 ```
-Read skills/backcap-core/SKILL.md and
-skills/backcap-auth/SKILL.md, then help me
+Read .claude/skills/backcap-core/SKILL.md and
+.claude/skills/backcap-auth/SKILL.md, then help me
 add an updatePassword use case to the auth capability.
 ```
 
@@ -107,7 +107,7 @@ Add the skill files to your AI context window via the `@` include syntax or proj
 
 ## Skill File Structure
 
-A skill file has three sections:
+A skill file has six main sections:
 
 ### 1. Frontmatter
 
@@ -115,19 +115,25 @@ YAML block at the top of the file. Contains `name`, `description` (a single dens
 
 The `description` field is the most important — it is short enough to be embedded directly in a system prompt or tool description.
 
-### 2. Architecture Prose
+### 2. Overview
 
-A narrative explanation of the module. Written for humans but structured to be parseable by machines. Uses consistent section headers and table formats.
+High-level summary of the module's purpose, structure, and key design decisions.
 
-### 3. Reference Tables
+### 3. Domain Map
 
-File-by-file tables listing:
+Architecture prose and reference tables mapping every file to its exported types and responsibilities. Written for humans but structured to be parseable by machines.
 
-- File path
-- Exported name(s)
-- Responsibility in one sentence
+### 4. Extension Guide
 
-These tables make it fast for an AI to locate the right file when making a change.
+Instructions for adding new use cases, ports, or adapters to the capability.
+
+### 5. Conventions
+
+File naming rules, import rules, and coding conventions specific to the module.
+
+### 6. Additional Sections
+
+Depending on the skill, additional sections may include Available Bridges, CLI Commands, or other capability-specific reference material.
 
 ## Creating Skills for Your Own Capabilities
 
@@ -139,4 +145,4 @@ When you [create a new capability](/backcap/guides/create-capability), you shoul
 4. Document what `Result` error types each use case can return
 5. Reference the `backcap-core` skill for shared architecture rules
 
-See [backcap-core SKILL.md](https://github.com/backcap/backcap/blob/main/skills/backcap-core/SKILL.md) for a complete example.
+See [backcap-core SKILL.md](https://github.com/faroke/backcap/blob/main/packages/registry/skills/backcap-core/SKILL.md) for a complete example.

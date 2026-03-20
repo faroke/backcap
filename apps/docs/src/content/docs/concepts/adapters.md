@@ -23,7 +23,7 @@ export interface IUserRepository {
 An adapter implements that interface for a specific technology:
 
 ```typescript
-// src/adapters/prisma/auth/user-repository.adapter.ts
+// src/adapters/persistence/prisma/auth/user-repository.adapter.ts
 export class PrismaUserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
@@ -73,12 +73,14 @@ The Prisma adapter for auth (`auth-prisma`) provides `PrismaUserRepository`. It 
 
 ### HTTP / Framework Adapters
 
+**Import rule**: HTTP adapters import from `contracts/` (for the public service interface) and `domain/` errors (for error-to-status-code mapping). They do not import from `application/` ports directly.
+
 HTTP adapters connect the capability's public service interface to a framework's routing layer.
 
 The Express adapter for auth (`auth-express`) provides `createAuthRouter()` and an authentication middleware:
 
 ```typescript
-// src/adapters/express/auth/auth.router.ts
+// src/adapters/http/express/auth/auth.router.ts
 export function createAuthRouter(authService: IAuthService, router: Router): Router {
   router.post("/auth/register", async (req, res) => {
     const result = await authService.register(req.body);
@@ -127,16 +129,18 @@ src/
   capabilities/
     auth/              # Capability source (domain, application, contracts)
   adapters/
-    prisma/
-      auth/
-        user-repository.adapter.ts
-        __tests__/
-          user-repository.adapter.test.ts
-    express/
-      auth/
-        auth.router.ts
-        auth.middleware.ts
-        __tests__/
+    persistence/
+      prisma/
+        auth/
+          user-repository.adapter.ts
+          __tests__/
+            user-repository.adapter.test.ts
+    http/
+      express/
+        auth/
+          auth.router.ts
+          auth.middleware.ts
+          __tests__/
 ```
 
 This separation enforces the import rules: the capability code can never accidentally import from an adapter.
@@ -157,7 +161,7 @@ The CLI detects which adapters are compatible with your project based on the pac
 To write a custom adapter:
 
 1. Identify the port interface you want to implement (in `application/ports/`)
-2. Create a new file in `src/adapters/<technology>/<capability>/`
+2. Create a new file in `src/adapters/<category>/<technology>/<capability>/` (where category is `persistence/` or `http/`)
 3. Implement the interface with your technology of choice
 4. Wire it into the `createAuthService()` factory call in your container
 

@@ -96,17 +96,25 @@ your-project/
         shared/
           result.ts
     adapters/
-      prisma/
-        auth/
-          user-repository.adapter.ts
-      express/
-        auth/
-          auth.router.ts
-          auth.middleware.ts
+      persistence/
+        prisma/
+          auth/
+            user-repository.adapter.ts
+      http/
+        express/
+          auth/
+            auth.router.ts
+            auth.middleware.ts
     bridges/
       auth-notifications/
+        bridge.json                              # Machine-readable manifest
+        auth-notifications.bridge.ts             # Factory + event subscriptions
         use-cases/send-welcome-email.use-case.ts
         contracts/auth-notifications.contract.ts
+        domain/events/user-registered.event.ts
+        dto/welcome-email.dto.ts
+        shared/result.ts
+        __tests__/
 ```
 
 ## Registry Package Layout
@@ -117,8 +125,6 @@ The Backcap registry (the npm workspace package at `packages/registry/`) mirrors
 packages/registry/
   capabilities/
     auth/              # Authored source of the auth capability
-    contracts/         # Shared contract types (if any)
-    shared/            # Cross-capability shared code
   adapters/
     prisma/auth/       # Prisma adapter for auth
     express/auth/      # Express adapter for auth
@@ -133,7 +139,7 @@ packages/registry/
 
 Backcap uses `Result<T, E>` instead of thrown exceptions for all **expected** failures. This is a deliberate design choice with several advantages:
 
-**Explicit failure modes**: The return type of a use case documents exactly which errors are possible. A function returning `Result<{ userId: string }, UserAlreadyExists | InvalidEmail>` is self-documenting.
+**Explicit failure modes**: The return type of a use case documents exactly which errors are possible. For example, `Result<{ userId: string; event: UserRegistered }, Error>` is self-documenting — callers know both the success payload and possible failure types.
 
 **No unchecked exceptions**: TypeScript's type system cannot track which functions throw. `Result` makes error handling a compile-time concern, not a runtime surprise.
 
@@ -145,8 +151,8 @@ Thrown exceptions are reserved for programmer errors and environmental failures 
 
 The domain and application layers have no framework imports. This is enforced by the import rules:
 
-- `domain/` — no external imports at all
-- `application/` — imports `domain/` only
+- `domain/` — no external imports except the capability's own `shared/result.ts`
+- `application/` — imports `domain/` and the capability's own `shared/result.ts`
 
 This means the same `auth` capability can be used with:
 

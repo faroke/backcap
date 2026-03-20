@@ -31,14 +31,28 @@ Example — the `User` entity:
 ```typescript
 // domain/entities/user.entity.ts
 export class User {
+  readonly id: string;
+  readonly email: Email;
+  readonly passwordHash: string;
+  readonly roles: string[];
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+
   private constructor(
-    readonly id: string,
-    readonly email: Email,
-    readonly passwordHash: string,
-    readonly roles: string[],
-    readonly createdAt: Date,
-    readonly updatedAt: Date,
-  ) {}
+    id: string,
+    email: Email,
+    passwordHash: string,
+    roles: string[],
+    createdAt: Date,
+    updatedAt: Date,
+  ) {
+    this.id = id;
+    this.email = email;
+    this.passwordHash = passwordHash;
+    this.roles = roles;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
 
   static create(params: {
     id: string;
@@ -66,7 +80,7 @@ application/
   __tests__/          # Integration tests using mock implementations
 ```
 
-**Import rule**: The application layer imports from `domain/` only.
+**Import rule**: The application layer imports from `domain/` and the capability's own `shared/result.ts`.
 
 Ports are the key concept here. A port is a TypeScript interface that describes what the use case needs from the outside world — a database, a hash function, a token signer — without saying anything about how it is implemented.
 
@@ -89,7 +103,7 @@ export class RegisterUser {
     private readonly passwordHasher: IPasswordHasher,
   ) {}
 
-  async execute(input: RegisterInput): Promise<Result<{ userId: string }, Error>> {
+  async execute(input: RegisterInput): Promise<Result<{ userId: string; event: UserRegistered }, Error>> {
     const existing = await this.userRepository.findByEmail(input.email);
     if (existing) {
       return Result.fail(UserAlreadyExists.create(input.email));
@@ -132,16 +146,18 @@ Adapters live **outside the capability directory** in a separate `src/adapters/`
 
 ```
 src/adapters/
-  prisma/
-    auth/
-      user-repository.adapter.ts   # PrismaUserRepository implements IUserRepository
-  express/
-    auth/
-      auth.router.ts               # createAuthRouter() wires IAuthService to HTTP
-      auth.middleware.ts           # Bearer token middleware
+  persistence/
+    prisma/
+      auth/
+        user-repository.adapter.ts   # PrismaUserRepository implements IUserRepository
+  http/
+    express/
+      auth/
+        auth.router.ts               # createAuthRouter() wires IAuthService to HTTP
+        auth.middleware.ts           # Bearer token middleware
 ```
 
-**Import rule**: Adapters import from `application/` ports (for the interface) and `domain/` entities (for type mapping). They must not import from `contracts/`.
+**Import rule**: Persistence adapters import from `application/` ports (for the interface) and `domain/` entities (for type mapping). They must not import from `contracts/`. HTTP adapters import from `contracts/` (for the public service interface) and `domain/` errors (for error mapping).
 
 ## The Result Pattern
 

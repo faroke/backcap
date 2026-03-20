@@ -13,6 +13,12 @@ Initialize a Backcap project in the current directory.
 npx @backcap/cli init
 ```
 
+**Options:**
+
+| Option | Alias | Description |
+|---|---|---|
+| `--yes` | `-y` | Skip all prompts (non-interactive mode) |
+
 **What it does:**
 
 1. Detects your framework by inspecting `package.json` dependencies
@@ -33,10 +39,13 @@ npx @backcap/cli init
     "capabilities": "src/capabilities",
     "adapters": "src/adapters",
     "bridges": "src/bridges",
-    "skills": "src/skills",
+    "skills": ".claude/skills",
     "shared": "src/shared"
   },
-  "installed": []
+  "installed": {
+    "capabilities": [],
+    "bridges": []
+  }
 }
 ```
 
@@ -44,15 +53,17 @@ npx @backcap/cli init
 
 | `package.json` dependency | Detected framework |
 |---|---|
-| `next` | `next` |
-| `express` | `express` |
-| `fastify` | `fastify` |
+| `next` | `nextjs` |
 | `@nestjs/core` | `nestjs` |
+| `fastify` | `fastify` |
+| `hono` | `hono` |
+| `express` | `express` |
 
 **Detected package managers** (by lockfile presence):
 
 | Lockfile | Package manager |
 |---|---|
+| `bun.lockb` | `bun` |
 | `pnpm-lock.yaml` | `pnpm` |
 | `yarn.lock` | `yarn` |
 | `package-lock.json` | `npm` |
@@ -61,35 +72,43 @@ npx @backcap/cli init
 
 ## backcap add
 
-Install a capability from the registry.
+Install a capability or bridge from the registry.
 
 ```bash
-npx @backcap/cli add <capability>
+npx @backcap/cli add <name>
 ```
 
 **Arguments:**
 
 | Argument | Required | Description |
 |---|---|---|
-| `capability` | Yes | The name of the capability to install (e.g., `auth`, `blog`) |
+| `name` | Yes | The name of the capability or bridge to install (e.g., `auth`, `blog`, `auth-blog`) |
+
+**Options:**
+
+| Option | Alias | Description |
+|---|---|---|
+| `--yes` | `-y` | Skip all prompts (non-interactive mode) |
 
 **What it does:**
 
 1. Verifies that `backcap.json` exists (exits with an error if not)
 2. Loads the configuration from `backcap.json`
-3. Fetches the capability JSON bundle from `https://faroke.github.io/backcap/dist/<capability>.json`
+3. Fetches the JSON bundle from `https://faroke.github.io/backcap/dist/<name>.json` (falls back to `dist/bridges/<name>.json` for bridges)
 4. Detects which adapters in the bundle are compatible with your `package.json`
 5. Runs conflict detection against your existing files:
    - If all incoming files are identical to existing files, exits early (nothing to do)
    - If there are no conflicts, proceeds directly to the install prompt
-   - If there are conflicts, shows a summary and offers three options:
-     - **Abort** — cancel the installation, no files written
-     - **Install at a different path** — prompts for a new path
-     - **Compare and continue** — shows detailed diffs, then proceeds
+   - If there are conflicts, shows a summary and offers four options:
+     - **Compare and continue** — shows detailed diffs, then overwrites all conflicting files
+     - **Select files individually** — pick which files to write
+     - **Choose a different path** — prompts for a new base path
+     - **Abort installation** — cancel, no files written
 6. Prompts for final confirmation before writing files
-7. Writes capability source files to `<paths.capabilities>/<capability>/`
-8. Installs npm dependencies listed in the capability bundle
-9. Updates `backcap.json` to record the installed capability
+7. Writes source files to the appropriate directory (`capabilities/`, `bridges/`, or `adapters/`)
+8. Installs npm dependencies listed in the bundle
+9. Installs `peerDependencies` as devDependencies in a second install pass
+10. Updates `backcap.json` to record the installed capability or bridge
 
 **Example:**
 
@@ -98,9 +117,18 @@ npx @backcap/cli add auth
 # Fetching auth...
 # No conflicts detected.
 # Install auth? › Yes
-# Capability files written to src/capabilities/auth
 # Installing dependencies: zod
-# auth installed successfully!
+# Installing dev dependencies: @types/bcrypt
+#
+# auth v1.0.0 installed successfully!
+#
+#   Capability: src/capabilities/auth
+#   Adapters:   auth-express, auth-prisma
+#
+#   Next steps:
+#   1. Review the installed files in src/capabilities/auth/
+#   2. Run the test suite to verify: npx vitest run
+#   3. Check available bridges: backcap bridges
 ```
 
 **Conflict resolution options:**
@@ -112,9 +140,10 @@ Conflicts detected:
   ~ src/capabilities/auth/domain/entities/user.entity.ts (modified)
 
 How would you like to proceed?
-  › Abort installation
-    Install at a different path
-    Compare changes and continue
+  › Compare and continue (overwrite all)
+    Select files individually
+    Choose a different path
+    Abort installation
 ```
 
 ---
@@ -130,7 +159,7 @@ npx @backcap/cli list
 **What it does:**
 
 1. Loads `backcap.json` if it exists (to know which capabilities are already installed)
-2. Fetches the registry catalog from `https://faroke.github.io/backcap/registry.json`
+2. Fetches the registry catalog from `https://faroke.github.io/backcap/dist/registry.json`
 3. Renders a table of available capabilities with their name, description, type, and installation status
 
 **Example output:**
@@ -149,7 +178,7 @@ auth-express     Express router for auth              adapter       available
 
 ## backcap bridges
 
-List bridges installed in your project.
+List available bridges between installed capabilities.
 
 ```bash
 npx @backcap/cli bridges
@@ -179,18 +208,19 @@ Bridges
     Events: CommentPosted | Status: installed
 ```
 
-If no bridge manifests are found, the command suggests running `backcap add <bridge>` to install bridges.
+If no bridge manifests are found, the command displays "No bridges available."
 
 ---
 
 ## Global Options
 
-All commands support these options:
+All commands support this option:
 
 | Option | Description |
 |---|---|
 | `--help`, `-h` | Show help text for the command |
-| `--version`, `-v` | Show the CLI version |
+
+The `--version` / `-v` flag is available on the root `backcap` command only (not on subcommands).
 
 ---
 
@@ -200,8 +230,8 @@ The CLI uses a consistent error format. Errors are displayed with a red cross pr
 
 ```
 ✖ No backcap.json found. Run `backcap init` first.
-✖ Could not fetch capability "auth" from registry.
-✖ Invalid capability data received from registry.
+✖ Could not fetch "auth" from registry.
+✖ Invalid data received from registry.
 ```
 
 Common errors and their solutions:
@@ -209,9 +239,9 @@ Common errors and their solutions:
 | Error | Solution |
 |---|---|
 | `No backcap.json found` | Run `npx @backcap/cli init` first |
-| `Could not fetch capability from registry` | Check your internet connection; verify the capability name with `backcap list` |
-| `Invalid capability data` | The registry may be temporarily unavailable; try again |
-| `No bridge manifests found` | Install bridges with `backcap add <bridge>` |
+| `Could not fetch "<name>" from registry` | Check your internet connection; verify the name with `backcap list` |
+| `Invalid data received from registry` | The registry may be temporarily unavailable; try again |
+| `No bridges available` | Install capabilities first, then bridges will appear between them |
 
 ---
 
