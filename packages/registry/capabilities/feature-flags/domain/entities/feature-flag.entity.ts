@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { FlagKey } from "../value-objects/flag-key.vo.js";
 import { FlagToggled } from "../events/flag-toggled.event.js";

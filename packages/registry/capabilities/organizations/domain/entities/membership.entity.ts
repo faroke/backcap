@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { MemberRole } from "../value-objects/member-role.vo.js";
 

@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { AuditQueryFailed } from "../../domain/errors/audit-query-failed.error.js";
 import type { IAuditStore } from "../ports/audit-store.port.js";

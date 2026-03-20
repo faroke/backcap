@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import type { IWebhookRepository } from "../ports/webhook-repository.port.js";
 import type { IWebhookDelivery } from "../ports/webhook-delivery.port.js";

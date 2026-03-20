@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { MimeType } from "../value-objects/mime-type.vo.js";
 import { Dimensions } from "../value-objects/dimensions.vo.js";

@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { WebhookUrl } from "../value-objects/webhook-url.vo.js";
 import { InvalidWebhookUrl } from "../errors/invalid-webhook-url.error.js";

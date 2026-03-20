@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { CartNotFound } from "../../domain/errors/cart-not-found.error.js";
 import { CartConverted } from "../../domain/events/cart-converted.event.js";

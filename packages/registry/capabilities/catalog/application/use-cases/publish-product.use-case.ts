@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { ProductPublished } from "../../domain/events/product-published.event.js";
 import { ProductNotFound } from "../../domain/errors/product-not-found.error.js";

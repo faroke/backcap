@@ -173,7 +173,6 @@ export async function generateBridgeItemJson(
     files,
     dependencies: bridge.dependencies,
     peerDependencies: {},
-    templateMarkers: ["{{capabilities_path}}"],
   };
 }
 

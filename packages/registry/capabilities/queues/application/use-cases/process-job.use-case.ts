@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { JobCompleted } from "../../domain/events/job-completed.event.js";
 import { JobFailed } from "../../domain/events/job-failed.event.js";

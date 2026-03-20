@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { MediaNotFound } from "../../domain/errors/media-not-found.error.js";
 import type { IMediaRepository } from "../ports/media-repository.port.js";

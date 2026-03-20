@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { WebhookNotFound } from "../../domain/errors/webhook-not-found.error.js";
 import { WebhookDeliveryFailed } from "../../domain/errors/webhook-delivery-failed.error.js";

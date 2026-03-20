@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { Job } from "../../domain/entities/job.entity.js";
 import type { IJobRepository } from "../ports/job-repository.port.js";

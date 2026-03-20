@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { InvalidQuantity } from "../errors/invalid-quantity.error.js";
 

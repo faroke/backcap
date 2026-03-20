@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { SKU } from "../value-objects/sku.vo.js";
 import { Money } from "../value-objects/money.vo.js";

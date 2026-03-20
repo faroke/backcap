@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import type { IMediaRepository } from "../ports/media-repository.port.js";
 import type { ListMediaInput, ListMediaOutput } from "../dto/list-media.dto.js";

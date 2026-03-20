@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { ProductVariant } from "../../domain/entities/product-variant.entity.js";
 import { VariantAdded } from "../../domain/events/variant-added.event.js";

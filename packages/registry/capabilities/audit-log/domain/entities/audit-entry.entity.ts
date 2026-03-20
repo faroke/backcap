@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { AuditAction } from "../value-objects/audit-action.vo.js";
 import { InvalidAuditAction } from "../errors/invalid-audit-action.error.js";

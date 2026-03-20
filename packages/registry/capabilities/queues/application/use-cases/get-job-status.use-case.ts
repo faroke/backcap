@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { JobNotFound } from "../../domain/errors/job-not-found.error.js";
 import type { IJobRepository } from "../ports/job-repository.port.js";

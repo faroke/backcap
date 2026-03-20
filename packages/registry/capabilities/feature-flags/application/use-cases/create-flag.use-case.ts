@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { FeatureFlag } from "../../domain/entities/feature-flag.entity.js";
 import { FlagAlreadyExists } from "../../domain/errors/flag-already-exists.error.js";

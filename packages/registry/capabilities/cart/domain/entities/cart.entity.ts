@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { CartItem } from "./cart-item.entity.js";
 import { CartStatus } from "../value-objects/cart-status.vo.js";

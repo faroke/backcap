@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { FlagNotFound } from "../../domain/errors/flag-not-found.error.js";
 import { FlagAlreadyInState } from "../../domain/errors/flag-already-in-state.error.js";

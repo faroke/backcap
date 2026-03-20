@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { Category } from "../../domain/entities/category.entity.js";
 import type { ICategoryRepository } from "../ports/category-repository.port.js";

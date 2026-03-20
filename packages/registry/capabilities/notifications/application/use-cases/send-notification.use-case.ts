@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { Notification } from "../../domain/entities/notification.entity.js";
 import { NotificationSent } from "../../domain/events/notification-sent.event.js";

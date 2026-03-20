@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 
 // SKU format: alphanumeric with optional hyphens, 3-50 chars

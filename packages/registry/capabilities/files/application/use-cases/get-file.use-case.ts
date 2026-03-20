@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { FileNotFound } from "../../domain/errors/file-not-found.error.js";
 import type { IFileStorage } from "../ports/file-storage.port.js";

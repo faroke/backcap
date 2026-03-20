@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 
 // Slug: lowercase alphanumeric with hyphens, 2-100 chars

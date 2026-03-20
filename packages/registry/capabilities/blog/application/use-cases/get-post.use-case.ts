@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { PostNotFound } from "../../domain/errors/post-not-found.error.js";
 import type { IPostRepository } from "../ports/post-repository.port.js";

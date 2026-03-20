@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import type { IPostRepository } from "../ports/post-repository.port.js";
 import type { ListPostsInput, ListPostsOutput } from "../dto/list-posts.dto.js";

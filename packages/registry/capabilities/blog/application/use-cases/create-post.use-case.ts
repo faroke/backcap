@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { Post } from "../../domain/entities/post.entity.js";
 import { PostCreated } from "../../domain/events/post-created.event.js";

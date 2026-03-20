@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import type { Organization } from "../../domain/entities/organization.entity.js";
 import { OrgNotFound } from "../../domain/errors/org-not-found.error.js";

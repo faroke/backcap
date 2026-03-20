@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { MediaVariant } from "../../domain/entities/media-variant.entity.js";
 import { MediaNotFound } from "../../domain/errors/media-not-found.error.js";

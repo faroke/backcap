@@ -1,5 +1,3 @@
-// Template: import type from "{{capabilities_path}}/auth/contracts"
-// Template: import type from "{{capabilities_path}}/notifications/contracts"
 import { Result } from "../shared/result.js";
 import type { UserRegistered } from "../domain/events/user-registered.event.js";
 import type { WelcomeEmailDto } from "../dto/welcome-email.dto.js";

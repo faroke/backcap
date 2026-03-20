@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { MemberInvited } from "../../domain/events/member-invited.event.js";
 import { OrgNotFound } from "../../domain/errors/org-not-found.error.js";

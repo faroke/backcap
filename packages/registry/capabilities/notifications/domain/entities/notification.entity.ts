@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { NotificationChannel } from "../value-objects/notification-channel.vo.js";
 import { InvalidChannel } from "../errors/invalid-channel.error.js";

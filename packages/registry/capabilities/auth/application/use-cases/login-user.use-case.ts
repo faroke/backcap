@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { UserNotFound } from "../../domain/errors/user-not-found.error.js";
 import { InvalidCredentials } from "../../domain/errors/invalid-credentials.error.js";

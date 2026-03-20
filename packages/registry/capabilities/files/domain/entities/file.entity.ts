@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { FilePath } from "../value-objects/file-path.vo.js";
 import { InvalidFilePath } from "../errors/invalid-file-path.error.js";

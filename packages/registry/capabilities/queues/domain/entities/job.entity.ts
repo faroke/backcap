@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import { JobPayload } from "../value-objects/job-payload.vo.js";
 import { MaxAttemptsExceeded } from "../errors/max-attempts-exceeded.error.js";

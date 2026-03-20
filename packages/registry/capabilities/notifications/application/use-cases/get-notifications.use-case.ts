@@ -1,4 +1,3 @@
-// Template: import { Result } from "{{shared_path}}/result";
 import { Result } from "../../shared/result.js";
 import type { INotificationRepository } from "../ports/notification-repository.port.js";
 import type {
