@@ -25,7 +25,13 @@ async function tsconfigExists(cwd: string): Promise<boolean> {
 }
 
 function stripJsonComments(text: string): string {
-  return text.replace(/\/\/.*$/gm, "").replace(/\/\*[\s\S]*?\*\//g, "");
+  let result = text
+    // Block comments first (avoids // inside /* */ being caught as line comments)
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\/\/.*$/gm, "");
+  // Remove trailing commas left behind after comment stripping
+  result = result.replace(/,\s*([\]}])/g, "$1");
+  return result;
 }
 
 async function injectTsconfigAlias(cwd: string, alias: string, domainsPath: string): Promise<void> {
