@@ -73,7 +73,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   </section>
 
   <!-- Problem -->
-  <section>
+  <section class="section-with-glow">
+    <div class="section-orb left"></div>
+    <div class="section-orb right"></div>
     <div class="container">
       <h2 class="section-title anim">Stop rewriting <span class="text-gradient">backend features.</span></h2>
       <p class="section-sub anim">
@@ -89,7 +91,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Set up notifications</span></div>
           <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Handle billing logic</span></div>
         </div>
-        <div class="problem-card good glow-primary anim from-right">
+        <div class="problem-card good glow-primary glow-enhanced anim from-right">
           <h3>Backcap capabilities</h3>
           <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx @backcap/cli add auth</code></div>
           <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx @backcap/cli add rbac</code></div>
@@ -141,7 +143,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   </section>
 
   <!-- Examples -->
-  <section>
+  <section class="section-with-glow">
+    <div class="section-orb right" style="top:10%"></div>
     <div class="container">
       <h2 class="section-title anim">Build anything with <span class="text-gradient">capabilities.</span></h2>
       <div class="examples-grid">
@@ -209,25 +212,50 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   </section>
 
   <!-- Architecture -->
-  <section id="architecture">
+  <section id="architecture" class="section-with-glow">
+    <div class="section-orb left" style="top:30%"></div>
     <div class="container">
       <div class="arch-grid">
         <div class="arch-text anim from-left">
           <h2>Framework agnostic <span class="text-gradient">by design.</span></h2>
           <p>Backcap uses a modular architecture inspired by clean architecture and hexagonal architecture. The core domain is independent from frameworks.</p>
           <div class="arch-label">Runtimes</div>
-          <div class="arch-tags">
-            <span class="arch-tag">Node</span>
-            <span class="arch-tag">Bun</span>
-            <span class="arch-tag">Deno</span>
+          <div class="fw-grid runtimes">
+            <div class="fw-card">
+              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg></div>
+              <span class="fw-card-name">Node.js</span>
+            </div>
+            <div class="fw-card">
+              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+              <span class="fw-card-name">Bun</span>
+            </div>
+            <div class="fw-card">
+              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg></div>
+              <span class="fw-card-name">Deno</span>
+            </div>
           </div>
           <div class="arch-label">Frameworks</div>
-          <div class="arch-tags">
-            <span class="arch-tag">Next.js</span>
-            <span class="arch-tag">Express</span>
-            <span class="arch-tag">Fastify</span>
-            <span class="arch-tag">Hono</span>
-            <span class="arch-tag">NestJS</span>
+          <div class="fw-grid">
+            <div class="fw-card">
+              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg></div>
+              <span class="fw-card-name">Next.js</span>
+            </div>
+            <div class="fw-card">
+              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+              <span class="fw-card-name">Express</span>
+            </div>
+            <div class="fw-card">
+              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-2 2.5h3L12 7"/><path d="M10 14v-3"/><path d="M14 14v-3"/><path d="M11 19c-1.7 0-3-1.3-3-3v-2h8v2c0 1.7-1.3 3-3 3h-2z"/><path d="M12 22v-3"/></svg></div>
+              <span class="fw-card-name">Fastify</span>
+            </div>
+            <div class="fw-card">
+              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></div>
+              <span class="fw-card-name">Hono</span>
+            </div>
+            <div class="fw-card">
+              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z"/></svg></div>
+              <span class="fw-card-name">NestJS</span>
+            </div>
           </div>
         </div>
         <div class="arch-tree anim from-right">
@@ -254,22 +282,31 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <div class="container">
       <h2 class="section-title anim">Built for <span class="text-gradient">AI-assisted</span> development.</h2>
       <p class="section-sub anim">Every capability is structured so AI tools can understand and extend your backend.</p>
-      <div class="ai-grid">
-        <div class="ai-card anim">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          <h3>Clear specifications</h3>
-          <p>Each capability includes a spec.yaml contract readable by humans and AI alike.</p>
-        </div>
-        <div class="ai-card anim d1">
+      <div class="bento-grid">
+        <a href={`${base}/concepts/skills`} class="bento-card featured anim">
+          <div class="bento-glow"></div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+            <h3>AI-friendly structure</h3>
+            <p>Consistent, hierarchical architecture that LLMs can parse, navigate, and compose. Each capability follows the same contract — making generation, modification, and extension predictable.</p>
+          </div>
+          <div class="bento-footer">Knowledge Graph Ready</div>
+        </a>
+        <a href={`${base}/concepts/capabilities`} class="bento-card tall anim d1">
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <h3>Clear specifications</h3>
+            <p>Each capability includes a specification contract readable by humans and AI alike.</p>
+            <p style="margin-top:0.75rem">Typed interfaces and ports that AI tools can understand and extend automatically.</p>
+          </div>
+          <div class="bento-footer">Standardized Manifests</div>
+        </a>
+        <a href={`${base}/concepts/architecture`} class="bento-card anim d2" style="grid-column:span 2">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
           <h3>Domain contracts</h3>
-          <p>Typed interfaces and ports that AI tools can understand and extend automatically.</p>
-        </div>
-        <div class="ai-card anim d2">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
-          <h3>AI-friendly structure</h3>
-          <p>Consistent architecture lets LLMs generate, modify and compose capabilities.</p>
-        </div>
+          <p>Typed interfaces and ports that define clear boundaries. AI tools get predictable execution paths to generate and extend your backend accurately.</p>
+          <div class="bento-footer">Interface Integrity</div>
+        </a>
       </div>
       <div class="section-cta anim">
         <a href={`${base}/concepts/skills`} class="btn-outline">
@@ -298,6 +335,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
         View on GitHub
       </a>
+      <div class="cta-microcopy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+        <span>Free & open source. No account required.</span>
+      </div>
       <div class="cta-footer">
         <span>TypeScript</span>
         <span class="cta-dot"></span>
@@ -674,11 +715,31 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
     color: var(--lp-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;
   }
-  .landing .arch-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
-  .landing .arch-tag {
-    padding: 0.375rem 0.75rem; border-radius: 0.375rem;
-    background: var(--lp-secondary); border: 1px solid var(--lp-border);
-    font-size: 0.875rem; font-family: 'JetBrains Mono', monospace;
+  .landing .fw-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.5rem;
+  }
+  .landing .fw-grid.runtimes { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 500px) {
+    .landing .fw-grid { grid-template-columns: repeat(2, 1fr); }
+    .landing .fw-grid.runtimes { grid-template-columns: repeat(3, 1fr); }
+  }
+  .landing .fw-card {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.625rem; padding: 1rem 0.75rem; border-radius: 0.625rem;
+    border: 1px solid var(--lp-border); background: var(--lp-card); transition: all 0.25s;
+  }
+  .landing .fw-card:hover {
+    border-color: hsl(152 76% 52% / 0.35); background: hsl(220 18% 9%);
+    transform: translateY(-2px);
+  }
+  .landing .fw-card-icon {
+    width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;
+    color: var(--lp-muted); transition: color 0.25s;
+  }
+  .landing .fw-card:hover .fw-card-icon { color: var(--lp-primary); }
+  .landing .fw-card-icon svg { width: 1.5rem; height: 1.5rem; }
+  .landing .fw-card-name {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; font-weight: 500;
   }
   .landing .arch-tree {
     border-radius: 0.75rem; border: 1px solid var(--lp-border);
@@ -689,21 +750,54 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .landing .arch-tree .accent-dir { color: var(--lp-accent); }
   .landing .arch-tree .muted { color: var(--lp-muted); }
 
-  /* ── AI Section ── */
+  /* ── AI Section (Bento Grid) ── */
   .landing .ai-section { position: relative; }
   .landing .ai-section .bg-grid { position: absolute; inset: 0; opacity: 0.15; }
-  .landing .ai-grid {
-    display: grid; gap: 1.5rem; max-width: 56rem; margin: 0 auto;
-    position: relative; z-index: 1;
+  .landing .bento-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: auto auto;
+    gap: 1rem; max-width: 56rem; margin: 0 auto; position: relative; z-index: 1;
   }
-  @media (min-width: 768px) { .landing .ai-grid { grid-template-columns: repeat(3, 1fr); } }
-  .landing .ai-card {
-    padding: 1.5rem; border-radius: 0.75rem;
-    border: 1px solid var(--lp-border); background: hsl(220 18% 7% / 0.5);
+  @media (max-width: 768px) {
+    .landing .bento-grid { grid-template-columns: 1fr; }
+    .landing .bento-card.featured,
+    .landing .bento-card[style*="grid-column"] { grid-column: auto !important; }
   }
-  .landing .ai-card svg { width: 1.5rem; height: 1.5rem; color: var(--lp-primary); margin-bottom: 1rem; }
-  .landing .ai-card h3 { font-weight: 600; margin-bottom: 0.5rem; }
-  .landing .ai-card p { font-size: 0.875rem; color: var(--lp-muted); line-height: 1.6; }
+  .landing .bento-card {
+    padding: 2rem; border-radius: 0.75rem; border: 1px solid var(--lp-border);
+    background: var(--lp-card); transition: all 0.3s; position: relative;
+    overflow: hidden; text-decoration: none; color: inherit; display: block;
+  }
+  .landing .bento-card:hover {
+    border-color: hsl(152 76% 52% / 0.3);
+    box-shadow: 0 0 40px hsl(152 76% 52% / 0.08);
+  }
+  .landing .bento-card.featured {
+    grid-column: span 2; min-height: 14rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .landing .bento-card.tall {
+    grid-row: span 2; min-height: 18rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .landing .bento-glow {
+    position: absolute; top: -50%; right: -30%;
+    width: 250px; height: 250px; border-radius: 50%;
+    background: hsl(152 76% 52% / 0.04); filter: blur(60px); pointer-events: none;
+  }
+  .landing .bento-card svg {
+    width: 2rem; height: 2rem; color: var(--lp-primary); margin-bottom: 1.25rem;
+  }
+  .landing .bento-card h3 { font-weight: 700; font-size: 1.25rem; margin-bottom: 0.75rem; }
+  .landing .bento-card p { font-size: 0.9rem; color: var(--lp-muted); line-height: 1.7; }
+  .landing .bento-card code {
+    color: var(--lp-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.85em;
+  }
+  .landing .bento-footer {
+    margin-top: 1.5rem; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: hsl(152 76% 52% / 0.5); transition: color 0.3s;
+  }
+  .landing .bento-card:hover .bento-footer { color: var(--lp-primary); }
 
   /* ── CTA ── */
   .landing .cta-section { position: relative; padding: 8rem 0; }
@@ -729,6 +823,38 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-family: 'JetBrains Mono', monospace;
   }
   .landing .cta-dot { width: 0.25rem; height: 0.25rem; border-radius: 50%; background: var(--lp-primary); }
+  .landing .cta-microcopy {
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    margin-top: 1.5rem; font-size: 0.8125rem; color: var(--lp-muted);
+  }
+  .landing .cta-microcopy svg {
+    width: 0.875rem; height: 0.875rem; color: hsl(152 76% 52% / 0.6); flex-shrink: 0;
+  }
+
+  /* ── Glow Effects ── */
+  .landing .section-with-glow { position: relative; overflow: hidden; }
+  .landing .section-orb {
+    position: absolute; width: 400px; height: 400px; border-radius: 50%;
+    filter: blur(120px); pointer-events: none; z-index: 0;
+  }
+  .landing .section-orb.left { top: 20%; left: -10%; background: hsl(152 76% 52% / 0.04); }
+  .landing .section-orb.right { bottom: 10%; right: -8%; background: hsl(172 66% 50% / 0.03); }
+  .landing .section-with-glow .container { position: relative; z-index: 1; }
+  .landing .glow-enhanced {
+    position: relative; overflow: hidden;
+    border-color: hsl(152 76% 52% / 0.25) !important;
+    box-shadow: 0 0 40px hsl(152 76% 52% / 0.08);
+  }
+  .landing .glow-enhanced::before {
+    content: ''; position: absolute; top: -80px; right: -80px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: hsl(152 76% 52% / 0.06); filter: blur(50px); pointer-events: none;
+  }
+  .landing .glow-enhanced::after {
+    content: ''; position: absolute; bottom: -60px; left: -40px;
+    width: 150px; height: 150px; border-radius: 50%;
+    background: hsl(172 66% 50% / 0.04); filter: blur(40px); pointer-events: none;
+  }
 
   .landing .icon { display: inline-block; vertical-align: middle; }
 </style>
