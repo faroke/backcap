@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section Features — Proposals</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwindcss.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: 'hsl(220 20% 4%)',
+            card: 'hsl(220 18% 7%)',
+            'card-hover': 'hsl(220 18% 9%)',
+            border: 'hsl(220 14% 16%)',
+            muted: 'hsl(215 14% 50%)',
+            fg: 'hsl(210 20% 92%)',
+            primary: 'hsl(152 76% 52%)',
+            accent: 'hsl(172 66% 50%)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .gradient-text { background: linear-gradient(135deg, hsl(152 76% 52%), hsl(172 66% 50%)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .glow:hover { box-shadow: 0 0 30px -5px hsla(152, 76%, 52%, 0.15); }
+    .proposal-divider { border-top: 2px dashed hsl(220 14% 16%); margin: 5rem 0; position: relative; }
+    .proposal-divider::after { content: attr(data-label); position: absolute; top: -0.75rem; left: 50%; transform: translateX(-50%); background: hsl(220 20% 4%); padding: 0 1rem; color: hsl(215 14% 50%); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* Sally - hover animations */
+    .sally-card { transition: all 0.25s ease; }
+    .sally-card:hover { transform: translateY(-4px); border-color: hsla(152, 76%, 52%, 0.3); box-shadow: 0 12px 40px -8px hsla(152, 76%, 52%, 0.12); }
+    .sally-card:hover .sally-icon { transform: scale(1.1); }
+    .sally-icon { transition: transform 0.25s ease; }
+
+    /* Carson - marquee */
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .marquee-track { animation: marquee 25s linear infinite; }
+    .marquee-track:hover { animation-play-state: paused; }
+
+    /* Yann - tabs */
+    .tab-btn { transition: all 0.15s ease; }
+    .tab-btn.active { color: hsl(152 76% 52%); border-color: hsl(152 76% 52%); background: hsla(152, 76%, 52%, 0.05); }
+    .tab-content { display: none; }
+    .tab-content.active { display: flex; }
+    .tree-item { cursor: pointer; transition: color 0.1s; }
+    .tree-item:hover { color: hsl(152 76% 52%); }
+    .tree-item.active { color: hsl(152 76% 52%); }
+    .code-block { font-family: 'JetBrains Mono', 'Fira Code', monospace; }
+    .line-number { user-select: none; }
+  </style>
+</head>
+<body class="bg-bg text-fg">
+
+  <div class="max-w-6xl mx-auto px-6 py-12">
+    <h1 class="text-3xl font-bold mb-2">Features Section — Proposals</h1>
+    <p class="text-muted mb-16">Chaque agent propose son layout. Meme contenu, design different.</p>
+
+    <!-- ============================================ -->
+    <!-- JOHN - Clean 3x2 Grid -->
+    <!-- ============================================ -->
+    <div class="proposal-divider" data-label="Proposal 1"></div>
+    <section class="py-12">
+      <p class="text-primary text-xs font-medium tracking-widest uppercase mb-6">&#x1F4CB; John — PM</p>
+      <p class="text-muted text-sm mb-10">Grille 3x2 fonctionnelle. Chaque carte = feature + commande CLI. Pas de fioriture, straight to the point.</p>
+
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold mb-3">Pick what <span class="gradient-text">you need.</span></h2>
+        <p class="text-muted max-w-lg mx-auto">Production-ready backend features — full source code, zero dependency.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <div class="bg-card border border-border rounded-xl p-5 glow">
+          <div class="text-2xl mb-3">&#x1F510;</div>
+          <h3 class="font-semibold mb-1">Auth</h3>
+          <p class="text-sm text-muted mb-3">Sign-up, login, sessions & API keys</p>
+          <code class="text-xs text-muted/70 bg-bg px-2 py-1 rounded block">npx @backcap/cli add auth</code>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-5 glow">
+          <div class="text-2xl mb-3">&#x1F4B0;</div>
+          <h3 class="font-semibold mb-1">Billing</h3>
+          <p class="text-sm text-muted mb-3">Payments, subscriptions & invoicing</p>
+          <code class="text-xs text-muted/70 bg-bg px-2 py-1 rounded block">npx @backcap/cli add billing</code>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-5 glow">
+          <div class="text-2xl mb-3">&#x1F50D;</div>
+          <h3 class="font-semibold mb-1">Search</h3>
+          <p class="text-sm text-muted mb-3">Full-text search with filters & facets</p>
+          <code class="text-xs text-muted/70 bg-bg px-2 py-1 rounded block">npx @backcap/cli add search</code>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-5 glow">
+          <div class="text-2xl mb-3">&#x1F6E1;</div>
+          <h3 class="font-semibold mb-1">RBAC</h3>
+          <p class="text-sm text-muted mb-3">Roles, permissions & access control</p>
+          <code class="text-xs text-muted/70 bg-bg px-2 py-1 rounded block">npx @backcap/cli add rbac</code>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-5 glow">
+          <div class="text-2xl mb-3">&#x1F514;</div>
+          <h3 class="font-semibold mb-1">Notifications</h3>
+          <p class="text-sm text-muted mb-3">In-app, email & push notifications</p>
+          <code class="text-xs text-muted/70 bg-bg px-2 py-1 rounded block">npx @backcap/cli add notifications</code>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-5 glow">
+          <div class="text-2xl mb-3">&#x1F4DD;</div>
+          <h3 class="font-semibold mb-1">Blog</h3>
+          <p class="text-sm text-muted mb-3">Posts, categories, drafts & publishing</p>
+          <code class="text-xs text-muted/70 bg-bg px-2 py-1 rounded block">npx @backcap/cli add blog</code>
+        </div>
+      </div>
+      <div class="text-center space-y-4">
+        <a href="#" class="text-primary text-sm hover:underline">+ 14 more features &#x2192;</a>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SALLY - Generous cards with hover -->
+    <!-- ============================================ -->
+    <div class="proposal-divider" data-label="Proposal 2"></div>
+    <section class="py-12">
+      <p class="text-accent text-xs font-medium tracking-widest uppercase mb-6">&#x1F3A8; Sally — UX Designer</p>
+      <p class="text-muted text-sm mb-10">Cartes plus grandes, plus de respiration. Icones genereux, hover qui invite a explorer. Le design respire.</p>
+
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-3">Pick what <span class="gradient-text">you need.</span></h2>
+        <p class="text-muted max-w-lg mx-auto">Production-ready backend features — full source code, zero dependency.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="sally-card bg-card border border-border rounded-2xl p-7">
+          <div class="sally-icon w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl mb-5">&#x1F510;</div>
+          <h3 class="font-semibold text-lg mb-2">Auth</h3>
+          <p class="text-sm text-muted leading-relaxed mb-5">Sign-up, login, sessions & API keys. Everything to authenticate users.</p>
+          <div class="flex items-center justify-between">
+            <code class="text-xs text-muted/60 bg-bg px-2.5 py-1 rounded">add auth</code>
+            <span class="text-muted/40 text-xs">&#x2192;</span>
+          </div>
+        </div>
+        <div class="sally-card bg-card border border-border rounded-2xl p-7">
+          <div class="sally-icon w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center text-2xl mb-5">&#x1F4B0;</div>
+          <h3 class="font-semibold text-lg mb-2">Billing</h3>
+          <p class="text-sm text-muted leading-relaxed mb-5">Payments, subscriptions & invoicing. Never rewrite Stripe glue again.</p>
+          <div class="flex items-center justify-between">
+            <code class="text-xs text-muted/60 bg-bg px-2.5 py-1 rounded">add billing</code>
+            <span class="text-muted/40 text-xs">&#x2192;</span>
+          </div>
+        </div>
+        <div class="sally-card bg-card border border-border rounded-2xl p-7">
+          <div class="sally-icon w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-2xl mb-5">&#x1F50D;</div>
+          <h3 class="font-semibold text-lg mb-2">Search</h3>
+          <p class="text-sm text-muted leading-relaxed mb-5">Full-text search with filters & facets. Swap adapters anytime.</p>
+          <div class="flex items-center justify-between">
+            <code class="text-xs text-muted/60 bg-bg px-2.5 py-1 rounded">add search</code>
+            <span class="text-muted/40 text-xs">&#x2192;</span>
+          </div>
+        </div>
+        <div class="sally-card bg-card border border-border rounded-2xl p-7">
+          <div class="sally-icon w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-2xl mb-5">&#x1F6E1;</div>
+          <h3 class="font-semibold text-lg mb-2">RBAC</h3>
+          <p class="text-sm text-muted leading-relaxed mb-5">Roles, permissions & access control. Fine-grained authorization.</p>
+          <div class="flex items-center justify-between">
+            <code class="text-xs text-muted/60 bg-bg px-2.5 py-1 rounded">add rbac</code>
+            <span class="text-muted/40 text-xs">&#x2192;</span>
+          </div>
+        </div>
+        <div class="sally-card bg-card border border-border rounded-2xl p-7">
+          <div class="sally-icon w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-2xl mb-5">&#x1F514;</div>
+          <h3 class="font-semibold text-lg mb-2">Notifications</h3>
+          <p class="text-sm text-muted leading-relaxed mb-5">In-app, email & push. Multi-channel notification system.</p>
+          <div class="flex items-center justify-between">
+            <code class="text-xs text-muted/60 bg-bg px-2.5 py-1 rounded">add notifications</code>
+            <span class="text-muted/40 text-xs">&#x2192;</span>
+          </div>
+        </div>
+        <div class="sally-card bg-card border border-border rounded-2xl p-7">
+          <div class="sally-icon w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-2xl mb-5">&#x1F4DD;</div>
+          <h3 class="font-semibold text-lg mb-2">Blog</h3>
+          <p class="text-sm text-muted leading-relaxed mb-5">Posts, categories, drafts & publishing. Content management done right.</p>
+          <div class="flex items-center justify-between">
+            <code class="text-xs text-muted/60 bg-bg px-2.5 py-1 rounded">add blog</code>
+            <span class="text-muted/40 text-xs">&#x2192;</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+        <a href="#" class="text-primary text-sm hover:underline">+ 14 more features &#x2192;</a>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- CARSON - Horizontal scroll / marquee -->
+    <!-- ============================================ -->
+    <div class="proposal-divider" data-label="Proposal 3"></div>
+    <section class="py-12">
+      <p class="text-yellow-400 text-xs font-medium tracking-widest uppercase mb-6">&#x1F9E0; Carson — Brainstorming Coach</p>
+      <p class="text-muted text-sm mb-10">Marquee horizontal infini. Les features defilent, on hover pour arreter. C'est vivant, ca bouge, ca donne envie d'explorer. Dessous : les 6 stars en focus.</p>
+
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold mb-3">Pick what <span class="gradient-text">you need.</span></h2>
+        <p class="text-muted max-w-lg mx-auto">Production-ready backend features — full source code, zero dependency.</p>
+      </div>
+
+      <!-- Marquee with ALL 20 features -->
+      <div class="overflow-hidden mb-10 py-2">
+        <div class="marquee-track flex gap-3 w-max">
+          <!-- First set -->
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F510; Auth</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4B0; Billing</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F50D; Search</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F6E1; RBAC</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F514; Notifications</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4DD; Blog</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4C1; Files</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F517; Webhooks</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4E6; Queues</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F3E2; Organizations</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F3F3; Feature Flags</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4CB; Audit Log</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4CA; Analytics</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F3AC; Media</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4DD; Forms</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4AC; Comments</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F3F7; Tags</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F6D2; Catalog</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F6D2; Cart</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4E6; Orders</span>
+          <!-- Duplicate set for seamless loop -->
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F510; Auth</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4B0; Billing</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F50D; Search</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F6E1; RBAC</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F514; Notifications</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4DD; Blog</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4C1; Files</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F517; Webhooks</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4E6; Queues</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F3E2; Organizations</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F3F3; Feature Flags</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4CB; Audit Log</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4CA; Analytics</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F3AC; Media</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4DD; Forms</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4AC; Comments</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F3F7; Tags</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F6D2; Catalog</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F6D2; Cart</span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-2 text-sm whitespace-nowrap">&#x1F4E6; Orders</span>
+        </div>
+      </div>
+
+      <!-- 6 featured cards below -->
+      <div class="grid sm:grid-cols-3 gap-3">
+        <div class="bg-card border border-border rounded-xl p-4 text-center glow">
+          <div class="text-xl mb-2">&#x1F510;</div>
+          <p class="font-medium text-sm">Auth</p>
+          <p class="text-xs text-muted mt-1">Sign-up, login, sessions</p>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-4 text-center glow">
+          <div class="text-xl mb-2">&#x1F4B0;</div>
+          <p class="font-medium text-sm">Billing</p>
+          <p class="text-xs text-muted mt-1">Payments & subscriptions</p>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-4 text-center glow">
+          <div class="text-xl mb-2">&#x1F50D;</div>
+          <p class="font-medium text-sm">Search</p>
+          <p class="text-xs text-muted mt-1">Full-text with filters</p>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-4 text-center glow">
+          <div class="text-xl mb-2">&#x1F6E1;</div>
+          <p class="font-medium text-sm">RBAC</p>
+          <p class="text-xs text-muted mt-1">Roles & permissions</p>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-4 text-center glow">
+          <div class="text-xl mb-2">&#x1F514;</div>
+          <p class="font-medium text-sm">Notifications</p>
+          <p class="text-xs text-muted mt-1">Email, push & in-app</p>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-4 text-center glow">
+          <div class="text-xl mb-2">&#x1F4DD;</div>
+          <p class="font-medium text-sm">Blog</p>
+          <p class="text-xs text-muted mt-1">Posts, drafts & publishing</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- WINSTON - Minimal, architectural -->
+    <!-- ============================================ -->
+    <div class="proposal-divider" data-label="Proposal 4"></div>
+    <section class="py-12">
+      <p class="text-blue-400 text-xs font-medium tracking-widest uppercase mb-6">&#x1F3D7; Winston — Architect</p>
+      <p class="text-muted text-sm mb-10">Minimaliste. Deux colonnes : a gauche la liste, a droite un apercu de la structure. La section montre la qualite du code, pas juste le catalogue.</p>
+
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-3">Pick what <span class="gradient-text">you need.</span></h2>
+        <p class="text-muted max-w-lg mx-auto">Production-ready backend features — full source code, zero dependency.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Left: feature list -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-4 bg-card border border-primary/20 rounded-lg px-5 py-3">
+            <span>&#x1F510;</span>
+            <div class="flex-1">
+              <span class="font-medium text-sm">Auth</span>
+              <span class="text-muted text-xs ml-2">Sign-up, login, sessions & API keys</span>
+            </div>
+            <code class="text-xs text-primary/60 hidden sm:block">add auth</code>
+          </div>
+          <div class="flex items-center gap-4 bg-card border border-border rounded-lg px-5 py-3">
+            <span>&#x1F4B0;</span>
+            <div class="flex-1">
+              <span class="font-medium text-sm">Billing</span>
+              <span class="text-muted text-xs ml-2">Payments, subscriptions & invoicing</span>
+            </div>
+            <code class="text-xs text-muted/40 hidden sm:block">add billing</code>
+          </div>
+          <div class="flex items-center gap-4 bg-card border border-border rounded-lg px-5 py-3">
+            <span>&#x1F50D;</span>
+            <div class="flex-1">
+              <span class="font-medium text-sm">Search</span>
+              <span class="text-muted text-xs ml-2">Full-text search with filters & facets</span>
+            </div>
+            <code class="text-xs text-muted/40 hidden sm:block">add search</code>
+          </div>
+          <div class="flex items-center gap-4 bg-card border border-border rounded-lg px-5 py-3">
+            <span>&#x1F6E1;</span>
+            <div class="flex-1">
+              <span class="font-medium text-sm">RBAC</span>
+              <span class="text-muted text-xs ml-2">Roles, permissions & access control</span>
+            </div>
+            <code class="text-xs text-muted/40 hidden sm:block">add rbac</code>
+          </div>
+          <div class="flex items-center gap-4 bg-card border border-border rounded-lg px-5 py-3">
+            <span>&#x1F514;</span>
+            <div class="flex-1">
+              <span class="font-medium text-sm">Notifications</span>
+              <span class="text-muted text-xs ml-2">In-app, email & push</span>
+            </div>
+            <code class="text-xs text-muted/40 hidden sm:block">add notifications</code>
+          </div>
+          <div class="flex items-center gap-4 bg-card border border-border rounded-lg px-5 py-3">
+            <span>&#x1F4DD;</span>
+            <div class="flex-1">
+              <span class="font-medium text-sm">Blog</span>
+              <span class="text-muted text-xs ml-2">Posts, categories, drafts & publishing</span>
+            </div>
+            <code class="text-xs text-muted/40 hidden sm:block">add blog</code>
+          </div>
+          <a href="#" class="text-primary text-xs hover:underline block pt-2 pl-1">+ 14 more features &#x2192;</a>
+        </div>
+
+        <!-- Right: structure preview -->
+        <div class="bg-card border border-border rounded-xl p-6">
+          <p class="text-xs text-muted mb-4 uppercase tracking-wider">What you get</p>
+          <div class="code-block text-sm text-muted space-y-1.5">
+            <div><span class="text-fg">domains/</span></div>
+            <div class="pl-4">&#x2514;&#x2500;&#x2500; <span class="text-primary">auth/</span></div>
+            <div class="pl-10">&#x251C;&#x2500;&#x2500; <span class="text-accent">contracts/</span></div>
+            <div class="pl-16 text-muted/50">&#x251C;&#x2500;&#x2500; auth.port.ts</div>
+            <div class="pl-16 text-muted/50">&#x251C;&#x2500;&#x2500; session.port.ts</div>
+            <div class="pl-16 text-muted/50">&#x2514;&#x2500;&#x2500; auth.types.ts</div>
+            <div class="pl-10">&#x251C;&#x2500;&#x2500; <span class="text-accent">domain/</span></div>
+            <div class="pl-16 text-muted/50">&#x251C;&#x2500;&#x2500; auth.service.ts</div>
+            <div class="pl-16 text-muted/50">&#x2514;&#x2500;&#x2500; session.entity.ts</div>
+            <div class="pl-10">&#x2514;&#x2500;&#x2500; <span class="text-accent">application/</span></div>
+            <div class="pl-16 text-muted/50">&#x251C;&#x2500;&#x2500; sign-up.use-case.ts</div>
+            <div class="pl-16 text-muted/50">&#x2514;&#x2500;&#x2500; login.use-case.ts</div>
+          </div>
+          <p class="text-xs text-muted/50 mt-4 italic">Every feature follows the same clean structure.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- YANN - Tabs + File explorer + Code -->
+    <!-- ============================================ -->
+    <div class="proposal-divider" data-label="Proposal 5"></div>
+    <section class="py-12">
+      <p class="text-pink-400 text-xs font-medium tracking-widest uppercase mb-6">&#x1F451; Yann — Le Boss</p>
+      <p class="text-muted text-sm mb-10">Tabs par categorie + file system a gauche + code explorable a droite. Le visiteur navigue dans le code comme dans un IDE. Montre la qualite du code en live.</p>
+
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold mb-3">Pick what <span class="gradient-text">you need.</span></h2>
+        <p class="text-muted max-w-lg mx-auto">Production-ready backend features — full source code, zero dependency.</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex gap-2 mb-6 flex-wrap" id="yann-tabs">
+        <button class="tab-btn active border border-border rounded-lg px-4 py-2 text-sm" data-tab="security">&#x1F510; Security</button>
+        <button class="tab-btn border border-border rounded-lg px-4 py-2 text-sm text-muted" data-tab="content">&#x1F4DD; Content</button>
+        <button class="tab-btn border border-border rounded-lg px-4 py-2 text-sm text-muted" data-tab="commerce">&#x1F6D2; Commerce</button>
+        <button class="tab-btn border border-border rounded-lg px-4 py-2 text-sm text-muted" data-tab="infra">&#x2699; Infrastructure</button>
+      </div>
+
+      <!-- Tab content: Security -->
+      <div class="tab-content active bg-card border border-border rounded-xl overflow-hidden" data-tab-content="security">
+        <div class="flex flex-col lg:flex-row min-h-[400px]">
+          <!-- File tree -->
+          <div class="lg:w-64 border-b lg:border-b-0 lg:border-r border-border p-4">
+            <p class="text-[10px] text-muted uppercase tracking-widest mb-3">Explorer</p>
+            <div class="code-block text-xs space-y-1">
+              <div class="tree-item active flex items-center gap-1.5 py-1 px-2 rounded bg-primary/5" data-file="auth-port">
+                <span class="text-muted/40">&#x25BC;</span> <span class="text-primary">auth/</span>
+              </div>
+              <div class="pl-4 space-y-0.5">
+                <div class="tree-item active flex items-center gap-1.5 py-0.5 px-2 rounded bg-primary/5" data-file="auth-port">
+                  <span class="text-muted/40">&#x25BC;</span> <span class="text-accent">contracts/</span>
+                </div>
+                <div class="pl-4 space-y-0.5">
+                  <div class="tree-item active py-0.5 px-2 rounded bg-primary/10 text-primary" data-file="auth-port">auth.port.ts</div>
+                  <div class="tree-item py-0.5 px-2 rounded hover:bg-card-hover" data-file="auth-types">auth.types.ts</div>
+                </div>
+                <div class="flex items-center gap-1.5 py-0.5 px-2 text-muted/60">
+                  <span class="text-muted/40">&#x25B6;</span> domain/
+                </div>
+                <div class="flex items-center gap-1.5 py-0.5 px-2 text-muted/60">
+                  <span class="text-muted/40">&#x25B6;</span> application/
+                </div>
+              </div>
+              <div class="tree-item flex items-center gap-1.5 py-1 px-2 rounded text-muted/60" data-file="rbac">
+                <span class="text-muted/40">&#x25B6;</span> rbac/
+              </div>
+            </div>
+            <p class="text-xs text-muted mt-6"><code class="bg-bg px-1.5 py-0.5 rounded text-[10px]">add auth</code></p>
+            <p class="text-xs text-muted mt-1"><code class="bg-bg px-1.5 py-0.5 rounded text-[10px]">add rbac</code></p>
+          </div>
+
+          <!-- Code viewer -->
+          <div class="flex-1 p-4 overflow-x-auto">
+            <div class="flex items-center gap-2 mb-3 border-b border-border pb-2">
+              <span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded">auth.port.ts</span>
+              <span class="text-[10px] text-muted/40">contracts/</span>
+            </div>
+            <div id="code-auth-port" class="code-block text-xs leading-6">
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">1</span><span class="text-purple-400">export interface</span> <span class="text-yellow-300">AuthPort</span> {</div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">2</span>  <span class="text-blue-300">signUp</span>(input: <span class="text-yellow-300">SignUpInput</span>): <span class="text-yellow-300">Promise</span>&lt;<span class="text-yellow-300">AuthResult</span>&gt;</div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">3</span>  <span class="text-blue-300">login</span>(input: <span class="text-yellow-300">LoginInput</span>): <span class="text-yellow-300">Promise</span>&lt;<span class="text-yellow-300">AuthResult</span>&gt;</div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">4</span>  <span class="text-blue-300">logout</span>(sessionId: <span class="text-accent">string</span>): <span class="text-yellow-300">Promise</span>&lt;<span class="text-accent">void</span>&gt;</div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">5</span>  <span class="text-blue-300">validateSession</span>(token: <span class="text-accent">string</span>): <span class="text-yellow-300">Promise</span>&lt;<span class="text-yellow-300">Session</span> | <span class="text-accent">null</span>&gt;</div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">6</span>  <span class="text-blue-300">refreshToken</span>(refreshToken: <span class="text-accent">string</span>): <span class="text-yellow-300">Promise</span>&lt;<span class="text-yellow-300">TokenPair</span>&gt;</div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">7</span>}</div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">8</span></div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">9</span><span class="text-muted/40">// &#x2191; This is YOUR code. Edit anything.</span></div>
+            </div>
+
+            <div id="code-auth-types" class="code-block text-xs leading-6 hidden">
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">1</span><span class="text-purple-400">export interface</span> <span class="text-yellow-300">SignUpInput</span> {</div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">2</span>  email: <span class="text-accent">string</span></div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">3</span>  password: <span class="text-accent">string</span></div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">4</span>  displayName?: <span class="text-accent">string</span></div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">5</span>}</div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">6</span></div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">7</span><span class="text-purple-400">export interface</span> <span class="text-yellow-300">AuthResult</span> {</div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">8</span>  user: <span class="text-yellow-300">User</span></div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">9</span>  tokens: <span class="text-yellow-300">TokenPair</span></div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">10</span>}</div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">11</span></div>
+              <div><span class="line-number text-muted/30 inline-block w-8 text-right mr-4">12</span><span class="text-muted/40">// &#x2191; This is YOUR code. Edit anything.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab content: Content -->
+      <div class="tab-content bg-card border border-border rounded-xl overflow-hidden" data-tab-content="content">
+        <div class="flex flex-col lg:flex-row min-h-[400px]">
+          <div class="lg:w-64 border-b lg:border-b-0 lg:border-r border-border p-4">
+            <p class="text-[10px] text-muted uppercase tracking-widest mb-3">Explorer</p>
+            <div class="code-block text-xs space-y-1">
+              <div class="tree-item active flex items-center gap-1.5 py-1 px-2 rounded bg-primary/5">
+                <span class="text-muted/40">&#x25BC;</span> <span class="text-primary">blog/</span>
+              </div>
+              <div class="pl-4 space-y-0.5">
+                <div class="flex items-center gap-1.5 py-0.5 px-2">
+                  <span class="text-muted/40">&#x25B6;</span> <span class="text-accent">contracts/</span>
+                </div>
+                <div class="flex items-center gap-1.5 py-0.5 px-2 text-muted/60">
+                  <span class="text-muted/40">&#x25B6;</span> domain/
+                </div>
+                <div class="flex items-center gap-1.5 py-0.5 px-2 text-muted/60">
+                  <span class="text-muted/40">&#x25B6;</span> application/
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> comments/
+              </div>
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> tags/
+              </div>
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> search/
+              </div>
+            </div>
+            <p class="text-xs text-muted mt-6"><code class="bg-bg px-1.5 py-0.5 rounded text-[10px]">add blog</code></p>
+            <p class="text-xs text-muted mt-1"><code class="bg-bg px-1.5 py-0.5 rounded text-[10px]">add comments</code></p>
+            <p class="text-xs text-muted mt-1"><code class="bg-bg px-1.5 py-0.5 rounded text-[10px]">add tags</code></p>
+          </div>
+          <div class="flex-1 p-4 flex items-center justify-center text-muted/30 text-sm">
+            Click a file to explore the code
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab content: Commerce -->
+      <div class="tab-content bg-card border border-border rounded-xl overflow-hidden" data-tab-content="commerce">
+        <div class="flex flex-col lg:flex-row min-h-[400px]">
+          <div class="lg:w-64 border-b lg:border-b-0 lg:border-r border-border p-4">
+            <p class="text-[10px] text-muted uppercase tracking-widest mb-3">Explorer</p>
+            <div class="code-block text-xs space-y-1">
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> <span class="text-primary">billing/</span>
+              </div>
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> catalog/
+              </div>
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> cart/
+              </div>
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> orders/
+              </div>
+            </div>
+            <p class="text-xs text-muted mt-6"><code class="bg-bg px-1.5 py-0.5 rounded text-[10px]">add billing</code></p>
+            <p class="text-xs text-muted mt-1"><code class="bg-bg px-1.5 py-0.5 rounded text-[10px]">add catalog</code></p>
+          </div>
+          <div class="flex-1 p-4 flex items-center justify-center text-muted/30 text-sm">
+            Click a file to explore the code
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab content: Infrastructure -->
+      <div class="tab-content bg-card border border-border rounded-xl overflow-hidden" data-tab-content="infra">
+        <div class="flex flex-col lg:flex-row min-h-[400px]">
+          <div class="lg:w-64 border-b lg:border-b-0 lg:border-r border-border p-4">
+            <p class="text-[10px] text-muted uppercase tracking-widest mb-3">Explorer</p>
+            <div class="code-block text-xs space-y-1">
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> <span class="text-primary">notifications/</span>
+              </div>
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> webhooks/
+              </div>
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> queues/
+              </div>
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> feature-flags/
+              </div>
+              <div class="flex items-center gap-1.5 py-1 px-2 text-muted/60">
+                <span class="text-muted/40">&#x25B6;</span> audit-log/
+              </div>
+            </div>
+            <p class="text-xs text-muted mt-6"><code class="bg-bg px-1.5 py-0.5 rounded text-[10px]">add notifications</code></p>
+            <p class="text-xs text-muted mt-1"><code class="bg-bg px-1.5 py-0.5 rounded text-[10px]">add webhooks</code></p>
+          </div>
+          <div class="flex-1 p-4 flex items-center justify-center text-muted/30 text-sm">
+            Click a file to explore the code
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <script>
+    // Yann tabs
+    document.querySelectorAll('#yann-tabs .tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#yann-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelector(`[data-tab-content="${btn.dataset.tab}"]`).classList.add('active');
+      });
+    });
+
+    // File tree click in Security tab
+    document.querySelectorAll('[data-file]').forEach(item => {
+      item.addEventListener('click', () => {
+        const file = item.dataset.file;
+        // Update active state
+        item.closest('.space-y-1').querySelectorAll('.tree-item').forEach(t => {
+          t.classList.remove('text-primary');
+          t.classList.remove('bg-primary/10');
+        });
+        item.classList.add('text-primary', 'bg-primary/10');
+
+        // Toggle code blocks
+        document.getElementById('code-auth-port').classList.toggle('hidden', file !== 'auth-port');
+        document.getElementById('code-auth-types').classList.toggle('hidden', file !== 'auth-types');
+
+        // Update tab header
+        const tabHeader = item.closest('.tab-content').querySelector('.bg-primary\\/10');
+        if (tabHeader) {
+          tabHeader.textContent = file === 'auth-port' ? 'auth.port.ts' : 'auth.types.ts';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

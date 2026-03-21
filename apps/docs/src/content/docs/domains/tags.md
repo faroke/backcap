@@ -1,9 +1,9 @@
 ---
-title: Tags Capability
+title: Tags Domain
 description: Flexible tagging and categorization — create tags, tag/untag any resource, and query resources by tag for TypeScript backends.
 ---
 
-The `tags` capability provides **flexible resource tagging and categorization** for TypeScript backends. Tag any resource type without coupling, using a generic junction model. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `tags` domain provides **flexible resource tagging and categorization** for TypeScript backends. Tag any resource type without coupling, using a generic junction model. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add tags
 The `Tag` entity is the aggregate root. It auto-generates a slug from the tag name.
 
 ```typescript
-import { Tag } from "./capabilities/tags/domain/entities/tag.entity";
+import { Tag } from "./domains/tags/domain/entities/tag.entity";
 
 const result = Tag.create({ id: crypto.randomUUID(), name: "Web Development" });
 
@@ -38,7 +38,7 @@ if (result.isOk()) {
 ### TagSlug Value Object
 
 ```typescript
-import { TagSlug } from "./capabilities/tags/domain/value-objects/tag-slug.vo";
+import { TagSlug } from "./domains/tags/domain/value-objects/tag-slug.vo";
 
 // Create from explicit slug
 const result = TagSlug.create("web-development");
@@ -137,7 +137,7 @@ export interface ITagRepository {
 ## Public API (contracts/)
 
 ```typescript
-import { createTagsService, ITagsService } from "./capabilities/tags/contracts";
+import { createTagsService, ITagsService } from "./domains/tags/contracts";
 
 const tagsService: ITagsService = createTagsService({ tagRepository });
 ```
@@ -174,7 +174,7 @@ npx @backcap/cli add tags-express
 ## File Map
 
 ```
-capabilities/tags/
+domains/tags/
   domain/
     entities/tag.entity.ts
     value-objects/tag-slug.vo.ts

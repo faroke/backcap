@@ -1,9 +1,9 @@
 ---
-title: Feature Flags Capability
+title: Feature Flags Domain
 description: Toggle features per context without deploys — domain model, use cases, ports, and adapters for TypeScript backends.
 ---
 
-The `feature-flags` capability provides **controlled feature rollouts** with key validation, toggle tracking, and optional contextual conditions for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `feature-flags` domain provides **controlled feature rollouts** with key validation, toggle tracking, and optional contextual conditions for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add feature-flags
 The `FeatureFlag` entity is the aggregate root. It holds a validated key, an enabled/disabled state, and an optional conditions field for future rule engine integration.
 
 ```typescript
-import { FeatureFlag } from "./capabilities/feature-flags/domain/entities/feature-flag.entity";
+import { FeatureFlag } from "./domains/feature-flags/domain/entities/feature-flag.entity";
 
 const result = FeatureFlag.create({
   id: crypto.randomUUID(),
@@ -53,7 +53,7 @@ if (result.isOk()) {
 Validates that keys are lowercase, start with a letter, use only letters/digits/underscores/hyphens, and are 2–64 characters long.
 
 ```typescript
-import { FlagKey } from "./capabilities/feature-flags/domain/value-objects/flag-key.vo";
+import { FlagKey } from "./domains/feature-flags/domain/value-objects/flag-key.vo";
 
 const key = FlagKey.create("dark-mode"); // Ok
 const bad = FlagKey.create("INVALID!");  // Fail

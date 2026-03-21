@@ -1,13 +1,13 @@
 ---
 title: Hono Adapter
-description: Hono route implementations for Backcap capabilities.
+description: Hono route implementations for Backcap domains.
 ---
 
-The Hono adapter package provides HTTP route handlers for Backcap capability service interfaces using [Hono](https://hono.dev/)'s lightweight, edge-ready API. Each adapter wires a capability's public `IService` interface to Hono routes using the Context pattern.
+The Hono adapter package provides HTTP route handlers for Backcap domain service interfaces using [Hono](https://hono.dev/)'s lightweight, edge-ready API. Each adapter wires a domain's public `IService` interface to Hono routes using the Context pattern.
 
 ## Install
 
-Install the Hono adapter for a specific capability:
+Install the Hono adapter for a specific domain:
 
 ```bash
 npx @backcap/cli add blog-hono
@@ -94,11 +94,11 @@ Hono is designed for multiple JavaScript runtimes. The adapter itself uses no ru
 
 ## Writing Additional Hono Adapters
 
-When a new capability needs a Hono HTTP layer:
+When a new domain needs a Hono HTTP layer:
 
-1. Create the file at `adapters/hono/<capability>/<name>.router.ts`
-2. Import the public service interface from `capabilities/<capability>/contracts`
-3. Import domain error classes from `capabilities/<capability>/domain/errors/`
+1. Create the file at `adapters/hono/<domain>/<name>.router.ts`
+2. Import the public service interface from `domains/<domain>/contracts`
+3. Import domain error classes from `domains/<domain>/domain/errors/`
 4. Write a `createXxxRoutes(service: IService, app: HonoApp)` function
 5. Map domain errors to HTTP status codes using a `toHttpError()` helper
 6. Write route handler tests using a mock service

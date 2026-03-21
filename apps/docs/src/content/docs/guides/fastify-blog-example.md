@@ -3,13 +3,13 @@ title: "Example: Fastify Blog"
 description: A working Fastify blog API built step-by-step with the Backcap CLI — identical domain logic to Express, different HTTP adapter.
 ---
 
-This guide walks through a **working Fastify blog example** built with the Backcap CLI. It demonstrates that capabilities, adapters, and bridges are truly swappable — the domain and application layers are identical to the [Express example](/backcap/guides/express-blog-example), only the HTTP adapter and server wiring differ.
+This guide walks through a **working Fastify blog example** built with the Backcap CLI. It demonstrates that domains, adapters, and bridges are truly swappable — the domain and application layers are identical to the [Express example](/backcap/guides/express-blog-example), only the HTTP adapter and server wiring differ.
 
 The full source code is in [`examples/fastify-blog/`](https://github.com/faroke/backcap/tree/main/examples/fastify-blog).
 
 ## What It Demonstrates
 
-- **Adapter swappability** — Same blog + search capabilities as Express, different HTTP layer
+- **Adapter swappability** — Same blog + search domains as Express, different HTTP layer
 - **Fastify plugin pattern** — Routes registered via `fastify.register()` instead of Express routers
 - **Schema validation** — Fastify JSON Schema validation on routes
 - **Blog-Search bridge** — Same event-driven architecture as Express example
@@ -40,11 +40,11 @@ npx @backcap/cli init
 
 Detects **Fastify** framework and pnpm package manager. Creates `backcap.json` with `"framework": "fastify"`.
 
-### 3. Install capabilities and bridge
+### 3. Install domains and bridge
 
 ```bash
-npx @backcap/cli add blog         # Blog capability + Fastify & Prisma adapters
-npx @backcap/cli add search       # Search capability
+npx @backcap/cli add blog         # Blog domain + Fastify & Prisma adapters
+npx @backcap/cli add search       # Search domain
 npx @backcap/cli add blog-search  # Bridge: PostPublished → index in search
 ```
 
@@ -66,8 +66,8 @@ npx prisma migrate dev --name init
 
 ```typescript
 import Fastify from "fastify";
-import { createBlogService } from "./capabilities/blog/contracts/index.js";
-import { createSearchService } from "./capabilities/search/contracts/search.factory.js";
+import { createBlogService } from "./domains/blog/contracts/index.js";
+import { createSearchService } from "./domains/search/contracts/search.factory.js";
 import { createBridge } from "./bridges/blog-search/blog-search.bridge.js";
 import { createBlogPlugin } from "./adapters/http/fastify/blog/blog.router.js";
 import { InMemoryEventBus } from "./shared/in-memory-event-bus.js";
@@ -75,7 +75,7 @@ import { InMemoryEventBus } from "./shared/in-memory-event-bus.js";
 const fastify = Fastify({ logger: true });
 const eventBus = new InMemoryEventBus();
 
-// Wire capabilities
+// Wire domains
 const blogService = createBlogService({ postRepository, eventBus });
 const searchService = createSearchService({ searchEngine });
 
@@ -150,9 +150,9 @@ See [`examples/fastify-blog/FRICTION.md`](https://github.com/faroke/backcap/tree
 
 ## See Also
 
-- [Express Blog example](/backcap/guides/express-blog-example) — Same capabilities with Express adapter
-- [Hono Blog example](/backcap/guides/hono-blog-example) — Same capabilities with Hono adapter
-- [NestJS Blog example](/backcap/guides/nestjs-blog-example) — Same capabilities with NestJS DI bridge
+- [Express Blog example](/backcap/guides/express-blog-example) — Same domains with Express adapter
+- [Hono Blog example](/backcap/guides/hono-blog-example) — Same domains with Hono adapter
+- [NestJS Blog example](/backcap/guides/nestjs-blog-example) — Same domains with NestJS DI bridge
 - [Fastify adapter](/backcap/adapters/fastify) — Adapter API reference
-- [Blog capability](/backcap/capabilities/blog) — Full domain model and API reference
-- [Bridges concept](/backcap/concepts/bridges) — How bridges connect capabilities
+- [Blog domain](/backcap/domains/blog) — Full domain model and API reference
+- [Bridges concept](/backcap/concepts/bridges) — How bridges connect domains

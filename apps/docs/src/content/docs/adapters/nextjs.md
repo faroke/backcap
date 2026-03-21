@@ -1,13 +1,13 @@
 ---
 title: Next.js Adapter
-description: Next.js App Router route handler implementations for Backcap capabilities.
+description: Next.js App Router route handler implementations for Backcap domains.
 ---
 
-The Next.js adapter provides HTTP route handlers for Backcap capability service interfaces using [Next.js](https://nextjs.org/) App Router API routes. Each adapter wires a capability's public `IService` interface to handler objects that Next.js route files delegate to.
+The Next.js adapter provides HTTP route handlers for Backcap domain service interfaces using [Next.js](https://nextjs.org/) App Router API routes. Each adapter wires a domain's public `IService` interface to handler objects that Next.js route files delegate to.
 
 ## Install
 
-Install the Next.js adapter for a specific capability:
+Install the Next.js adapter for a specific domain:
 
 ```bash
 npx @backcap/cli add blog-nextjs
@@ -114,7 +114,7 @@ function getServices() {
 
 ## ESM Extension Alias
 
-Backcap capabilities use `.js` extensions in imports (ESM convention). Next.js webpack bundler requires an `extensionAlias` config to resolve `.js` → `.ts`:
+Backcap domains use `.js` extensions in imports (ESM convention). Next.js webpack bundler requires an `extensionAlias` config to resolve `.js` → `.ts`:
 
 ```typescript
 // next.config.ts
@@ -131,11 +131,11 @@ const nextConfig: NextConfig = {
 
 ## Writing Additional Next.js Adapters
 
-When a new capability needs a Next.js HTTP layer:
+When a new domain needs a Next.js HTTP layer:
 
-1. Create the file at `adapters/nextjs/<capability>/<name>.route-handlers.ts`
-2. Import the public service interface from `capabilities/<capability>/contracts`
-3. Import domain error classes from `capabilities/<capability>/domain/errors/`
+1. Create the file at `adapters/nextjs/<domain>/<name>.route-handlers.ts`
+2. Import the public service interface from `domains/<domain>/contracts`
+3. Import domain error classes from `domains/<domain>/domain/errors/`
 4. Write a `createXxxRouteHandlers(service: IService)` function returning handler objects
 5. Map domain errors to HTTP status codes using a `toHttpError()` helper
 6. Write route handler tests using a mock service

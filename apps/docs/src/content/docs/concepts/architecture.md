@@ -69,7 +69,7 @@ A Backcap project has the following structure after installing `auth`:
 your-project/
   backcap.json                          # Configuration file
   src/
-    capabilities/
+    domains/
       auth/
         domain/
           entities/user.entity.ts
@@ -119,12 +119,12 @@ your-project/
 
 ## Registry Package Layout
 
-The Backcap registry (the npm workspace package at `packages/registry/`) mirrors this structure for authoring capabilities before they are distributed:
+The Backcap registry (the npm workspace package at `packages/registry/`) mirrors this structure for authoring domains before they are distributed:
 
 ```
 packages/registry/
-  capabilities/
-    auth/              # Authored source of the auth capability
+  domains/
+    auth/              # Authored source of the auth domain
   adapters/
     prisma/auth/       # Prisma adapter for auth
     express/auth/      # Express adapter for auth
@@ -132,7 +132,7 @@ packages/registry/
     auth-notifications/  # Bridge between auth and notifications
   skills/
     backcap-core/      # Architecture skill file for AI tools
-    backcap-auth/      # Auth capability skill file
+    backcap-auth/      # Auth domain skill file
 ```
 
 ## The Result Monad vs. Exceptions
@@ -151,10 +151,10 @@ Thrown exceptions are reserved for programmer errors and environmental failures 
 
 The domain and application layers have no framework imports. This is enforced by the import rules:
 
-- `domain/` — no external imports except the capability's own `shared/result.ts`
-- `application/` — imports `domain/` and the capability's own `shared/result.ts`
+- `domain/` — no external imports except the domain's own `shared/result.ts`
+- `application/` — imports `domain/` and the domain's own `shared/result.ts`
 
-This means the same `auth` capability can be used with:
+This means the same `auth` domain can be used with:
 
 - **Express** via `createAuthRouter()`
 - **Fastify** via a custom Fastify adapter

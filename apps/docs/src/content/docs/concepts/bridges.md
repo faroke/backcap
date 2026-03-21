@@ -1,11 +1,11 @@
 ---
 title: Bridges
-description: Cross-capability use cases that wire two or more capabilities together.
+description: Cross-domain use cases that wire two or more domains together.
 ---
 
-A **bridge** is a standalone module that connects two or more capabilities. Bridges implement cross-cutting logic that does not belong inside any single capability — for example, recording an audit entry when a user registers, or indexing a blog post for search.
+A **bridge** is a standalone module that connects two or more domains. Bridges implement cross-cutting logic that does not belong inside any single domain — for example, recording an audit entry when a user registers, or indexing a blog post for search.
 
-Without bridges, you would have to modify the `auth` capability to import from `audit-log`, violating the principle that each capability is self-contained. Bridges solve this by living outside both capabilities, subscribing to domain events via a shared event bus, and calling use cases from the target capability.
+Without bridges, you would have to modify the `auth` domain to import from `audit-log`, violating the principle that each domain is self-contained. Bridges solve this by living outside both domains, subscribing to domain events via a shared event bus, and calling use cases from the target domain.
 
 ## Anatomy of a Bridge
 
@@ -24,8 +24,8 @@ A `bridge.json` manifest declares the bridge metadata:
 ```json
 {
   "name": "auth-audit-log",
-  "sourceCapability": "auth",
-  "targetCapability": "audit-log",
+  "sourceDomain": "auth",
+  "targetDomain": "audit-log",
   "events": ["UserRegistered", "LoginSucceeded"],
   "version": "1.0.0"
 }
@@ -59,7 +59,7 @@ export function createBridge(deps: AuthAuditLogBridgeDeps): Bridge {
 }
 ```
 
-Dependencies (use case instances) are injected via the factory — the bridge never calls capability factories directly. This makes testing trivial: swap `InMemoryEventBus` and mock use cases.
+Dependencies (use case instances) are injected via the factory — the bridge never calls domain factories directly. This makes testing trivial: swap `InMemoryEventBus` and mock use cases.
 
 ## Error Isolation
 
@@ -139,12 +139,12 @@ bridge.wire(eventBus);
 // When auth emits events on this bus, the bridge reacts automatically
 ```
 
-## Bridge vs. Capability
+## Bridge vs. Domain
 
-| | Capability | Bridge |
+| | Domain | Bridge |
 |---|---|---|
-| Purpose | Implements a bounded context | Connects two capabilities via events |
-| Location | `src/capabilities/<name>/` | `src/bridges/<name>/` |
+| Purpose | Implements a bounded context | Connects two domains via events |
+| Location | `src/domains/<name>/` | `src/bridges/<name>/` |
 | Dependencies | Zero external imports in domain | Imports from shared event bus + use case ports |
 | Pattern | Use cases, entities, ports | Factory + `wire(eventBus)` subscriptions |
 | Installed via | `backcap add <name>` | `backcap add <bridge-name>` |
@@ -154,6 +154,6 @@ bridge.wire(eventBus);
 - A bridge name uses the format `<source-cap>-<target-cap>` (e.g., `auth-audit-log`)
 - A bridge must include a `bridge.json` manifest
 - A bridge defines its own event shapes by duck-typing (event mirroring)
-- A bridge defines its own use case port interfaces — no direct imports from capability internals
+- A bridge defines its own use case port interfaces — no direct imports from domain internals
 - A bridge has no knowledge of framework details — it only depends on port interfaces
 - Error handling: catch and log, never re-throw

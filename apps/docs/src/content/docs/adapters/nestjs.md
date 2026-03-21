@@ -1,6 +1,6 @@
 ---
 title: NestJS Adapter
-description: Wiring guide for integrating Backcap capabilities with NestJS's decorator-based DI.
+description: Wiring guide for integrating Backcap domains with NestJS's decorator-based DI.
 ---
 
 NestJS uses a **wiring guide** instead of a code adapter. Unlike Express, Fastify, and Hono — where the registry provides framework-agnostic route handlers — NestJS requires compile-time decorators (`@Controller`, `@Get`, `@Inject`) on class definitions that cannot be added programmatically.
@@ -19,8 +19,8 @@ NestJS requires decorators on the class itself. A plain-class controller without
 
 ```typescript
 import { Module, DynamicModule } from "@nestjs/common";
-import type { IPostRepository } from "../../capabilities/blog/application/ports/post-repository.port.js";
-import { createBlogService } from "../../capabilities/blog/contracts/index.js";
+import type { IPostRepository } from "../../domains/blog/application/ports/post-repository.port.js";
+import { createBlogService } from "../../domains/blog/contracts/index.js";
 import { BlogController } from "./blog.controller.js";
 
 interface IEventBus {
@@ -53,10 +53,10 @@ export class BlogModule {
 
 ```typescript
 import { Controller, Post, Get, Param, Body, Inject, HttpCode, HttpException } from "@nestjs/common";
-import type { IBlogService } from "../../capabilities/blog/contracts/index.js";
-import { InvalidSlug } from "../../capabilities/blog/domain/errors/invalid-slug.error.js";
-import { PostNotFound } from "../../capabilities/blog/domain/errors/post-not-found.error.js";
-import { PostAlreadyPublished } from "../../capabilities/blog/domain/errors/post-already-published.error.js";
+import type { IBlogService } from "../../domains/blog/contracts/index.js";
+import { InvalidSlug } from "../../domains/blog/domain/errors/invalid-slug.error.js";
+import { PostNotFound } from "../../domains/blog/domain/errors/post-not-found.error.js";
+import { PostAlreadyPublished } from "../../domains/blog/domain/errors/post-already-published.error.js";
 
 function toHttpStatus(error: Error): number {
   if (error instanceof InvalidSlug) return 400;
@@ -103,9 +103,9 @@ export class BlogController {
 
 The domain and application layers remain **identical** — only the HTTP adapter and DI wiring differ.
 
-## Writing NestJS Controllers for Other Capabilities
+## Writing NestJS Controllers for Other Domains
 
-When integrating a new capability with NestJS:
+When integrating a new domain with NestJS:
 
 1. Create a `@Controller` class with `@Inject("IServiceName")` constructor injection
 2. Create a `@Module` class with a `static register(deps)` method returning a `DynamicModule`
@@ -142,4 +142,4 @@ bootstrap();
 
 ## Reference Implementation
 
-See the [NestJS Blog example](/backcap/guides/nestjs-blog-example) for a complete working project with blog + search capabilities, Prisma persistence, and event-driven bridge.
+See the [NestJS Blog example](/backcap/guides/nestjs-blog-example) for a complete working project with blog + search domains, Prisma persistence, and event-driven bridge.

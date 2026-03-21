@@ -1,13 +1,13 @@
 ---
 title: Express Adapter
-description: Express.js route and middleware implementations for Backcap capabilities.
+description: Express.js route and middleware implementations for Backcap domains.
 ---
 
-The Express adapter package provides HTTP route handlers and middleware for Backcap capability service interfaces using [Express.js](https://expressjs.com/). Each adapter wires a capability's public `IService` interface to Express routes.
+The Express adapter package provides HTTP route handlers and middleware for Backcap domain service interfaces using [Express.js](https://expressjs.com/). Each adapter wires a domain's public `IService` interface to Express routes.
 
 ## Install
 
-Install the Express adapter for a specific capability:
+Install the Express adapter for a specific domain:
 
 ```bash
 npx @backcap/cli add auth-express
@@ -142,20 +142,20 @@ export default app;
 
 ## Writing Additional Express Adapters
 
-When a new capability needs an Express HTTP layer:
+When a new domain needs an Express HTTP layer:
 
-1. Create the file at `src/adapters/express/<capability>/<name>.router.ts`
-2. Import the public service interface from `../../capabilities/<capability>/contracts`
-3. Import domain error classes from `../../capabilities/<capability>/domain/errors/`
+1. Create the file at `src/adapters/express/<domain>/<name>.router.ts`
+2. Import the public service interface from `../../domains/<domain>/contracts`
+3. Import domain error classes from `../../domains/<domain>/domain/errors/`
 4. Write a `createXxxRouter(service: IService, router: Router): Router` function
 5. Map domain errors to HTTP status codes using a `toHttpError()` helper
 6. Write route handler tests using a mock service
 
 See the [Create an Adapter guide](/backcap/guides/create-adapter) for a detailed walkthrough.
 
-## Capability Support
+## Domain Support
 
-19 out of 20 capabilities ship with Express adapters. The `search` capability has no Express adapter because it defines its own search-engine port instead.
+19 out of 20 domains ship with Express adapters. The `search` domain has no Express adapter because it defines its own search-engine port instead.
 
 ## Testing
 

@@ -1,13 +1,13 @@
 ---
 title: Prisma Adapter
-description: Prisma ORM implementations for Backcap capability repositories.
+description: Prisma ORM implementations for Backcap domain repositories.
 ---
 
-The Prisma adapter package provides persistence implementations for Backcap capability port interfaces using [Prisma ORM](https://www.prisma.io/). Each adapter implements a repository port interface and translates between the domain entity model and Prisma's record types.
+The Prisma adapter package provides persistence implementations for Backcap domain port interfaces using [Prisma ORM](https://www.prisma.io/). Each adapter implements a repository port interface and translates between the domain entity model and Prisma's record types.
 
 ## Install
 
-Install the Prisma adapter for a specific capability:
+Install the Prisma adapter for a specific domain:
 
 ```bash
 npx @backcap/cli add auth-prisma
@@ -26,7 +26,7 @@ src/adapters/prisma/auth/
 
 ### PrismaUserRepository
 
-`PrismaUserRepository` implements `IUserRepository` from the `auth` capability.
+`PrismaUserRepository` implements `IUserRepository` from the `auth` domain.
 
 ```typescript
 import { PrismaUserRepository } from "./adapters/prisma/auth/user-repository.adapter";
@@ -103,7 +103,7 @@ private toPrisma(user: User): PrismaUserRecord {
 
 ```typescript
 // src/container.ts
-import { createAuthService } from "./capabilities/auth/contracts";
+import { createAuthService } from "./domains/auth/contracts";
 import { PrismaUserRepository } from "./adapters/prisma/auth/user-repository.adapter";
 import { PrismaClient } from "@prisma/client";
 
@@ -118,11 +118,11 @@ export const authService = createAuthService({
 
 ## Writing Additional Prisma Adapters
 
-When a new capability is added that requires a persistence adapter, follow these steps:
+When a new domain is added that requires a persistence adapter, follow these steps:
 
-1. Create the file at `src/adapters/prisma/<capability>/<entity>-repository.adapter.ts`
-2. Import the port interface from `../../capabilities/<capability>/application/ports/`
-3. Import the domain entity from `../../capabilities/<capability>/domain/entities/`
+1. Create the file at `src/adapters/prisma/<domain>/<entity>-repository.adapter.ts`
+2. Import the port interface from `../../domains/<domain>/application/ports/`
+3. Import the domain entity from `../../domains/<domain>/domain/entities/`
 4. Implement the interface with `class Prisma<Entity>Repository implements I<Entity>Repository`
 5. Write `toDomain()` and `toPrisma()` mapping methods
 6. Add the corresponding model to `prisma/schema.prisma`
@@ -130,9 +130,9 @@ When a new capability is added that requires a persistence adapter, follow these
 
 See the [Create an Adapter guide](/backcap/guides/create-adapter) for a detailed walkthrough.
 
-## Capability Support
+## Domain Support
 
-19 out of 20 capabilities ship with Prisma adapters. The `search` capability has no Prisma adapter because it defines its own search-engine port instead.
+19 out of 20 domains ship with Prisma adapters. The `search` domain has no Prisma adapter because it defines its own search-engine port instead.
 
 ## Testing
 

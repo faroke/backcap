@@ -1,9 +1,9 @@
 ---
-title: Orders Capability
+title: Orders Domain
 description: Order lifecycle management for TypeScript backends — state machine-driven order processing from placement through fulfillment.
 ---
 
-The `orders` capability provides **order lifecycle management** for TypeScript backends. It handles order placement, state machine transitions (pending, confirmed, processing, shipped, delivered, canceled, refunded), address management, and price totals.
+The `orders` domain provides **order lifecycle management** for TypeScript backends. It handles order placement, state machine transitions (pending, confirmed, processing, shipped, delivered, canceled, refunded), address management, and price totals.
 
 ## Install
 
@@ -18,9 +18,9 @@ npx @backcap/cli add orders
 The `Order` entity is the aggregate root. All state transitions go through `Order` methods — `confirm()`, `process()`, `ship()`, `deliver()`, `cancel()`.
 
 ```typescript
-import { Order } from "./capabilities/orders/domain/entities/order.entity";
-import { OrderItem } from "./capabilities/orders/domain/entities/order-item.entity";
-import { Address } from "./capabilities/orders/domain/value-objects/address.vo";
+import { Order } from "./domains/orders/domain/entities/order.entity";
+import { OrderItem } from "./domains/orders/domain/entities/order-item.entity";
+import { Address } from "./domains/orders/domain/value-objects/address.vo";
 
 const address = Address.create({
   street: "123 Main St",
@@ -112,8 +112,8 @@ if (item.isOk()) {
 ## Contract
 
 ```typescript
-import { createOrderService } from "./capabilities/orders/contracts";
-import type { IOrderService, OrderOutput } from "./capabilities/orders/contracts";
+import { createOrderService } from "./domains/orders/contracts";
+import type { IOrderService, OrderOutput } from "./domains/orders/contracts";
 
 const orders: IOrderService = createOrderService({
   orderRepository,

@@ -1,9 +1,9 @@
 ---
-title: Billing Capability
+title: Billing Domain
 description: Payments, subscriptions, and invoicing with vendor-independent design, Money value object for safe arithmetic, and clean architecture layers for TypeScript backends.
 ---
 
-The `billing` capability provides **payments, subscriptions, and invoicing** with a vendor-independent architecture. The domain layer uses integer-cents arithmetic via the `Money` value object and has zero knowledge of payment providers like Stripe or Paddle.
+The `billing` domain provides **payments, subscriptions, and invoicing** with a vendor-independent architecture. The domain layer uses integer-cents arithmetic via the `Money` value object and has zero knowledge of payment providers like Stripe or Paddle.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add billing
 All monetary amounts use integer cents to avoid floating-point issues.
 
 ```typescript
-import { Money } from "./capabilities/billing/domain/value-objects/money.vo";
+import { Money } from "./domains/billing/domain/value-objects/money.vo";
 
 const price = Money.create(2999, "USD"); // $29.99
 const tax = Money.create(450, "USD");    // $4.50
@@ -30,7 +30,7 @@ const discounted = total.unwrap().multiply(0.9); // 10% off
 ### Customer Entity
 
 ```typescript
-import { Customer } from "./capabilities/billing/domain/entities/customer.entity";
+import { Customer } from "./domains/billing/domain/entities/customer.entity";
 
 const result = Customer.create({
   id: crypto.randomUUID(),
@@ -44,7 +44,7 @@ const result = Customer.create({
 Subscriptions compose `SubscriptionStatus`, `Money`, and `BillingPeriod` value objects. Mutations are immutable — `cancel()` and `changePlan()` return new instances.
 
 ```typescript
-import { Subscription } from "./capabilities/billing/domain/entities/subscription.entity";
+import { Subscription } from "./domains/billing/domain/entities/subscription.entity";
 
 const sub = Subscription.create({
   id: crypto.randomUUID(),
@@ -65,7 +65,7 @@ const canceled = sub.unwrap().cancel("user request");
 ### Invoice Entity
 
 ```typescript
-import { Invoice } from "./capabilities/billing/domain/entities/invoice.entity";
+import { Invoice } from "./domains/billing/domain/entities/invoice.entity";
 
 const invoice = Invoice.create({
   id: crypto.randomUUID(),
@@ -109,7 +109,7 @@ const paid = invoice.unwrap().markPaid();
 
 ## Ports
 
-The billing capability defines four ports for adapter injection:
+The billing domain defines four ports for adapter injection:
 
 - **`IPaymentProvider`** — `createCustomer`, `charge`, `refund`, `createSubscription`, `cancelSubscription`, `attachPaymentMethod`
 - **`ICustomerRepository`** — `findById`, `findByEmail`, `save`
@@ -121,7 +121,7 @@ The billing capability defines four ports for adapter injection:
 Wire everything through the contract factory:
 
 ```typescript
-import { createBillingService } from "./capabilities/billing/contracts";
+import { createBillingService } from "./domains/billing/contracts";
 
 const billing = createBillingService({
   customerRepository: prismaCustomerRepo,

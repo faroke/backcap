@@ -1,9 +1,9 @@
 ---
-title: RBAC Capability
+title: RBAC Domain
 description: Role-based access control for TypeScript backends — roles, permissions, assignment, and authorization checks.
 ---
 
-The `rbac` capability provides **role-based access control (RBAC)** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `rbac` domain provides **role-based access control (RBAC)** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -15,11 +15,11 @@ npx @backcap/cli add rbac
 
 ### Role Entity
 
-The `Role` entity is the aggregate root of the RBAC capability. It holds the role's identity, name, description, and a list of permissions.
+The `Role` entity is the aggregate root of the RBAC domain. It holds the role's identity, name, description, and a list of permissions.
 
 ```typescript
-import { Role } from "./capabilities/rbac/domain/entities/role.entity";
-import { Permission } from "./capabilities/rbac/domain/entities/permission.entity";
+import { Role } from "./domains/rbac/domain/entities/role.entity";
+import { Permission } from "./domains/rbac/domain/entities/permission.entity";
 
 const perm = Permission.create({
   id: crypto.randomUUID(),
@@ -56,7 +56,7 @@ if (result.isOk()) {
 ### Permission Entity
 
 ```typescript
-import { Permission } from "./capabilities/rbac/domain/entities/permission.entity";
+import { Permission } from "./domains/rbac/domain/entities/permission.entity";
 
 const result = Permission.create({
   id: crypto.randomUUID(),
@@ -107,7 +107,7 @@ Validates resource names against `^[a-z][a-z0-9]*(-[a-z0-9]+)*$`. Examples: `pos
 Creates a new role with optional permissions. Emits `PermissionGranted` events for each permission.
 
 ```typescript
-import { CreateRole } from "./capabilities/rbac/application/use-cases/create-role.use-case";
+import { CreateRole } from "./domains/rbac/application/use-cases/create-role.use-case";
 
 const createRole = new CreateRole(roleRepository);
 
@@ -129,7 +129,7 @@ const result = await createRole.execute({
 Assigns a role to a user.
 
 ```typescript
-import { AssignRole } from "./capabilities/rbac/application/use-cases/assign-role.use-case";
+import { AssignRole } from "./domains/rbac/application/use-cases/assign-role.use-case";
 
 const assignRole = new AssignRole(roleRepository);
 const result = await assignRole.execute({ userId: "user-1", roleId: "role-1", organizationId: "org-1" });
@@ -143,7 +143,7 @@ const result = await assignRole.execute({ userId: "user-1", roleId: "role-1", or
 Revokes a role from a user. Verifies the user actually has the role before revoking.
 
 ```typescript
-import { RevokeRole } from "./capabilities/rbac/application/use-cases/revoke-role.use-case";
+import { RevokeRole } from "./domains/rbac/application/use-cases/revoke-role.use-case";
 
 const revokeRole = new RevokeRole(roleRepository);
 const result = await revokeRole.execute({ userId: "user-1", roleId: "role-1" });
@@ -157,7 +157,7 @@ const result = await revokeRole.execute({ userId: "user-1", roleId: "role-1" });
 Checks if a user has a specific permission. Optionally scoped to an organization.
 
 ```typescript
-import { CheckPermission } from "./capabilities/rbac/application/use-cases/check-permission.use-case";
+import { CheckPermission } from "./domains/rbac/application/use-cases/check-permission.use-case";
 
 const checkPermission = new CheckPermission(permissionResolver);
 const result = await checkPermission.execute({
@@ -215,7 +215,7 @@ When `organizationId` is provided, the resolver filters permissions to those ass
 import {
   createAuthorizationService,
   IAuthorizationService,
-} from "./capabilities/rbac/contracts";
+} from "./domains/rbac/contracts";
 
 const authorizationService: IAuthorizationService = createAuthorizationService({
   roleRepository,
@@ -351,7 +351,7 @@ npx @backcap/cli add rbac-organizations
 ## File Map
 
 ```
-capabilities/rbac/
+domains/rbac/
   domain/
     entities/role.entity.ts
     entities/permission.entity.ts

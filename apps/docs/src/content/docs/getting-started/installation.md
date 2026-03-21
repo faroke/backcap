@@ -3,7 +3,7 @@ title: Installation
 description: Prerequisites, initializing a project, and understanding backcap.json.
 ---
 
-Backcap is a CLI tool that scaffolds backend capabilities into your existing TypeScript project. There is nothing to install globally — you run it with `npx`.
+Backcap is a CLI tool that scaffolds backend domains into your existing TypeScript project. There is nothing to install globally — you run it with `npx`.
 
 ## Prerequisites
 
@@ -46,7 +46,7 @@ After running `init`, a `backcap.json` is written to your project root:
     "shared": "shared"
   },
   "installed": {
-    "capabilities": [],
+    "domains": [],
     "bridges": []
   }
 }
@@ -59,12 +59,12 @@ After running `init`, a `backcap.json` is written to your project root:
 | `framework` | The detected or selected framework identifier |
 | `packageManager` | The package manager used to install dependencies |
 | `alias` | The tsconfig path alias prefix for domains (default: `"@domains"`) |
-| `paths.domains` | Where capability source files are written |
+| `paths.domains` | Where domain source files are written |
 | `paths.adapters` | Where adapter source files are written |
 | `paths.bridges` | Where bridge source files are written |
 | `paths.skills` | Where agent skill files are written |
 | `paths.shared` | Where shared utilities (like `Result`) are written |
-| `installed` | Structured record of installed capabilities and bridges |
+| `installed` | Structured record of installed domains and bridges |
 
 ### Customizing Paths
 
@@ -96,7 +96,7 @@ If no framework is detected, the CLI prompts you to select one from a list.
 
 ## What Comes Next
 
-Once your project is initialized, install your first capability:
+Once your project is initialized, install your first domain:
 
 ```bash
 npx @backcap/cli add auth

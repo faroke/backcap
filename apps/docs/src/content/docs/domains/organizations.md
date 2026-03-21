@@ -1,9 +1,9 @@
 ---
-title: Organizations Capability
+title: Organizations Domain
 description: Multi-tenant organizations for TypeScript backends — workspace isolation, member management, invitations, and role-based membership.
 ---
 
-The `organizations` capability provides **multi-tenant workspace isolation** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `organizations` domain provides **multi-tenant workspace isolation** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add organizations
 The `Organization` entity is the aggregate root. It holds the org's identity, name, slug, plan, and settings.
 
 ```typescript
-import { Organization } from "./capabilities/organizations/domain/entities/organization.entity";
+import { Organization } from "./domains/organizations/domain/entities/organization.entity";
 
 const result = Organization.create({
   id: crypto.randomUUID(),
@@ -51,7 +51,7 @@ if (result.isOk()) {
 ### Membership Entity
 
 ```typescript
-import { Membership } from "./capabilities/organizations/domain/entities/membership.entity";
+import { Membership } from "./domains/organizations/domain/entities/membership.entity";
 
 const result = Membership.create({
   id: crypto.randomUUID(),
@@ -69,7 +69,7 @@ const result = Membership.create({
 Validates slugs: 3-63 characters, lowercase alphanumeric + hyphens, no leading/trailing hyphens.
 
 ```typescript
-import { OrgSlug } from "./capabilities/organizations/domain/value-objects/org-slug.vo";
+import { OrgSlug } from "./domains/organizations/domain/value-objects/org-slug.vo";
 
 const result = OrgSlug.create("my-team");
 // Result<OrgSlug, Error>
@@ -110,7 +110,7 @@ Valid roles: `owner`, `admin`, `member`, `viewer`.
 Creates a new organization and an owner membership for the creator.
 
 ```typescript
-import { CreateOrganization } from "./capabilities/organizations/application/use-cases/create-organization.use-case";
+import { CreateOrganization } from "./domains/organizations/application/use-cases/create-organization.use-case";
 
 const createOrg = new CreateOrganization(organizationRepository, membershipRepository);
 
@@ -214,7 +214,7 @@ export interface IInvitationService {
 import {
   createOrganizationService,
   IOrganizationService,
-} from "./capabilities/organizations/contracts";
+} from "./domains/organizations/contracts";
 
 const orgService: IOrganizationService = createOrganizationService({
   organizationRepository,
@@ -309,7 +309,7 @@ npx @backcap/cli add rbac-organizations
 ## File Map
 
 ```
-capabilities/organizations/
+domains/organizations/
   domain/
     entities/organization.entity.ts
     entities/membership.entity.ts

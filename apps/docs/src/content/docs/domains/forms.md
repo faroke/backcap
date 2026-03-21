@@ -1,9 +1,9 @@
 ---
-title: Forms Capability
+title: Forms Domain
 description: Dynamic form schemas and submissions — create forms, validate and collect structured user input for TypeScript backends.
 ---
 
-The `forms` capability provides **dynamic form creation, submission validation, and data collection** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `forms` domain provides **dynamic form creation, submission validation, and data collection** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -18,8 +18,8 @@ npx @backcap/cli add forms
 The `Form` entity is the aggregate root. It holds a list of typed fields and supports adding new fields after creation.
 
 ```typescript
-import { Form } from "./capabilities/forms/domain/entities/form.entity";
-import { FormField } from "./capabilities/forms/domain/value-objects/form-field.vo";
+import { Form } from "./domains/forms/domain/entities/form.entity";
+import { FormField } from "./domains/forms/domain/value-objects/form-field.vo";
 
 const field = FormField.create({ name: "email", type: "email", required: true }).unwrap();
 const result = Form.create({ id: crypto.randomUUID(), name: "Contact", fields: [field] });
@@ -42,7 +42,7 @@ A form must have at least one field to be created. `addField(field)` returns a n
 ### FormField Value Object
 
 ```typescript
-import { FormField } from "./capabilities/forms/domain/value-objects/form-field.vo";
+import { FormField } from "./domains/forms/domain/value-objects/form-field.vo";
 
 const field = FormField.create({
   name: "color",
@@ -129,7 +129,7 @@ export interface IFormStore {
 ## Public API (contracts/)
 
 ```typescript
-import { createFormsService, IFormsService } from "./capabilities/forms/contracts";
+import { createFormsService, IFormsService } from "./domains/forms/contracts";
 
 const formsService: IFormsService = createFormsService({ formStore });
 ```
@@ -161,7 +161,7 @@ npx @backcap/cli add forms-express
 ## File Map
 
 ```
-capabilities/forms/
+domains/forms/
   domain/
     entities/form.entity.ts
     value-objects/form-field.vo.ts

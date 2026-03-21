@@ -36,14 +36,14 @@ npx @backcap/cli init
   "framework": "express",
   "packageManager": "pnpm",
   "paths": {
-    "capabilities": "src/capabilities",
+    "domains": "src/domains",
     "adapters": "src/adapters",
     "bridges": "src/bridges",
     "skills": ".claude/skills",
     "shared": "src/shared"
   },
   "installed": {
-    "capabilities": [],
+    "domains": [],
     "bridges": []
   }
 }
@@ -72,7 +72,7 @@ npx @backcap/cli init
 
 ## backcap add
 
-Install a capability or bridge from the registry.
+Install a domain or bridge from the registry.
 
 ```bash
 npx @backcap/cli add <name>
@@ -82,7 +82,7 @@ npx @backcap/cli add <name>
 
 | Argument | Required | Description |
 |---|---|---|
-| `name` | Yes | The name of the capability or bridge to install (e.g., `auth`, `blog`, `auth-blog`) |
+| `name` | Yes | The name of the domain or bridge to install (e.g., `auth`, `blog`, `auth-blog`) |
 
 **Options:**
 
@@ -101,14 +101,14 @@ npx @backcap/cli add <name>
    - If there are no conflicts, proceeds directly to the install prompt
    - If there are conflicts, shows a summary and offers resolution options:
      - **Compare and continue** — shows detailed diffs, then overwrites all conflicting files
-     - **Select files individually** — pick which files to write (capabilities only)
-     - **Choose a different path** — prompts for a new base path (capabilities only)
+     - **Select files individually** — pick which files to write (domains only)
+     - **Choose a different path** — prompts for a new base path (domains only)
      - **Abort installation** — cancel, no files written
 6. Prompts for final confirmation before writing files
-7. Writes source files to the appropriate directory (`capabilities/`, `bridges/`, or `adapters/`)
+7. Writes source files to the appropriate directory (`domains/`, `bridges/`, or `adapters/`)
 8. Installs npm dependencies listed in the bundle
 9. Installs `peerDependencies` as devDependencies in a second install pass
-10. Updates `backcap.json` to record the installed capability or bridge
+10. Updates `backcap.json` to record the installed domain or bridge
 
 **Example:**
 
@@ -122,11 +122,11 @@ npx @backcap/cli add auth
 #
 # auth v1.0.0 installed successfully!
 #
-#   Capability: src/capabilities/auth
+#   Domain: src/domains/auth
 #   Adapters:   auth-express, auth-prisma
 #
 #   Next steps:
-#   1. Review the installed files in src/capabilities/auth/
+#   1. Review the installed files in src/domains/auth/
 #   2. Run the test suite to verify: npx vitest run
 #   3. Check available bridges: backcap bridges
 ```
@@ -137,7 +137,7 @@ When the CLI detects files that differ from what is already on disk:
 
 ```
 Conflicts detected:
-  ~ src/capabilities/auth/domain/entities/user.entity.ts (modified)
+  ~ src/domains/auth/domain/entities/user.entity.ts (modified)
 
 How would you like to proceed?
   › Compare and continue (overwrite all)
@@ -150,7 +150,7 @@ How would you like to proceed?
 
 ## backcap list
 
-Browse available capabilities from the registry.
+Browse available domains from the registry.
 
 ```bash
 npx @backcap/cli list
@@ -158,18 +158,18 @@ npx @backcap/cli list
 
 **What it does:**
 
-1. Loads `backcap.json` if it exists (to know which capabilities are already installed)
+1. Loads `backcap.json` if it exists (to know which domains are already installed)
 2. Fetches the registry catalog from `https://faroke.github.io/backcap/dist/registry.json`
-3. Renders a table of available capabilities with their name, description, type, and installation status
+3. Renders a table of available domains with their name, description, type, and installation status
 
 **Example output:**
 
 ```
 Name             Description                          Type          Status
-auth             User registration and login          capability    installed
-blog             Blog post management                 capability    available
-search           Full-text search                     capability    available
-notifications    Email and push notifications         capability    available
+auth             User registration and login          domain    installed
+blog             Blog post management                 domain    available
+search           Full-text search                     domain    available
+notifications    Email and push notifications         domain    available
 auth-prisma      Prisma adapter for auth              adapter       available
 auth-express     Express router for auth              adapter       available
 ```
@@ -178,7 +178,7 @@ auth-express     Express router for auth              adapter       available
 
 ## backcap bridges
 
-List available bridges between installed capabilities.
+List available bridges between installed domains.
 
 ```bash
 npx @backcap/cli bridges
@@ -188,7 +188,7 @@ npx @backcap/cli bridges
 
 1. Verifies that `backcap.json` exists
 2. Reads all `bridge.json` manifests from your local `bridges/` directory
-3. Displays each bridge with its source capability, target capability, subscribed events, and installation status
+3. Displays each bridge with its source domain, target domain, subscribed events, and installation status
 
 **Example output:**
 
@@ -241,7 +241,7 @@ Common errors and their solutions:
 | `No backcap.json found` | Run `npx @backcap/cli init` first |
 | `Could not fetch "<name>" from registry` | Check your internet connection; verify the name with `backcap list` |
 | `Invalid data received from registry` | The registry may be temporarily unavailable; try again |
-| `No bridges available` | Install capabilities first — bridges appear automatically between installed capabilities. |
+| `No bridges available` | Install domains first — bridges appear automatically between installed domains. |
 
 ---
 

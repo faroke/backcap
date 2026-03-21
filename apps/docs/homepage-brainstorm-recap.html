@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Homepage Redesign — Brainstorm Recap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwindcss.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: 'hsl(220 20% 4%)',
+            card: 'hsl(220 18% 7%)',
+            border: 'hsl(220 14% 16%)',
+            muted: 'hsl(215 14% 50%)',
+            fg: 'hsl(210 20% 92%)',
+            primary: 'hsl(152 76% 52%)',
+            accent: 'hsl(172 66% 50%)',
+            bad: 'hsl(0 70% 55%)',
+            warn: 'hsl(40 90% 55%)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .gradient-text { background: linear-gradient(135deg, hsl(152 76% 52%), hsl(172 66% 50%)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .glow { box-shadow: 0 0 30px -5px hsla(152, 76%, 52%, 0.15); }
+    .strike { text-decoration: line-through; opacity: 0.4; }
+  </style>
+</head>
+<body class="bg-bg text-fg min-h-screen">
+
+  <!-- Header -->
+  <div class="border-b border-border">
+    <div class="max-w-5xl mx-auto px-6 py-8">
+      <p class="text-primary text-sm font-medium tracking-wide uppercase mb-2">Brainstorm Recap — 20 mars 2026</p>
+      <h1 class="text-3xl md:text-4xl font-bold mb-2">Homepage Redesign <span class="gradient-text">Backcap</span></h1>
+      <p class="text-muted">Pour Thomas (et toute l'equipe) — voici ou on en est.</p>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 py-12 space-y-16">
+
+    <!-- Why -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6">Pourquoi on refait la homepage</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-card border border-bad/20 rounded-xl p-5">
+          <p class="text-bad text-sm font-medium mb-3">Le probleme</p>
+          <ul class="space-y-2 text-sm text-muted">
+            <li>&#x2022; "The shadcn/ui for backends" — incomprehensible si tu connais pas shadcn</li>
+            <li>&#x2022; Thomas a cru que c'etait un outil frontend</li>
+            <li>&#x2022; "capabilities" = jargon interne, personne cherche ca</li>
+            <li>&#x2022; Le differenciateur IA etait enterre tout en bas</li>
+          </ul>
+        </div>
+        <div class="bg-card border border-primary/20 rounded-xl p-5 glow">
+          <p class="text-primary text-sm font-medium mb-3">La direction</p>
+          <ul class="space-y-2 text-sm text-muted">
+            <li>&#x2022; Un message qui marche sans connaitre shadcn</li>
+            <li>&#x2022; Parler en termes concrets : auth, billing, search</li>
+            <li>&#x2022; Mettre en avant l'aspect AI-ready</li>
+            <li>&#x2022; Zero fake metrics — on est honnete</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pillars -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6">Les 4 piliers du nouveau positionnement</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-card border border-border rounded-xl p-5 text-center">
+          <p class="text-3xl mb-3">&#x1F3D7;</p>
+          <p class="font-semibold mb-1">Built right</p>
+          <p class="text-xs text-muted">Code structure, production-ready. Communique la clean archi sans le jargon.</p>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-5 text-center">
+          <p class="text-3xl mb-3">&#x1F30D;</p>
+          <p class="font-semibold mb-1">Works everywhere</p>
+          <p class="text-xs text-muted">Framework-agnostic. Express, Fastify, Hono, Nest, Next.js.</p>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-5 text-center">
+          <p class="text-3xl mb-3">&#x1F916;</p>
+          <p class="font-semibold mb-1">AI-ready</p>
+          <p class="text-xs text-muted">Skills IA embarquees. Ton agent comprend le code des le jour 1.</p>
+        </div>
+        <div class="bg-card border border-border rounded-xl p-5 text-center">
+          <p class="text-3xl mb-3">&#x1F511;</p>
+          <p class="font-semibold mb-1">Owned by you</p>
+          <p class="text-xs text-muted">Copy & own. C'est ton code, pas une dependance.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vocabulary -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6">Vocabulaire : ce qui change</h2>
+      <div class="bg-card border border-border rounded-xl overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-border">
+              <th class="text-left p-4 text-bad/80 font-medium">On ne dit plus</th>
+              <th class="text-left p-4 text-primary font-medium">On dit</th>
+            </tr>
+          </thead>
+          <tbody class="text-muted">
+            <tr class="border-b border-border/50"><td class="p-4 strike">capabilities</td><td class="p-4"><span class="text-fg">features</span> ou noms concrets (auth, billing, search)</td></tr>
+            <tr class="border-b border-border/50"><td class="p-4 strike">The shadcn/ui for backends</td><td class="p-4">Aside secondaire : <span class="text-fg italic">"Think shadcn/ui, but for your backend."</span></td></tr>
+            <tr class="border-b border-border/50"><td class="p-4 strike">DDD / hexagonal / clean archi</td><td class="p-4"><span class="text-fg">"built right"</span> + montrer l'arbre de fichiers</td></tr>
+            <tr class="border-b border-border/50"><td class="p-4 strike">Knowledge Graph Ready</td><td class="p-4"><span class="text-fg">"Your AI agent understands every feature"</span></td></tr>
+            <tr class="border-b border-border/50"><td class="p-4 strike">Standardized Manifests</td><td class="p-4"><span class="text-fg">"Specs your tools can read and act on"</span></td></tr>
+            <tr><td class="p-4 strike">Domain contracts</td><td class="p-4"><span class="text-fg">"Clean boundaries — swap, extend, replace"</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Page structure -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6">Structure de page validee</h2>
+      <div class="space-y-3">
+        <div class="flex items-center gap-4 bg-card border border-primary/30 rounded-xl p-4 glow">
+          <span class="text-primary font-mono text-sm w-6">1</span>
+          <div>
+            <p class="font-semibold">Hero <span class="text-primary text-xs ml-2">&#x2705; DECIDE</span></p>
+            <p class="text-xs text-muted">Pain point + solution + 3 piliers + CTA</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 bg-card border border-primary/30 rounded-xl p-4 glow">
+          <span class="text-primary font-mono text-sm w-6">2</span>
+          <div>
+            <p class="font-semibold">Problem <span class="text-primary text-xs ml-2">&#x2705; DECIDE</span></p>
+            <p class="text-xs text-muted">Avant/apres — "You've already built this before."</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 bg-card border border-warn/30 rounded-xl p-4">
+          <span class="text-warn font-mono text-sm w-6">3</span>
+          <div>
+            <p class="font-semibold">How it works <span class="text-warn text-xs ml-2">&#x1F6A7; EN COURS</span></p>
+            <p class="text-xs text-muted">3 etapes — rewording + mini arbre fichiers au step 3 ?</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 bg-card border border-border rounded-xl p-4">
+          <span class="text-muted font-mono text-sm w-6">4</span>
+          <div>
+            <p class="font-semibold text-muted">Features <span class="text-muted text-xs ml-2">TODO</span></p>
+            <p class="text-xs text-muted">Grille de cartes — remplacer "capabilities"</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 bg-card border border-border rounded-xl p-4">
+          <span class="text-muted font-mono text-sm w-6">5</span>
+          <div>
+            <p class="font-semibold text-muted">AI-ready <span class="text-muted text-xs ml-2">TODO</span></p>
+            <p class="text-xs text-muted">Reecrire le bento grid — skills + structure</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 bg-card border border-border rounded-xl p-4">
+          <span class="text-muted font-mono text-sm w-6">6</span>
+          <div>
+            <p class="font-semibold text-muted">Frameworks <span class="text-muted text-xs ml-2">TODO</span></p>
+            <p class="text-xs text-muted">Runtimes + frameworks supportes</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 bg-card border border-border rounded-xl p-4">
+          <span class="text-muted font-mono text-sm w-6">7</span>
+          <div>
+            <p class="font-semibold text-muted">CTA final <span class="text-muted text-xs ml-2">TODO</span></p>
+            <p class="text-xs text-muted">Reprendre le message du hero</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 bg-card border border-bad/20 rounded-xl p-4">
+          <span class="text-bad/60 font-mono text-sm w-6">&#x2716;</span>
+          <div>
+            <p class="font-semibold text-bad/60 strike">Examples (SaaS/Ecommerce/Content)</p>
+            <p class="text-xs text-muted">Vote : supprime — redondant avec la grille features</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hero preview -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6">Preview du nouveau Hero</h2>
+      <div class="bg-card border border-border rounded-xl p-8 md:p-12 text-center space-y-6 glow">
+        <div class="inline-flex items-center gap-2 border border-border rounded-full px-4 py-1.5 text-xs text-muted">
+          Open source &middot; TypeScript &middot; AI-ready
+        </div>
+        <h3 class="text-2xl md:text-4xl font-bold leading-tight">
+          Stop rewriting the same<br/><span class="gradient-text">backend features.</span>
+        </h3>
+        <p class="text-muted max-w-xl mx-auto leading-relaxed">
+          Auth, billing, search and more — built right, works everywhere, owned by you.
+          Copy production-ready code your AI agent already understands.
+        </p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <span class="inline-flex items-center gap-2 bg-primary text-bg font-medium px-5 py-2.5 rounded-lg text-sm">
+            Get Started &#x2192;
+          </span>
+          <span class="inline-flex items-center gap-2 border border-border text-fg px-5 py-2.5 rounded-lg text-sm">
+            &#x2B50; GitHub
+          </span>
+        </div>
+        <div class="inline-flex items-center gap-2 bg-bg border border-border rounded-lg px-4 py-2 font-mono text-sm">
+          <span class="text-muted">$</span> npx @backcap/cli init
+        </div>
+        <p class="text-muted/50 text-xs italic">Think shadcn/ui, but for your backend.</p>
+      </div>
+    </section>
+
+    <!-- Problem preview -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6">Preview de la section Problem</h2>
+      <div class="bg-card border border-border rounded-xl p-8 md:p-12 space-y-8">
+        <h3 class="text-2xl md:text-3xl font-bold text-center">You've <span class="gradient-text">already built this</span> before.</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="border border-bad/20 rounded-xl p-5 space-y-3 bg-bad/[0.02]">
+            <p class="font-semibold text-sm text-bad/80">Traditional backend development</p>
+            <div class="space-y-2 text-sm text-muted">
+              <div class="flex items-center gap-2"><span class="text-bad">&#x2716;</span> Rewrite auth from scratch — <em>again</em></div>
+              <div class="flex items-center gap-2"><span class="text-bad">&#x2716;</span> Build custom permissions — <em>for the third time</em></div>
+              <div class="flex items-center gap-2"><span class="text-bad">&#x2716;</span> Implement <em>yet another</em> blog system</div>
+              <div class="flex items-center gap-2"><span class="text-bad">&#x2716;</span> Create <em>yet another</em> search engine</div>
+              <div class="flex items-center gap-2"><span class="text-bad">&#x2716;</span> Set up notifications — <em>once more</em></div>
+              <div class="flex items-center gap-2"><span class="text-bad">&#x2716;</span> Handle billing logic — <em>again</em></div>
+            </div>
+          </div>
+          <div class="border border-primary/30 rounded-xl p-5 space-y-3 glow bg-primary/[0.02]">
+            <p class="font-semibold text-sm text-primary">With Backcap</p>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center gap-2"><span class="text-primary">&#x2714;</span> <code class="text-muted bg-bg px-2 py-0.5 rounded text-xs">npx @backcap/cli add auth</code></div>
+              <div class="flex items-center gap-2"><span class="text-primary">&#x2714;</span> <code class="text-muted bg-bg px-2 py-0.5 rounded text-xs">npx @backcap/cli add rbac</code></div>
+              <div class="flex items-center gap-2"><span class="text-primary">&#x2714;</span> <code class="text-muted bg-bg px-2 py-0.5 rounded text-xs">npx @backcap/cli add blog</code></div>
+              <div class="flex items-center gap-2"><span class="text-primary">&#x2714;</span> <code class="text-muted bg-bg px-2 py-0.5 rounded text-xs">npx @backcap/cli add search</code></div>
+              <div class="flex items-center gap-2"><span class="text-primary">&#x2714;</span> <code class="text-muted bg-bg px-2 py-0.5 rounded text-xs">npx @backcap/cli add notifications</code></div>
+              <div class="flex items-center gap-2"><span class="text-primary">&#x2714;</span> <code class="text-muted bg-bg px-2 py-0.5 rounded text-xs">npx @backcap/cli add billing</code></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works preview -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6">Preview de la section How it works</h2>
+      <div class="bg-card border border-border rounded-xl p-8 md:p-12 space-y-8">
+        <h3 class="text-2xl md:text-3xl font-bold text-center">Three steps. <span class="gradient-text">That's it.</span></h3>
+        <div class="grid md:grid-cols-3 gap-6">
+
+          <!-- Step 1 -->
+          <div class="space-y-4">
+            <span class="text-5xl font-bold text-primary/10">01</span>
+            <h4 class="font-semibold text-lg">Install the CLI</h4>
+            <p class="text-sm text-muted">Initialize Backcap in your existing TypeScript project.</p>
+            <div class="bg-bg border border-border rounded-lg px-4 py-2.5 font-mono text-xs text-muted">
+              npx @backcap/cli init
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="space-y-4">
+            <span class="text-5xl font-bold text-primary/10">02</span>
+            <h4 class="font-semibold text-lg">Add what you need</h4>
+            <p class="text-sm text-muted">Pick the backend features for your project.</p>
+            <div class="bg-bg border border-border rounded-lg px-4 py-2.5 font-mono text-xs text-muted space-y-1">
+              <div>npx @backcap/cli add auth</div>
+              <div>npx @backcap/cli add blog</div>
+              <div>npx @backcap/cli add search</div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="space-y-4">
+            <span class="text-5xl font-bold text-primary/10">03</span>
+            <h4 class="font-semibold text-lg">It's your code now</h4>
+            <p class="text-sm text-muted">Full source code, directly in your project. Every feature follows the same clean structure.</p>
+            <div class="bg-bg border border-border rounded-lg px-4 py-3 font-mono text-xs text-muted space-y-1">
+              <div class="text-muted/50">your-project/</div>
+              <div class="pl-3">&#x2514;&#x2500;&#x2500; <span class="text-primary">domains/</span></div>
+              <div class="pl-10">&#x2514;&#x2500;&#x2500; <span class="text-primary">auth/</span></div>
+              <div class="pl-16">&#x251C;&#x2500;&#x2500; <span class="text-accent">contracts/</span></div>
+              <div class="pl-16">&#x251C;&#x2500;&#x2500; <span class="text-accent">domain/</span></div>
+              <div class="pl-16">&#x2514;&#x2500;&#x2500; <span class="text-accent">application/</span></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="text-center pt-4 space-y-4">
+          <p class="text-muted text-sm tracking-wide">Edit anything <span class="text-border mx-2">&middot;</span> Use AI skills <span class="text-border mx-2">&middot;</span> No lock-in</p>
+          <span class="inline-flex items-center gap-2 border border-border text-fg px-5 py-2.5 rounded-lg text-sm">
+            &#x1F4D6; Read the getting started guide &#x2192;
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <div class="border-t border-border pt-8 text-center text-muted text-xs">
+      <p>Brainstorm en cours — sections 4 a 7 a discuter</p>
+      <p class="mt-1">Party Mode session avec John, Winston, Sally, Mary, Carson, Sophia, Bob</p>
+    </div>
+
+  </div>
+</body>
+</html>

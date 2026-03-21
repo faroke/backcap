@@ -3,14 +3,14 @@ title: Create an Adapter
 description: Step-by-step guide for writing a custom persistence or framework adapter.
 ---
 
-An adapter implements a port interface defined by a capability's application layer. This guide covers creating both a persistence adapter (for a database) and an HTTP adapter (for a framework). We'll use the `auth` capability as the example.
+An adapter implements a port interface defined by a domain's application layer. This guide covers creating both a persistence adapter (for a database) and an HTTP adapter (for a framework). We'll use the `auth` domain as the example.
 
 ## Which Port Do You Need to Implement?
 
-Open the capability's `application/ports/` directory to see what interfaces are available:
+Open the domain's `application/ports/` directory to see what interfaces are available:
 
 ```
-src/capabilities/auth/application/ports/
+src/domains/auth/application/ports/
   user-repository.port.ts    # IUserRepository
   password-hasher.port.ts    # IPasswordHasher
   token-service.port.ts      # ITokenService
@@ -31,8 +31,8 @@ src/adapters/persistence/mongodb/auth/user-repository.adapter.ts
 **Step 2 — Import the port interface and domain entity**
 
 ```typescript
-import type { IUserRepository } from "../../../../capabilities/auth/application/ports/user-repository.port";
-import { User } from "../../../../capabilities/auth/domain/entities/user.entity";
+import type { IUserRepository } from "../../../../domains/auth/application/ports/user-repository.port";
+import { User } from "../../../../domains/auth/domain/entities/user.entity";
 ```
 
 The adapter imports the interface (to satisfy the contract) and the domain entity (to translate between the database model and the domain model).
@@ -130,7 +130,7 @@ describe("MongoUserRepository", () => {
 
 ```typescript
 // src/container.ts
-import { createAuthService } from "./capabilities/auth/contracts";
+import { createAuthService } from "./domains/auth/contracts";
 import { MongoUserRepository } from "./adapters/persistence/mongodb/auth/user-repository.adapter";
 
 export const authService = createAuthService({
@@ -152,13 +152,13 @@ src/adapters/http/fastify/auth/auth.routes.ts
 
 **Step 2 — Import the contracts layer**
 
-HTTP adapters depend on the capability's public contract, not on internal use cases:
+HTTP adapters depend on the domain's public contract, not on internal use cases:
 
 ```typescript
-import type { IAuthService } from "../../../../capabilities/auth/contracts";
-import { UserAlreadyExists } from "../../../../capabilities/auth/domain/errors/user-already-exists.error";
-import { InvalidCredentials } from "../../../../capabilities/auth/domain/errors/invalid-credentials.error";
-import { InvalidEmail } from "../../../../capabilities/auth/domain/errors/invalid-email.error";
+import type { IAuthService } from "../../../../domains/auth/contracts";
+import { UserAlreadyExists } from "../../../../domains/auth/domain/errors/user-already-exists.error";
+import { InvalidCredentials } from "../../../../domains/auth/domain/errors/invalid-credentials.error";
+import { InvalidEmail } from "../../../../domains/auth/domain/errors/invalid-email.error";
 ```
 
 **Step 3 — Implement the routes**
@@ -238,7 +238,7 @@ await registerAuthRoutes(app, authService);
 ## Checklist
 
 - [ ] Port interface identified in `application/ports/`
-- [ ] Adapter file created in `src/adapters/<category>/<technology>/<capability>/`
+- [ ] Adapter file created in `src/adapters/<category>/<technology>/<domain>/`
 - [ ] Class implements the port interface with the `implements` keyword
 - [ ] `toDomain()` and `toStorage()` mappers written (for persistence adapters)
 - [ ] Integration test written

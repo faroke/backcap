@@ -1,9 +1,9 @@
 ---
-title: Webhooks Capability
+title: Webhooks Domain
 description: Outbound HTTP event delivery with URL validation, SSRF protection, and delivery tracking for TypeScript backends — domain model, use cases, ports, and adapters.
 ---
 
-The `webhooks` capability provides **outbound HTTP event delivery** with URL validation, SSRF protection, and delivery tracking for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `webhooks` domain provides **outbound HTTP event delivery** with URL validation, SSRF protection, and delivery tracking for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add webhooks
 The `Webhook` entity is the aggregate root. It tracks subscribed events, delivery secret, and active state through guarded mutations.
 
 ```typescript
-import { Webhook } from "./capabilities/webhooks/domain/entities/webhook.entity";
+import { Webhook } from "./domains/webhooks/domain/entities/webhook.entity";
 
 const result = Webhook.create({
   id: crypto.randomUUID(),
@@ -54,7 +54,7 @@ if (result.isOk()) {
 ### WebhookUrl Value Object
 
 ```typescript
-import { WebhookUrl } from "./capabilities/webhooks/domain/value-objects/webhook-url.vo";
+import { WebhookUrl } from "./domains/webhooks/domain/value-objects/webhook-url.vo";
 
 const result = WebhookUrl.create("https://example.com/hook");
 // Result<WebhookUrl, InvalidWebhookUrl>
@@ -91,7 +91,7 @@ Validates: must be a valid HTTPS/HTTP URL. Rejects private and reserved IPs (`12
 Creates a new webhook entity, validates the URL and events, and persists it.
 
 ```typescript
-import { RegisterWebhook } from "./capabilities/webhooks/application/use-cases/register-webhook.use-case";
+import { RegisterWebhook } from "./domains/webhooks/application/use-cases/register-webhook.use-case";
 
 const registerWebhook = new RegisterWebhook(webhookRepository, webhookDelivery);
 
@@ -110,7 +110,7 @@ const result = await registerWebhook.execute({
 Delivers a payload to a webhook endpoint. Only delivers if the webhook subscribes to the given event type.
 
 ```typescript
-import { TriggerWebhook } from "./capabilities/webhooks/application/use-cases/trigger-webhook.use-case";
+import { TriggerWebhook } from "./domains/webhooks/application/use-cases/trigger-webhook.use-case";
 
 const triggerWebhook = new TriggerWebhook(webhookRepository, webhookDelivery);
 
@@ -129,7 +129,7 @@ const result = await triggerWebhook.execute({
 Lists webhooks with optional filtering and pagination.
 
 ```typescript
-import { ListWebhooks } from "./capabilities/webhooks/application/use-cases/list-webhooks.use-case";
+import { ListWebhooks } from "./domains/webhooks/application/use-cases/list-webhooks.use-case";
 
 const listWebhooks = new ListWebhooks(webhookRepository, webhookDelivery);
 
@@ -168,11 +168,11 @@ The delivery port dispatches the HTTP request to the webhook URL. It does not pe
 
 ```typescript
 import {
-  createWebhooksCapability,
+  createWebhooksDomain,
   IWebhooksService,
-} from "./capabilities/webhooks/contracts";
+} from "./domains/webhooks/contracts";
 
-const webhooksService: IWebhooksService = createWebhooksCapability({
+const webhooksService: IWebhooksService = createWebhooksDomain({
   webhookRepository,
   webhookDelivery,
 });
@@ -251,7 +251,7 @@ app.use(router);
 ## File Map
 
 ```
-capabilities/webhooks/
+domains/webhooks/
   domain/
     entities/webhook.entity.ts
     value-objects/webhook-url.vo.ts

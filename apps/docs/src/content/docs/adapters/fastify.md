@@ -1,13 +1,13 @@
 ---
 title: Fastify Adapter
-description: Fastify plugin implementations for Backcap capabilities.
+description: Fastify plugin implementations for Backcap domains.
 ---
 
-The Fastify adapter package provides HTTP route handlers as [Fastify plugins](https://fastify.dev/docs/latest/Reference/Plugins/) for Backcap capability service interfaces. Each adapter wires a capability's public `IService` interface to Fastify routes using the plugin pattern.
+The Fastify adapter package provides HTTP route handlers as [Fastify plugins](https://fastify.dev/docs/latest/Reference/Plugins/) for Backcap domain service interfaces. Each adapter wires a domain's public `IService` interface to Fastify routes using the plugin pattern.
 
 ## Install
 
-Install the Fastify adapter for a specific capability:
+Install the Fastify adapter for a specific domain:
 
 ```bash
 npx @backcap/cli add blog-fastify
@@ -85,11 +85,11 @@ The domain and application layers remain **identical** — only the HTTP adapter
 
 ## Writing Additional Fastify Adapters
 
-When a new capability needs a Fastify HTTP layer:
+When a new domain needs a Fastify HTTP layer:
 
-1. Create the file at `adapters/fastify/<capability>/<name>.router.ts`
-2. Import the public service interface from `capabilities/<capability>/contracts`
-3. Import domain error classes from `capabilities/<capability>/domain/errors/`
+1. Create the file at `adapters/fastify/<domain>/<name>.router.ts`
+2. Import the public service interface from `domains/<domain>/contracts`
+3. Import domain error classes from `domains/<domain>/domain/errors/`
 4. Write a `createXxxPlugin(service: IService)` function that returns an async Fastify plugin
 5. Map domain errors to HTTP status codes using a `toHttpError()` helper
 6. Write route handler tests using a mock service

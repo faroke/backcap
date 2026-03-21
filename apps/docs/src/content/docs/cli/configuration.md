@@ -67,7 +67,7 @@ The TypeScript path alias for cross-domain imports. During `backcap init`, the C
 }
 ```
 
-This lets capabilities import from each other using clean paths:
+This lets domains import from each other using clean paths:
 
 ```typescript
 import type { ITokenService } from "@domains/auth/application/ports/token-service.port.js";
@@ -87,7 +87,7 @@ Controls where the CLI writes files when you run `backcap add`. All paths are re
 |-------|---------|-------------|
 | `paths.domains` | `"domains"` | Domain source files — entities, use cases, contracts, value objects |
 | `paths.adapters` | `"adapters"` | Adapter implementations — Express routers, Prisma repositories, etc. |
-| `paths.bridges` | `"bridges"` | Bridge files — event-driven connections between capabilities |
+| `paths.bridges` | `"bridges"` | Bridge files — event-driven connections between domains |
 | `paths.skills` | `".claude/skills"` | AI agent skill files (SKILL.md and references) |
 | `paths.shared` | `"src/shared"` | Shared utilities — `Result` type, event bus port, base bridge class |
 
@@ -111,6 +111,6 @@ The CLI will use these paths for all subsequent `backcap add` commands. Existing
 
 ## Design notes
 
-- **No state tracking.** Unlike tools that maintain a lock file, `backcap.json` contains only configuration. The filesystem is the source of truth for what is installed — run `backcap list` to see installed capabilities.
+- **No state tracking.** Unlike tools that maintain a lock file, `backcap.json` contains only configuration. The filesystem is the source of truth for what is installed — run `backcap list` to see installed domains.
 - **Strict paths.** Unknown keys inside `paths` are rejected during validation to catch typos early.
 - **Extensible top level.** Unknown keys at the top level are allowed for forward compatibility.

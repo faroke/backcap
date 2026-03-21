@@ -1,9 +1,9 @@
 ---
-title: Blog Capability
+title: Blog Domain
 description: Blog post management for TypeScript backends — create, publish, and list posts with Clean Architecture.
 ---
 
-The `blog` capability provides **blog post management** for TypeScript backends. It handles post creation, publishing lifecycle, slug generation, and listing with filtering.
+The `blog` domain provides **blog post management** for TypeScript backends. It handles post creation, publishing lifecycle, slug generation, and listing with filtering.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add blog
 The `Post` entity is the aggregate root. It is immutable — all state changes return new instances.
 
 ```typescript
-import { Post } from "./capabilities/blog/domain/entities/post.entity";
+import { Post } from "./domains/blog/domain/entities/post.entity";
 
 const result = Post.create({
   id: crypto.randomUUID(),
@@ -62,7 +62,7 @@ Returns `Result<{ post: Post; event: PostPublished }, PostAlreadyPublished>`. Fa
 ### Slug Value Object
 
 ```typescript
-import { Slug } from "./capabilities/blog/domain/value-objects/slug.vo";
+import { Slug } from "./domains/blog/domain/value-objects/slug.vo";
 
 const result = Slug.create("my-blog-post");
 // Result<Slug, InvalidSlug>
@@ -97,7 +97,7 @@ Validates against `/^[a-z0-9]+(?:-[a-z0-9]+)*$/` — lowercase alphanumeric segm
 Creates a draft post with an auto-generated or explicit slug.
 
 ```typescript
-import { CreatePost } from "./capabilities/blog/application/use-cases/create-post.use-case";
+import { CreatePost } from "./domains/blog/application/use-cases/create-post.use-case";
 
 const createPost = new CreatePost(postRepository);
 
@@ -199,7 +199,7 @@ app.use(router);
 ## Public API (contracts/)
 
 ```typescript
-import { createBlogService, IBlogService } from "./capabilities/blog/contracts";
+import { createBlogService, IBlogService } from "./domains/blog/contracts";
 
 const blogService: IBlogService = createBlogService({
   postRepository,
@@ -219,13 +219,13 @@ The `eventBus` dependency is optional. When provided, the factory automatically 
 
 ### blog-search
 
-Indexes published posts into the search capability when `PostPublished` fires.
+Indexes published posts into the search domain when `PostPublished` fires.
 
 ```bash
 npx @backcap/cli add blog-search
 ```
 
-**Requires**: `blog` and `search` capabilities installed.
+**Requires**: `blog` and `search` domains installed.
 
 ### blog-comments
 
@@ -238,7 +238,7 @@ Associates tags with posts when they are published.
 ## File Map
 
 ```
-capabilities/blog/
+domains/blog/
   domain/
     entities/post.entity.ts
     value-objects/slug.vo.ts

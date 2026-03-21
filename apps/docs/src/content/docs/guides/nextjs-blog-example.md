@@ -3,13 +3,13 @@ title: "Example: Next.js Blog"
 description: A working Next.js App Router blog API built step-by-step with the Backcap CLI — identical domain logic to Express, Fastify, and Hono, different HTTP adapter suited for serverless.
 ---
 
-This guide walks through a **working Next.js blog example** built with the Backcap CLI. It demonstrates that capabilities, adapters, and bridges are truly swappable — the domain and application layers are identical to the [Express example](/backcap/guides/express-blog-example), [Fastify example](/backcap/guides/fastify-blog-example), and [Hono example](/backcap/guides/hono-blog-example), only the HTTP adapter and server wiring differ.
+This guide walks through a **working Next.js blog example** built with the Backcap CLI. It demonstrates that domains, adapters, and bridges are truly swappable — the domain and application layers are identical to the [Express example](/backcap/guides/express-blog-example), [Fastify example](/backcap/guides/fastify-blog-example), and [Hono example](/backcap/guides/hono-blog-example), only the HTTP adapter and server wiring differ.
 
 The full source code is in [`examples/nextjs-blog/`](https://github.com/faroke/backcap/tree/main/examples/nextjs-blog).
 
 ## What It Demonstrates
 
-- **Adapter swappability** — Same blog + search capabilities as other frameworks, different HTTP layer
+- **Adapter swappability** — Same blog + search domains as other frameworks, different HTTP layer
 - **Serverless-ready** — Next.js App Router API routes with module-level singleton pattern
 - **File-based routing** — Routes use `app/api/` convention with handler delegation
 - **Blog-Search bridge** — Same event-driven architecture as other examples
@@ -40,7 +40,7 @@ Create `tsconfig.json` with `@/*` path alias pointing to `./src/*`.
 
 ### 2. Configure ESM extension resolution
 
-Backcap capabilities use `.js` extensions in imports. Add webpack config to `next.config.ts`:
+Backcap domains use `.js` extensions in imports. Add webpack config to `next.config.ts`:
 
 ```typescript
 import type { NextConfig } from "next";
@@ -66,11 +66,11 @@ npx @backcap/cli init
 
 Detects **Next.js** framework and pnpm package manager. Creates `backcap.json` with `"framework": "nextjs"`.
 
-### 4. Install capabilities and bridge
+### 4. Install domains and bridge
 
 ```bash
-npx @backcap/cli add blog         # Blog capability + Next.js & Prisma adapters
-npx @backcap/cli add search       # Search capability
+npx @backcap/cli add blog         # Blog domain + Next.js & Prisma adapters
+npx @backcap/cli add search       # Search domain
 npx @backcap/cli add blog-search  # Bridge: PostPublished → index in search
 ```
 
@@ -92,8 +92,8 @@ npx prisma migrate dev --name init
 
 ```typescript
 // src/lib/services.ts
-import { createBlogService } from "../capabilities/blog/contracts/index.js";
-import { createSearchService } from "../capabilities/search/contracts/search.factory.js";
+import { createBlogService } from "../domains/blog/contracts/index.js";
+import { createSearchService } from "../domains/search/contracts/search.factory.js";
 import { createBridge } from "../bridges/blog-search/blog-search.bridge.js";
 import { createBlogRouteHandlers } from "../adapters/http/nextjs/blog/blog.route-handlers.js";
 import { InMemoryEventBus } from "../shared/in-memory-event-bus.js";
@@ -199,10 +199,10 @@ See [`examples/nextjs-blog/FRICTION.md`](https://github.com/faroke/backcap/tree/
 
 ## See Also
 
-- [Express Blog example](/backcap/guides/express-blog-example) — Same capabilities with Express adapter
-- [Fastify Blog example](/backcap/guides/fastify-blog-example) — Same capabilities with Fastify adapter
-- [Hono Blog example](/backcap/guides/hono-blog-example) — Same capabilities with Hono adapter
-- [NestJS Blog example](/backcap/guides/nestjs-blog-example) — Same capabilities with NestJS DI bridge
+- [Express Blog example](/backcap/guides/express-blog-example) — Same domains with Express adapter
+- [Fastify Blog example](/backcap/guides/fastify-blog-example) — Same domains with Fastify adapter
+- [Hono Blog example](/backcap/guides/hono-blog-example) — Same domains with Hono adapter
+- [NestJS Blog example](/backcap/guides/nestjs-blog-example) — Same domains with NestJS DI bridge
 - [Next.js adapter](/backcap/adapters/nextjs) — Adapter API reference
-- [Blog capability](/backcap/capabilities/blog) — Full domain model and API reference
-- [Bridges concept](/backcap/concepts/bridges) — How bridges connect capabilities
+- [Blog domain](/backcap/domains/blog) — Full domain model and API reference
+- [Bridges concept](/backcap/concepts/bridges) — How bridges connect domains

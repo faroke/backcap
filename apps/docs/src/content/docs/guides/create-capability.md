@@ -1,46 +1,46 @@
 ---
-title: Create a Capability
-description: Numbered checklist for authoring a new Backcap capability from scratch.
+title: Create a Domain
+description: Numbered checklist for authoring a new Backcap domain from scratch.
 ---
 
-This guide walks through creating a new capability for the Backcap registry. We'll use a hypothetical `notifications` capability as the running example. Follow the numbered checklist in order.
+This guide walks through creating a new domain for the Backcap registry. We'll use a hypothetical `notifications` domain as the running example. Follow the numbered checklist in order.
 
 ## Before You Start
 
-A capability is a vertical slice of backend business logic structured in four layers: `domain/`, `application/`, `contracts/`, and an optional `adapters/` tree. Read the [Capabilities concept page](/backcap/concepts/capabilities) and the [Architecture page](/backcap/concepts/architecture) before proceeding.
+A domain is a vertical slice of backend business logic structured in four layers: `domain/`, `application/`, `contracts/`, and an optional `adapters/` tree. Read the [Domains concept page](/backcap/concepts/domains) and the [Architecture page](/backcap/concepts/architecture) before proceeding.
 
 ## Checklist
 
 ### 1. Define the Bounded Context
 
-Write a one-paragraph description of what the capability does and what it does **not** do. Be explicit about boundaries.
+Write a one-paragraph description of what the domain does and what it does **not** do. Be explicit about boundaries.
 
 Example:
-> The `notifications` capability manages the delivery of transactional messages to users. It defines the `INotificationSender` port, a `SendNotification` use case, and typed results for delivery success and failure. It does not handle email provider configuration, template rendering, or user preference management.
+> The `notifications` domain manages the delivery of transactional messages to users. It defines the `INotificationSender` port, a `SendNotification` use case, and typed results for delivery success and failure. It does not handle email provider configuration, template rendering, or user preference management.
 
 ### 2. Create the Directory Structure
 
 ```bash
-mkdir -p packages/registry/capabilities/notifications/domain/entities
-mkdir -p packages/registry/capabilities/notifications/domain/value-objects
-mkdir -p packages/registry/capabilities/notifications/domain/errors
-mkdir -p packages/registry/capabilities/notifications/domain/events
-mkdir -p packages/registry/capabilities/notifications/domain/__tests__
-mkdir -p packages/registry/capabilities/notifications/application/use-cases
-mkdir -p packages/registry/capabilities/notifications/application/ports
-mkdir -p packages/registry/capabilities/notifications/application/dto
-mkdir -p packages/registry/capabilities/notifications/application/__tests__/mocks
-mkdir -p packages/registry/capabilities/notifications/contracts
-mkdir -p packages/registry/capabilities/notifications/shared
+mkdir -p packages/registry/domains/notifications/domain/entities
+mkdir -p packages/registry/domains/notifications/domain/value-objects
+mkdir -p packages/registry/domains/notifications/domain/errors
+mkdir -p packages/registry/domains/notifications/domain/events
+mkdir -p packages/registry/domains/notifications/domain/__tests__
+mkdir -p packages/registry/domains/notifications/application/use-cases
+mkdir -p packages/registry/domains/notifications/application/ports
+mkdir -p packages/registry/domains/notifications/application/dto
+mkdir -p packages/registry/domains/notifications/application/__tests__/mocks
+mkdir -p packages/registry/domains/notifications/contracts
+mkdir -p packages/registry/domains/notifications/shared
 ```
 
 ### 3. Copy the Result Monad
 
-Copy `shared/result.ts` from an existing capability. This file is duplicated intentionally so each capability is self-contained:
+Copy `shared/result.ts` from an existing domain. This file is duplicated intentionally so each domain is self-contained:
 
 ```bash
-cp packages/registry/capabilities/auth/shared/result.ts \
-   packages/registry/capabilities/notifications/shared/result.ts
+cp packages/registry/domains/auth/shared/result.ts \
+   packages/registry/domains/notifications/shared/result.ts
 ```
 
 ### 4. Define Domain Errors
@@ -92,7 +92,7 @@ Rules:
 
 ### 6. Define Domain Entities (if needed)
 
-Entities are domain objects with identity. Not every capability needs entities — some are purely service-oriented.
+Entities are domain objects with identity. Not every domain needs entities — some are purely service-oriented.
 
 Rules:
 - Private constructor
@@ -279,7 +279,7 @@ export { createNotificationsService } from "./notifications.factory.js";
 export type { NotificationsServiceDeps } from "./notifications.factory.js";
 ```
 
-This is the **only** barrel export in the capability. Do not create `index.ts` files in `domain/` or `application/`.
+This is the **only** barrel export in the domain. Do not create `index.ts` files in `domain/` or `application/`.
 
 ### 16. Create the SKILL.md
 
@@ -293,7 +293,7 @@ Build the registry to produce a JSON bundle (`notifications.json`) containing al
 pnpm --filter @backcap/registry build
 ```
 
-The bundle format matches the `registryItemSchema` in `packages/shared/`. The build step runs `runQualityChecks()` from `quality-check.ts`, which enforces the capability directory structure and naming conventions at build time.
+The bundle format matches the `registryItemSchema` in `packages/shared/`. The build step runs `runQualityChecks()` from `quality-check.ts`, which enforces the domain directory structure and naming conventions at build time.
 
 ## Checklist Summary
 

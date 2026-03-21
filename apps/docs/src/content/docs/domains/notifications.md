@@ -1,9 +1,9 @@
 ---
-title: Notifications Capability
+title: Notifications Domain
 description: Multi-channel notification delivery (email, SMS, push) for TypeScript backends — domain model, use cases, ports, and adapters.
 ---
 
-The `notifications` capability provides **multi-channel notification delivery** (email, SMS, push) for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `notifications` domain provides **multi-channel notification delivery** (email, SMS, push) for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add notifications
 The `Notification` entity is the aggregate root. It tracks delivery status through immutable state transitions.
 
 ```typescript
-import { Notification } from "./capabilities/notifications/domain/entities/notification.entity";
+import { Notification } from "./domains/notifications/domain/entities/notification.entity";
 
 const result = Notification.create({
   id: crypto.randomUUID(),
@@ -57,7 +57,7 @@ if (result.isOk()) {
 ### NotificationChannel Value Object
 
 ```typescript
-import { NotificationChannel } from "./capabilities/notifications/domain/value-objects/notification-channel.vo";
+import { NotificationChannel } from "./domains/notifications/domain/value-objects/notification-channel.vo";
 
 const result = NotificationChannel.create("email");
 // Result<NotificationChannel, InvalidChannel>
@@ -94,7 +94,7 @@ Supports: `"email"`, `"sms"`, `"push"`. Returns `InvalidChannel` for anything el
 Creates a notification, sends it via `INotificationSender`, marks it as sent or failed, and persists via `INotificationRepository`.
 
 ```typescript
-import { SendNotification } from "./capabilities/notifications/application/use-cases/send-notification.use-case";
+import { SendNotification } from "./domains/notifications/application/use-cases/send-notification.use-case";
 
 const sendNotification = new SendNotification(notificationSender, notificationRepository);
 
@@ -114,7 +114,7 @@ const result = await sendNotification.execute({
 Retrieves notifications for a given recipient.
 
 ```typescript
-import { GetNotifications } from "./capabilities/notifications/application/use-cases/get-notifications.use-case";
+import { GetNotifications } from "./domains/notifications/application/use-cases/get-notifications.use-case";
 
 const getNotifications = new GetNotifications(notificationRepository);
 
@@ -127,7 +127,7 @@ const result = await getNotifications.execute({ recipient: "user@example.com" })
 Marks a notification as sent by transitioning its status to `"sent"` via `markSent()`. Despite its name, it sets the status to `"sent"` (not `"read"`) — there is no separate read state in the domain model.
 
 ```typescript
-import { MarkAsRead } from "./capabilities/notifications/application/use-cases/mark-as-read.use-case";
+import { MarkAsRead } from "./domains/notifications/application/use-cases/mark-as-read.use-case";
 
 const markAsRead = new MarkAsRead(notificationRepository);
 
@@ -163,7 +163,7 @@ export interface INotificationRepository {
 import {
   createNotificationsService,
   INotificationsService,
-} from "./capabilities/notifications/contracts";
+} from "./domains/notifications/contracts";
 
 const notificationsService: INotificationsService = createNotificationsService({
   notificationSender,
@@ -256,7 +256,7 @@ See the [auth-notifications bridge](/backcap/concepts/bridges#the-auth-notificat
 ## File Map
 
 ```
-capabilities/notifications/
+domains/notifications/
   domain/
     entities/notification.entity.ts
     value-objects/notification-channel.vo.ts

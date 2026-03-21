@@ -1,9 +1,9 @@
 ---
-title: Search Capability
+title: Search Domain
 description: Full-text search for TypeScript backends — index documents, search with filters, and paginate results.
 ---
 
-The `search` capability provides **full-text search** for TypeScript backends. It offers a provider-agnostic port interface that allows you to plug in Meilisearch, Algolia, Typesense, Elasticsearch, or a database-native solution.
+The `search` domain provides **full-text search** for TypeScript backends. It offers a provider-agnostic port interface that allows you to plug in Meilisearch, Algolia, Typesense, Elasticsearch, or a database-native solution.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add search
 The `SearchIndex` entity represents a named search index and tracks its document count. Immutable — mutations return new instances.
 
 ```typescript
-import { SearchIndex } from "./capabilities/search/domain/entities/search-index.entity";
+import { SearchIndex } from "./domains/search/domain/entities/search-index.entity";
 
 const result = SearchIndex.create({
   id: crypto.randomUUID(),
@@ -46,7 +46,7 @@ Methods: `incrementCount()` and `decrementCount()` return new instances with upd
 ### SearchQuery Value Object
 
 ```typescript
-import { SearchQuery } from "./capabilities/search/domain/value-objects/search-query.vo";
+import { SearchQuery } from "./domains/search/domain/value-objects/search-query.vo";
 
 const result = SearchQuery.create({
   query: "typescript backend",
@@ -88,7 +88,7 @@ Validation: query must be non-empty, page >= 1, pageSize capped at 100.
 Adds or updates a document in a search index. If the index does not exist, the search engine creates it automatically.
 
 ```typescript
-import { IndexDocument } from "./capabilities/search/application/use-cases/index-document.use-case";
+import { IndexDocument } from "./domains/search/application/use-cases/index-document.use-case";
 
 const indexDocument = new IndexDocument(searchEngine);
 
@@ -160,7 +160,7 @@ No registry adapter is provided — implement this port for your search provider
 ## Public API (contracts/)
 
 ```typescript
-import { createSearchService, ISearchService } from "./capabilities/search/contracts";
+import { createSearchService, ISearchService } from "./domains/search/contracts";
 
 const searchService: ISearchService = createSearchService({
   searchEngine,
@@ -182,14 +182,14 @@ Automatically indexes blog posts when they are published via the `PostPublished`
 npx @backcap/cli add blog-search
 ```
 
-**Requires**: `blog` and `search` capabilities installed.
+**Requires**: `blog` and `search` domains installed.
 
 When a `PostPublished` event fires, the bridge calls `indexDocument` to add the post to the `"posts"` index with `title`, `slug`, `authorId`, and `publishedAt`.
 
 ## File Map
 
 ```
-capabilities/search/
+domains/search/
   domain/
     entities/search-index.entity.ts
     value-objects/search-query.vo.ts

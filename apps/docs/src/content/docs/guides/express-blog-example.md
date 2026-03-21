@@ -3,14 +3,14 @@ title: "Example: Express Blog"
 description: A working Express blog API built step-by-step with the Backcap CLI — blog, search, and bridge integration.
 ---
 
-This guide walks through a **working Express blog example** built entirely with the Backcap CLI. It demonstrates capabilities, adapters, bridges, and event-driven architecture in a real project.
+This guide walks through a **working Express blog example** built entirely with the Backcap CLI. It demonstrates domains, adapters, bridges, and event-driven architecture in a real project.
 
 The full source code is in [`examples/express-blog/`](https://github.com/faroke/backcap/tree/main/examples/express-blog).
 
 ## What It Demonstrates
 
-- **Blog capability** — CRUD operations for blog posts
-- **Search capability** — Document indexing and full-text search
+- **Blog domain** — CRUD operations for blog posts
+- **Search domain** — Document indexing and full-text search
 - **Blog-Search bridge** — Automatically indexes posts when published
 - **Prisma adapter** — SQLite persistence
 - **Event bus** — Domain events flowing from blog to search via bridge
@@ -41,11 +41,11 @@ npx @backcap/cli init
 
 Detects Express framework and pnpm package manager. Creates `backcap.json`.
 
-### 3. Install capabilities and bridge
+### 3. Install domains and bridge
 
 ```bash
-npx @backcap/cli add blog       # Blog capability + Express & Prisma adapters
-npx @backcap/cli add search     # Search capability
+npx @backcap/cli add blog       # Blog domain + Express & Prisma adapters
+npx @backcap/cli add search     # Search domain
 npx @backcap/cli add blog-search # Bridge: PostPublished → index in search
 ```
 
@@ -66,12 +66,12 @@ npx prisma migrate dev --name init
 ### 5. Wire everything in server.ts
 
 ```typescript
-import { createBlogService } from "./capabilities/blog/contracts/index.js";
-import { createSearchService } from "./capabilities/search/contracts/search.factory.js";
+import { createBlogService } from "./domains/blog/contracts/index.js";
+import { createSearchService } from "./domains/search/contracts/search.factory.js";
 import { createBridge } from "./bridges/blog-search/blog-search.bridge.js";
 import { InMemoryEventBus } from "./shared/in-memory-event-bus.js";
 
-// Wire capabilities with event bus
+// Wire domains with event bus
 const eventBus = new InMemoryEventBus();
 const blogService = createBlogService({ postRepository, eventBus });
 const searchService = createSearchService({ searchEngine });
@@ -124,9 +124,9 @@ GET /api/search?q=hello
 
 ## See Also
 
-- [Fastify Blog example](/backcap/guides/fastify-blog-example) — Same capabilities with Fastify adapter
-- [Hono Blog example](/backcap/guides/hono-blog-example) — Same capabilities with Hono adapter
-- [NestJS Blog example](/backcap/guides/nestjs-blog-example) — Same capabilities with NestJS DI bridge
-- [Blog capability](/backcap/capabilities/blog) — Full domain model and API reference
-- [Search capability](/backcap/capabilities/search) — Search engine port and use cases
-- [Bridges concept](/backcap/concepts/bridges) — How bridges connect capabilities
+- [Fastify Blog example](/backcap/guides/fastify-blog-example) — Same domains with Fastify adapter
+- [Hono Blog example](/backcap/guides/hono-blog-example) — Same domains with Hono adapter
+- [NestJS Blog example](/backcap/guides/nestjs-blog-example) — Same domains with NestJS DI bridge
+- [Blog domain](/backcap/domains/blog) — Full domain model and API reference
+- [Search domain](/backcap/domains/search) — Search engine port and use cases
+- [Bridges concept](/backcap/concepts/bridges) — How bridges connect domains

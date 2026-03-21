@@ -1,9 +1,9 @@
 ---
-title: Files Capability
+title: Files Domain
 description: File upload, retrieval, and deletion for TypeScript backends — domain model, use cases, ports, and adapters.
 ---
 
-The `files` capability provides **file upload, retrieval, and deletion** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `files` domain provides **file upload, retrieval, and deletion** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -15,10 +15,10 @@ npx @backcap/cli add files
 
 ### File Entity
 
-The `File` entity is the aggregate root of the files capability. It holds file metadata including a validated path.
+The `File` entity is the aggregate root of the files domain. It holds file metadata including a validated path.
 
 ```typescript
-import { File } from "./capabilities/files/domain/entities/file.entity";
+import { File } from "./domains/files/domain/entities/file.entity";
 
 const result = File.create({
   id: crypto.randomUUID(),
@@ -48,7 +48,7 @@ if (result.isOk()) {
 ### FilePath Value Object
 
 ```typescript
-import { FilePath } from "./capabilities/files/domain/value-objects/file-path.vo";
+import { FilePath } from "./domains/files/domain/value-objects/file-path.vo";
 
 const result = FilePath.create("uploads/photo.jpg");
 // Result<FilePath, InvalidFilePath>
@@ -84,7 +84,7 @@ Validates: non-empty, no `..` path traversal, matches safe pattern `^[a-zA-Z0-9.
 Creates a new file entity, validates it, persists it, and emits a `FileUploaded` event.
 
 ```typescript
-import { UploadFile } from "./capabilities/files/application/use-cases/upload-file.use-case";
+import { UploadFile } from "./domains/files/application/use-cases/upload-file.use-case";
 
 const uploadFile = new UploadFile(fileStorage);
 
@@ -104,7 +104,7 @@ const result = await uploadFile.execute({
 Retrieves a file by ID.
 
 ```typescript
-import { GetFile } from "./capabilities/files/application/use-cases/get-file.use-case";
+import { GetFile } from "./domains/files/application/use-cases/get-file.use-case";
 
 const getFile = new GetFile(fileStorage);
 
@@ -117,7 +117,7 @@ const result = await getFile.execute({ fileId: "abc-123" });
 Deletes a file by ID.
 
 ```typescript
-import { DeleteFile } from "./capabilities/files/application/use-cases/delete-file.use-case";
+import { DeleteFile } from "./domains/files/application/use-cases/delete-file.use-case";
 
 const deleteFile = new DeleteFile(fileStorage);
 
@@ -140,7 +140,7 @@ export interface IFileStorage {
 ## Public API (contracts/)
 
 ```typescript
-import { createFilesService, IFilesService } from "./capabilities/files/contracts";
+import { createFilesService, IFilesService } from "./domains/files/contracts";
 
 const filesService: IFilesService = createFilesService({
   fileStorage,
@@ -227,7 +227,7 @@ createFilesRouter(filesService, router, upload.single("file"));
 ## File Map
 
 ```
-capabilities/files/
+domains/files/
   domain/
     entities/file.entity.ts
     value-objects/file-path.vo.ts

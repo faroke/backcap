@@ -1,9 +1,9 @@
 ---
-title: Media Capability
+title: Media Domain
 description: Media asset management with image/video processing, variant generation, and CDN-aware URL resolution for TypeScript backends.
 ---
 
-The `media` capability provides **media asset management with processing and variant generation** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `media` domain provides **media asset management with processing and variant generation** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add media
 The `MediaAsset` entity is the aggregate root. It holds media metadata, dimensions (for images/videos), and a list of variants (thumbnails, previews, etc.).
 
 ```typescript
-import { MediaAsset } from "./capabilities/media/domain/entities/media-asset.entity";
+import { MediaAsset } from "./domains/media/domain/entities/media-asset.entity";
 
 const result = MediaAsset.create({
   id: crypto.randomUUID(),
@@ -50,7 +50,7 @@ if (result.isOk()) {
 ### MediaVariant Entity
 
 ```typescript
-import { MediaVariant } from "./capabilities/media/domain/entities/media-variant.entity";
+import { MediaVariant } from "./domains/media/domain/entities/media-variant.entity";
 
 const result = MediaVariant.create({
   id: crypto.randomUUID(),
@@ -69,7 +69,7 @@ const result = MediaVariant.create({
 Validates against a supported list and categorizes as `image`, `video`, or `document`.
 
 ```typescript
-import { MimeType } from "./capabilities/media/domain/value-objects/mime-type.vo";
+import { MimeType } from "./domains/media/domain/value-objects/mime-type.vo";
 
 const result = MimeType.create("image/jpeg");
 if (result.isOk()) {
@@ -86,7 +86,7 @@ Supported types include: `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `
 Width and height as positive integers with aspect ratio computation.
 
 ```typescript
-import { Dimensions } from "./capabilities/media/domain/value-objects/dimensions.vo";
+import { Dimensions } from "./domains/media/domain/value-objects/dimensions.vo";
 
 const dims = Dimensions.create(1920, 1080).unwrap();
 console.log(dims.aspectRatio); // ~1.778 (16:9)
@@ -97,7 +97,7 @@ console.log(dims.aspectRatio); // ~1.778 (16:9)
 Enum value object: `thumbnail`, `preview`, `original`, `optimized`.
 
 ```typescript
-import { MediaPurpose } from "./capabilities/media/domain/value-objects/media-purpose.vo";
+import { MediaPurpose } from "./domains/media/domain/value-objects/media-purpose.vo";
 
 const purpose = MediaPurpose.thumbnail();
 const fromString = MediaPurpose.from("preview"); // Result<MediaPurpose, Error>
@@ -206,7 +206,7 @@ export interface IMediaStorage {
 ## Public API (contracts/)
 
 ```typescript
-import { createMediaService, IMediaService } from "./capabilities/media/contracts";
+import { createMediaService, IMediaService } from "./domains/media/contracts";
 
 const mediaService: IMediaService = createMediaService({
   mediaRepository,
@@ -323,7 +323,7 @@ const url = await resolver.getMediaUrl("media-123", "thumbnail");
 
 When both `media` and `files` are installed, the `media-files` bridge connects them:
 
-- **DI factory:** `createFileBackedMediaStorage()` creates an `IMediaStorage` adapter that delegates to the files capability's `IFileStorage` — raw file storage and variant persistence go through the files layer
+- **DI factory:** `createFileBackedMediaStorage()` creates an `IMediaStorage` adapter that delegates to the files domain's `IFileStorage` — raw file storage and variant persistence go through the files layer
 - **Event-driven:** `MediaUploaded` triggers `ProcessMedia` to generate variants after storage confirms success
 
 ```typescript
@@ -333,7 +333,7 @@ const mediaStorage = createFileBackedMediaStorage({ fileStorage });
 // Use mediaStorage as the IMediaStorage implementation
 ```
 
-## Distinction from Files Capability
+## Distinction from Files Domain
 
 - **files** = raw upload/download/delete — no processing, no variants, no metadata enrichment
 - **media** = processing-aware — thumbnails, format conversion, dimensions, variants, CDN URLs
@@ -342,7 +342,7 @@ const mediaStorage = createFileBackedMediaStorage({ fileStorage });
 ## File Map
 
 ```
-capabilities/media/
+domains/media/
   domain/
     entities/media-asset.entity.ts
     entities/media-variant.entity.ts

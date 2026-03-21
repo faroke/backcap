@@ -1,9 +1,9 @@
 ---
-title: Analytics Capability
+title: Analytics Domain
 description: Event tracking, querying, and metrics aggregation — track events, query history, and compute dashboards for TypeScript backends.
 ---
 
-The `analytics` capability provides **event tracking, querying, and metrics aggregation** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `analytics` domain provides **event tracking, querying, and metrics aggregation** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add analytics
 The `AnalyticsEvent` entity is the aggregate root. It is **immutable by design** — analytics are facts that cannot be edited.
 
 ```typescript
-import { AnalyticsEvent } from "./capabilities/analytics/domain/entities/analytics-event.entity";
+import { AnalyticsEvent } from "./domains/analytics/domain/entities/analytics-event.entity";
 
 const result = AnalyticsEvent.create({
   id: crypto.randomUUID(),
@@ -50,7 +50,7 @@ if (result.isOk()) {
 ### TrackingId Value Object
 
 ```typescript
-import { TrackingId } from "./capabilities/analytics/domain/value-objects/tracking-id.vo";
+import { TrackingId } from "./domains/analytics/domain/value-objects/tracking-id.vo";
 
 const result = TrackingId.create("site-project-abc");
 // Result<TrackingId, InvalidTrackingId>
@@ -135,9 +135,9 @@ The store is append-only (`record`). Aggregation is delegated to the store imple
 ## Public API (contracts/)
 
 ```typescript
-import { createAnalyticsCapability, IAnalyticsService } from "./capabilities/analytics/contracts";
+import { createAnalyticsDomain, IAnalyticsService } from "./domains/analytics/contracts";
 
-const analyticsService: IAnalyticsService = createAnalyticsCapability({ analyticsStore });
+const analyticsService: IAnalyticsService = createAnalyticsDomain({ analyticsStore });
 ```
 
 ## Adapters
@@ -167,7 +167,7 @@ npx @backcap/cli add analytics-express
 ## File Map
 
 ```
-capabilities/analytics/
+domains/analytics/
   domain/
     entities/analytics-event.entity.ts
     value-objects/tracking-id.vo.ts

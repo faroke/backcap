@@ -1,9 +1,9 @@
 ---
-title: Comments Capability
+title: Comments Domain
 description: Threaded comments and moderation — post, list, and soft-delete comments on any resource for TypeScript backends.
 ---
 
-The `comments` capability provides **threaded commenting on any resource** with soft-delete and author-based moderation for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `comments` domain provides **threaded commenting on any resource** with soft-delete and author-based moderation for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add comments
 The `Comment` entity is the aggregate root. It attaches to any resource via generic `resourceId`/`resourceType` strings and supports threaded replies via `parentId`.
 
 ```typescript
-import { Comment } from "./capabilities/comments/domain/entities/comment.entity";
+import { Comment } from "./domains/comments/domain/entities/comment.entity";
 
 const result = Comment.create({
   id: crypto.randomUUID(),
@@ -53,7 +53,7 @@ if (result.isOk()) {
 ### CommentContent Value Object
 
 ```typescript
-import { CommentContent } from "./capabilities/comments/domain/value-objects/comment-content.vo";
+import { CommentContent } from "./domains/comments/domain/value-objects/comment-content.vo";
 
 const result = CommentContent.create("Great article!");
 // Result<CommentContent, Error>
@@ -135,7 +135,7 @@ export interface ICommentRepository {
 ## Public API (contracts/)
 
 ```typescript
-import { createCommentsService, ICommentsService } from "./capabilities/comments/contracts";
+import { createCommentsService, ICommentsService } from "./domains/comments/contracts";
 
 const commentsService: ICommentsService = createCommentsService({ commentRepository });
 ```
@@ -171,7 +171,7 @@ npx @backcap/cli add comments-express
 ## File Map
 
 ```
-capabilities/comments/
+domains/comments/
   domain/
     entities/comment.entity.ts
     value-objects/comment-content.vo.ts

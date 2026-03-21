@@ -7,7 +7,7 @@ Backcap is designed to work well with AI coding assistants. The strict layer sep
 
 ## Why Backcap Works Well with AI
 
-**Predictable structure**: Every capability has the same four layers with the same naming conventions. An AI that has read `SKILL.md` once knows where every type of file belongs.
+**Predictable structure**: Every domain has the same four layers with the same naming conventions. An AI that has read `SKILL.md` once knows where every type of file belongs.
 
 **Typed error handling**: `Result<T, E>` makes failure modes explicit in the type signature. The AI can see exactly what errors a use case returns and generate correct error-handling code.
 
@@ -42,7 +42,7 @@ After loading the skills, the AI understands:
 ```
 I've loaded the backcap-core and backcap-auth skills.
 
-Add an updateEmail use case to the auth capability. It should:
+Add an updateEmail use case to the auth domain. It should:
 - Accept userId and newEmail as inputs
 - Find the user by ID (return UserNotFound if not found)
 - Call user.updateEmail() (which returns Result<User, InvalidEmail>)
@@ -75,22 +75,22 @@ The AI will:
 
 ## Generating Bridge Use Cases
 
-Bridges connect two capabilities. Load both relevant skill files:
+Bridges connect two domains. Load both relevant skill files:
 
 ```
 Read backcap-core, backcap-auth, and any notifications skill.
 
 Create an auth-notifications bridge that:
-- Listens for UserRegistered events from the auth capability
+- Listens for UserRegistered events from the auth domain
 - Calls an IEmailSender port to send a welcome email
 - Returns Result<void, SendWelcomeEmailError>
 
 Model it on the existing auth-notifications bridge pattern.
 ```
 
-## Extending a Capability
+## Extending a Domain
 
-When extending an existing capability, always load the specific skill file for that capability. It contains the domain map — a table of every file, its export, and its responsibility.
+When extending an existing domain, always load the specific skill file for that domain. It contains the domain map — a table of every file, its export, and its responsibility.
 
 ```
 Load backcap-auth SKILL.md.
@@ -106,13 +106,13 @@ Add a UserRole value object that:
 Use the architecture rules as a review checklist:
 
 ### Domain Layer Check
-- [ ] No external imports (only `shared/result.ts` from within the capability)
+- [ ] No external imports (only `shared/result.ts` from within the domain)
 - [ ] Private constructor with a static `create()` factory
 - [ ] Factory returns `Result<T, E>`, not the value directly
 - [ ] No async methods
 
 ### Application Layer Check
-- [ ] Imports only from `domain/` and `application/` within the capability
+- [ ] Imports only from `domain/` and `application/` within the domain
 - [ ] Use case receives port interfaces via constructor (not concrete classes)
 - [ ] `execute()` returns `Result<T, E>`
 - [ ] No framework-specific code (no `req`, `res`, `prisma`, etc.)
@@ -180,7 +180,7 @@ updateEmail(newEmail: string): Result<User, InvalidEmail> {
 The Backcap documentation site publishes two files for AI consumption:
 
 - **`/llms.txt`** — a concise (300-500 word) summary of Backcap for use as a system prompt prefix
-- **`/llms-full.txt`** — a comprehensive (2000-4000 word) reference covering all capabilities, adapters, and architecture rules
+- **`/llms-full.txt`** — a comprehensive (2000-4000 word) reference covering all domains, adapters, and architecture rules
 
 These follow the [llms.txt convention](https://llmstxt.org/) and can be fetched and embedded in AI tool configurations.
 

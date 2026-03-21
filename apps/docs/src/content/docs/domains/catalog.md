@@ -1,9 +1,9 @@
 ---
-title: Catalog Capability
+title: Catalog Domain
 description: Product catalog management for TypeScript backends — products, variants, categories and pricing with Clean Architecture.
 ---
 
-The `catalog` capability provides **product and category management** for TypeScript backends. It handles product creation, publishing lifecycle, variant management with SKU validation, pricing, and category hierarchies.
+The `catalog` domain provides **product and category management** for TypeScript backends. It handles product creation, publishing lifecycle, variant management with SKU validation, pricing, and category hierarchies.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add catalog
 The `Product` entity is the aggregate root. It owns its variants and enforces business rules (no duplicate SKUs, state machine transitions).
 
 ```typescript
-import { Product } from "./capabilities/catalog/domain/entities/product.entity";
+import { Product } from "./domains/catalog/domain/entities/product.entity";
 
 const result = Product.create({
   id: crypto.randomUUID(),
@@ -55,7 +55,7 @@ Products follow a strict state machine:
 ### ProductVariant Entity
 
 ```typescript
-import { ProductVariant } from "./capabilities/catalog/domain/entities/product-variant.entity";
+import { ProductVariant } from "./domains/catalog/domain/entities/product-variant.entity";
 
 const variant = ProductVariant.create({
   id: crypto.randomUUID(),
@@ -71,7 +71,7 @@ const variant = ProductVariant.create({
 Categories support hierarchy via flat `parentId` references.
 
 ```typescript
-import { Category } from "./capabilities/catalog/domain/entities/category.entity";
+import { Category } from "./domains/catalog/domain/entities/category.entity";
 
 const category = Category.create({
   id: crypto.randomUUID(),
@@ -105,8 +105,8 @@ const category = Category.create({
 ## Contract
 
 ```typescript
-import { createCatalogService } from "./capabilities/catalog/contracts";
-import type { ICatalogService } from "./capabilities/catalog/contracts";
+import { createCatalogService } from "./domains/catalog/contracts";
+import type { ICatalogService } from "./domains/catalog/contracts";
 
 const catalog: ICatalogService = createCatalogService({
   productRepository,

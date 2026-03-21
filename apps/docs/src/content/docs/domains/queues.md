@@ -1,9 +1,9 @@
 ---
-title: Queues Capability
+title: Queues Domain
 description: Background job processing with configurable handlers, retry logic, and status tracking for TypeScript backends — domain model, use cases, ports, and adapters.
 ---
 
-The `queues` capability provides **background job processing** with configurable handlers, retry logic, and status tracking for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `queues` domain provides **background job processing** with configurable handlers, retry logic, and status tracking for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add queues
 The `Job` entity is the aggregate root. It tracks job lifecycle through guarded state transitions: `pending` → `processing` → `completed` | `failed`.
 
 ```typescript
-import { Job } from "./capabilities/queues/domain/entities/job.entity";
+import { Job } from "./domains/queues/domain/entities/job.entity";
 
 const result = Job.create({
   id: crypto.randomUUID(),
@@ -60,7 +60,7 @@ if (result.isOk()) {
 ### JobPayload Value Object
 
 ```typescript
-import { JobPayload } from "./capabilities/queues/domain/value-objects/job-payload.vo";
+import { JobPayload } from "./domains/queues/domain/value-objects/job-payload.vo";
 
 const result = JobPayload.create({ to: "user@example.com" });
 // Result<JobPayload, InvalidJobPayload>
@@ -97,7 +97,7 @@ Validates: must be a non-null plain object.
 Creates a new job entity, validates it, and persists it.
 
 ```typescript
-import { EnqueueJob } from "./capabilities/queues/application/use-cases/enqueue-job.use-case";
+import { EnqueueJob } from "./domains/queues/application/use-cases/enqueue-job.use-case";
 
 const enqueueJob = new EnqueueJob(jobRepository);
 
@@ -116,7 +116,7 @@ const result = await enqueueJob.execute({
 Processes a job by invoking the configured handler. Handles success, failure, and crashes.
 
 ```typescript
-import { ProcessJob } from "./capabilities/queues/application/use-cases/process-job.use-case";
+import { ProcessJob } from "./domains/queues/application/use-cases/process-job.use-case";
 
 const processJob = new ProcessJob(
   jobRepository,
@@ -141,7 +141,7 @@ The handler is wrapped in a try/catch — if it throws, the job is marked as fai
 Retrieves a job's current status by ID.
 
 ```typescript
-import { GetJobStatus } from "./capabilities/queues/application/use-cases/get-job-status.use-case";
+import { GetJobStatus } from "./domains/queues/application/use-cases/get-job-status.use-case";
 
 const getJobStatus = new GetJobStatus(jobRepository);
 
@@ -167,11 +167,11 @@ export interface IJobRepository {
 
 ```typescript
 import {
-  createQueuesCapability,
+  createQueuesDomain,
   IQueuesService,
-} from "./capabilities/queues/contracts";
+} from "./domains/queues/contracts";
 
-const queuesService: IQueuesService = createQueuesCapability({
+const queuesService: IQueuesService = createQueuesDomain({
   jobRepository,
   processHandler: async (job) => {
     await sendEmail(job.payload);
@@ -256,7 +256,7 @@ app.use(router);
 ## File Map
 
 ```
-capabilities/queues/
+domains/queues/
   domain/
     entities/job.entity.ts
     value-objects/job-payload.vo.ts

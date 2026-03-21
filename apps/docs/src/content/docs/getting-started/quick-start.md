@@ -1,9 +1,9 @@
 ---
 title: Quick Start
-description: Step-by-step guide to installing and using the auth capability.
+description: Step-by-step guide to installing and using the auth domain.
 ---
 
-This guide walks you through adding the `auth` capability to an existing TypeScript project. By the end you will have a working user registration and login system with typed errors, port interfaces, and a Prisma adapter — all in your repository.
+This guide walks you through adding the `auth` domain to an existing TypeScript project. By the end you will have a working user registration and login system with typed errors, port interfaces, and a Prisma adapter — all in your repository.
 
 ## Step 1 — Initialize Backcap
 
@@ -15,7 +15,7 @@ npx @backcap/cli init
 
 Accept the detected framework and package manager, or select them manually. A `backcap.json` file will be created in your project root.
 
-## Step 2 — Add the Auth Capability
+## Step 2 — Add the Auth Domain
 
 ```bash
 npx @backcap/cli add auth
@@ -23,17 +23,17 @@ npx @backcap/cli add auth
 
 The CLI will:
 
-1. Fetch the `auth` capability bundle from the registry
+1. Fetch the `auth` domain bundle from the registry
 2. Check for any file conflicts with your existing codebase
 3. Ask you to confirm the installation
-4. Write the capability source files to `src/capabilities/auth/`
+4. Write the domain source files to `src/domains/auth/`
 5. Install any required npm dependencies
 6. Record `auth` in your `backcap.json`
 
 ### What Gets Written
 
 ```
-src/capabilities/auth/
+src/domains/auth/
   domain/
     entities/
       user.entity.ts        # User aggregate root
@@ -84,12 +84,12 @@ src/capabilities/auth/
 
 ## Step 3 — Implement the Port Interfaces
 
-The `auth` capability defines three port interfaces that you must implement. These are the seams between the capability logic and your infrastructure:
+The `auth` domain defines three port interfaces that you must implement. These are the seams between the domain logic and your infrastructure:
 
 ### IUserRepository
 
 ```typescript
-// src/capabilities/auth/application/ports/user-repository.port.ts
+// src/domains/auth/application/ports/user-repository.port.ts
 export interface IUserRepository {
   findByEmail(email: string): Promise<User | null>;
   save(user: User): Promise<void>;
@@ -112,7 +112,7 @@ Implement this interface using `bcrypt` or `argon2`:
 ```typescript
 // src/adapters/my-app/password-hasher.adapter.ts
 import bcrypt from "bcrypt";
-import type { IPasswordHasher } from "../../capabilities/auth/application/ports/password-hasher.port";
+import type { IPasswordHasher } from "../../domains/auth/application/ports/password-hasher.port";
 
 export class BcryptPasswordHasher implements IPasswordHasher {
   async hash(plain: string): Promise<string> {
@@ -132,7 +132,7 @@ Implement using `jsonwebtoken` or any JWT library:
 ```typescript
 // src/adapters/my-app/token-service.adapter.ts
 import jwt from "jsonwebtoken";
-import type { ITokenService } from "../../capabilities/auth/application/ports/token-service.port";
+import type { ITokenService } from "../../domains/auth/application/ports/token-service.port";
 
 export class JwtTokenService implements ITokenService {
   constructor(private readonly secret: string) {}
@@ -157,7 +157,7 @@ Use the `createAuthService` factory from the contracts layer to assemble the ser
 
 ```typescript
 // src/container.ts
-import { createAuthService } from "./capabilities/auth/contracts";
+import { createAuthService } from "./domains/auth/contracts";
 import { PrismaUserRepository } from "./adapters/prisma/auth/user-repository.adapter";
 import { BcryptPasswordHasher } from "./adapters/my-app/password-hasher.adapter";
 import { JwtTokenService } from "./adapters/my-app/token-service.adapter";
@@ -232,7 +232,7 @@ This installs two files:
 
 ## Next Steps
 
-- Read the [Auth capability reference](/backcap/capabilities/auth) for the full API
-- Learn about the [Result pattern](/backcap/concepts/capabilities#the-result-pattern)
+- Read the [Auth domain reference](/backcap/domains/auth) for the full API
+- Learn about the [Result pattern](/backcap/concepts/domains#the-result-pattern)
 - Explore [Bridges](/backcap/concepts/bridges) to connect auth with notifications
-- See how to [create your own capability](/backcap/guides/create-capability)
+- See how to [create your own domain](/backcap/guides/create-domain)

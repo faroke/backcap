@@ -1,18 +1,18 @@
 ---
 title: Adapters
-description: How adapters implement port interfaces to connect capabilities to real infrastructure.
+description: How adapters implement port interfaces to connect domains to real infrastructure.
 ---
 
-An **adapter** is a concrete implementation of a port interface. Ports are defined in the `application/` layer of a capability as TypeScript interfaces — they describe what the capability needs from the outside world (a database, a hash function, a token signer) without saying anything about how those things work. Adapters provide the "how".
+An **adapter** is a concrete implementation of a port interface. Ports are defined in the `application/` layer of a domain as TypeScript interfaces — they describe what the domain needs from the outside world (a database, a hash function, a token signer) without saying anything about how those things work. Adapters provide the "how".
 
-This is the ports and adapters pattern from hexagonal architecture. The capability domain and use cases are kept completely isolated from infrastructure concerns by programming only against the interface.
+This is the ports and adapters pattern from hexagonal architecture. The domain domain and use cases are kept completely isolated from infrastructure concerns by programming only against the interface.
 
 ## The Port / Adapter Relationship
 
-A capability defines a port interface:
+A domain defines a port interface:
 
 ```typescript
-// src/capabilities/auth/application/ports/user-repository.port.ts
+// src/domains/auth/application/ports/user-repository.port.ts
 export interface IUserRepository {
   findByEmail(email: string): Promise<User | null>;
   save(user: User): Promise<void>;
@@ -75,7 +75,7 @@ The Prisma adapter for auth (`auth-prisma`) provides `PrismaUserRepository`. It 
 
 **Import rule**: HTTP adapters import from `contracts/` (for the public service interface) and `domain/` errors (for error-to-status-code mapping). They do not import from `application/` ports directly.
 
-HTTP adapters connect the capability's public service interface to a framework's routing layer.
+HTTP adapters connect the domain's public service interface to a framework's routing layer.
 
 The Express adapter for auth (`auth-express`) provides `createAuthRouter()` and an authentication middleware:
 
@@ -122,12 +122,12 @@ The `toHttpError()` helper maps typed domain errors to HTTP status codes:
 
 ## Directory Structure
 
-Adapters live outside the capability directory:
+Adapters live outside the domain directory:
 
 ```
 src/
-  capabilities/
-    auth/              # Capability source (domain, application, contracts)
+  domains/
+    auth/              # Domain source (domain, application, contracts)
   adapters/
     persistence/
       prisma/
@@ -143,25 +143,25 @@ src/
           __tests__/
 ```
 
-This separation enforces the import rules: the capability code can never accidentally import from an adapter.
+This separation enforces the import rules: the domain code can never accidentally import from an adapter.
 
 ## Installing Adapters
 
-Adapters are installed with the `backcap add` command, the same as capabilities:
+Adapters are installed with the `backcap add` command, the same as domains:
 
 ```bash
 npx @backcap/cli add auth-prisma
 npx @backcap/cli add auth-express
 ```
 
-The CLI detects which adapters are compatible with your project based on the packages in your `package.json`, and may offer to install compatible adapters automatically when you add a capability.
+The CLI detects which adapters are compatible with your project based on the packages in your `package.json`, and may offer to install compatible adapters automatically when you add a domain.
 
 ## Writing Your Own Adapter
 
 To write a custom adapter:
 
 1. Identify the port interface you want to implement (in `application/ports/`)
-2. Create a new file in `src/adapters/<category>/<technology>/<capability>/` (where category is `persistence/` or `http/`)
+2. Create a new file in `src/adapters/<category>/<technology>/<domain>/` (where category is `persistence/` or `http/`)
 3. Implement the interface with your technology of choice
 4. Wire it into the `createAuthService()` factory call in your container
 
@@ -175,4 +175,4 @@ Because the use cases only depend on port interfaces, you can:
 - **Test in isolation**: Use in-memory mock implementations in tests without needing a real database
 - **Support multiple frameworks**: Run the same auth logic behind Express, Fastify, or Next.js API routes by swapping the HTTP adapter
 
-The capability logic is stable; the adapters are interchangeable.
+The domain logic is stable; the adapters are interchangeable.

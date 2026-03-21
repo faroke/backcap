@@ -3,13 +3,13 @@ title: "Example: Hono Blog"
 description: A working Hono blog API built step-by-step with the Backcap CLI — identical domain logic to Express and Fastify, different HTTP adapter.
 ---
 
-This guide walks through a **working Hono blog example** built with the Backcap CLI. It demonstrates that capabilities, adapters, and bridges are truly swappable — the domain and application layers are identical to the [Express example](/backcap/guides/express-blog-example) and [Fastify example](/backcap/guides/fastify-blog-example), only the HTTP adapter and server wiring differ.
+This guide walks through a **working Hono blog example** built with the Backcap CLI. It demonstrates that domains, adapters, and bridges are truly swappable — the domain and application layers are identical to the [Express example](/backcap/guides/express-blog-example) and [Fastify example](/backcap/guides/fastify-blog-example), only the HTTP adapter and server wiring differ.
 
 The full source code is in [`examples/hono-blog/`](https://github.com/faroke/backcap/tree/main/examples/hono-blog).
 
 ## What It Demonstrates
 
-- **Adapter swappability** — Same blog + search capabilities as Express/Fastify, different HTTP layer
+- **Adapter swappability** — Same blog + search domains as Express/Fastify, different HTTP layer
 - **Edge-ready framework** — Hono's runtime-agnostic design (Node, Bun, Deno, Cloudflare Workers)
 - **Context-based API** — Routes use `c.req.json()`, `c.json()` instead of `req`/`res`
 - **Blog-Search bridge** — Same event-driven architecture as Express/Fastify examples
@@ -40,11 +40,11 @@ npx @backcap/cli init
 
 Detects **Hono** framework and pnpm package manager. Creates `backcap.json` with `"framework": "hono"`.
 
-### 3. Install capabilities and bridge
+### 3. Install domains and bridge
 
 ```bash
-npx @backcap/cli add blog         # Blog capability + Hono & Prisma adapters
-npx @backcap/cli add search       # Search capability
+npx @backcap/cli add blog         # Blog domain + Hono & Prisma adapters
+npx @backcap/cli add search       # Search domain
 npx @backcap/cli add blog-search  # Bridge: PostPublished → index in search
 ```
 
@@ -67,8 +67,8 @@ npx prisma migrate dev --name init
 ```typescript
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
-import { createBlogService } from "./capabilities/blog/contracts/index.js";
-import { createSearchService } from "./capabilities/search/contracts/search.factory.js";
+import { createBlogService } from "./domains/blog/contracts/index.js";
+import { createSearchService } from "./domains/search/contracts/search.factory.js";
 import { createBridge } from "./bridges/blog-search/blog-search.bridge.js";
 import { createBlogRoutes } from "./adapters/http/hono/blog/blog.router.js";
 import { InMemoryEventBus } from "./shared/in-memory-event-bus.js";
@@ -76,7 +76,7 @@ import { InMemoryEventBus } from "./shared/in-memory-event-bus.js";
 const app = new Hono();
 const eventBus = new InMemoryEventBus();
 
-// Wire capabilities
+// Wire domains
 const blogService = createBlogService({ postRepository, eventBus });
 const searchService = createSearchService({ searchEngine });
 
@@ -151,9 +151,9 @@ See [`examples/hono-blog/FRICTION.md`](https://github.com/faroke/backcap/tree/ma
 
 ## See Also
 
-- [Express Blog example](/backcap/guides/express-blog-example) — Same capabilities with Express adapter
-- [Fastify Blog example](/backcap/guides/fastify-blog-example) — Same capabilities with Fastify adapter
-- [NestJS Blog example](/backcap/guides/nestjs-blog-example) — Same capabilities with NestJS DI bridge
+- [Express Blog example](/backcap/guides/express-blog-example) — Same domains with Express adapter
+- [Fastify Blog example](/backcap/guides/fastify-blog-example) — Same domains with Fastify adapter
+- [NestJS Blog example](/backcap/guides/nestjs-blog-example) — Same domains with NestJS DI bridge
 - [Hono adapter](/backcap/adapters/hono) — Adapter API reference
-- [Blog capability](/backcap/capabilities/blog) — Full domain model and API reference
-- [Bridges concept](/backcap/concepts/bridges) — How bridges connect capabilities
+- [Blog domain](/backcap/domains/blog) — Full domain model and API reference
+- [Bridges concept](/backcap/concepts/bridges) — How bridges connect domains

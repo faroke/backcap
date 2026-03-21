@@ -1,15 +1,15 @@
 ---
-title: Capabilities
+title: Domains
 description: The four-layer architecture, import rules, and the Result pattern.
 ---
 
-A **capability** is the core unit of Backcap. It is a self-contained, framework-agnostic module that implements a vertical slice of backend business logic. Examples include `auth`, `blog`, `search`, and `notifications`.
+A **domain** is the core unit of Backcap. It is a self-contained, framework-agnostic module that implements a vertical slice of backend business logic. Examples include `auth`, `blog`, `search`, and `notifications`.
 
-When you run `npx @backcap/cli add auth`, the CLI writes the full TypeScript source of the capability into your project. You own the code — no opaque library, no runtime dependency on Backcap.
+When you run `npx @backcap/cli add auth`, the CLI writes the full TypeScript source of the domain into your project. You own the code — no opaque library, no runtime dependency on Backcap.
 
 ## The Four Layers
 
-Every Backcap capability is organized in exactly four layers. The layering is strict: each layer may only import from the layers listed in its import rule.
+Every Backcap domain is organized in exactly four layers. The layering is strict: each layer may only import from the layers listed in its import rule.
 
 ### 1. domain/
 
@@ -24,7 +24,7 @@ domain/
   __tests__/          # Unit tests for domain logic
 ```
 
-**Import rule**: The domain layer imports nothing outside of `domain/` itself and the capability's own `shared/result.ts`.
+**Import rule**: The domain layer imports nothing outside of `domain/` itself and the domain's own `shared/result.ts`.
 
 Example — the `User` entity:
 
@@ -80,7 +80,7 @@ application/
   __tests__/          # Integration tests using mock implementations
 ```
 
-**Import rule**: The application layer imports from `domain/` and the capability's own `shared/result.ts`.
+**Import rule**: The application layer imports from `domain/` and the domain's own `shared/result.ts`.
 
 Ports are the key concept here. A port is a TypeScript interface that describes what the use case needs from the outside world — a database, a hash function, a token signer — without saying anything about how it is implemented.
 
@@ -115,7 +115,7 @@ export class RegisterUser {
 
 ### 3. contracts/
 
-The contracts layer is the **public API** of the capability. It exposes exactly one service interface and one factory function. This is the only barrel `index.ts` in the capability.
+The contracts layer is the **public API** of the domain. It exposes exactly one service interface and one factory function. This is the only barrel `index.ts` in the domain.
 
 ```
 contracts/
@@ -138,11 +138,11 @@ export function createAuthService(deps: AuthServiceDeps): IAuthService {
 }
 ```
 
-Consumers of the capability only need to know about `IAuthService` and `createAuthService`. The internal use case classes are an implementation detail.
+Consumers of the domain only need to know about `IAuthService` and `createAuthService`. The internal use case classes are an implementation detail.
 
 ### 4. adapters/
 
-Adapters live **outside the capability directory** in a separate `src/adapters/` tree. An adapter implements a port interface using a specific technology.
+Adapters live **outside the domain directory** in a separate `src/adapters/` tree. An adapter implements a port interface using a specific technology.
 
 ```
 src/adapters/
@@ -163,7 +163,7 @@ src/adapters/
 
 Backcap uses a `Result<T, E>` monad for all expected failure conditions. Throwing errors is reserved for truly unexpected situations (programmer errors, environmental failures).
 
-The `Result` class ships inside each capability at `shared/result.ts`:
+The `Result` class ships inside each domain at `shared/result.ts`:
 
 ```typescript
 export class Result<T, E extends Error = Error> {

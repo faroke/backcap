@@ -3,11 +3,11 @@ title: Skills
 description: Agent Skills — machine-readable documentation for AI-assisted development.
 ---
 
-Backcap **Skills** are machine-readable documentation files that make each capability and adapter understandable to AI coding assistants. A skill is a Markdown file with structured frontmatter that describes the module's architecture, contracts, and usage rules in a form optimized for language models.
+Backcap **Skills** are machine-readable documentation files that make each domain and adapter understandable to AI coding assistants. A skill is a Markdown file with structured frontmatter that describes the module's architecture, contracts, and usage rules in a form optimized for language models.
 
 ## What is a Skill?
 
-A skill is a `SKILL.md` file inside a capability or adapter directory. It contains:
+A skill is a `SKILL.md` file inside a domain or adapter directory. It contains:
 
 - A YAML frontmatter block with a name, description, and metadata
 - A prose explanation of the module's purpose and structure
@@ -21,27 +21,27 @@ Skills are located at:
 packages/registry/
   skills/
     backcap-core/
-      SKILL.md          # Architecture rules for all capabilities
+      SKILL.md          # Architecture rules for all domains
       references/
     backcap-auth/
-      SKILL.md          # Auth capability detail
+      SKILL.md          # Auth domain detail
       references/
 ```
 
 ## The backcap-core Skill
 
-The `backcap-core` skill describes the global architecture rules that apply to every Backcap capability:
+The `backcap-core` skill describes the global architecture rules that apply to every Backcap domain:
 
 ```yaml
 ---
 name: backcap-core
 description: >
-  Backcap is a DDD capability registry and CLI for TypeScript backends. Each capability follows
+  Backcap is a DDD domain registry and CLI for TypeScript backends. Each domain follows
   strict Clean Architecture layers: domain (entities, value objects, domain errors, domain events),
   application (use cases, ports as interfaces, DTOs), contracts (public factory + service interface,
   the only barrel index.ts), and adapters (framework/persistence implementations). The Result<T,E>
   monad replaces exceptions for expected failures. Ports define interfaces; adapters implement them.
-  Bridges are cross-capability use cases that wire two or more capabilities together.
+  Bridges are cross-domain use cases that wire two or more domains together.
 metadata:
   author: Backcap
   version: 1.0.0
@@ -58,13 +58,13 @@ AI tools that load the `backcap-core` skill understand:
 
 ## The backcap-auth Skill
 
-The `backcap-auth` skill provides capability-specific detail:
+The `backcap-auth` skill provides domain-specific detail:
 
 ```yaml
 ---
 name: backcap-auth
 description: >
-  Backcap auth capability: DDD-structured user registration and login for TypeScript backends.
+  Backcap auth domain: DDD-structured user registration and login for TypeScript backends.
   Domain layer contains User entity, Email and Password value objects, and four typed errors
   (InvalidEmail, InvalidCredentials, UserNotFound, UserAlreadyExists). Application layer has
   RegisterUser and LoginUser use cases, plus IUserRepository, IPasswordHasher, and ITokenService
@@ -91,7 +91,7 @@ When working in a Backcap project, ask Claude to read the relevant skill files b
 ```
 Read .claude/skills/backcap-core/SKILL.md and
 .claude/skills/backcap-auth/SKILL.md, then help me
-add an updatePassword use case to the auth capability.
+add an updatePassword use case to the auth domain.
 ```
 
 With the skill loaded, the AI understands:
@@ -125,7 +125,7 @@ Architecture prose and reference tables mapping every file to its exported types
 
 ### 4. Extension Guide
 
-Instructions for adding new use cases, ports, or adapters to the capability.
+Instructions for adding new use cases, ports, or adapters to the domain.
 
 ### 5. Conventions
 
@@ -133,11 +133,11 @@ File naming rules, import rules, and coding conventions specific to the module.
 
 ### 6. Additional Sections
 
-Depending on the skill, additional sections may include Available Bridges, CLI Commands, or other capability-specific reference material.
+Depending on the skill, additional sections may include Available Bridges, CLI Commands, or other domain-specific reference material.
 
-## Creating Skills for Your Own Capabilities
+## Creating Skills for Your Own Domains
 
-When you [create a new capability](/backcap/guides/create-capability), you should create a corresponding `SKILL.md`. The file should:
+When you [create a new domain](/backcap/guides/create-domain), you should create a corresponding `SKILL.md`. The file should:
 
 1. Have a one-paragraph `description` in the YAML frontmatter dense enough to be used as a prompt prefix
 2. List every file in a table with its export and responsibility

@@ -1,9 +1,9 @@
 ---
-title: Cart Capability
+title: Cart Domain
 description: Shopping cart management for TypeScript backends — aggregate-based domain logic with price calculations, quantity validation, and lifecycle management.
 ---
 
-The `cart` capability provides **shopping cart management** for TypeScript backends. It handles item management, price verification at add time, quantity validation, total calculation, currency enforcement, and cart lifecycle (active → abandoned/converted).
+The `cart` domain provides **shopping cart management** for TypeScript backends. It handles item management, price verification at add time, quantity validation, total calculation, currency enforcement, and cart lifecycle (active → abandoned/converted).
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add cart
 The `Cart` entity is the aggregate root. All item operations go through `Cart` methods — never directly on `CartItem`. Each cart has a single currency enforced across all items.
 
 ```typescript
-import { Cart } from "./capabilities/cart/domain/entities/cart.entity";
+import { Cart } from "./domains/cart/domain/entities/cart.entity";
 
 const result = Cart.create({
   id: crypto.randomUUID(),
@@ -77,7 +77,7 @@ Carts follow a strict state machine:
 ### CartItem Entity
 
 ```typescript
-import { CartItem } from "./capabilities/cart/domain/entities/cart-item.entity";
+import { CartItem } from "./domains/cart/domain/entities/cart-item.entity";
 
 const item = CartItem.create({
   id: crypto.randomUUID(),
@@ -115,8 +115,8 @@ if (item.isOk()) {
 ## Contract
 
 ```typescript
-import { createCartService } from "./capabilities/cart/contracts";
-import type { ICartService, CartOutput } from "./capabilities/cart/contracts";
+import { createCartService } from "./domains/cart/contracts";
+import type { ICartService, CartOutput } from "./domains/cart/contracts";
 
 const cart: ICartService = createCartService({
   cartRepository,
@@ -146,7 +146,7 @@ await cart.convertCart("cart-123");
 | `ICartRepository` | Cart persistence (findById, findByUserId, save, update) |
 | `IProductPriceLookup` | Price verification at add time — prevents stale price attacks |
 
-The `IProductPriceLookup` port is satisfied by the catalog capability's contract when both are installed (via bridge).
+The `IProductPriceLookup` port is satisfied by the catalog domain's contract when both are installed (via bridge).
 
 ## Adapters
 

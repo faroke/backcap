@@ -3,7 +3,7 @@ title: "Example: NestJS Blog"
 description: A working NestJS blog API built step-by-step with the Backcap CLI — identical domain logic to Express, Fastify, and Hono, with a DynamicModule DI bridge pattern.
 ---
 
-This guide walks through a **working NestJS blog example** built with the Backcap CLI. It demonstrates that capabilities, adapters, and bridges are truly swappable — the domain and application layers are identical to the [Express example](/backcap/guides/express-blog-example), [Fastify example](/backcap/guides/fastify-blog-example), and [Hono example](/backcap/guides/hono-blog-example). Only the HTTP adapter and DI wiring differ.
+This guide walks through a **working NestJS blog example** built with the Backcap CLI. It demonstrates that domains, adapters, and bridges are truly swappable — the domain and application layers are identical to the [Express example](/backcap/guides/express-blog-example), [Fastify example](/backcap/guides/fastify-blog-example), and [Hono example](/backcap/guides/hono-blog-example). Only the HTTP adapter and DI wiring differ.
 
 NestJS is the **highest-friction framework** integration due to its decorator-based DI system. This example documents the bridge pattern that makes it work.
 
@@ -42,11 +42,11 @@ npx @backcap/cli init
 
 Detects **NestJS** framework and pnpm package manager. Creates `backcap.json` with `"framework": "nestjs"`.
 
-### 3. Install capabilities and bridge
+### 3. Install domains and bridge
 
 ```bash
-npx @backcap/cli add blog         # Blog capability + Prisma adapter
-npx @backcap/cli add search       # Search capability
+npx @backcap/cli add blog         # Blog domain + Prisma adapter
+npx @backcap/cli add search       # Search domain
 npx @backcap/cli add blog-search  # Bridge: PostPublished → index in search
 ```
 
@@ -73,8 +73,8 @@ This is the key integration pattern — bridging Backcap's Pure DI with NestJS's
 ```typescript
 // src/adapters/http/nestjs/blog/blog.module.ts
 import { Module, DynamicModule } from "@nestjs/common";
-import type { IPostRepository } from "../../../../capabilities/blog/application/ports/post-repository.port.js";
-import { createBlogService } from "../../../../capabilities/blog/contracts/index.js";
+import type { IPostRepository } from "../../../../domains/blog/application/ports/post-repository.port.js";
+import { createBlogService } from "../../../../domains/blog/contracts/index.js";
 import { BlogController } from "./blog.controller.js";
 
 export interface BlogModuleDeps {
@@ -188,9 +188,9 @@ See [`examples/nestjs-blog/FRICTION.md`](https://github.com/faroke/backcap/tree/
 
 ## See Also
 
-- [Express Blog example](/backcap/guides/express-blog-example) — Same capabilities with Express adapter
-- [Fastify Blog example](/backcap/guides/fastify-blog-example) — Same capabilities with Fastify adapter
-- [Hono Blog example](/backcap/guides/hono-blog-example) — Same capabilities with Hono adapter
+- [Express Blog example](/backcap/guides/express-blog-example) — Same domains with Express adapter
+- [Fastify Blog example](/backcap/guides/fastify-blog-example) — Same domains with Fastify adapter
+- [Hono Blog example](/backcap/guides/hono-blog-example) — Same domains with Hono adapter
 - [NestJS adapter](/backcap/adapters/nestjs) — Why NestJS uses a wiring guide instead of a code adapter
-- [Blog capability](/backcap/capabilities/blog) — Full domain model and API reference
-- [Bridges concept](/backcap/concepts/bridges) — How bridges connect capabilities
+- [Blog domain](/backcap/domains/blog) — Full domain model and API reference
+- [Bridges concept](/backcap/concepts/bridges) — How bridges connect domains

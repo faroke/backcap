@@ -4,8 +4,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <StarlightPage frontmatter={{
-  title: 'Backcap — The shadcn/ui for backends',
-  description: 'A registry of composable backend capabilities for TypeScript. Install backend features like packages.',
+  title: 'Backcap — Production-ready backend features for TypeScript',
+  description: 'Stop rewriting the same backend features. Copy production-ready, framework-agnostic code into your TypeScript project.',
   template: 'splash',
   pagefind: false,
   tableOfContents: false,
@@ -26,28 +26,25 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <div class="anim visible">
           <div class="hero-badge">
             <span class="hero-badge-dot"></span>
-            <span>shadcn/ui for backend capabilities</span>
+            <span>Open source · TypeScript · AI-ready</span>
           </div>
         </div>
-        <h1 class="anim visible d1">The <span class="text-gradient">shadcn/ui</span><br/>for backends.</h1>
+        <h1 class="anim visible d1">Stop rewriting the same<br/><span class="text-gradient">backend features.</span></h1>
         <p class="hero-sub anim visible d2">
-          Copy and own backend capabilities.<br/>
-          Auth, Blog, Search, Payments and more — ready for any TypeScript backend.
+          Auth, billing, search and more — built right, works everywhere, owned by you.<br/>
+          Copy production-ready code your AI agent already understands.
         </p>
         <div class="hero-ctas anim visible d3">
           <a href={`${base}/getting-started/introduction`} class="btn-primary">
             Get Started
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
-          <a href="#capabilities" class="btn-outline">
-            Explore capabilities
-          </a>
           <a href="https://github.com/faroke/backcap" target="_blank" rel="noopener noreferrer" class="btn-outline">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
             GitHub
           </a>
         </div>
-        <div class="anim visible d4" style="display:flex;justify-content:center;margin-bottom:4rem">
+        <div class="anim visible d4" style="display:flex;flex-direction:column;align-items:center;margin-bottom:4rem">
           <div class="cmd-box">
             <span class="dollar">$</span>
             <span>npx @backcap/cli init</span>
@@ -56,6 +53,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
               <svg class="cmd-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
           </div>
+          <p class="hero-aside"><em>Think shadcn/ui, but for your backend.</em></p>
         </div>
       </div>
       <div class="anim visible d5">
@@ -77,22 +75,22 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <div class="section-orb left"></div>
     <div class="section-orb right"></div>
     <div class="container">
-      <h2 class="section-title anim">Stop rewriting <span class="text-gradient">backend features.</span></h2>
+      <h2 class="section-title anim">You've <span class="text-gradient">already built this</span> before.</h2>
       <p class="section-sub anim">
-        Every backend project rebuilds the same features — authentication, permissions, blog, search, notifications, billing. This slows development and creates duplicated logic across projects.
+        Every backend project rebuilds the same features — authentication, permissions, blog, search, notifications, billing. Sound familiar?
       </p>
       <div class="problem-grid">
         <div class="problem-card bad anim from-left">
           <h3>Traditional backend development</h3>
-          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Rewrite auth from scratch</span></div>
-          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Build custom permissions</span></div>
-          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Implement blog system</span></div>
-          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Create search engine</span></div>
-          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Set up notifications</span></div>
-          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Handle billing logic</span></div>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Rewrite auth from scratch — <em>again</em></span></div>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Build custom permissions — <em>for the third time</em></span></div>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Implement <em>yet another</em> blog system</span></div>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Create <em>yet another</em> search engine</span></div>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Set up notifications — <em>once more</em></span></div>
+          <div class="problem-item bad-item"><svg class="icon-x" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Handle billing logic — <em>again</em></span></div>
         </div>
         <div class="problem-card good glow-primary glow-enhanced anim from-right">
-          <h3>Backcap capabilities</h3>
+          <h3>With Backcap</h3>
           <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx @backcap/cli add auth</code></div>
           <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx @backcap/cli add rbac</code></div>
           <div class="problem-item good-item"><svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><code>npx @backcap/cli add blog</code></div>
@@ -108,7 +106,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <section class="how-section">
     <div class="bg-grid"></div>
     <div class="container">
-      <h2 class="section-title anim">Install backend <span class="text-gradient">capabilities.</span></h2>
+      <h2 class="section-title anim">Three steps. <span class="text-gradient">That's it.</span></h2>
       <div class="how-grid">
         <div class="step anim">
           <span class="step-number">01</span>
@@ -118,8 +116,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </div>
         <div class="step anim d1">
           <span class="step-number">02</span>
-          <h3>Add capabilities</h3>
-          <p>Pick the backend features you need.</p>
+          <h3>Add what you need</h3>
+          <p>Pick the backend features for your project.</p>
           <div class="step-code">
             <div>npx @backcap/cli add auth</div>
             <div>npx @backcap/cli add blog</div>
@@ -128,9 +126,24 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </div>
         <div class="step anim d2">
           <span class="step-number">03</span>
-          <h3>Use them in your backend</h3>
-          <p>Capabilities are added directly to your project with full source code. No vendor lock-in.</p>
+          <h3>It's your code now</h3>
+          <p>Full source code, directly in your project. Every feature follows the same clean structure.</p>
+          <div class="step-code step-tree">
+            <div class="tree-muted">your-project/</div>
+            <div>&nbsp;&nbsp;└── <span class="tree-primary">domains/</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="tree-primary">auth/</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="tree-accent">contracts/</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="tree-accent">domain/</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="tree-accent">application/</span></div>
+          </div>
         </div>
+      </div>
+      <div class="how-trio anim">
+        <span>Edit anything</span>
+        <span class="trio-dot"></span>
+        <span>Use AI skills</span>
+        <span class="trio-dot"></span>
+        <span>No lock-in</span>
       </div>
       <div class="section-cta anim">
         <a href={`${base}/getting-started/introduction`} class="btn-outline">
@@ -142,170 +155,135 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </div>
   </section>
 
-  <!-- Examples -->
-  <section class="section-with-glow">
-    <div class="section-orb right" style="top:10%"></div>
-    <div class="container">
-      <h2 class="section-title anim">Build anything with <span class="text-gradient">capabilities.</span></h2>
-      <div class="examples-grid">
-        <div class="example-card anim">
-          <svg class="example-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-          <h3>SaaS</h3>
-          <div class="example-list">
-            <div><span class="plus">+</span> <span>authentication</span></div>
-            <div><span class="plus">+</span> <span>organizations</span></div>
-            <div><span class="plus">+</span> <span>billing</span></div>
-            <div><span class="plus">+</span> <span>feature-flags</span></div>
-            <div><span class="plus">+</span> <span>notifications</span></div>
-          </div>
-        </div>
-        <div class="example-card anim d1">
-          <svg class="example-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-          <h3>Ecommerce</h3>
-          <div class="example-list">
-            <div><span class="plus">+</span> <span>catalog</span></div>
-            <div><span class="plus">+</span> <span>cart</span></div>
-            <div><span class="plus">+</span> <span>orders</span></div>
-            <div><span class="plus">+</span> <span>billing</span></div>
-            <div><span class="plus">+</span> <span>notifications</span></div>
-          </div>
-        </div>
-        <div class="example-card anim d2">
-          <svg class="example-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
-          <h3>Content Platform</h3>
-          <div class="example-list">
-            <div><span class="plus">+</span> <span>blog</span></div>
-            <div><span class="plus">+</span> <span>comments</span></div>
-            <div><span class="plus">+</span> <span>tags</span></div>
-            <div><span class="plus">+</span> <span>media</span></div>
-            <div><span class="plus">+</span> <span>analytics</span></div>
-          </div>
-          <a href="/backcap/guides/express-blog-example/" style="display:inline-block;margin-top:0.75rem;font-size:0.85rem;color:var(--sl-color-text-accent);text-decoration:none;">See Express Blog example &rarr;</a>
-          <a href="/backcap/guides/fastify-blog-example/" style="display:inline-block;margin-top:0.25rem;font-size:0.85rem;color:var(--sl-color-text-accent);text-decoration:none;">See Fastify Blog example &rarr;</a>
-          <a href="/backcap/guides/hono-blog-example/" style="display:inline-block;margin-top:0.25rem;font-size:0.85rem;color:var(--sl-color-text-accent);text-decoration:none;">See Hono Blog example &rarr;</a>
-          <a href="/backcap/guides/nestjs-blog-example/" style="display:inline-block;margin-top:0.25rem;font-size:0.85rem;color:var(--sl-color-text-accent);text-decoration:none;">See NestJS Blog example &rarr;</a>
-          <a href="/backcap/guides/nextjs-blog-example/" style="display:inline-block;margin-top:0.25rem;font-size:0.85rem;color:var(--sl-color-text-accent);text-decoration:none;">See Next.js Blog example &rarr;</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Capabilities -->
-  <section class="cap-section" id="capabilities">
+  <!-- Features -->
+  <section class="features-section" id="features">
     <div class="container">
       <div style="text-align:center;margin-bottom:4rem" class="anim">
-        <span class="cap-badge">plug &amp; play</span>
-        <h2 class="section-title" style="margin-bottom:1rem">Available <span class="text-gradient">capabilities.</span></h2>
+        <h2 class="section-title" style="margin-bottom:1rem">Pick what <span class="text-gradient">you need.</span></h2>
         <p style="color:var(--lp-muted);font-size:1.125rem;max-width:32rem;margin:0 auto">
-          Ready-to-install backend features — full source code, zero lock-in.
+          Production-ready backend features — full source code, zero dependency.
         </p>
       </div>
-      <div class="cap-grid" id="cap-grid"></div>
+      <div class="features-grid">
+        <div class="features-list">
+          <a href={`${base}/domains/auth`} class="feature-row anim">
+            <div class="feature-icon" style="background:hsl(152 76% 52% / 0.1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="hsl(152 76% 52%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+            </div>
+            <div class="feature-info">
+              <h3>Auth</h3>
+              <p>Sign-up, login, sessions & API keys</p>
+            </div>
+            <code class="feature-cmd">add auth</code>
+            <svg class="feature-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+          <a href={`${base}/domains/billing`} class="feature-row anim d1">
+            <div class="feature-icon" style="background:hsl(45 96% 58% / 0.1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="hsl(45 96% 58%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+            </div>
+            <div class="feature-info">
+              <h3>Billing</h3>
+              <p>Payments, subscriptions & invoicing</p>
+            </div>
+            <code class="feature-cmd">add billing</code>
+            <svg class="feature-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+          <a href={`${base}/domains/search`} class="feature-row anim d2">
+            <div class="feature-icon" style="background:hsl(200 80% 55% / 0.1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="hsl(200 80% 55%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </div>
+            <div class="feature-info">
+              <h3>Search</h3>
+              <p>Full-text search with filters & facets</p>
+            </div>
+            <code class="feature-cmd">add search</code>
+            <svg class="feature-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+          <a href={`${base}/domains/rbac`} class="feature-row anim d3">
+            <div class="feature-icon" style="background:hsl(45 96% 58% / 0.1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="hsl(45 96% 58%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="feature-info">
+              <h3>RBAC</h3>
+              <p>Roles, permissions & access control</p>
+            </div>
+            <code class="feature-cmd">add rbac</code>
+            <svg class="feature-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+          <a href={`${base}/domains/notifications`} class="feature-row anim d4">
+            <div class="feature-icon" style="background:hsl(280 70% 60% / 0.1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="hsl(280 70% 60%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            </div>
+            <div class="feature-info">
+              <h3>Notifications</h3>
+              <p>In-app, email & push notifications</p>
+            </div>
+            <code class="feature-cmd">add notifications</code>
+            <svg class="feature-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+          <a href={`${base}/domains/blog`} class="feature-row anim d5">
+            <div class="feature-icon" style="background:hsl(172 66% 50% / 0.1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="hsl(172 66% 50%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+            </div>
+            <div class="feature-info">
+              <h3>Blog</h3>
+              <p>Posts, categories, drafts & publishing</p>
+            </div>
+            <code class="feature-cmd">add blog</code>
+            <svg class="feature-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+          <a href={`${base}/domains`} class="features-more anim">+ 14 more features &rarr;</a>
+        </div>
+        <div class="features-tree anim from-right">
+          <div class="features-tree-label">What you get</div>
+          <div class="features-tree-code">
+            <div><span class="tree-fg">domains/</span></div>
+            <div>&nbsp;&nbsp;└── <span class="tree-primary">auth/</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="tree-accent">contracts/</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="tree-muted">auth.port.ts</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="tree-muted">session.port.ts</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="tree-muted">auth.types.ts</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="tree-accent">domain/</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="tree-muted">auth.service.ts</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="tree-muted">session.entity.ts</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="tree-accent">application/</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="tree-muted">sign-up.use-case.ts</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="tree-muted">login.use-case.ts</span></div>
+          </div>
+          <p class="features-tree-note">Every feature follows the same clean structure.</p>
+        </div>
+      </div>
       <div class="section-cta anim">
-        <a href={`${base}/concepts/capabilities`} class="btn-outline">
+        <a href={`${base}/concepts/domains`} class="btn-outline">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          Learn how capabilities work
+          How features work
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Architecture -->
-  <section id="architecture" class="section-with-glow">
-    <div class="section-orb left" style="top:30%"></div>
-    <div class="container">
-      <div class="arch-grid">
-        <div class="arch-text anim from-left">
-          <h2>Framework agnostic <span class="text-gradient">by design.</span></h2>
-          <p>Backcap uses a modular architecture inspired by clean architecture and hexagonal architecture. The core domain is independent from frameworks.</p>
-          <div class="arch-label">Runtimes</div>
-          <div class="fw-grid runtimes">
-            <div class="fw-card">
-              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg></div>
-              <span class="fw-card-name">Node.js</span>
-            </div>
-            <div class="fw-card">
-              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-              <span class="fw-card-name">Bun</span>
-            </div>
-            <div class="fw-card">
-              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg></div>
-              <span class="fw-card-name">Deno</span>
-            </div>
-          </div>
-          <div class="arch-label">Frameworks</div>
-          <div class="fw-grid">
-            <div class="fw-card">
-              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg></div>
-              <span class="fw-card-name">Next.js</span>
-            </div>
-            <div class="fw-card">
-              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
-              <span class="fw-card-name">Express</span>
-            </div>
-            <div class="fw-card">
-              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-2 2.5h3L12 7"/><path d="M10 14v-3"/><path d="M14 14v-3"/><path d="M11 19c-1.7 0-3-1.3-3-3v-2h8v2c0 1.7-1.3 3-3 3h-2z"/><path d="M12 22v-3"/></svg></div>
-              <span class="fw-card-name">Fastify</span>
-            </div>
-            <div class="fw-card">
-              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></div>
-              <span class="fw-card-name">Hono</span>
-            </div>
-            <div class="fw-card">
-              <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z"/></svg></div>
-              <span class="fw-card-name">NestJS</span>
-            </div>
-          </div>
-        </div>
-        <div class="arch-tree anim from-right">
-          <div class="muted" style="font-size:0.75rem;margin-bottom:0.5rem">project/</div>
-          <div style="margin-left:0.5rem;display:flex;flex-direction:column;gap:0.375rem">
-            <div>├── <span class="dir">capabilities/</span></div>
-            <div style="margin-left:1.5rem" class="muted">├── auth</div>
-            <div style="margin-left:1.5rem" class="muted">├── blog</div>
-            <div style="margin-left:1.5rem" class="muted">└── search</div>
-            <div>├── <span class="accent-dir">adapters/</span></div>
-            <div>├── <span class="accent-dir">bridges/</span></div>
-            <div style="margin-left:1.5rem" class="muted">├── auth-audit-log</div>
-            <div style="margin-left:1.5rem" class="muted">└── blog-search</div>
-            <div>└── <span class="accent-dir">shared/</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- AI Section -->
+  <!-- AI-ready -->
   <section class="ai-section">
     <div class="bg-grid"></div>
     <div class="container">
-      <h2 class="section-title anim">Built for <span class="text-gradient">AI-assisted</span> development.</h2>
-      <p class="section-sub anim">Every capability is structured so AI tools can understand and extend your backend.</p>
-      <div class="bento-grid">
-        <a href={`${base}/concepts/skills`} class="bento-card featured anim">
-          <div class="bento-glow"></div>
-          <div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
-            <h3>AI-friendly structure</h3>
-            <p>Consistent, hierarchical architecture that LLMs can parse, navigate, and compose. Each capability follows the same contract — making generation, modification, and extension predictable.</p>
-          </div>
-          <div class="bento-footer">Knowledge Graph Ready</div>
+      <h2 class="section-title anim"><span class="text-gradient">AI-ready</span> by design.</h2>
+      <p class="section-sub anim">Each feature ships with AI skills. Your agent understands your code from day one.</p>
+      <div class="ai-grid">
+        <a href={`${base}/concepts/skills`} class="ai-card anim">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+          <h3>Your AI agent, onboarded</h3>
+          <p>Each feature ships with skills — instructions your AI agent reads to extend, test, and debug your code.</p>
         </a>
-        <a href={`${base}/concepts/capabilities`} class="bento-card tall anim d1">
-          <div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-            <h3>Clear specifications</h3>
-            <p>Each capability includes a specification contract readable by humans and AI alike.</p>
-            <p style="margin-top:0.75rem">Typed interfaces and ports that AI tools can understand and extend automatically.</p>
-          </div>
-          <div class="bento-footer">Standardized Manifests</div>
+        <a href={`${base}/concepts/architecture`} class="ai-card anim d1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <h3>Generate, don't write</h3>
+          <p>Ask your agent to add a feature — it follows the same patterns automatically.</p>
         </a>
-        <a href={`${base}/concepts/architecture`} class="bento-card anim d2" style="grid-column:span 2">
+        <a href={`${base}/concepts/domains`} class="ai-card anim d2">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/></svg>
-          <h3>Domain contracts</h3>
-          <p>Typed interfaces and ports that define clear boundaries. AI tools get predictable execution paths to generate and extend your backend accurately.</p>
-          <div class="bento-footer">Interface Integrity</div>
+          <h3>Interfaces your AI can read</h3>
+          <p>Typed ports and boundaries. Your agent generates compatible code on the first try.</p>
         </a>
       </div>
       <div class="section-cta anim">
@@ -318,18 +296,73 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </div>
   </section>
 
+  <!-- Frameworks -->
+  <section class="fw-section">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:3rem" class="anim">
+        <h2 class="section-title" style="margin-bottom:1rem">Works with <span class="text-gradient">your stack.</span></h2>
+        <p style="color:var(--lp-muted);font-size:1.125rem;max-width:32rem;margin:0 auto">
+          Same code, any TypeScript runtime or framework.
+        </p>
+      </div>
+      <div class="fw-centered">
+        <div class="arch-label anim">Runtimes</div>
+        <div class="fw-grid runtimes anim">
+          <div class="fw-card">
+            <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg></div>
+            <span class="fw-card-name">Node.js</span>
+          </div>
+          <div class="fw-card">
+            <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+            <span class="fw-card-name">Bun</span>
+          </div>
+          <div class="fw-card">
+            <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg></div>
+            <span class="fw-card-name">Deno</span>
+          </div>
+        </div>
+        <div class="arch-label anim d1">Frameworks</div>
+        <div class="fw-grid fw-grid-5 anim d1">
+          <div class="fw-card">
+            <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg></div>
+            <span class="fw-card-name">Next.js</span>
+          </div>
+          <div class="fw-card">
+            <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <span class="fw-card-name">Express</span>
+          </div>
+          <div class="fw-card">
+            <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-2 2.5h3L12 7"/><path d="M10 14v-3"/><path d="M14 14v-3"/><path d="M11 19c-1.7 0-3-1.3-3-3v-2h8v2c0 1.7-1.3 3-3 3h-2z"/><path d="M12 22v-3"/></svg></div>
+            <span class="fw-card-name">Fastify</span>
+          </div>
+          <div class="fw-card">
+            <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></div>
+            <span class="fw-card-name">Hono</span>
+          </div>
+          <div class="fw-card">
+            <div class="fw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z"/></svg></div>
+            <span class="fw-card-name">NestJS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA -->
   <section class="cta-section">
     <div class="cta-orb"></div>
     <div class="container cta-content anim">
-      <h2>Start building <span class="text-gradient">faster backends.</span></h2>
-      <p class="sub">Stop rewriting. Start composing.</p>
+      <h2>Ready to <span class="text-gradient">stop rewriting?</span></h2>
+      <p class="sub">Copy production-ready features. Ship faster.</p>
       <div class="cta-btns">
         <a href={`${base}/getting-started/introduction`} class="btn-primary">
           Get Started
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </a>
-        <a href="#capabilities" class="btn-outline">Explore Capabilities</a>
+        <a href="https://github.com/faroke/backcap" target="_blank" rel="noopener noreferrer" class="btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          GitHub
+        </a>
       </div>
       <a href="https://github.com/faroke/backcap" target="_blank" rel="noopener noreferrer" class="cta-github">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
@@ -344,7 +377,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <span class="cta-dot"></span>
         <span>Open Source</span>
         <span class="cta-dot"></span>
-        <span>AI-Native</span>
+        <span>AI-ready</span>
       </div>
     </div>
   </section>
@@ -476,6 +509,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
     gap: 1rem; margin-bottom: 3rem;
   }
+  .landing .hero-aside {
+    color: var(--lp-muted); font-size: 0.8125rem; margin-top: 1rem; opacity: 0.6;
+  }
   .landing .btn-primary {
     display: inline-flex; align-items: center; gap: 0.5rem;
     padding: 0.75rem 1.5rem; border-radius: 0.5rem;
@@ -495,7 +531,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     padding: 0.75rem 1.25rem; border-radius: 0.5rem;
     background: var(--lp-secondary); border: 1px solid var(--lp-border);
     font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;
-    margin-bottom: 4rem;
   }
   .landing .cmd-box .dollar { color: var(--lp-muted); user-select: none; }
   .landing .cmd-copy {
@@ -593,6 +628,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-size: 0.875rem; padding: 0.375rem 0;
   }
   .landing .problem-item.bad-item { color: var(--lp-muted); }
+  .landing .problem-item.bad-item em { color: hsl(0 84% 60% / 0.7); font-style: italic; }
   .landing .problem-item.good-item code {
     font-family: 'JetBrains Mono', monospace; color: var(--lp-primary);
   }
@@ -620,113 +656,134 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
     line-height: 1.8; color: var(--lp-primary);
   }
+  .landing .step-tree { color: var(--lp-muted); line-height: 1.6; }
+  .landing .step-tree .tree-primary { color: var(--lp-primary); }
+  .landing .step-tree .tree-accent { color: var(--lp-accent); }
+  .landing .step-tree .tree-muted { color: var(--lp-muted); opacity: 0.6; }
+  .landing .how-trio {
+    display: flex; align-items: center; justify-content: center;
+    gap: 1rem; margin-top: 2.5rem; color: var(--lp-muted); font-size: 0.9375rem;
+    position: relative; z-index: 1;
+  }
+  .landing .trio-dot {
+    width: 0.25rem; height: 0.25rem; border-radius: 50%;
+    background: var(--lp-border);
+  }
 
-  /* ── Examples ── */
-  .landing .examples-grid {
-    display: grid; gap: 1.5rem; max-width: 64rem; margin: 0 auto;
+  /* ── Features ── */
+  .landing .features-section { position: relative; overflow: hidden; }
+  .landing .features-grid {
+    display: grid; gap: 3rem; max-width: 64rem; margin: 0 auto;
   }
-  @media (min-width: 768px) { .landing .examples-grid { grid-template-columns: repeat(3, 1fr); } }
-  .landing .example-card {
-    padding: 1.5rem; border-radius: 0.75rem;
-    border: 1px solid var(--lp-border); background: var(--lp-card);
-    transition: all 0.3s;
-  }
-  .landing .example-card:hover { border-color: hsl(152 76% 52% / 0.3); box-shadow: 0 0 40px hsl(152 76% 52% / 0.15); }
-  .landing .example-icon {
-    width: 2rem; height: 2rem; color: var(--lp-primary); margin-bottom: 1rem;
-    transition: transform 0.3s;
-  }
-  .landing .example-card:hover .example-icon { transform: scale(1.1); }
-  .landing .example-card h3 { font-weight: 600; font-size: 1.25rem; margin-bottom: 1.25rem; }
-  .landing .example-list {
-    border-radius: 0.5rem; background: var(--lp-secondary);
-    border: 1px solid var(--lp-border); padding: 1rem;
-    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 2;
-  }
-  .landing .example-list span { color: var(--lp-muted); }
-  .landing .example-list .plus { color: var(--lp-primary); }
-
-  /* ── Capabilities ── */
-  .landing .cap-section { position: relative; overflow: hidden; max-width: 100%; }
-  .landing .cap-badge {
-    display: inline-block; font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--lp-primary); margin-bottom: 1rem;
-    padding: 0.25rem 0.75rem; border-radius: 9999px;
-    border: 1px solid hsl(152 76% 52% / 0.2); background: hsl(152 76% 52% / 0.05);
-  }
-  .landing .cap-grid {
-    display: grid; gap: 0.75rem; max-width: 100%; margin: 0 auto;
-  }
-  @media (min-width: 640px) { .landing .cap-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .landing .cap-grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (min-width: 1280px) { .landing .cap-grid { grid-template-columns: repeat(4, 1fr); } }
-  .landing .cap-card {
+  @media (min-width: 768px) { .landing .features-grid { grid-template-columns: 1fr 1fr; } }
+  .landing .features-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .landing .feature-row {
     display: flex; align-items: center; gap: 0.875rem;
-    padding: 1rem 1.25rem; border-radius: 0.625rem;
-    border: 1px solid hsl(220 14% 18%);
-    background: hsl(220 20% 7%);
-    transition: border-color 0.2s, background 0.2s, transform 0.2s;
-    text-decoration: none; color: inherit;
-    min-width: 0; overflow: hidden;
+    padding: 0.875rem 1.25rem; border-radius: 0.625rem;
+    border: 1px solid var(--lp-border); background: var(--lp-card);
+    transition: all 0.2s; text-decoration: none; color: inherit;
   }
-  .landing .cap-card:hover {
-    transform: translateY(-2px);
+  .landing .feature-row:hover {
+    transform: translateY(-2px); border-color: hsl(152 76% 52% / 0.4);
     background: hsl(220 20% 9%);
   }
-  .landing a.cap-card:hover {
-    border-color: hsl(152 76% 52% / 0.4);
-  }
-  .landing .cap-card.is-soon { opacity: 0.5; }
-  .landing .cap-card.is-soon:hover { transform: none; opacity: 0.55; }
-  .landing .cap-icon {
+  .landing .feature-icon {
     flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 0.5rem;
     display: flex; align-items: center; justify-content: center;
   }
-  .landing .cap-icon svg { width: 1.25rem; height: 1.25rem; }
-  .landing .cap-info { min-width: 0; flex: 1; }
-  .landing .cap-info h3 {
-    font-weight: 600; font-size: 0.875rem; margin: 0 0 0.125rem;
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-  .landing .cap-info p {
+  .landing .feature-icon svg { width: 1.25rem; height: 1.25rem; }
+  .landing .feature-info { flex: 1; min-width: 0; }
+  .landing .feature-info h3 { font-weight: 600; font-size: 0.875rem; margin: 0 0 0.125rem; }
+  .landing .feature-info p {
     font-size: 0.75rem; color: var(--lp-muted); margin: 0;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .landing .cap-soon-tag {
-    font-size: 0.625rem; font-weight: 500; text-transform: uppercase;
-    letter-spacing: 0.05em; color: var(--lp-muted); background: hsl(220 14% 14%);
-    padding: 0.1rem 0.4rem; border-radius: 0.25rem;
+  .landing .feature-cmd {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem;
+    color: hsl(152 76% 52% / 0.5); display: none;
   }
-  .landing .cap-arrow-icon {
-    flex-shrink: 0; color: hsl(152 76% 52% / 0);
-    transition: color 0.2s;
+  @media (min-width: 640px) { .landing .feature-cmd { display: block; } }
+  .landing .feature-arrow {
+    flex-shrink: 0; color: hsl(152 76% 52% / 0); transition: color 0.2s;
   }
-  .landing a.cap-card:hover .cap-arrow-icon { color: hsl(152 76% 52% / 0.6); }
+  .landing .feature-row:hover .feature-arrow { color: hsl(152 76% 52% / 0.6); }
+  .landing .features-more {
+    display: inline-block; color: var(--lp-primary); font-size: 0.875rem;
+    padding-top: 0.5rem; padding-left: 0.25rem; transition: opacity 0.2s;
+  }
+  .landing .features-more:hover { opacity: 0.8; }
+  .landing .features-tree {
+    border-radius: 0.75rem; border: 1px solid var(--lp-border);
+    background: var(--lp-card); padding: 1.5rem; align-self: start;
+  }
+  @media (max-width: 767px) { .landing .features-tree { display: none; } }
+  .landing .features-tree-label {
+    font-size: 0.6875rem; font-family: 'JetBrains Mono', monospace;
+    color: var(--lp-muted); text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .landing .features-tree-code {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem;
+    line-height: 1.7; color: var(--lp-muted);
+  }
+  .landing .features-tree-code .tree-fg { color: var(--lp-fg); }
+  .landing .features-tree-code .tree-primary { color: var(--lp-primary); }
+  .landing .features-tree-code .tree-accent { color: var(--lp-accent); }
+  .landing .features-tree-code .tree-muted { color: var(--lp-muted); opacity: 0.6; }
+  .landing .features-tree-note {
+    margin-top: 1rem; font-size: 0.75rem; color: var(--lp-muted);
+    font-style: italic; opacity: 0.6;
+  }
 
-  /* ── Architecture ── */
-  .landing .arch-grid {
-    display: grid; gap: 4rem; max-width: 64rem; margin: 0 auto; align-items: center;
+  /* ── AI Section ── */
+  .landing .ai-section { position: relative; }
+  .landing .ai-section .bg-grid { position: absolute; inset: 0; opacity: 0.15; }
+  .landing .ai-grid {
+    display: grid; gap: 1.5rem; max-width: 56rem; margin: 0 auto;
+    position: relative; z-index: 1;
   }
-  @media (min-width: 768px) { .landing .arch-grid { grid-template-columns: 1fr 1fr; } }
-  .landing .arch-text h2 { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; margin-bottom: 1.25rem; }
-  .landing .arch-text p { color: var(--lp-muted); margin-bottom: 1.5rem; line-height: 1.7; }
+  @media (min-width: 768px) { .landing .ai-grid { grid-template-columns: repeat(3, 1fr); } }
+  .landing .ai-card {
+    padding: 2rem; border-radius: 0.75rem; border: 1px solid var(--lp-border);
+    background: var(--lp-card); transition: all 0.3s;
+    text-decoration: none; color: inherit; display: block;
+  }
+  .landing .ai-card:hover {
+    border-color: hsl(152 76% 52% / 0.3);
+    box-shadow: 0 0 40px hsl(152 76% 52% / 0.08);
+    transform: translateY(-2px);
+  }
+  .landing .ai-card svg {
+    width: 2rem; height: 2rem; color: var(--lp-primary); margin-bottom: 1.25rem;
+  }
+  .landing .ai-card h3 { font-weight: 700; font-size: 1.125rem; margin-bottom: 0.75rem; }
+  .landing .ai-card p { font-size: 0.875rem; color: var(--lp-muted); line-height: 1.7; }
+
+  /* ── Frameworks ── */
+  .landing .fw-section { position: relative; }
+  .landing .fw-centered {
+    max-width: 36rem; margin: 0 auto; text-align: center;
+  }
   .landing .arch-label {
     font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
-    color: var(--lp-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;
+    color: var(--lp-muted); text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
   }
   .landing .fw-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.5rem;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.5rem;
+    justify-items: center;
   }
   .landing .fw-grid.runtimes { grid-template-columns: repeat(3, 1fr); }
+  .landing .fw-grid-5 { grid-template-columns: repeat(5, 1fr); }
   @media (max-width: 500px) {
-    .landing .fw-grid { grid-template-columns: repeat(2, 1fr); }
-    .landing .fw-grid.runtimes { grid-template-columns: repeat(3, 1fr); }
+    .landing .fw-grid { grid-template-columns: repeat(3, 1fr); }
+    .landing .fw-grid-5 { grid-template-columns: repeat(3, 1fr); }
   }
   .landing .fw-card {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 0.625rem; padding: 1rem 0.75rem; border-radius: 0.625rem;
     border: 1px solid var(--lp-border); background: var(--lp-card); transition: all 0.25s;
+    width: 100%;
   }
   .landing .fw-card:hover {
     border-color: hsl(152 76% 52% / 0.35); background: hsl(220 18% 9%);
@@ -741,63 +798,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .landing .fw-card-name {
     font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; font-weight: 500;
   }
-  .landing .arch-tree {
-    border-radius: 0.75rem; border: 1px solid var(--lp-border);
-    background: var(--lp-card); padding: 1.5rem;
-    font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;
-  }
-  .landing .arch-tree .dir { color: var(--lp-primary); }
-  .landing .arch-tree .accent-dir { color: var(--lp-accent); }
-  .landing .arch-tree .muted { color: var(--lp-muted); }
-
-  /* ── AI Section (Bento Grid) ── */
-  .landing .ai-section { position: relative; }
-  .landing .ai-section .bg-grid { position: absolute; inset: 0; opacity: 0.15; }
-  .landing .bento-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: auto auto;
-    gap: 1rem; max-width: 56rem; margin: 0 auto; position: relative; z-index: 1;
-  }
-  @media (max-width: 768px) {
-    .landing .bento-grid { grid-template-columns: 1fr; }
-    .landing .bento-card.featured,
-    .landing .bento-card[style*="grid-column"] { grid-column: auto !important; }
-  }
-  .landing .bento-card {
-    padding: 2rem; border-radius: 0.75rem; border: 1px solid var(--lp-border);
-    background: var(--lp-card); transition: all 0.3s; position: relative;
-    overflow: hidden; text-decoration: none; color: inherit; display: block;
-  }
-  .landing .bento-card:hover {
-    border-color: hsl(152 76% 52% / 0.3);
-    box-shadow: 0 0 40px hsl(152 76% 52% / 0.08);
-  }
-  .landing .bento-card.featured {
-    grid-column: span 2; min-height: 14rem;
-    display: flex; flex-direction: column; justify-content: space-between;
-  }
-  .landing .bento-card.tall {
-    grid-row: span 2; min-height: 18rem;
-    display: flex; flex-direction: column; justify-content: space-between;
-  }
-  .landing .bento-glow {
-    position: absolute; top: -50%; right: -30%;
-    width: 250px; height: 250px; border-radius: 50%;
-    background: hsl(152 76% 52% / 0.04); filter: blur(60px); pointer-events: none;
-  }
-  .landing .bento-card svg {
-    width: 2rem; height: 2rem; color: var(--lp-primary); margin-bottom: 1.25rem;
-  }
-  .landing .bento-card h3 { font-weight: 700; font-size: 1.25rem; margin-bottom: 0.75rem; }
-  .landing .bento-card p { font-size: 0.9rem; color: var(--lp-muted); line-height: 1.7; }
-  .landing .bento-card code {
-    color: var(--lp-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.85em;
-  }
-  .landing .bento-footer {
-    margin-top: 1.5rem; font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.08em;
-    color: hsl(152 76% 52% / 0.5); transition: color 0.3s;
-  }
-  .landing .bento-card:hover .bento-footer { color: var(--lp-primary); }
 
   /* ── CTA ── */
   .landing .cta-section { position: relative; padding: 8rem 0; }
@@ -872,7 +872,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   document.querySelectorAll('.landing .anim:not(.visible)').forEach(el => observer.observe(el));
 
-  // ── Terminal animation ──
   // ── Copy button handler ──
   document.querySelectorAll('.cmd-copy').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -883,6 +882,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     });
   });
 
+  // ── Terminal animation ──
   const lines = [
     { html: '<span class="prompt-char">$ </span><strong>npx @backcap/cli init</strong>', cls: 'tl-cmd', delay: 800 },
     { html: '', cls: 'tl-empty', delay: 60 },
@@ -939,58 +939,5 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       });
     }, { threshold: 0.3 });
     terminalObs.observe(terminalEl);
-  }
-
-  // ── Capabilities grid ──
-  const landingEl = document.querySelector('.landing');
-  const base = landingEl?.getAttribute('data-base') || '';
-  const capabilities = [
-    { name: 'Auth', desc: 'Sign-up, login, sessions & API keys', color: '152 76% 52%', link: '/capabilities/auth', icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>' },
-    { name: 'Blog', desc: 'Posts, categories, drafts & publishing', color: '172 66% 50%', link: '/capabilities/blog', icon: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>' },
-    { name: 'Search', desc: 'Full-text search with filters & facets', color: '200 80% 55%', link: '/capabilities/search', icon: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>' },
-    { name: 'Files', desc: 'Upload, storage & file management', color: '38 92% 55%', link: '/capabilities/files', icon: '<path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>' },
-    { name: 'Notifications', desc: 'In-app, email & push notifications', color: '280 70% 60%', link: '/capabilities/notifications', icon: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>' },
-    { name: 'Webhooks', desc: 'Outbound event delivery & retries', color: '152 76% 52%', link: '/capabilities/webhooks', icon: '<path d="M18 16.98h-5.99c-1.1 0-1.95.94-2.48 1.9A4 4 0 0 1 2 17c.01-.7.2-1.4.57-2"/><path d="m6 17 3.13-5.78c.53-.97.1-2.18-.5-3.1a4 4 0 1 1 6.89-4.06"/><path d="m12 6 3.13 5.73C15.66 12.7 16.9 13 18 13a4 4 0 0 1 0 8H12"/>' },
-    { name: 'Queues', desc: 'Background jobs & task processing', color: '172 66% 50%', link: '/capabilities/queues', icon: '<rect width="7" height="18" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/>' },
-    { name: 'RBAC', desc: 'Roles, permissions & access control', color: '45 96% 58%', link: '/capabilities/rbac', icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
-    { name: 'Organizations', desc: 'Multi-tenant workspaces & teams', color: '260 60% 55%', link: '/capabilities/organizations', icon: '<path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"/>' },
-    { name: 'Feature Flags', desc: 'Toggle features per user or env', color: '340 75% 55%', link: '/capabilities/feature-flags', icon: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>' },
-    { name: 'Audit Log', desc: 'Track every action in your system', color: '200 80% 55%', link: '/capabilities/audit-log', icon: '<rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>' },
-    { name: 'Analytics', desc: 'Events, metrics & dashboards', color: '38 92% 55%', link: '/capabilities/analytics', icon: '<line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/>' },
-    { name: 'Media', desc: 'Image/video processing, thumbnails & CDN URLs', color: '310 65% 55%', link: '/capabilities/media', icon: '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>' },
-    { name: 'Forms', desc: 'Dynamic form schemas & submissions', color: '280 70% 60%', link: '/capabilities/forms', icon: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/>' },
-    { name: 'Comments', desc: 'Threaded comments & moderation', color: '152 76% 52%', link: '/capabilities/comments', icon: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>' },
-    { name: 'Tags', desc: 'Flexible tagging & categorization', color: '172 66% 50%', link: '/capabilities/tags', icon: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>' },
-    { name: 'Billing', desc: 'Payments, subscriptions & invoicing', color: '45 96% 58%', link: '/capabilities/billing', icon: '<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>' },
-    { name: 'Catalog', desc: 'Products, variants, categories & pricing', color: '320 70% 55%', link: '/capabilities/catalog', icon: '<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>' },
-    { name: 'Cart', desc: 'Shopping cart with price verification & lifecycle', color: '340 75% 55%', link: '/capabilities/cart', icon: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>' },
-    { name: 'Orders', desc: 'Order lifecycle with state machine & fulfillment', color: '320 70% 55%', link: '/capabilities/orders', icon: '<path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/>' },
-  ];
-
-  const arrow = '<svg class="cap-arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
-
-  const grid = document.getElementById('cap-grid');
-  if (grid) {
-    capabilities.forEach((cap, i) => {
-      const isAvailable = !!cap.link;
-      const tag = isAvailable ? 'a' : 'div';
-      const card = document.createElement(tag);
-      card.className = 'cap-card anim' + (isAvailable ? '' : ' is-soon');
-      if (isAvailable) card.href = base + cap.link;
-      card.style.animationDelay = `${i * 0.04}s`;
-      card.innerHTML = `
-        <div class="cap-icon" style="background:hsl(${cap.color} / 0.1)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="hsl(${cap.color})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${cap.icon}</svg>
-        </div>
-        <div class="cap-info">
-          <h3>${cap.name}${isAvailable ? '' : '<span class="cap-soon-tag">soon</span>'}</h3>
-          <p>${cap.desc}</p>
-        </div>
-        ${isAvailable ? arrow : ''}
-      `;
-      grid.appendChild(card);
-    });
-
-    document.querySelectorAll('.cap-card.anim:not(.visible)').forEach(el => observer.observe(el));
   }
 </script>

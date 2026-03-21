@@ -1,9 +1,9 @@
 ---
-title: Audit Log Capability
+title: Audit Log Domain
 description: Tamper-evident activity tracking with append-only design, filtering, and pagination for TypeScript backends.
 ---
 
-The `audit-log` capability provides a **tamper-evident record of all significant actions** with validated action formats, rich filtering, and pagination for TypeScript backends. It enforces append-only design at every layer — domain, port, adapter, and HTTP.
+The `audit-log` domain provides a **tamper-evident record of all significant actions** with validated action formats, rich filtering, and pagination for TypeScript backends. It enforces append-only design at every layer — domain, port, adapter, and HTTP.
 
 ## Install
 
@@ -18,7 +18,7 @@ npx @backcap/cli add audit-log
 The `AuditEntry` entity is immutable by design. It has no mutation methods — audit entries are append-only.
 
 ```typescript
-import { AuditEntry } from "./capabilities/audit-log/domain/entities/audit-entry.entity";
+import { AuditEntry } from "./domains/audit-log/domain/entities/audit-entry.entity";
 
 const result = AuditEntry.create({
   id: crypto.randomUUID(),
@@ -52,7 +52,7 @@ if (result.isOk()) {
 Validates that actions follow the `NOUN.VERB` format — uppercase, dot-separated (e.g., `USER.LOGIN`, `POST.CREATED`, `FLAG.TOGGLED`).
 
 ```typescript
-import { AuditAction } from "./capabilities/audit-log/domain/value-objects/audit-action.vo";
+import { AuditAction } from "./domains/audit-log/domain/value-objects/audit-action.vo";
 
 const action = AuditAction.create("USER.LOGIN");   // Ok
 const bad = AuditAction.create("user.login");       // Fail (lowercase)

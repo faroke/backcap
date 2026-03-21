@@ -1,9 +1,9 @@
 ---
-title: Auth Capability
+title: Auth Domain
 description: User registration and login for TypeScript backends — domain model, use cases, ports, and adapters.
 ---
 
-The `auth` capability provides **user registration and login** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
+The `auth` domain provides **user registration and login** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
 
 ## Install
 
@@ -15,10 +15,10 @@ npx @backcap/cli add auth
 
 ### User Entity
 
-The `User` entity is the aggregate root of the auth capability. It holds the user's identity, credentials, roles, and timestamps.
+The `User` entity is the aggregate root of the auth domain. It holds the user's identity, credentials, roles, and timestamps.
 
 ```typescript
-import { User } from "./capabilities/auth/domain/entities/user.entity";
+import { User } from "./domains/auth/domain/entities/user.entity";
 
 const result = User.create({
   id: crypto.randomUUID(),
@@ -49,7 +49,7 @@ if (result.isOk()) {
 ### Email Value Object
 
 ```typescript
-import { Email } from "./capabilities/auth/domain/value-objects/email.vo";
+import { Email } from "./domains/auth/domain/value-objects/email.vo";
 
 const result = Email.create("user@example.com");
 // Result<Email, InvalidEmail>
@@ -65,7 +65,7 @@ Validates against a simplified RFC-5321 regex. Returns `InvalidEmail` on failure
 ### Password Value Object
 
 ```typescript
-import { Password } from "./capabilities/auth/domain/value-objects/password.vo";
+import { Password } from "./domains/auth/domain/value-objects/password.vo";
 
 const result = Password.create("securepass1");
 // Result<Password, DomainError>
@@ -97,7 +97,7 @@ Validates: minimum 8 characters, at least one non-alphabetic character.
 Registers a new user. Checks for duplicate email, hashes the password, persists the user, and emits a `UserRegistered` event.
 
 ```typescript
-import { RegisterUser } from "./capabilities/auth/application/use-cases/register-user.use-case";
+import { RegisterUser } from "./domains/auth/application/use-cases/register-user.use-case";
 
 const registerUser = new RegisterUser(userRepository, passwordHasher);
 
@@ -115,7 +115,7 @@ const result = await registerUser.execute({
 Authenticates a user by email and password. Returns a signed token on success. Optionally accepts `organizationId` to include the active organization in the token.
 
 ```typescript
-import { LoginUser } from "./capabilities/auth/application/use-cases/login-user.use-case";
+import { LoginUser } from "./domains/auth/application/use-cases/login-user.use-case";
 
 const loginUser = new LoginUser(userRepository, tokenService, passwordHasher);
 
@@ -164,7 +164,7 @@ When `organizationId` is provided to `generate()`, the token includes the active
 ## Public API (contracts/)
 
 ```typescript
-import { createAuthService, IAuthService } from "./capabilities/auth/contracts";
+import { createAuthService, IAuthService } from "./domains/auth/contracts";
 
 const authService: IAuthService = createAuthService({
   userRepository,
@@ -297,7 +297,7 @@ npx @backcap/cli add auth-organizations
 ## File Map
 
 ```
-capabilities/auth/
+domains/auth/
   domain/
     entities/user.entity.ts
     value-objects/email.vo.ts
