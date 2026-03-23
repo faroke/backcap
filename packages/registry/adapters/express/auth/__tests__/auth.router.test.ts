@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { createAuthRouter } from "../auth.router.js";
-import { Result } from "../../../../capabilities/auth/shared/result.js";
-import { UserAlreadyExists } from "../../../../capabilities/auth/domain/errors/user-already-exists.error.js";
-import { InvalidCredentials } from "../../../../capabilities/auth/domain/errors/invalid-credentials.error.js";
+import { Result } from "../../../../domains/auth/shared/result.js";
+import { UserAlreadyExists } from "../../../../domains/auth/domain/errors/user-already-exists.error.js";
+import { InvalidCredentials } from "../../../../domains/auth/domain/errors/invalid-credentials.error.js";
 
 function createMockAuthService() {
   return {

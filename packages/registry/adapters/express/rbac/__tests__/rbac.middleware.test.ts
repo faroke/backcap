@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { requirePermission } from "../rbac.middleware.js";
-import { Result } from "../../../../capabilities/rbac/shared/result.js";
-import { PermissionDenied } from "../../../../capabilities/rbac/domain/errors/permission-denied.error.js";
+import { Result } from "../../../../domains/rbac/shared/result.js";
+import { PermissionDenied } from "../../../../domains/rbac/domain/errors/permission-denied.error.js";
 
 function createMockAuthorizationService() {
   return {

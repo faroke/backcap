@@ -5,7 +5,7 @@ import { registryItemSchema } from "@backcap/shared/schemas/registry-item";
 import { configExists, loadConfig } from "../config/loader.js";
 import { detectAdapters } from "../lib/detect-adapters.js";
 import { detectPM } from "../lib/detect-pm.js";
-import { writeCapabilityFiles } from "../lib/write-capability.js";
+import { writeDomainFiles } from "../lib/write-domain.js";
 import { installDeps } from "../lib/install-deps.js";
 import { detectConflicts } from "../installer/conflict-detector.js";
 import { renderConflictSummary, renderDetailedDiffs } from "../installer/diff-renderer.js";
@@ -32,13 +32,13 @@ const DEFAULT_REGISTRY_URL = "https://faroke.github.io/backcap";
 export default defineCommand({
   meta: {
     name: "add",
-    description: "Install a capability or bridge from the registry",
+    description: "Install a domain or bridge from the registry",
   },
   args: {
-    capability: {
+    domain: {
       type: "positional",
       required: true,
-      description: "Capability or bridge name to install",
+      description: "Domain or bridge name to install",
     },
     yes: {
       type: "boolean",
@@ -49,7 +49,7 @@ export default defineCommand({
   },
   async run({ args }) {
     const cwd = process.cwd();
-    const itemName = args.capability;
+    const itemName = args.domain;
     intro();
 
     // Load config
@@ -66,7 +66,7 @@ export default defineCommand({
 
     const config = configResult.unwrap();
 
-    // Fetch item JSON — try capability path first, then bridges
+    // Fetch item JSON — try domain path first, then bridges
     log.info(`Fetching ${itemName}...`);
     let itemData: unknown;
     let fetchedFromBridges = false;
@@ -103,14 +103,14 @@ export default defineCommand({
       return;
     }
 
-    // --- Capability installation flow ---
-    const capabilityName = itemName;
+    // --- Domain installation flow ---
+    const domainName = itemName;
 
-    // Resolve skill files from capability JSON
+    // Resolve skill files from domain JSON
     const skillFiles = resolveSkillFiles(item as { files?: Array<{ path: string; content?: string }>; skills?: string[] });
 
     // Detect adapters from project dependencies
-    const availableAdapters = await detectAdapters(cwd, capabilityName);
+    const availableAdapters = await detectAdapters(cwd, domainName);
     let selectedAdapters: string[] = [];
 
     if (availableAdapters.length > 0) {
@@ -128,8 +128,8 @@ export default defineCommand({
     const filesToWrite = files
       .filter((f): f is { path: string; content: string } => typeof f.content === "string");
 
-    // Conflict detection for capability files
-    let capRoot = normalize(join(cwd, config.paths.domains, capabilityName));
+    // Conflict detection for domain files
+    let capRoot = normalize(join(cwd, config.paths.domains, domainName));
 
     let useSelectiveInstall = false;
     let resolved = false;
@@ -175,7 +175,7 @@ export default defineCommand({
 
       if (action === "different_path") {
         const newPath = await promptNewPath();
-        capRoot = normalize(join(cwd, newPath, capabilityName));
+        capRoot = normalize(join(cwd, newPath, domainName));
         continue;
       }
 
@@ -188,7 +188,7 @@ export default defineCommand({
           const selectedPaths = new Set([...installResult.installed, ...installResult.alwaysInstalled]);
           const selectedFiles = filesToWrite.filter((f) => selectedPaths.has(f.path));
 
-          await writeCapabilityFiles(selectedFiles, { capabilityRoot: capRoot });
+          await writeDomainFiles(selectedFiles, { domainRoot: capRoot });
 
           reportInstallResult(installResult);
           useSelectiveInstall = true;
@@ -216,16 +216,16 @@ export default defineCommand({
     if (!useSelectiveInstall) {
       // Confirm
       if (!args.yes) {
-        const confirmed = await promptInstallConfirm(capabilityName);
+        const confirmed = await promptInstallConfirm(domainName);
         if (!confirmed) {
           outro("Installation cancelled.");
           return;
         }
       }
 
-      // Write all capability files
-      await writeCapabilityFiles(filesToWrite, { capabilityRoot: capRoot });
-      log.success(`Capability files written to ${capRoot}`);
+      // Write all domain files
+      await writeDomainFiles(filesToWrite, { domainRoot: capRoot });
+      log.success(`Domain files written to ${capRoot}`);
     }
 
     // Fetch and write adapter files (always, regardless of selective install)
@@ -245,11 +245,11 @@ export default defineCommand({
         const adapterFiles = (adapterItem.files as Array<{ path: string; content?: string }>)
           .filter((f): f is { path: string; content: string } => typeof f.content === "string");
 
-        const adapterType = adapterName.replace(`${capabilityName}-`, "");
+        const adapterType = adapterName.replace(`${domainName}-`, "");
         const category = adapterType === "prisma" ? "persistence" : "http";
-        const adapterRoot = normalize(join(cwd, config.paths.adapters, category, adapterType, capabilityName));
+        const adapterRoot = normalize(join(cwd, config.paths.adapters, category, adapterType, domainName));
 
-        await writeCapabilityFiles(adapterFiles, { capabilityRoot: adapterRoot });
+        await writeDomainFiles(adapterFiles, { domainRoot: adapterRoot });
         log.success(`Adapter files written to ${adapterRoot}`);
       } catch {
         log.warn(`Could not fetch adapter "${adapterName}", skipping.`);
@@ -287,13 +287,13 @@ export default defineCommand({
 
       await installSkill({
         skillsPath,
-        capabilityName,
+        domainName,
         skillFiles: capSkillFiles,
         coreSkillFiles,
         templateValues,
         onConflict: args.yes ? async () => "overwrite" as const : promptSkillConflict,
       });
-      log.success(`Skill installed to ${skillsPath}/backcap-${capabilityName}/`);
+      log.success(`Skill installed to ${skillsPath}/backcap-${domainName}/`);
     }
 
     // Install npm deps
@@ -314,15 +314,15 @@ export default defineCommand({
     if (!useSelectiveInstall) {
       const version = itemVersion ?? "1.0.0";
       const lines = [
-        `${capabilityName} v${version} installed successfully!`,
+        `${domainName} v${version} installed successfully!`,
         "",
-        `  Capability: ${capRoot}`,
+        `  Domain: ${capRoot}`,
       ];
       if (selectedAdapters.length > 0) {
         lines.push(`  Adapters:   ${selectedAdapters.join(", ")}`);
       }
       lines.push("", "  Next steps:");
-      lines.push(`  1. Review the installed files in ${config.paths.domains}/${capabilityName}/`);
+      lines.push(`  1. Review the installed files in ${config.paths.domains}/${domainName}/`);
       lines.push("  2. Run the test suite to verify: npx vitest run");
       lines.push("  3. Check available bridges: backcap bridges");
       outro(lines.join("\n"));
@@ -410,7 +410,7 @@ async function installBridge(
   }
 
   // Write bridge files
-  await writeCapabilityFiles(filesToWrite, { capabilityRoot: bridgeRoot });
+  await writeDomainFiles(filesToWrite, { domainRoot: bridgeRoot });
   log.success(`Bridge files written to ${bridgeRoot}`);
 
   // Success message

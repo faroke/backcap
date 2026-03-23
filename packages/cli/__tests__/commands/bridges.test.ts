@@ -46,9 +46,9 @@ const mockLoadConfig = vi.mocked(loadConfig);
 const mockDetectInstalledDomains = vi.mocked(detectInstalledDomains);
 
 describe("MissingDependencyError", () => {
-  it("contains missing capabilities and suggestion", () => {
+  it("contains missing domains and suggestion", () => {
     const err = new MissingDependencyError(["auth", "notifications"]);
-    expect(err.missingCapabilities).toEqual(["auth", "notifications"]);
+    expect(err.missingDomains).toEqual(["auth", "notifications"]);
     expect(err.suggestion).toContain("backcap add auth");
     expect(err.suggestion).toContain("backcap add notifications");
   });
@@ -137,7 +137,7 @@ describe("bridges command no-manifests output", () => {
     vi.clearAllMocks();
   });
 
-  it("shows install-capabilities hint when no bridge manifests found", async () => {
+  it("shows install-domains hint when no bridge manifests found", async () => {
     mockConfigExists.mockResolvedValue(true);
     mockLoadConfig.mockResolvedValue({
       isOk: () => true,
@@ -158,7 +158,7 @@ describe("bridges command no-manifests output", () => {
     await bridgesCommand.default.run!({ args: {} } as Parameters<NonNullable<typeof bridgesCommand.default.run>>[0]);
 
     expect(clack.log.info).toHaveBeenCalledWith(
-      "Install capabilities first — bridges appear automatically between installed capabilities.",
+      "Install domains first — bridges appear automatically between installed domains.",
     );
     expect(clack.outro).toHaveBeenCalledWith("No bridges available.");
   });

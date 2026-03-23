@@ -1,7 +1,7 @@
 // Template: import type { IFileStorage } from "{{cap_rel}}/files/application/ports/file-storage.port.js";
-import type { IFileStorage } from "../../../capabilities/files/application/ports/file-storage.port.js";
+import type { IFileStorage } from "../../../domains/files/application/ports/file-storage.port.js";
 // Template: import { File } from "{{cap_rel}}/files/domain/entities/file.entity.js";
-import { File } from "../../../capabilities/files/domain/entities/file.entity.js";
+import { File } from "../../../domains/files/domain/entities/file.entity.js";
 
 interface PrismaFileRecord {
   id: string;

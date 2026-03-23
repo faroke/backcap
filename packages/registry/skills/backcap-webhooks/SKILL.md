@@ -1,12 +1,12 @@
 ---
 name: backcap-webhooks
-description: Webhooks capability for Backcap — domain-first clean architecture for outbound HTTP event delivery. Provides webhook registration, triggering with delivery tracking, URL validation with private IP rejection, and configurable delivery providers. Use when building webhook integrations, event-driven HTTP notifications, or third-party callback systems.
+description: Webhooks domain for Backcap — domain-first clean architecture for outbound HTTP event delivery. Provides webhook registration, triggering with delivery tracking, URL validation with private IP rejection, and configurable delivery providers. Use when building webhook integrations, event-driven HTTP notifications, or third-party callback systems.
 metadata:
   author: backcap
   version: 0.1.0
 ---
 
-# Webhooks Capability
+# Webhooks Domain
 
 ## Domain Map
 
@@ -38,7 +38,7 @@ domains/webhooks/
 │   └── __tests__/
 ├── contracts/
 │   ├── webhooks.contract.ts             → IWebhooksService
-│   ├── webhooks.factory.ts              → createWebhooksCapability()
+│   ├── webhooks.factory.ts              → createWebhooksDomain()
 │   └── index.ts
 └── shared/result.ts
 ```
@@ -80,7 +80,7 @@ Implement `IWebhookDelivery.deliver(url, secret, eventType, payload)` → `{ sta
 
 | Command | Description |
 |---------|-------------|
-| `backcap add webhooks` | Install webhooks capability |
+| `backcap add webhooks` | Install webhooks domain |
 | `backcap add webhooks --yes` | Install without prompts |
-| `backcap list` | View all available capabilities |
+| `backcap list` | View all available domains |
 | `backcap bridges` | View compatible bridges |

@@ -1,5 +1,5 @@
-// Reference copy of capabilities/notifications/domain/value-objects/notification-channel.vo.ts
-// For skill documentation purposes — source of truth is the capability itself.
+// Reference copy of domains/notifications/domain/value-objects/notification-channel.vo.ts
+// For skill documentation purposes — source of truth is the domain itself.
 
 import { Result } from "../../shared/result.js";
 import { InvalidChannel } from "../errors/invalid-channel.error.js";

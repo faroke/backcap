@@ -7,17 +7,17 @@ interface FileEntry {
 }
 
 interface WriteOptions {
-  capabilityRoot: string;
+  domainRoot: string;
 }
 
-export async function writeCapabilityFiles(
+export async function writeDomainFiles(
   files: FileEntry[],
   options: WriteOptions,
 ): Promise<string[]> {
   const writtenPaths: string[] = [];
 
   for (const file of files) {
-    const destPath = normalize(join(options.capabilityRoot, file.path));
+    const destPath = normalize(join(options.domainRoot, file.path));
     const dir = dirname(destPath);
     await mkdir(dir, { recursive: true });
 

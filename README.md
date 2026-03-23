@@ -1,7 +1,7 @@
 <h1 align="center">Backcap</h1>
 
 <p align="center">
-  <strong>Production-ready backend capabilities, scaffolded as source code.</strong>
+  <strong>Production-ready backend domains, scaffolded as source code.</strong>
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
 
 <br />
 
-Backcap is a **capability registry and CLI** for TypeScript backends. Instead of installing opaque npm packages, you scaffold real source code — clean architecture, fully typed, ready to own and extend.
+Backcap is a **domain registry and CLI** for TypeScript backends. Instead of installing opaque npm packages, you scaffold real source code — clean architecture, fully typed, ready to own and extend.
 
 ```bash
 npx @backcap/cli init
@@ -27,16 +27,16 @@ That's it. You get a complete authentication module with entities, use cases, po
 
 Most backend starters give you a monolith to fork or a library to depend on. Backcap takes a different approach:
 
-- **Source code, not packages** — Every capability lands in your `src/` as plain TypeScript. No vendor lock-in, no black boxes.
+- **Source code, not packages** — Every domain lands in your `src/` as plain TypeScript. No vendor lock-in, no black boxes.
 - **Clean Architecture by default** — Domain, Application, Contracts, Adapters. Each layer has strict import rules enforced by convention.
 - **Framework-agnostic** — Works with Express, Fastify, NestJS, Next.js, or any Node/Bun/Deno runtime. Adapters are swappable.
-- **AI-native** — Each capability ships with a SKILL.md file that gives your AI assistant full context on the architecture, file map, and rules.
+- **AI-native** — Each domain ships with a SKILL.md file that gives your AI assistant full context on the architecture, file map, and rules.
 
-## Capabilities
+## Domains
 
-13 production-ready capabilities, each following the same clean architecture:
+13 production-ready domains, each following the same clean architecture:
 
-| Capability | Description |
+| Domain | Description |
 |---|---|
 | **auth** | Registration, login, JWT tokens, password hashing |
 | **blog** | Posts, drafts, publishing workflow |
@@ -54,10 +54,10 @@ Most backend starters give you a monolith to fork or a library to depend on. Bac
 
 ## Architecture
 
-Every capability follows the same 4-layer structure:
+Every domain follows the same 4-layer structure:
 
 ```
-src/capabilities/auth/
+src/domains/auth/
   domain/           # Entities, value objects, errors, events — zero external imports
   application/      # Use cases, ports (interfaces), DTOs — depends only on domain
   contracts/        # Public API: factory function + service interface — the only index.ts
@@ -78,7 +78,7 @@ Key principles:
 
 ## Bridges
 
-Bridges wire capabilities together through domain events:
+Bridges wire domains together through domain events:
 
 | Bridge | Connects |
 |---|---|
@@ -96,16 +96,16 @@ npx @backcap/cli add blog-search
 
 ```bash
 npx @backcap/cli init          # Initialize a project — detects framework & package manager
-npx @backcap/cli list          # List all available capabilities
-npx @backcap/cli add <name>    # Scaffold a capability or bridge into your project
-npx @backcap/cli bridges       # List bridges compatible with your installed capabilities
+npx @backcap/cli list          # List all available domains
+npx @backcap/cli add <name>    # Scaffold a domain or bridge into your project
+npx @backcap/cli bridges       # List bridges compatible with your installed domains
 ```
 
 The CLI handles adapter detection, conflict resolution, dependency installation, and skill file placement — all interactively.
 
 ## AI Skills
 
-Backcap capabilities ship with structured SKILL.md files designed for AI coding assistants. Load them to give your AI full architectural context:
+Backcap domains ship with structured SKILL.md files designed for AI coding assistants. Load them to give your AI full architectural context:
 
 ```
 Read skills/backcap-core/SKILL.md and skills/backcap-auth/SKILL.md,
@@ -126,7 +126,7 @@ npx skills add faroke/backcap
 # 1. Initialize your project
 npx @backcap/cli init
 
-# 2. Add capabilities
+# 2. Add domains
 npx @backcap/cli add auth
 npx @backcap/cli add blog
 
@@ -142,7 +142,7 @@ npx @backcap/cli add blog-tags
 backcap/
   packages/
     cli/              # @backcap/cli — the scaffolding tool
-    registry/         # Capability source code & build pipeline
+    registry/         # Domain source code & build pipeline
     shared/           # Shared types, schemas, Result monad
   apps/
     docs/             # Documentation site (faroke.github.io/backcap)
@@ -151,7 +151,7 @@ backcap/
 
 ## Documentation
 
-Full documentation at **[faroke.github.io/backcap](https://faroke.github.io/backcap/)** — guides, concepts, API reference, and a step-by-step tutorial for creating your own capabilities.
+Full documentation at **[faroke.github.io/backcap](https://faroke.github.io/backcap/)** — guides, concepts, API reference, and a step-by-step tutorial for creating your own domains.
 
 ## Contributing
 

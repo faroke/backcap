@@ -1,6 +1,6 @@
-# Blog Capability — Domain Map
+# Blog Domain — Domain Map
 
-Complete file-by-file reference for the `blog` capability.
+Complete file-by-file reference for the `blog` domain.
 
 ---
 
@@ -281,5 +281,5 @@ type BlogServiceDeps = {
 
 **Export**: `Result<T, E extends Error>`
 
-The `Result` monad. Copied into each capability so the domain and application layers have
+The `Result` monad. Copied into each domain so the domain and application layers have
 zero npm dependencies. Methods: `ok`, `fail`, `isOk`, `isFail`, `unwrap`, `unwrapError`, `map`.

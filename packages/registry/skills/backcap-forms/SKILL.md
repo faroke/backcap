@@ -1,12 +1,12 @@
 ---
 name: backcap-forms
-description: Forms capability for Backcap — create forms, submit structured data, and retrieve submissions
+description: Forms domain for Backcap — create forms, submit structured data, and retrieve submissions
 metadata:
   author: backcap
   version: 0.1.0
 ---
 
-# Forms Capability
+# Forms Domain
 
 ## Domain Map
 
@@ -60,6 +60,6 @@ To add a custom field type (e.g., `"date"`, `"url"`):
 ## CLI Commands
 
 ```bash
-backcap add forms       # Install the capability
+backcap add forms       # Install the domain
 backcap bridges         # List available bridges
 ```

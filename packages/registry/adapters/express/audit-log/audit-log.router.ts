@@ -1,7 +1,7 @@
 // Template: import type { IAuditLogService } from "{{cap_rel}}/audit-log/contracts/index.js";
-import type { IAuditLogService } from "../../../capabilities/audit-log/contracts/index.js";
+import type { IAuditLogService } from "../../../domains/audit-log/contracts/index.js";
 // Template: import { InvalidAuditAction } from "{{cap_rel}}/audit-log/domain/errors/invalid-audit-action.error.js";
-import { InvalidAuditAction } from "../../../capabilities/audit-log/domain/errors/invalid-audit-action.error.js";
+import { InvalidAuditAction } from "../../../domains/audit-log/domain/errors/invalid-audit-action.error.js";
 
 interface Request {
   body: Record<string, unknown>;

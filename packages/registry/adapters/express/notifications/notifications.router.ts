@@ -1,9 +1,9 @@
 // Template: import type { INotificationsService } from "{{cap_rel}}/notifications/contracts/index.js";
-import type { INotificationsService } from "../../../capabilities/notifications/contracts/index.js";
+import type { INotificationsService } from "../../../domains/notifications/contracts/index.js";
 // Template: import { NotificationNotFound } from "{{cap_rel}}/notifications/domain/errors/notification-not-found.error.js";
-import { NotificationNotFound } from "../../../capabilities/notifications/domain/errors/notification-not-found.error.js";
+import { NotificationNotFound } from "../../../domains/notifications/domain/errors/notification-not-found.error.js";
 // Template: import { InvalidChannel } from "{{cap_rel}}/notifications/domain/errors/invalid-channel.error.js";
-import { InvalidChannel } from "../../../capabilities/notifications/domain/errors/invalid-channel.error.js";
+import { InvalidChannel } from "../../../domains/notifications/domain/errors/invalid-channel.error.js";
 
 interface Request {
   body: Record<string, unknown>;

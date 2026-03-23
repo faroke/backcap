@@ -8,7 +8,7 @@ export type AnalyticsDeps = {
   analyticsStore: IAnalyticsStore;
 };
 
-export function createAnalyticsCapability(deps: AnalyticsDeps): IAnalyticsService {
+export function createAnalyticsDomain(deps: AnalyticsDeps): IAnalyticsService {
   const trackEvent = new TrackEvent(deps.analyticsStore);
   const queryEvents = new QueryEvents(deps.analyticsStore);
   const getMetrics = new GetMetrics(deps.analyticsStore);

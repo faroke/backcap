@@ -1,5 +1,5 @@
-// Reference copy of capabilities/files/application/ports/file-storage.port.ts
-// For skill documentation purposes — source of truth is the capability itself.
+// Reference copy of domains/files/application/ports/file-storage.port.ts
+// For skill documentation purposes — source of truth is the domain itself.
 
 import type { File } from "../../domain/entities/file.entity.js";
 

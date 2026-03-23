@@ -37,7 +37,7 @@ export async function detectConflicts(
       throw new ConflictDetectionError(
         `Path traversal detected: "${incoming.relativePath}" resolves outside target directory`,
         incoming.relativePath,
-        "Ensure all file paths in the capability are relative and do not contain '..' segments.",
+        "Ensure all file paths in the domain are relative and do not contain '..' segments.",
       );
     }
 

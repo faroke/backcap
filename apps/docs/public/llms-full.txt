@@ -1,14 +1,14 @@
 # Backcap — Comprehensive AI Reference
 
-Backcap is a registry of composable backend capabilities for TypeScript. Capabilities are installed via the CLI and written as full TypeScript source code into your project. There is no runtime dependency on Backcap after installation.
+Backcap is a registry of composable backend domains for TypeScript. Domains are installed via the CLI and written as full TypeScript source code into your project. There is no runtime dependency on Backcap after installation.
 
 ---
 
 ## Overview
 
-### What is a Capability?
+### What is a Domain?
 
-A capability is a vertical slice of backend business logic — authentication, blog, search, notifications, billing — implemented in strict Clean Architecture layers. When you install a capability, you receive all source files. You own and can modify every file.
+A domain is a vertical slice of backend business logic — authentication, blog, search, notifications, billing — implemented in strict Clean Architecture layers. When you install a domain, you receive all source files. You own and can modify every file.
 
 ### Installation Model
 
@@ -16,12 +16,12 @@ Backcap follows the shadcn/ui model: run a CLI command, get source code. Not a l
 
 ```bash
 npx @backcap/cli init       # Create backcap.json
-npx @backcap/cli add auth   # Install auth capability source files
+npx @backcap/cli add auth   # Install auth domain source files
 ```
 
 ### Framework Agnosticism
 
-Domain and application layers have zero framework or database imports. The same capability logic works with Express, Fastify, Next.js, or NestJS. Runtime support: Node.js, Bun, Deno.
+Domain and application layers have zero framework or database imports. The same domain logic works with Express, Fastify, Next.js, or NestJS. Runtime support: Node.js, Bun, Deno.
 
 ---
 
@@ -29,13 +29,13 @@ Domain and application layers have zero framework or database imports. The same 
 
 ### Four Layers
 
-Every capability is structured in exactly four layers with strict import rules.
+Every domain is structured in exactly four layers with strict import rules.
 
 #### Layer 1: domain/
 
 Contents: entities, value objects, domain errors, domain events.
 
-Import rule: zero external imports. Only imports `shared/result.ts` from within the same capability.
+Import rule: zero external imports. Only imports `shared/result.ts` from within the same domain.
 
 Key patterns:
 - Private constructors. Static `create()` factory returns `Result<T, E>`.
@@ -66,13 +66,13 @@ Import rule: imports from `application/` ports and use cases.
 Key patterns:
 - `I<Name>Service` interface defines the public API.
 - `create<Name>Service(deps)` factory wires the dependency graph.
-- This is the only `index.ts` in the capability. No barrel exports in domain/ or application/.
+- This is the only `index.ts` in the domain. No barrel exports in domain/ or application/.
 
 #### Layer 4: adapters/
 
 Contents: concrete implementations of port interfaces.
 
-Location: `adapters/<category>/<technology>/<capability>/` — outside the capability directory. Category is `persistence/` (e.g., prisma) or `http/` (e.g., express).
+Location: `adapters/<category>/<technology>/<domain>/` — outside the domain directory. Category is `persistence/` (e.g., prisma) or `http/` (e.g., express).
 
 Import rule: imports from `application/ports/` (for the interface) and `domain/` entities (for mapping). Never imports from `contracts/`.
 
@@ -88,7 +88,7 @@ Each layer only imports from the layer to its right. Nothing imports from adapte
 
 ## The Result<T, E> Monad
 
-`Result<T, E>` replaces thrown exceptions for all expected failure conditions. Located at `shared/result.ts` inside each capability (duplicated intentionally for self-containment).
+`Result<T, E>` replaces thrown exceptions for all expected failure conditions. Located at `shared/result.ts` inside each domain (duplicated intentionally for self-containment).
 
 ```typescript
 export class Result<T, E extends Error = Error> {
@@ -138,17 +138,17 @@ Package manager detection: `pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `pac
 ### backcap add
 
 ```bash
-npx @backcap/cli add <capability>
+npx @backcap/cli add <domain>
 ```
 
 1. Loads backcap.json (fails if not present)
 2. Fetches `https://faroke.github.io/backcap/dist/<name>.json` — if not found, falls back to `https://faroke.github.io/backcap/dist/bridges/<name>.json` (bridge auto-detection)
 3. If type is "bridge", routes to bridge installation flow (validates dependencies, writes to `<paths.bridges>/<name>/`)
-4. For capabilities: detects compatible adapters based on project package.json
+4. For domains: detects compatible adapters based on project package.json
 5. Runs conflict detection (identical → skip, no conflicts → proceed, conflicts → prompt)
-6. Conflict options: abort, different path, selective install (capabilities only), compare diffs and continue
-7. Writes files to `<paths.domains>/<capability>/`
-8. Writes adapter files to `<paths.adapters>/<category>/<technology>/<capability>/`
+6. Conflict options: abort, different path, selective install (domains only), compare diffs and continue
+7. Writes files to `<paths.domains>/<domain>/`
+8. Writes adapter files to `<paths.adapters>/<category>/<technology>/<domain>/`
 9. Installs npm deps
 10. Updates `backcap.json` installed list
 
@@ -158,7 +158,7 @@ npx @backcap/cli add <capability>
 npx @backcap/cli list
 ```
 
-Fetches `https://faroke.github.io/backcap/dist/registry.json`. Renders a table of capabilities with name, description, type, and installed status.
+Fetches `https://faroke.github.io/backcap/dist/registry.json`. Renders a table of domains with name, description, type, and installed status.
 
 ### backcap bridges
 
@@ -166,15 +166,15 @@ Fetches `https://faroke.github.io/backcap/dist/registry.json`. Renders a table o
 npx @backcap/cli bridges
 ```
 
-Reads local `bridge.json` manifests from the project's bridges directory (`<paths.bridges>/*/bridge.json`). Lists discovered bridges with source capability, target capability, events, and status (installed / available). No remote fetch — only locally installed bridge manifests are shown.
+Reads local `bridge.json` manifests from the project's bridges directory (`<paths.bridges>/*/bridge.json`). Lists discovered bridges with source domain, target domain, events, and status (installed / available). No remote fetch — only locally installed bridge manifests are shown.
 
 ---
 
-## Available Capabilities (20)
+## Available Domains (20)
 
-All capabilities follow the same four-layer Clean Architecture. Install any with `npx @backcap/cli add <name>`.
+All domains follow the same four-layer Clean Architecture. Install any with `npx @backcap/cli add <name>`.
 
-| Capability | Description |
+| Domain | Description |
 |---|---|
 | analytics | Event tracking and analytics pipelines |
 | audit-log | Audit trail and activity logging |
@@ -199,7 +199,7 @@ All capabilities follow the same four-layer Clean Architecture. Install any with
 
 ---
 
-## Auth Capability — Complete Reference
+## Auth Domain — Complete Reference
 
 ### Installation
 
@@ -361,12 +361,12 @@ Reads `Authorization: Bearer <token>`, verifies with tokenService, sets `req.use
 
 ## Bridges
 
-A bridge is a standalone module in `bridges/<name>/` that connects two capabilities via domain events. It defines its own port interfaces and has its own `shared/result.ts`.
+A bridge is a standalone module in `bridges/<name>/` that connects two domains via domain events. It defines its own port interfaces and has its own `shared/result.ts`.
 
 ### Bridge Structure
 
 Each bridge directory contains:
-- `bridge.json` — Manifest with name, sourceCapability, targetCapability, events, and version
+- `bridge.json` — Manifest with name, sourceDomain, targetDomain, events, and version
 - `<name>.bridge.ts` — Entry point that wires the bridge
 - Standard Clean Architecture layers (domain/, application/, contracts/)
 
@@ -424,10 +424,10 @@ All files use kebab-case. Class names use PascalCase. Interface names use `I` pr
 
 ## Skills (AI Documentation Files)
 
-Each capability has a corresponding `SKILL.md` in `packages/registry/skills/`:
+Each domain has a corresponding `SKILL.md` in `packages/registry/skills/`:
 
 - `backcap-core/SKILL.md` — global architecture rules, import rules, naming conventions, Result pattern, CLI overview
-- `backcap-auth/SKILL.md` — auth capability domain map, all ports and use cases, error types, adapters, bridge
+- `backcap-auth/SKILL.md` — auth domain domain map, all ports and use cases, error types, adapters, bridge
 
 Load these files as AI context before making changes to a Backcap project. The `description` field in each skill's YAML frontmatter is a dense one-paragraph summary suitable for use as a system prompt prefix.
 
@@ -448,7 +448,7 @@ Load these files as AI context before making changes to a Backcap project. The `
     "shared": "shared"
   },
   "installed": {
-    "capabilities": [{ "name": "auth", "version": "1.0.0", "adapters": ["auth-prisma", "auth-express"] }],
+    "domains": [{ "name": "auth", "version": "1.0.0", "adapters": ["auth-prisma", "auth-express"] }],
     "bridges": []
   }
 }
@@ -460,7 +460,7 @@ All paths are relative to the project root. Customize any path before running `b
 
 ## Dependency Injection
 
-Backcap uses constructor injection throughout. No IoC container is required. The factory function in `contracts/` is the composition root for each capability.
+Backcap uses constructor injection throughout. No IoC container is required. The factory function in `contracts/` is the composition root for each domain.
 
 ```typescript
 // All wiring in one place

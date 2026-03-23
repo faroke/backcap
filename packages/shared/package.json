@@ -23,9 +23,9 @@
       "import": "./dist/types/config.types.mjs",
       "types": "./dist/types/config.types.d.mts"
     },
-    "./types/capability": {
-      "import": "./dist/types/capability.types.mjs",
-      "types": "./dist/types/capability.types.d.mts"
+    "./types/domain": {
+      "import": "./dist/types/domain.types.mjs",
+      "types": "./dist/types/domain.types.d.mts"
     },
     "./result": {
       "import": "./dist/result.mjs",

@@ -1,4 +1,4 @@
-# Notifications Capability — Bridges Reference
+# Notifications Domain — Bridges Reference
 
 ---
 

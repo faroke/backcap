@@ -1,7 +1,7 @@
 {
   "name": "catalog-cart",
-  "sourceCapability": "catalog",
-  "targetCapability": "cart",
+  "sourceDomain": "catalog",
+  "targetDomain": "cart",
   "events": ["PriceLookup"],
   "version": "1.0.0"
 }

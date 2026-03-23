@@ -10,8 +10,8 @@ import { InMemorySearchEngine } from "./adapters/in-memory-search-engine.js";
 import { BlogModule } from "./adapters/http/nestjs/blog/blog.module.js";
 import { SearchModule } from "./adapters/http/nestjs/search/search.module.js";
 
-// Capabilities — factories
-import { createSearchService } from "./capabilities/search/contracts/search.factory.js";
+// Domains — factories
+import { createSearchService } from "./domains/search/contracts/search.factory.js";
 
 // Bridge
 import { createBridge } from "./bridges/blog-search/blog-search.bridge.js";
@@ -28,7 +28,7 @@ const eventBus = new InMemoryEventBus();
 const postRepository = new PrismaPostRepository(prisma as never);
 const searchEngine = new InMemorySearchEngine();
 
-// 2. Wire search capability
+// 2. Wire search domain
 const searchService = createSearchService({ searchEngine });
 
 // 3. Wire bridge: PostPublished → index in search

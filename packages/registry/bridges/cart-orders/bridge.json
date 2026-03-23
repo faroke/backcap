@@ -1,7 +1,7 @@
 {
   "name": "cart-orders",
-  "sourceCapability": "cart",
-  "targetCapability": "orders",
+  "sourceDomain": "cart",
+  "targetDomain": "orders",
   "events": ["CartConverted"],
   "version": "1.0.0"
 }

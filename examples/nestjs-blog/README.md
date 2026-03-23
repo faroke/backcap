@@ -4,8 +4,8 @@ A working blog API built with [Backcap](https://github.com/faroke/backcap) — d
 
 ## What's Inside
 
-- **Blog capability** — CRUD operations for blog posts (create, publish, get, list)
-- **Search capability** — Document indexing and full-text search
+- **Blog domain** — CRUD operations for blog posts (create, publish, get, list)
+- **Search domain** — Document indexing and full-text search
 - **Blog-Search bridge** — Automatically indexes posts in search when published
 - **Prisma adapter** — SQLite persistence via Prisma ORM
 - **NestJS adapter** — HTTP routes via NestJS controllers with `@Inject()` DI bridge
@@ -69,11 +69,11 @@ This example was built step-by-step using the Backcap CLI:
 # 1. Initialize Backcap config (detects NestJS framework)
 npx @backcap/cli init -y
 
-# 2. Install blog capability + adapters
+# 2. Install blog domain + adapters
 npx @backcap/cli add blog -y
 # → blog-prisma adapter installed, blog-nestjs skipped (not yet published)
 
-# 3. Install search capability
+# 3. Install search domain
 npx @backcap/cli add search -y
 # → search adapters skipped (not yet published)
 
@@ -169,12 +169,12 @@ examples/nestjs-blog/
 ├── src/
 │   ├── main.ts                                  # Application entry point (NestJS bootstrap)
 │   ├── app.module.ts                            # Root module (infrastructure wiring)
-│   ├── capabilities/
-│   │   ├── blog/                                # Blog capability (installed by CLI)
+│   ├── domains/
+│   │   ├── blog/                                # Blog domain (installed by CLI)
 │   │   │   ├── domain/                          # Entities, value objects, events
 │   │   │   ├── application/                     # Use cases, DTOs, ports
 │   │   │   └── contracts/                       # Service interface & factory
-│   │   └── search/                              # Search capability (installed by CLI)
+│   │   └── search/                              # Search domain (installed by CLI)
 │   ├── adapters/
 │   │   ├── http/nestjs/blog/                    # NestJS blog controller + module
 │   │   ├── http/nestjs/search/                  # NestJS search controller + module

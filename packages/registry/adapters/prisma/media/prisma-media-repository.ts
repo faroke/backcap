@@ -1,9 +1,9 @@
 // Template: import type { IMediaRepository } from "{{cap_rel}}/media/application/ports/media-repository.port.js";
-import type { IMediaRepository, FindAllOptions } from "../../../capabilities/media/application/ports/media-repository.port.js";
+import type { IMediaRepository, FindAllOptions } from "../../../domains/media/application/ports/media-repository.port.js";
 // Template: import { MediaAsset } from "{{cap_rel}}/media/domain/entities/media-asset.entity.js";
-import { MediaAsset } from "../../../capabilities/media/domain/entities/media-asset.entity.js";
+import { MediaAsset } from "../../../domains/media/domain/entities/media-asset.entity.js";
 // Template: import { MediaVariant } from "{{cap_rel}}/media/domain/entities/media-variant.entity.js";
-import { MediaVariant } from "../../../capabilities/media/domain/entities/media-variant.entity.js";
+import { MediaVariant } from "../../../domains/media/domain/entities/media-variant.entity.js";
 
 interface PrismaMediaVariantRecord {
   id: string;

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { PrismaMembershipRepository } from "../membership-repository.adapter.js";
-import { Membership } from "../../../../capabilities/organizations/domain/entities/membership.entity.js";
+import { Membership } from "../../../../domains/organizations/domain/entities/membership.entity.js";
 
 function createMockPrisma() {
   return {

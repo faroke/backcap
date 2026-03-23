@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { createOrgScopeMiddleware } from "../organizations.middleware.js";
-import { Result } from "../../../../capabilities/organizations/shared/result.js";
-import { OrgNotFound } from "../../../../capabilities/organizations/domain/errors/org-not-found.error.js";
+import { Result } from "../../../../domains/organizations/shared/result.js";
+import { OrgNotFound } from "../../../../domains/organizations/domain/errors/org-not-found.error.js";
 
 function createMockOrgService() {
   return {

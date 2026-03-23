@@ -2,7 +2,7 @@
 import type {
   IInvitationService,
   Invitation,
-} from "../../../capabilities/organizations/application/ports/invitation-service.port.js";
+} from "../../../domains/organizations/application/ports/invitation-service.port.js";
 
 interface PrismaInvitationRecord {
   id: string;

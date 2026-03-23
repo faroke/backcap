@@ -10,7 +10,7 @@ export type WebhooksDeps = {
   webhookDelivery: IWebhookDelivery;
 };
 
-export function createWebhooksCapability(deps: WebhooksDeps): IWebhooksService {
+export function createWebhooksDomain(deps: WebhooksDeps): IWebhooksService {
   const registerWebhook = new RegisterWebhook(deps.webhookRepository, deps.webhookDelivery);
   const triggerWebhook = new TriggerWebhook(deps.webhookRepository, deps.webhookDelivery);
   const listWebhooks = new ListWebhooks(deps.webhookRepository, deps.webhookDelivery);

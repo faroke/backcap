@@ -1,12 +1,12 @@
 ---
 name: backcap-tags
-description: Tags capability for Backcap — create tags, tag/untag resources, and list resources by tag
+description: Tags domain for Backcap — create tags, tag/untag resources, and list resources by tag
 metadata:
   author: backcap
   version: 0.1.0
 ---
 
-# Tags Capability
+# Tags Domain
 
 ## Domain Map
 
@@ -64,6 +64,6 @@ To tag a new resource type (e.g., "product"):
 ## CLI Commands
 
 ```bash
-backcap add tags       # Install the capability
+backcap add tags       # Install the domain
 backcap bridges        # List available bridges
 ```

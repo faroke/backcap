@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import type { DynamicModule } from "@nestjs/common";
-import type { ISearchService } from "../../../../capabilities/search/contracts/search.contract.js";
+import type { ISearchService } from "../../../../domains/search/contracts/search.contract.js";
 import { SearchController } from "./search.controller.js";
 
 export interface SearchModuleDeps {

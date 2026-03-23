@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { PrismaOrganizationRepository } from "../organization-repository.adapter.js";
-import { Organization } from "../../../../capabilities/organizations/domain/entities/organization.entity.js";
+import { Organization } from "../../../../domains/organizations/domain/entities/organization.entity.js";
 
 function createMockPrisma() {
   return {

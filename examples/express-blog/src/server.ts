@@ -6,9 +6,9 @@ import { PrismaLibSql } from "@prisma/adapter-libsql";
 import { PrismaPostRepository } from "./adapters/persistence/prisma/blog/post-repository.adapter.js";
 import { InMemorySearchEngine } from "./adapters/in-memory-search-engine.js";
 
-// Capabilities — factories
-import { createBlogService } from "./capabilities/blog/contracts/index.js";
-import { createSearchService } from "./capabilities/search/contracts/search.factory.js";
+// Domains — factories
+import { createBlogService } from "./domains/blog/contracts/index.js";
+import { createSearchService } from "./domains/search/contracts/search.factory.js";
 
 // Bridge
 import { createBridge } from "./bridges/blog-search/blog-search.bridge.js";
@@ -26,7 +26,7 @@ const eventBus = new InMemoryEventBus();
 const postRepository = new PrismaPostRepository(prisma as never);
 const searchEngine = new InMemorySearchEngine();
 
-// 2. Wire capabilities via factories
+// 2. Wire domains via factories
 const blogService = createBlogService({ postRepository, eventBus });
 const searchService = createSearchService({ searchEngine });
 

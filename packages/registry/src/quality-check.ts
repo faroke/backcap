@@ -1,6 +1,6 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join, basename } from "pathe";
-import type { CapabilityMeta, BridgeMeta } from "./types.js";
+import type { DomainMeta, BridgeMeta } from "./types.js";
 
 const TYPED_SUFFIX_REGEX = /^[a-z0-9-]+\.(entity|vo|use-case|port|dto|event|error|contract|factory|test|mock|fixture|schema|adapter|middleware|router)\.ts$/;
 
@@ -49,10 +49,10 @@ async function getAllTsFiles(dir: string): Promise<string[]> {
   return results;
 }
 
-export async function runQualityChecks(capabilities: CapabilityMeta[]): Promise<string[]> {
+export async function runQualityChecks(domains: DomainMeta[]): Promise<string[]> {
   const errors: string[] = [];
 
-  for (const cap of capabilities) {
+  for (const cap of domains) {
     const base = cap.path;
 
     if (!(await dirExists(join(base, "domain/entities")))) {
@@ -146,7 +146,7 @@ export async function runBridgeQualityChecks(bridges: BridgeMeta[]): Promise<str
         const raw = await readFile(manifestPath, "utf-8");
         const parsed = JSON.parse(raw) as Record<string, unknown>;
 
-        const requiredFields = ["name", "sourceCapability", "targetCapability", "events", "version"] as const;
+        const requiredFields = ["name", "sourceDomain", "targetDomain", "events", "version"] as const;
         for (const field of requiredFields) {
           if (!(field in parsed) || parsed[field] === undefined || parsed[field] === null) {
             errors.push(`${bridge.name}: bridge.json missing required field '${field}'`);

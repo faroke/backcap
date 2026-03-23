@@ -1,5 +1,5 @@
 // Template: import type { ITokenService } from "{{cap_rel}}/auth/application/ports/token-service.port.js";
-import type { ITokenService } from "../../../capabilities/auth/application/ports/token-service.port.js";
+import type { ITokenService } from "../../../domains/auth/application/ports/token-service.port.js";
 
 interface Request {
   headers: Record<string, string | undefined>;

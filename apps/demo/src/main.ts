@@ -1,12 +1,12 @@
 /**
  * Backcap Demo — Auth + Blog + Search with blog-search bridge
  *
- * This demo shows how capabilities compose together using the Backcap architecture:
+ * This demo shows how domains compose together using the Backcap architecture:
  *
- * 1. Register a user (auth capability)
- * 2. Create and publish a blog post (blog capability)
+ * 1. Register a user (auth domain)
+ * 2. Create and publish a blog post (blog domain)
  * 3. Blog-search bridge auto-indexes the post when published
- * 4. Search for the post (search capability)
+ * 4. Search for the post (search domain)
  *
  * All adapters are in-memory for demo purposes.
  * In production, replace with Prisma, Express, Meilisearch, etc.
@@ -80,7 +80,7 @@ async function main() {
     id: postId,
     title: "Getting Started with Backcap",
     slug,
-    content: "Backcap is a capability registry for TypeScript backends...",
+    content: "Backcap is a domain registry for TypeScript backends...",
     authorId: userId,
     status: "draft",
     createdAt: new Date(),
@@ -120,7 +120,7 @@ async function main() {
   }
 
   console.log("\n=== Demo complete ===");
-  console.log("\nCapabilities used: auth, blog, search");
+  console.log("\nDomains used: auth, blog, search");
   console.log("Bridge used: blog-search (PostPublished → indexDocument)");
 }
 

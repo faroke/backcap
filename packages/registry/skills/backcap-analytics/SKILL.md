@@ -1,12 +1,12 @@
 ---
 name: backcap-analytics
-description: Analytics capability for Backcap — track events, query history, and aggregate metrics
+description: Analytics domain for Backcap — track events, query history, and aggregate metrics
 metadata:
   author: backcap
   version: 0.1.0
 ---
 
-# Analytics Capability
+# Analytics Domain
 
 ## Domain Map
 
@@ -27,7 +27,7 @@ domains/analytics/
 │   └── ports/analytics-store.port.ts         # IAnalyticsStore — persistence + aggregation contract
 ├── contracts/
 │   ├── analytics.contract.ts                 # IAnalyticsService
-│   ├── analytics.factory.ts                  # createAnalyticsCapability(deps)
+│   ├── analytics.factory.ts                  # createAnalyticsDomain(deps)
 │   └── index.ts                              # Barrel exports
 └── shared/result.ts                          # Result<T, E> type
 ```
@@ -70,6 +70,6 @@ To validate event names or properties:
 ## CLI Commands
 
 ```bash
-backcap add analytics       # Install the capability
+backcap add analytics       # Install the domain
 backcap bridges             # List available bridges
 ```

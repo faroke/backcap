@@ -10,7 +10,7 @@
 ### Problem identified
 - "The shadcn/ui for backends" excludes devs outside React ecosystem
 - Real feedback: Angular/Nest dev thought it was a frontend tool
-- "capabilities" is internal jargon — visitors don't search for "capabilities"
+- "domains" is internal jargon — visitors don't search for "domains"
 - AI-ready differentiator was buried in a section nobody scrolls to
 - No fake metrics — nobody uses the tool yet, stay honest
 
@@ -23,7 +23,7 @@
 ### Vocabulary rules
 | Don't say | Say instead |
 |---|---|
-| capabilities | features (or list concrete ones: auth, billing, search) |
+| domains | features (or list concrete ones: auth, billing, search) |
 | DDD / hexagonal / clean architecture | "built right", "well-structured", show the tree |
 | shadcn/ui for backends (as headline) | move to secondary aside/badge |
 | Knowledge Graph Ready | "Your AI agent understands every feature" |
@@ -39,7 +39,7 @@
 1. Hero          — pain point + solution + 3 pillars + CTA
 2. Problem       — before/after comparison (keep, update wording)
 3. How it works  — 3 steps (keep, update wording)
-4. Features      — cards grid (replace "capabilities" label)
+4. Features      — cards grid (replace "domains" label)
 5. AI-ready      — skills + structure benefits (rewrite bento)
 6. Frameworks    — runtimes + frameworks supported (keep)
 7. CTA final     — echo hero message
@@ -72,7 +72,7 @@ Terminal: keep as-is
 ### CTA decisions
 - **DECIDED: Option A** — Get Started + GitHub side by side
 - Reason: need GitHub stars + want users to see the code
-- Removed: "Explore capabilities" button (scroll handles this naturally)
+- Removed: "Explore domains" button (scroll handles this naturally)
 
 ---
 
@@ -89,7 +89,7 @@ Terminal: keep as-is
 
 ### Right card (Backcap)
 - **DECIDED: Keep CLI commands** — important to show how easy it is ("just run the CLI and it's done")
-- **DECIDED: Rename title** — remove "Backcap capabilities", use something like "With Backcap" or just "Backcap"
+- **DECIDED: Rename title** — remove "Backcap domains", use something like "With Backcap" or just "Backcap"
 - The CLI one-liner per feature IS the value prop here — simplicity
 
 ---
@@ -101,7 +101,7 @@ Terminal: keep as-is
 
 ### Steps
 - Step 1: "Install the CLI" (unchanged)
-- Step 2: "Add what you need" (was "Add capabilities")
+- Step 2: "Add what you need" (was "Add domains")
 - Step 3: "It's your code now" (was "Use them in your backend")
   - Mini file tree showing `domains/auth/` with contracts, domain, application
   - `domains/` is default path (configurable, but no need to mention here)
@@ -134,7 +134,7 @@ Terminal: keep as-is
 - Reduced from 20 cards to 6 flagship features
 
 ### CTA
-- **DECIDED (temp):** "How features work" → points to /concepts/capabilities
+- **DECIDED (temp):** "How features work" → points to /concepts/domains
 - **FUTURE:** When features list page exists, switch to "Browse all features"
 
 ### Future: /features doc page
@@ -205,7 +205,7 @@ Terminal: keep as-is
 
 ### CTAs
 - **DECIDED:** [Get Started] (primary) + [GitHub] (outline) — same as hero
-- Removed: "Explore Capabilities" button
+- Removed: "Explore Domains" button
 
 ### Microcopy
 - **DECIDED: Keep** — "Free & open source. No account required."

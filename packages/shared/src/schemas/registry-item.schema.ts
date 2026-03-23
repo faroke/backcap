@@ -13,7 +13,7 @@ export const registryItemFileSchema = z.object({
 
 export const registryItemSchema = z.object({
   name: z.string(),
-  type: z.enum(["capability", "adapter", "bridge", "skill"]),
+  type: z.enum(["domain", "adapter", "bridge", "skill"]),
   description: z.string(),
   files: z.array(registryItemFileSchema),
   dependencies: z.union([z.record(z.string()), z.array(z.string())]).optional(),

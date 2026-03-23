@@ -1,9 +1,9 @@
 // Template: import type { IFormsService } from "{{cap_rel}}/forms/contracts/index.js";
-import type { IFormsService } from "../../../capabilities/forms/contracts/index.js";
+import type { IFormsService } from "../../../domains/forms/contracts/index.js";
 // Template: import { FormNotFound } from "{{cap_rel}}/forms/domain/errors/form-not-found.error.js";
-import { FormNotFound } from "../../../capabilities/forms/domain/errors/form-not-found.error.js";
+import { FormNotFound } from "../../../domains/forms/domain/errors/form-not-found.error.js";
 // Template: import { FormValidationFailed } from "{{cap_rel}}/forms/domain/errors/form-validation-failed.error.js";
-import { FormValidationFailed } from "../../../capabilities/forms/domain/errors/form-validation-failed.error.js";
+import { FormValidationFailed } from "../../../domains/forms/domain/errors/form-validation-failed.error.js";
 
 interface Request {
   body: Record<string, unknown>;

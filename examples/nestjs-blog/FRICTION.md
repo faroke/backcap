@@ -11,7 +11,7 @@
 
 **Step:** `backcap add search -y`
 **Output:** `Could not fetch adapter "search-prisma", skipping.` and `Could not fetch adapter "search-nestjs", skipping.`
-**Root cause:** No search adapters exist in the registry yet (Express, Fastify, Hono examples all have the same issue). Search capability is installed, but both adapters are missing.
+**Root cause:** No search adapters exist in the registry yet (Express, Fastify, Hono examples all have the same issue). Search domain is installed, but both adapters are missing.
 **Fix applied:** Created `src/adapters/in-memory-search-engine.ts` manually implementing `ISearchEngine` port with simple substring matching. Wired search manually in app.module.ts.
 
 ## Friction Point 3: Bridge imports reference non-existent shared paths

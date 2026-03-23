@@ -2,7 +2,7 @@ export default function Home() {
   return (
     <main style={{ padding: "2rem", fontFamily: "system-ui" }}>
       <h1>Next.js Blog Example</h1>
-      <p>Powered by <strong>Backcap</strong> — capabilities, adapters, and bridges.</p>
+      <p>Powered by <strong>Backcap</strong> — domains, adapters, and bridges.</p>
       <h2>API Endpoints</h2>
       <ul>
         <li><code>POST /api/posts</code> — Create a blog post</li>

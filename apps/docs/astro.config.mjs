@@ -49,8 +49,8 @@ export default defineConfig({
           label: "Guides",
           items: [
             {
-              label: "Create a Capability",
-              slug: "guides/create-capability",
+              label: "Create a Domain",
+              slug: "guides/create-domain",
             },
             { label: "Create an Adapter", slug: "guides/create-adapter" },
             { label: "AI Workflow", slug: "guides/ai-workflow" },

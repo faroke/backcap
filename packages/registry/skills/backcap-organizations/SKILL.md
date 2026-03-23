@@ -1,7 +1,7 @@
 ---
 name: backcap-organizations
 description: >
-  Organizations (multi-tenant) capability for backcap registry.
+  Organizations (multi-tenant) domain for backcap registry.
   Provides domain entities for Organizations and Memberships, value objects for
   OrgSlug and MemberRole, use cases for organization lifecycle and member
   management, Prisma adapters for persistence, and Express adapter with
@@ -11,7 +11,7 @@ metadata:
   version: 1.0.0
 ---
 
-# Organizations Capability Skill
+# Organizations Domain Skill
 
 ## Domain Map
 

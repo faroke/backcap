@@ -50,7 +50,7 @@ describe("detectAdapters", () => {
     expect(result).toEqual([]);
   });
 
-  it("uses capability name for adapter naming", async () => {
+  it("uses domain name for adapter naming", async () => {
     mockReadPkg.mockResolvedValue({
       dependencies: { "@prisma/client": "^5.0" },
     } as any);

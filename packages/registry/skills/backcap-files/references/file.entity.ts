@@ -1,5 +1,5 @@
-// Reference copy of capabilities/files/domain/entities/file.entity.ts
-// For skill documentation purposes — source of truth is the capability itself.
+// Reference copy of domains/files/domain/entities/file.entity.ts
+// For skill documentation purposes — source of truth is the domain itself.
 
 import { Result } from "../../shared/result.js";
 import { FilePath } from "../value-objects/file-path.vo.js";

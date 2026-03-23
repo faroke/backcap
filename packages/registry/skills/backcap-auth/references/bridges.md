@@ -1,6 +1,6 @@
-# Auth Capability — Bridges Reference
+# Auth Domain — Bridges Reference
 
-Bridges are standalone modules that connect two or more capabilities via the shared event bus.
+Bridges are standalone modules that connect two or more domains via the shared event bus.
 
 ---
 

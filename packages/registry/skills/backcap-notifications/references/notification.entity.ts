@@ -1,5 +1,5 @@
-// Reference copy of capabilities/notifications/domain/entities/notification.entity.ts
-// For skill documentation purposes — source of truth is the capability itself.
+// Reference copy of domains/notifications/domain/entities/notification.entity.ts
+// For skill documentation purposes — source of truth is the domain itself.
 
 import { Result } from "../../shared/result.js";
 import { NotificationChannel } from "../value-objects/notification-channel.vo.js";

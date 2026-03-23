@@ -11,7 +11,7 @@
 
 **Step:** `backcap add bridge blog-search`
 **Error:** `Could not fetch "bridge" from registry.`
-**Root cause:** The CLI interprets "bridge" as the item name (positional arg). There is no `bridge` sub-command — the CLI auto-detects bridge vs capability by trying both registry paths.
+**Root cause:** The CLI interprets "bridge" as the item name (positional arg). There is no `bridge` sub-command — the CLI auto-detects bridge vs domain by trying both registry paths.
 **Fix applied:** None needed in code — the correct syntax is `backcap add blog-search`. Updated documentation/example to reflect correct usage.
 
 ## Friction Point 3: Template comments cause false conflicts on reinstall
@@ -19,7 +19,7 @@
 **Step:** `backcap add blog -y` (second run after installing Prisma adapter)
 **Error:** Conflict report shows 6 "modified" files with only `// Template:` comment differences.
 **Root cause:** Conflict detection compares raw registry content (with `{{shared_path}}` markers) against installed files (with resolved paths). The `// Template:` comments aren't resolved before comparison.
-**Fix applied:** Added `resolveFileMarkers()` in `packages/cli/src/lib/write-capability.ts` and updated `packages/cli/src/commands/add.ts` to resolve template markers before conflict detection.
+**Fix applied:** Added `resolveFileMarkers()` in `packages/cli/src/lib/write-domain.ts` and updated `packages/cli/src/commands/add.ts` to resolve template markers before conflict detection.
 
 ## Friction Point 4: Bridge imports reference non-existent shared paths
 
@@ -38,9 +38,9 @@
 ## Friction Point 6: Adapter imports have wrong relative paths
 
 **Step:** TypeScript compilation
-**Error:** `Cannot find module '../../../capabilities/blog/...'` — off by one directory level.
-**Root cause:** Adapters are installed with a category directory (e.g., `http/` or `persistence/`) making them one level deeper than the hardcoded relative imports expect. The template system only resolves `{{shared_path}}`, not capability cross-references.
-**Fix applied:** Manually corrected imports in `blog.router.ts` and `post-repository.adapter.ts` to use `../../../../capabilities/...` (4 levels up instead of 3).
+**Error:** `Cannot find module '../../../domains/blog/...'` — off by one directory level.
+**Root cause:** Adapters are installed with a category directory (e.g., `http/` or `persistence/`) making them one level deeper than the hardcoded relative imports expect. The template system only resolves `{{shared_path}}`, not domain cross-references.
+**Fix applied:** Manually corrected imports in `blog.router.ts` and `post-repository.adapter.ts` to use `../../../../domains/...` (4 levels up instead of 3).
 
 ## Friction Point 7: IndexDocument use case requires pre-existing index
 

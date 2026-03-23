@@ -13,11 +13,11 @@ function truncate(str: string, maxLen: number): string {
   return str.length > maxLen ? str.slice(0, maxLen - 3) + "..." : str;
 }
 
-export function renderCapabilityTable(
+export function renderDomainTable(
   items: RegistryItem[],
   installed: Set<string>,
 ): string {
-  const capabilities = items.filter((i) => i.type === "capability");
+  const domains = items.filter((i) => i.type === "domain");
 
   const COL = { name: 20, version: 10, description: 50, installed: 12 };
 
@@ -25,7 +25,7 @@ export function renderCapabilityTable(
     pad("Name", COL.name) + pad("Version", COL.version) + pad("Description", COL.description) + pad("Installed", COL.installed);
   const separator = "-".repeat(COL.name + COL.version + COL.description + COL.installed);
 
-  const rows = capabilities.map((cap) => {
+  const rows = domains.map((cap) => {
     const installedMark = installed.has(cap.name) ? "✓" : "—";
     const version = cap.version ?? "—";
     return (
@@ -36,7 +36,7 @@ export function renderCapabilityTable(
     );
   });
 
-  const footer = `\n${capabilities.length} capabilities available`;
+  const footer = `\n${domains.length} domains available`;
 
   return [header, separator, ...rows, footer].join("\n") + "\n";
 }

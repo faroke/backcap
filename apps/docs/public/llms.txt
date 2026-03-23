@@ -1,21 +1,21 @@
 # Backcap
 
-Backcap is a registry of composable backend capabilities for TypeScript. It lets you install production-ready backend features — authentication, search, blog, billing, notifications — the same way you install npm packages, with full source code written directly into your project. You own every file.
+Backcap is a registry of composable backend domains for TypeScript. It lets you install production-ready backend features — authentication, search, blog, billing, notifications — the same way you install npm packages, with full source code written directly into your project. You own every file.
 
 > For the full API reference, see [llms-full.txt](https://faroke.github.io/backcap/llms-full.txt).
 
 ## Core Concept
 
-Run `npx @backcap/cli add auth` and Backcap fetches the auth capability from the registry, writes TypeScript source files to `domains/auth/`, installs npm dependencies, and records it in `backcap.json`. No runtime library — the code is yours.
+Run `npx @backcap/cli add auth` and Backcap fetches the auth domain from the registry, writes TypeScript source files to `domains/auth/`, installs npm dependencies, and records it in `backcap.json`. No runtime library — the code is yours.
 
 ## Four-Layer Architecture
 
-Every Backcap capability uses strict Clean Architecture layering:
+Every Backcap domain uses strict Clean Architecture layering:
 
 - **domain/** — Entities, value objects, domain errors, domain events. Zero external imports. No framework code.
 - **application/** — Use cases, port interfaces (TypeScript interfaces), DTOs. Imports domain/ only.
 - **contracts/** — Public service interface and factory function. The only barrel index.ts. Imports application/ only.
-- **adapters/** — Framework and persistence implementations of port interfaces. Live outside the capability in adapters/.
+- **adapters/** — Framework and persistence implementations of port interfaces. Live outside the domain in adapters/.
 
 Import rule: dependencies point inward only. domain/ never imports from application/. application/ never imports from adapters/.
 
@@ -36,19 +36,19 @@ const { userId } = result.unwrap();
 ## CLI Commands
 
 - `npx @backcap/cli init` — Detects framework and package manager, writes backcap.json
-- `npx @backcap/cli add <capability>` — Fetches and installs a capability with conflict detection
-- `npx @backcap/cli list` — Lists available capabilities from the registry
+- `npx @backcap/cli add <domain>` — Fetches and installs a domain with conflict detection
+- `npx @backcap/cli list` — Lists available domains from the registry
 - `npx @backcap/cli bridges` — Reads local bridge.json manifests and lists locally discovered bridges with install status
 
-## Available Capabilities (20)
+## Available Domains (20)
 
 analytics, audit-log, auth, billing, blog, cart, catalog, comments, feature-flags, files, forms, media, notifications, orders, organizations, queues, rbac, search, tags, webhooks
 
-Each capability follows the same four-layer architecture. Install any with `npx @backcap/cli add <name>`.
+Each domain follows the same four-layer architecture. Install any with `npx @backcap/cli add <name>`.
 
 ## Adapters
 
-Live in `adapters/<category>/<technology>/<capability>/` (category: `persistence/` or `http/`):
+Live in `adapters/<category>/<technology>/<domain>/` (category: `persistence/` or `http/`):
 
 - **auth-prisma** — PrismaUserRepository implements IUserRepository
 - **auth-express** — createAuthRouter(), createAuthMiddleware() (sets `req.user.userId`)
@@ -58,13 +58,13 @@ Live in `adapters/<category>/<technology>/<capability>/` (category: `persistence
 
 ## Bridges (16)
 
-Bridges connect two capabilities via domain events. Each bridge has a `bridge.json` manifest and a `<name>.bridge.ts` entry point. Install with `npx @backcap/cli add <bridge-name>` (type auto-detected from registry JSON).
+Bridges connect two domains via domain events. Each bridge has a `bridge.json` manifest and a `<name>.bridge.ts` entry point. Install with `npx @backcap/cli add <bridge-name>` (type auto-detected from registry JSON).
 
 auth-audit-log, auth-billing, auth-notifications, auth-organizations, auth-rbac, blog-comments, blog-media, blog-search, blog-tags, cart-orders, catalog-cart, catalog-search, media-files, orders-billing, organizations-billing, rbac-organizations
 
 ## Skills (AI Documentation)
 
-Each capability has a SKILL.md with structured frontmatter and file-by-file tables. Load these as AI context before making architectural changes.
+Each domain has a SKILL.md with structured frontmatter and file-by-file tables. Load these as AI context before making architectural changes.
 
 ## File Naming Conventions
 
@@ -86,7 +86,7 @@ Configuration file written by `backcap init`:
     "shared": "shared"
   },
   "installed": {
-    "capabilities": [],
+    "domains": [],
     "bridges": []
   }
 }

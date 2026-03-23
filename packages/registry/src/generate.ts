@@ -1,6 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "pathe";
-import type { CapabilityMeta, AdapterMeta, BridgeMeta, SkillMeta } from "./types.js";
+import type { DomainMeta, AdapterMeta, BridgeMeta, SkillMeta } from "./types.js";
 
 async function readAllFiles(
   dir: string,
@@ -28,10 +28,10 @@ async function readAllFiles(
   return results;
 }
 
-export async function discoverCapabilities(
+export async function discoverDomains(
   registryRoot: string,
-): Promise<CapabilityMeta[]> {
-  const capDir = join(registryRoot, "capabilities");
+): Promise<DomainMeta[]> {
+  const capDir = join(registryRoot, "domains");
   const entries = await readdir(capDir, { withFileTypes: true });
   return entries
     .filter((e) => e.isDirectory())
@@ -49,13 +49,13 @@ export async function discoverAdapters(
     for (const cat of categories) {
       if (!cat.isDirectory()) continue;
       const categoryPath = join(adaptersDir, cat.name);
-      const capabilities = await readdir(categoryPath, { withFileTypes: true });
-      for (const cap of capabilities) {
+      const domains = await readdir(categoryPath, { withFileTypes: true });
+      for (const cap of domains) {
         if (!cap.isDirectory()) continue;
         results.push({
           name: `${cap.name}-${cat.name}`,
           path: join(categoryPath, cap.name),
-          capability: cap.name,
+          domain: cap.name,
           category: cat.name === "prisma" ? "persistence" : "http",
         });
       }
@@ -67,8 +67,8 @@ export async function discoverAdapters(
   return results;
 }
 
-export async function generateCapabilityItemJson(
-  cap: CapabilityMeta,
+export async function generateDomainItemJson(
+  cap: DomainMeta,
   resultTs: string,
 ): Promise<Record<string, unknown>> {
   const files = await readAllFiles(cap.path, cap.path);
@@ -80,8 +80,8 @@ export async function generateCapabilityItemJson(
 
   return {
     name: cap.name,
-    type: "capability",
-    description: `${cap.name} capability`,
+    type: "domain",
+    description: `${cap.name} domain`,
     files,
     dependencies: {},
     peerDependencies: {},
@@ -96,7 +96,7 @@ export async function generateAdapterItemJson(
   return {
     name: adapter.name,
     type: "adapter",
-    description: `${adapter.capability} ${adapter.category} adapter`,
+    description: `${adapter.domain} ${adapter.category} adapter`,
     files,
     dependencies: {},
     peerDependencies: {},
@@ -115,8 +115,8 @@ export async function discoverBridges(
       if (!entry.isDirectory()) continue;
 
       // Read bridge.json manifest for metadata
-      let sourceCapability: string | undefined;
-      let targetCapability: string | undefined;
+      let sourceDomain: string | undefined;
+      let targetDomain: string | undefined;
       let events: string[] | undefined;
       let dependencies: string[];
 
@@ -124,14 +124,14 @@ export async function discoverBridges(
         const manifestPath = join(bridgesDir, entry.name, "bridge.json");
         const raw = await readFile(manifestPath, "utf-8");
         const manifest = JSON.parse(raw) as {
-          sourceCapability?: string;
-          targetCapability?: string;
+          sourceDomain?: string;
+          targetDomain?: string;
           events?: string[];
         };
-        sourceCapability = manifest.sourceCapability;
-        targetCapability = manifest.targetCapability;
+        sourceDomain = manifest.sourceDomain;
+        targetDomain = manifest.targetDomain;
         events = Array.isArray(manifest.events) ? manifest.events : undefined;
-        dependencies = [sourceCapability, targetCapability].filter(
+        dependencies = [sourceDomain, targetDomain].filter(
           (x): x is string => !!x,
         );
       } catch {
@@ -143,8 +143,8 @@ export async function discoverBridges(
         name: entry.name,
         path: join(bridgesDir, entry.name),
         dependencies,
-        sourceCapability,
-        targetCapability,
+        sourceDomain,
+        targetDomain,
         events,
       });
     }
@@ -229,7 +229,7 @@ export async function generateSkillItemJson(
 }
 
 export async function generateRegistryCatalog(
-  capabilities: Array<Record<string, unknown>>,
+  domains: Array<Record<string, unknown>>,
   adapters: Array<Record<string, unknown>>,
   bridges: Array<Record<string, unknown>> = [],
   skills: Array<Record<string, unknown>> = [],
@@ -237,7 +237,7 @@ export async function generateRegistryCatalog(
   return {
     name: "backcap-registry",
     version: "1.0.0",
-    description: "Official Backcap capability registry",
-    items: [...capabilities, ...adapters, ...bridges, ...skills],
+    description: "Official Backcap domain registry",
+    items: [...domains, ...adapters, ...bridges, ...skills],
   };
 }

@@ -2,14 +2,14 @@
   "framework": "express",
   "packageManager": "pnpm",
   "paths": {
-    "capabilities": "src/capabilities",
+    "domains": "src/domains",
     "adapters": "src/adapters",
     "bridges": "src/bridges",
     "skills": ".claude/skills",
     "shared": "src/shared"
   },
   "installed": {
-    "capabilities": [
+    "domains": [
       { "name": "auth", "version": "1.0.0", "adapters": [] },
       { "name": "blog", "version": "1.0.0", "adapters": [] },
       { "name": "search", "version": "1.0.0", "adapters": [] }

@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { CreatePost } from "../capabilities/blog/application/use-cases/create-post.use-case.js";
-import { PublishPost } from "../capabilities/blog/application/use-cases/publish-post.use-case.js";
-import { GetPost } from "../capabilities/blog/application/use-cases/get-post.use-case.js";
-import { ListPosts } from "../capabilities/blog/application/use-cases/list-posts.use-case.js";
-import type { IPostRepository } from "../capabilities/blog/application/ports/post-repository.port.js";
-import { Post } from "../capabilities/blog/domain/entities/post.entity.js";
+import { CreatePost } from "../domains/blog/application/use-cases/create-post.use-case.js";
+import { PublishPost } from "../domains/blog/application/use-cases/publish-post.use-case.js";
+import { GetPost } from "../domains/blog/application/use-cases/get-post.use-case.js";
+import { ListPosts } from "../domains/blog/application/use-cases/list-posts.use-case.js";
+import type { IPostRepository } from "../domains/blog/application/ports/post-repository.port.js";
+import { Post } from "../domains/blog/domain/entities/post.entity.js";
 
 class InMemoryPostRepository implements IPostRepository {
   private posts = new Map<string, Post>();
@@ -29,7 +29,7 @@ class InMemoryPostRepository implements IPostRepository {
   }
 }
 
-describe("Blog capability", () => {
+describe("Blog domain", () => {
   let repo: InMemoryPostRepository;
   let createPost: CreatePost;
   let publishPost: PublishPost;

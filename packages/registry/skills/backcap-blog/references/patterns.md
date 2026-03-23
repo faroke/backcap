@@ -1,4 +1,4 @@
-# Blog Capability — Patterns Reference
+# Blog Domain — Patterns Reference
 
 Blog-specific coding patterns, conventions, and design decisions.
 

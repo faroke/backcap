@@ -1,5 +1,5 @@
-// Reference copy of capabilities/files/domain/value-objects/file-path.vo.ts
-// For skill documentation purposes — source of truth is the capability itself.
+// Reference copy of domains/files/domain/value-objects/file-path.vo.ts
+// For skill documentation purposes — source of truth is the domain itself.
 
 import { Result } from "../../shared/result.js";
 import { InvalidFilePath } from "../errors/invalid-file-path.error.js";

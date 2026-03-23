@@ -1,7 +1,7 @@
 # Backcap Conventions Reference
 
 This document is the authoritative reference for all structural and coding conventions used
-across Backcap capabilities, adapters, and bridges.
+across Backcap domains, adapters, and bridges.
 
 ---
 
@@ -53,7 +53,7 @@ All files use **kebab-case** with a mandatory typed suffix that signals the role
 
 - Contains: the public service interface (`<name>.contract.ts`), the DI factory
   (`<name>.factory.ts`), and the barrel (`index.ts`).
-- **The only `index.ts` barrel in the capability** — consuming code imports only from `contracts/`.
+- **The only `index.ts` barrel in the domain** — consuming code imports only from `contracts/`.
 - The factory function (`createXxxService(deps: XxxServiceDeps): IXxxService`) is the single
   public entry point that wires the full object graph.
 - `contracts/` imports from `application/` ports and use cases, and from `domain/` errors
@@ -62,9 +62,9 @@ All files use **kebab-case** with a mandatory typed suffix that signals the role
 ### `adapters/`
 
 - Contains: concrete implementations of ports defined in `application/ports/`.
-- Stored outside the capability directory: `adapters/<framework>/<capability>/` or
-  `adapters/<orm>/<capability>/`.
-- May import from the capability's `application/ports/` and `domain/entities/`.
+- Stored outside the domain directory: `adapters/<framework>/<domain>/` or
+  `adapters/<orm>/<domain>/`.
+- May import from the domain's `application/ports/` and `domain/entities/`.
 - **Never imported directly** by `domain/` or `application/`.
 - No barrel files; adapters are wired by the host application using the factory from `contracts/`.
 
@@ -72,7 +72,7 @@ All files use **kebab-case** with a mandatory typed suffix that signals the role
 
 ## Barrel File Rule
 
-`index.ts` exists in **exactly one place** per capability: `contracts/index.ts`.
+`index.ts` exists in **exactly one place** per domain: `contracts/index.ts`.
 
 There are no barrel files in `domain/`, `application/`, `application/ports/`,
 `application/use-cases/`, `application/dto/`, or `adapters/`.
@@ -101,7 +101,7 @@ Rules:
 - Infrastructure errors (network, DB) may bubble as real exceptions; use cases may catch and
   wrap them in a typed error before returning `Result.fail`.
 - Domain objects (`static create`) return `Result` when validation can fail.
-- `shared/result.ts` is copied into each capability; it has no external dependencies.
+- `shared/result.ts` is copied into each domain; it has no external dependencies.
 
 ---
 
@@ -110,7 +110,7 @@ Rules:
 Dependencies are injected via **constructor injection** only. No service locators, no global
 singletons, no IoC container in domain or application layers.
 
-The `contracts/<name>.factory.ts` file is the composition root for a capability:
+The `contracts/<name>.factory.ts` file is the composition root for a domain:
 
 ```typescript
 export type AuthServiceDeps = {
@@ -177,7 +177,7 @@ application/__tests__/
     user.fixture.ts
 ```
 
-There is no top-level `tests/` or `__tests__/` directory at the capability root.
+There is no top-level `tests/` or `__tests__/` directory at the domain root.
 
 Mocks implement the full port interface and are placed in `__tests__/mocks/`.
 Fixtures are pre-built domain objects in `__tests__/fixtures/`.
@@ -189,7 +189,7 @@ Fixtures are pre-built domain objects in `__tests__/fixtures/`.
 The `domain/` and `application/` layers must have **zero npm dependencies**. This is enforced
 by convention and validated during registry quality checks.
 
-`shared/result.ts` is inlined per-capability (no shared npm package) to preserve this guarantee.
+`shared/result.ts` is inlined per-domain (no shared npm package) to preserve this guarantee.
 
 Adapters may have npm dependencies (e.g. `@prisma/client`, `express`) but these are declared
 as `peerDependencies` in the registry item so the host project controls version selection.

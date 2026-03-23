@@ -5,8 +5,8 @@ import { registryItemSchema } from "../../src/schemas/registry-item.schema.js";
 describe("registryItemSchema", () => {
   const validItem = {
     name: "auth",
-    type: "capability" as const,
-    description: "Authentication capability",
+    type: "domain" as const,
+    description: "Authentication domain",
     files: [{ path: "src/auth.ts", type: "source" as const }],
   };
 
@@ -44,7 +44,7 @@ describe("registrySchema", () => {
     items: [
       {
         name: "auth",
-        type: "capability" as const,
+        type: "domain" as const,
         description: "Auth",
         files: [{ path: "src/auth.ts", type: "source" as const }],
       },

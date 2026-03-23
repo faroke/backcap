@@ -7,16 +7,16 @@ import { runQualityChecks, runBridgeQualityChecks } from "../src/quality-check.j
 const REGISTRY_ROOT = import.meta.dirname ? join(import.meta.dirname, "..") : ".";
 
 describe("runQualityChecks", () => {
-  it("passes for the auth capability", async () => {
+  it("passes for the auth domain", async () => {
     const errors = await runQualityChecks([
-      { name: "auth", path: join(REGISTRY_ROOT, "capabilities/auth") },
+      { name: "auth", path: join(REGISTRY_ROOT, "domains/auth") },
     ]);
     expect(errors).toEqual([]);
   });
 
-  it("fails for a missing capability directory", async () => {
+  it("fails for a missing domain directory", async () => {
     const errors = await runQualityChecks([
-      { name: "missing", path: join(REGISTRY_ROOT, "capabilities/nonexistent") },
+      { name: "missing", path: join(REGISTRY_ROOT, "domains/nonexistent") },
     ]);
     expect(errors.length).toBeGreaterThan(0);
     expect(errors[0]).toContain("missing");
@@ -80,7 +80,7 @@ describe("runBridgeQualityChecks", () => {
     const bridgePath = join(tmpDir, "no-bridge-ts");
     await mkdir(join(bridgePath, "__tests__"), { recursive: true });
     await writeFile(join(bridgePath, "bridge.json"), JSON.stringify({
-      name: "no-bridge-ts", sourceCapability: "a", targetCapability: "b", events: ["X"], version: "1.0.0",
+      name: "no-bridge-ts", sourceDomain: "a", targetDomain: "b", events: ["X"], version: "1.0.0",
     }));
     await writeFile(join(bridgePath, "__tests__/foo.test.ts"), "");
 
@@ -95,7 +95,7 @@ describe("runBridgeQualityChecks", () => {
     const bridgePath = join(tmpDir, "no-tests");
     await mkdir(bridgePath, { recursive: true });
     await writeFile(join(bridgePath, "bridge.json"), JSON.stringify({
-      name: "no-tests", sourceCapability: "a", targetCapability: "b", events: ["X"], version: "1.0.0",
+      name: "no-tests", sourceDomain: "a", targetDomain: "b", events: ["X"], version: "1.0.0",
     }));
     await writeFile(join(bridgePath, "no-tests.bridge.ts"), "export {}");
 
@@ -110,7 +110,7 @@ describe("runBridgeQualityChecks", () => {
     const bridgePath = join(tmpDir, "empty-tests");
     await mkdir(join(bridgePath, "__tests__"), { recursive: true });
     await writeFile(join(bridgePath, "bridge.json"), JSON.stringify({
-      name: "empty-tests", sourceCapability: "a", targetCapability: "b", events: ["X"], version: "1.0.0",
+      name: "empty-tests", sourceDomain: "a", targetDomain: "b", events: ["X"], version: "1.0.0",
     }));
     await writeFile(join(bridgePath, "empty-tests.bridge.ts"), "export {}");
 
@@ -145,8 +145,8 @@ describe("runBridgeQualityChecks", () => {
     const errors = await runBridgeQualityChecks([
       { name: "missing-fields", path: bridgePath, dependencies: [] },
     ]);
-    expect(errors.some((e) => e.includes("sourceCapability"))).toBe(true);
-    expect(errors.some((e) => e.includes("targetCapability"))).toBe(true);
+    expect(errors.some((e) => e.includes("sourceDomain"))).toBe(true);
+    expect(errors.some((e) => e.includes("targetDomain"))).toBe(true);
     expect(errors.some((e) => e.includes("events"))).toBe(true);
     expect(errors.some((e) => e.includes("version"))).toBe(true);
   });
@@ -156,7 +156,7 @@ describe("runBridgeQualityChecks", () => {
     const bridgePath = join(tmpDir, "real-name");
     await mkdir(join(bridgePath, "__tests__"), { recursive: true });
     await writeFile(join(bridgePath, "bridge.json"), JSON.stringify({
-      name: "wrong-name", sourceCapability: "a", targetCapability: "b", events: ["X"], version: "1.0.0",
+      name: "wrong-name", sourceDomain: "a", targetDomain: "b", events: ["X"], version: "1.0.0",
     }));
     await writeFile(join(bridgePath, "real-name.bridge.ts"), "export {}");
     await writeFile(join(bridgePath, "__tests__/foo.test.ts"), "");

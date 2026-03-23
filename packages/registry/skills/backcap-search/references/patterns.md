@@ -1,4 +1,4 @@
-# Search Capability — Patterns Reference
+# Search Domain — Patterns Reference
 
 Search-specific coding patterns, conventions, and design decisions.
 

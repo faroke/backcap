@@ -5,14 +5,14 @@ export const mockRegistryData = {
   items: [
     {
       name: "auth",
-      type: "capability",
-      description: "Authentication capability with login and registration",
+      type: "domain",
+      description: "Authentication domain with login and registration",
       files: [],
     },
     {
       name: "blog",
-      type: "capability",
-      description: "Blog capability with CRUD operations",
+      type: "domain",
+      description: "Blog domain with CRUD operations",
       files: [],
     },
     {

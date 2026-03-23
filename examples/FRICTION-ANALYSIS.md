@@ -36,12 +36,12 @@ All 33 friction points were resolved during stop-and-fix. No open blockers remai
 
 **Category:** Import issue · **Severity:** Blocker · **Status:** Resolved (all 4 examples)
 
-**Problem:** Adapters are installed under a category subdirectory (e.g., `adapters/http/express/blog/`, `adapters/persistence/prisma/blog/`), making them one level deeper than the hardcoded relative imports expect. Imports use `../../../capabilities/...` (3 levels) when they need `../../../../capabilities/...` (4 levels).
+**Problem:** Adapters are installed under a category subdirectory (e.g., `adapters/http/express/blog/`, `adapters/persistence/prisma/blog/`), making them one level deeper than the hardcoded relative imports expect. Imports use `../../../domains/...` (3 levels) when they need `../../../../domains/...` (4 levels).
 
 **Fix applied:** Manually corrected relative imports in adapter files.
 
 **Recommended follow-up:**
-- **Issue: Template system should resolve capability cross-references.** Currently it only resolves `{{shared_path}}` markers. It should also handle `{{capabilities_path}}` or use a consistent path strategy.
+- **Issue: Template system should resolve domain cross-references.** Currently it only resolves `{{shared_path}}` markers. It should also handle `{{domains_path}}` or use a consistent path strategy.
 
 ---
 
@@ -52,16 +52,16 @@ All 33 friction points were resolved during stop-and-fix. No open blockers remai
 **Problem:** Framework-specific HTTP adapters exist in the registry source (`packages/registry/adapters/<framework>/blog/`) but haven't been published to the GitHub Pages registry. The CLI detects the framework and warns, but skips the adapter.
 
 **Current state of registry adapters:**
-- `express/` — Full coverage: 19 capabilities with HTTP adapters
+- `express/` — Full coverage: 19 domains with HTTP adapters
 - `fastify/` — Blog only
 - `hono/` — Blog only
 - `nestjs/` — Wiring guide only (no code adapter — by design)
 - `nextjs/` — Blog only
-- `prisma/` — Full coverage: 19 capabilities with persistence adapters
+- `prisma/` — Full coverage: 19 domains with persistence adapters
 
 **Recommended follow-up:**
 - **Issue: Publish adapters with next registry build+deploy.** All adapter source code is ready.
-- **Issue: Expand Fastify/Hono/Next.js adapters** beyond blog to match Express coverage (19 capabilities).
+- **Issue: Expand Fastify/Hono/Next.js adapters** beyond blog to match Express coverage (19 domains).
 
 ---
 
@@ -72,7 +72,7 @@ All 33 friction points were resolved during stop-and-fix. No open blockers remai
 **Problem:** No search adapters exist in the registry (no `search-prisma`, no `search-express`, etc.). Each example had to manually implement `ISearchEngine` with a basic in-memory adapter.
 
 **Recommended follow-up:**
-- **Issue: Create search adapters** — at minimum: `search-prisma` (persistence) and HTTP adapters for each framework. Search is a core capability referenced on the landing page.
+- **Issue: Create search adapters** — at minimum: `search-prisma` (persistence) and HTTP adapters for each framework. Search is a core domain referenced on the landing page.
 
 ---
 
@@ -119,7 +119,7 @@ All 33 friction points were resolved during stop-and-fix. No open blockers remai
 
 **Problem:** Conflict detection compares raw registry content (with `{{shared_path}}` markers) against installed files (with resolved paths). Template comments aren't resolved before comparison.
 
-**Fix applied:** Added `resolveFileMarkers()` in CLI write-capability and updated conflict detection.
+**Fix applied:** Added `resolveFileMarkers()` in CLI write-domain and updated conflict detection.
 
 ---
 
@@ -194,9 +194,9 @@ Issues affecting **multiple frameworks** indicate systemic problems that should 
 
 ## Adapter Coverage Matrix
 
-### HTTP Adapters (Framework → Capability)
+### HTTP Adapters (Framework → Domain)
 
-| Capability | Express | Fastify | Hono | NestJS | Next.js |
+| Domain | Express | Fastify | Hono | NestJS | Next.js |
 |------------|:---:|:---:|:---:|:---:|:---:|
 | blog | ✅ | ✅ | ✅ | ✅ (wiring guide) | ✅ |
 | auth | ✅ | ❌ | ❌ | ❌ | ❌ |
@@ -223,7 +223,7 @@ Issues affecting **multiple frameworks** indicate systemic problems that should 
 
 | Status | Count |
 |--------|:---:|
-| Prisma adapters available | 19/19 capabilities |
+| Prisma adapters available | 19/19 domains |
 | All frameworks share the same Prisma adapters | ✅ |
 
 ### Search Adapters
@@ -247,11 +247,11 @@ The landing page (`apps/docs/src/pages/index.astro`) claims support for:
 
 | Claim | Status | Evidence |
 |-------|:---:|---------|
-| **Express** | ✅ Validated | Full adapter coverage (19 capabilities). Express blog example passes all tests. |
-| **Fastify** | ⚠️ Partial | Blog adapter only (1/19 capabilities). Fastify blog example passes all tests. Core architecture works — adapter pattern maps cleanly to Fastify plugins. |
-| **Hono** | ⚠️ Partial | Blog adapter only (1/19 capabilities). Hono blog example passes all tests. Adapter pattern handles Hono's context-based API well. |
+| **Express** | ✅ Validated | Full adapter coverage (19 domains). Express blog example passes all tests. |
+| **Fastify** | ⚠️ Partial | Blog adapter only (1/19 domains). Fastify blog example passes all tests. Core architecture works — adapter pattern maps cleanly to Fastify plugins. |
+| **Hono** | ⚠️ Partial | Blog adapter only (1/19 domains). Hono blog example passes all tests. Adapter pattern handles Hono's context-based API well. |
 | **NestJS** | ⚠️ Partial | Wiring guide only — no code adapter (by design). NestJS blog example passes all tests. `DynamicModule` + `useFactory` bridges Pure DI and NestJS DI effectively. |
-| **Next.js** | ⚠️ Partial | Blog adapter only (1/19 capabilities). Next.js blog example passes all tests. Requires webpack `extensionAlias` config. File-based routing requires a different adapter shape. |
+| **Next.js** | ⚠️ Partial | Blog adapter only (1/19 domains). Next.js blog example passes all tests. Requires webpack `extensionAlias` config. File-based routing requires a different adapter shape. |
 
 ### Runtime Claims
 
@@ -277,8 +277,8 @@ Priority-ordered list of issues identified from this analysis:
 1. **CLI: Auto-scaffold `src/shared/` infrastructure when installing bridges**
    Affects: All frameworks. Bridge installation should include `event-bus.port.ts`, `bridge.ts`, and `in-memory-event-bus.ts`.
 
-2. **Template system: Resolve capability cross-references in adapter imports**
-   Affects: Express, Fastify, Hono, NestJS. The template marker system should handle `{{capabilities_path}}` in addition to `{{shared_path}}`.
+2. **Template system: Resolve domain cross-references in adapter imports**
+   Affects: Express, Fastify, Hono, NestJS. The template marker system should handle `{{domains_path}}` in addition to `{{shared_path}}`.
 
 ### High (Adapter gaps)
 
@@ -289,7 +289,7 @@ Priority-ordered list of issues identified from this analysis:
    Affects: All frameworks. Search is on the LP but has zero adapter support.
 
 5. **Expand Fastify/Hono/Next.js HTTP adapters beyond blog**
-   Gap: Express has 19 capability adapters; others have 1.
+   Gap: Express has 19 domain adapters; others have 1.
 
 ### Medium (Developer experience)
 
@@ -323,9 +323,9 @@ Priority-ordered list of issues identified from this analysis:
 Backcap's clean architecture and adapter pattern are **validated across all 5 frameworks**. The core domain and application layers are 100% shared — only HTTP adapters and server wiring differ. This confirms the "framework agnostic by design" LP claim.
 
 The main gaps are:
-- **Tooling:** The CLI's template system needs to handle more import resolution patterns (shared infrastructure, capability cross-references)
-- **Coverage:** Express has full adapter coverage (19 capabilities); other frameworks have blog-only
-- **Search:** A core LP capability with zero adapter support
+- **Tooling:** The CLI's template system needs to handle more import resolution patterns (shared infrastructure, domain cross-references)
+- **Coverage:** Express has full adapter coverage (19 domains); other frameworks have blog-only
+- **Search:** A core LP domain with zero adapter support
 - **Runtimes:** Bun and Deno are claimed but untested
 
 All 33 friction points encountered during Epic 12 were resolved during stop-and-fix. The 5 examples serve as integration tests — all pass their test suites.

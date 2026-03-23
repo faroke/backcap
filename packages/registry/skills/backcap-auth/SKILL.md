@@ -1,7 +1,7 @@
 ---
 name: backcap-auth
 description: >
-  Backcap auth capability: DDD-structured user registration and login for TypeScript backends.
+  Backcap auth domain: DDD-structured user registration and login for TypeScript backends.
   Domain layer contains User entity, Email and Password value objects, and four typed errors
   (InvalidEmail, InvalidCredentials, UserNotFound, UserAlreadyExists). Application layer has
   RegisterUser and LoginUser use cases, plus IUserRepository, IPasswordHasher, and ITokenService
@@ -16,7 +16,7 @@ metadata:
 
 # backcap-auth
 
-The `auth` capability provides **user registration and login** for TypeScript backends. It is
+The `auth` domain provides **user registration and login** for TypeScript backends. It is
 structured in strict Clean Architecture layers and has zero npm dependencies in the domain and
 application layers.
 
@@ -138,8 +138,8 @@ See [`references/bridges.md`](references/bridges.md) for detailed bridge documen
 |---|---|
 | `npx @backcap/cli init` | Scaffold `backcap.json` in the current project |
 | `npx @backcap/cli init --yes` | Non-interactive init; fails if framework or package manager cannot be detected |
-| `npx @backcap/cli list` | List all available capabilities from the registry |
-| `npx @backcap/cli add auth` | Install the auth capability (prompts for adapter selection) |
+| `npx @backcap/cli list` | List all available domains from the registry |
+| `npx @backcap/cli add auth` | Install the auth domain (prompts for adapter selection) |
 | `npx @backcap/cli add auth --yes` | Non-interactive install; auto-selects detected adapters, overwrites conflicts |
-| `npx @backcap/cli bridges` | List bridges compatible with installed capabilities |
+| `npx @backcap/cli bridges` | List bridges compatible with installed domains |
 | `npx @backcap/cli add bridge auth-notifications` | Install the auth-notifications bridge |

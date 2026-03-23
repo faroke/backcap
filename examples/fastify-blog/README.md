@@ -1,11 +1,11 @@
 # Fastify Blog Example
 
-A working blog API built with [Backcap](https://github.com/faroke/backcap) — demonstrating capabilities, adapters, bridges, and the CLI end-to-end with Fastify.
+A working blog API built with [Backcap](https://github.com/faroke/backcap) — demonstrating domains, adapters, bridges, and the CLI end-to-end with Fastify.
 
 ## What's Inside
 
-- **Blog capability** — CRUD operations for blog posts (create, publish, get, list)
-- **Search capability** — Document indexing and full-text search
+- **Blog domain** — CRUD operations for blog posts (create, publish, get, list)
+- **Search domain** — Document indexing and full-text search
 - **Blog-Search bridge** — Automatically indexes posts in search when published
 - **Prisma adapter** — SQLite persistence via Prisma ORM
 - **Fastify adapter** — HTTP routes via Fastify plugin pattern
@@ -67,10 +67,10 @@ This example was built step-by-step using the Backcap CLI:
 # 1. Initialize Backcap config
 npx @backcap/cli init
 
-# 2. Install blog capability (detects Fastify + Prisma adapters)
+# 2. Install blog domain (detects Fastify + Prisma adapters)
 npx @backcap/cli add blog
 
-# 3. Install search capability
+# 3. Install search domain
 npx @backcap/cli add search
 
 # 4. Install blog-search bridge
@@ -86,7 +86,7 @@ npx prisma migrate dev --name init
 
 This example validates that Backcap adapters are truly swappable:
 
-- **Domain and application layers are identical** — same capability code as the Express example
+- **Domain and application layers are identical** — same domain code as the Express example
 - **Only the HTTP adapter and server wiring differ** — Fastify uses plugins (`fastify.register()`) instead of Express routers (`app.use()`)
 - **The Fastify adapter** exports `createBlogPlugin()` which returns an async Fastify plugin
 
@@ -102,12 +102,12 @@ pnpm test
 examples/fastify-blog/
 ├── src/
 │   ├── server.ts                          # Application entry point (Fastify)
-│   ├── capabilities/
-│   │   ├── blog/                          # Blog capability (installed by CLI)
+│   ├── domains/
+│   │   ├── blog/                          # Blog domain (installed by CLI)
 │   │   │   ├── domain/                    # Entities, value objects, events
 │   │   │   ├── application/               # Use cases, DTOs, ports
 │   │   │   └── contracts/                 # Service interface & factory
-│   │   └── search/                        # Search capability (installed by CLI)
+│   │   └── search/                        # Search domain (installed by CLI)
 │   ├── adapters/
 │   │   ├── http/fastify/blog/             # Fastify routes plugin
 │   │   ├── persistence/prisma/blog/       # Prisma repository (installed by CLI)

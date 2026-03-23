@@ -1,7 +1,7 @@
 ---
 name: backcap-rbac
 description: >
-  Role-Based Access Control (RBAC) capability for backcap registry.
+  Role-Based Access Control (RBAC) domain for backcap registry.
   Provides domain entities for Roles and Permissions, value objects for
   PermissionAction and ResourceType, use cases for role management and
   permission checking, Prisma adapter for persistence, and Express
@@ -11,7 +11,7 @@ metadata:
   version: 1.0.0
 ---
 
-# RBAC Capability Skill
+# RBAC Domain Skill
 
 ## Domain Map
 

@@ -1,4 +1,4 @@
-export interface CapabilityMeta {
+export interface DomainMeta {
   name: string;
   path: string;
 }
@@ -6,7 +6,7 @@ export interface CapabilityMeta {
 export interface AdapterMeta {
   name: string;
   path: string;
-  capability: string;
+  domain: string;
   category: string;
 }
 
@@ -14,8 +14,8 @@ export interface BridgeMeta {
   name: string;
   path: string;
   dependencies: string[];
-  sourceCapability?: string;
-  targetCapability?: string;
+  sourceDomain?: string;
+  targetDomain?: string;
   events?: string[];
 }
 

@@ -11,13 +11,13 @@
 
 ### Patch Changes
 
-- c6aaadd: Remove template markers from capability and bridge source files, convert cross-domain imports to @domains/ alias, and update skill references to use new paths.domains config.
+- c6aaadd: Remove template markers from domain and bridge source files, convert cross-domain imports to @domains/ alias, and update skill references to use new paths.domains config.
 
 ## 0.9.4
 
 ### Patch Changes
 
-- 404f6c7: Next.js Blog example with stop-and-fix methodology (story 12.5): Next.js App Router adapter for blog capability, working example project, documentation pages.
+- 404f6c7: Next.js Blog example with stop-and-fix methodology (story 12.5): Next.js App Router adapter for blog domain, working example project, documentation pages.
 
 ## 0.9.3
 
@@ -29,13 +29,13 @@
 
 ### Patch Changes
 
-- 4a16362: Hono blog adapter and example with stop-and-fix methodology (story 12.3). Fix registry quality check naming errors in billing, catalog, and orders capabilities.
+- 4a16362: Hono blog adapter and example with stop-and-fix methodology (story 12.3). Fix registry quality check naming errors in billing, catalog, and orders domains.
 
 ## 0.9.1
 
 ### Patch Changes
 
-- f804c40: Fastify HTTP adapter for blog capability with plugin pattern and JSON schema validation
+- f804c40: Fastify HTTP adapter for blog domain with plugin pattern and JSON schema validation
 
 ## 0.9.0
 
@@ -47,7 +47,7 @@
 
   - Package manager detection now traverses parent directories (monorepo support)
   - Template markers resolved before conflict detection (eliminates false conflicts)
-  - Bridge conflict detection uses resolved markers (parity with capabilities)
+  - Bridge conflict detection uses resolved markers (parity with domains)
   - `incomingFiles` recomputed after `capRoot` change in different-path flow
   - New `processTemplateComments` resolves `// Template:` lines during installation
   - New per-file markers: `cap_rel`, `shared_rel`, `bridges_rel` for cross-module imports
@@ -72,7 +72,7 @@
 
 - 49294db: feat(registry): media bridges — blog-media and media-files (story 11.2)
 
-  Two hybrid bridges connecting media to blog and files capabilities:
+  Two hybrid bridges connecting media to blog and files domains:
 
   - **blog-media**: `MediaDeleted` → cleanup blog post media references (featured images, inline images); `createBlogMediaResolver()` provides `IBlogMediaResolver` wrapping `IMediaService.getMediaUrl()` for blog post media URL resolution
   - **media-files**: `MediaUploaded` → triggers `ProcessMedia` for variant generation; `createFileBackedMediaStorage()` provides `IMediaStorageAdapter` wrapping `IFileStorage` for raw file and variant persistence through the files layer
@@ -83,7 +83,7 @@
 
 ### Minor Changes
 
-- 81aa1a6: feat(registry): media capability — asset management with processing, variant generation, and CDN-aware URL resolution (story 11.1)
+- 81aa1a6: feat(registry): media domain — asset management with processing, variant generation, and CDN-aware URL resolution (story 11.1)
 
 ## 0.6.0
 
@@ -104,29 +104,29 @@
 
 ### Minor Changes
 
-- 30938c7: feat(registry): orders capability — order lifecycle with state machine, fulfillment tracking (story 10.3)
+- 30938c7: feat(registry): orders domain — order lifecycle with state machine, fulfillment tracking (story 10.3)
 
 ### Patch Changes
 
-- 4d6552a: fix(registry): cart capability code review fixes — variantId+productId match, domain errors→400, price upper bound, $transaction required, Quantity.max stored, Cart.create validation
+- 4d6552a: fix(registry): cart domain code review fixes — variantId+productId match, domain errors→400, price upper bound, $transaction required, Quantity.max stored, Cart.create validation
 
 ## 0.4.0
 
 ### Minor Changes
 
-- e81fb1c: feat(registry): cart capability — aggregate-based shopping cart with price verification, quantity validation, currency enforcement, and lifecycle management (story 10.2)
+- e81fb1c: feat(registry): cart domain — aggregate-based shopping cart with price verification, quantity validation, currency enforcement, and lifecycle management (story 10.2)
 
 ## 0.3.0
 
 ### Minor Changes
 
-- feat(registry): catalog capability — products, variants, categories & pricing (story 10.1)
+- feat(registry): catalog domain — products, variants, categories & pricing (story 10.1)
 
 ## 0.2.0
 
 ### Minor Changes
 
-- 361c159: feat(registry): catalog capability — products, variants, categories and pricing (story 10.1)
+- 361c159: feat(registry): catalog domain — products, variants, categories and pricing (story 10.1)
 
 ## 0.1.0
 
@@ -136,11 +136,11 @@
 
   - auth-billing bridge: UserRegistered → CreateCustomer with userId, email, derived name (fallback to full email if local part empty)
   - organizations-billing bridge: OrganizationCreated → CreateCustomer with orgId, org name, sanitized slug email
-  - Shared ICreateCustomer contract extracted to billing capability contracts
+  - Shared ICreateCustomer contract extracted to billing domain contracts
   - Bridges doc table updated with both new bridges
   - 8 tests (4 per bridge: happy path, edge case, failure result, exception handling)
 
-- 990b6c8: Billing capability: vendor-independent payments, subscriptions, and invoicing (story 9.1)
+- 990b6c8: Billing domain: vendor-independent payments, subscriptions, and invoicing (story 9.1)
 
   - Domain layer: Customer, Subscription, Invoice, PaymentMethod entities; Money VO (integer cents, no floating-point), BillingPeriod, SubscriptionStatus VOs; 5 domain events; 5 domain errors including InvoiceNotFound
   - Application layer: 10 use cases (CreateSubscription, CancelSubscription, ChangeSubscriptionPlan, GetSubscription, ProcessPayment, RefundPayment, GetPaymentHistory, GenerateInvoice, GetInvoice, ListInvoices); 4 ports (IPaymentProvider, ICustomerRepository, ISubscriptionRepository, IInvoiceRepository)

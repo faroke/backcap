@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { PrismaRoleRepository } from "../prisma-role-repository.adapter.js";
-import { Role } from "../../../../capabilities/rbac/domain/entities/role.entity.js";
-import { Permission } from "../../../../capabilities/rbac/domain/entities/permission.entity.js";
+import { Role } from "../../../../domains/rbac/domain/entities/role.entity.js";
+import { Permission } from "../../../../domains/rbac/domain/entities/permission.entity.js";
 
 function createMockPrisma() {
   return {

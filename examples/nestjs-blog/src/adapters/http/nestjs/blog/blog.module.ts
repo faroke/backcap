@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import type { DynamicModule } from "@nestjs/common";
-import type { IPostRepository } from "../../../../capabilities/blog/application/ports/post-repository.port.js";
-import { createBlogService } from "../../../../capabilities/blog/contracts/index.js";
+import type { IPostRepository } from "../../../../domains/blog/application/ports/post-repository.port.js";
+import { createBlogService } from "../../../../domains/blog/contracts/index.js";
 import { BlogController } from "./blog.controller.js";
 
 interface IEventBus {

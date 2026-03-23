@@ -17,8 +17,8 @@
 ## Friction Point 3: Adapter imports have wrong relative paths (same as Express/Fastify)
 
 **Step:** TypeScript compilation
-**Error:** `Cannot find module '../../../capabilities/blog/...'` — off by one directory level.
-**Root cause:** Adapters are installed with a category directory (e.g., `http/hono/`) making them one level deeper than the hardcoded relative imports expect. The Prisma adapter uses a bare path `src/capabilities/...` instead of a relative path.
+**Error:** `Cannot find module '../../../domains/blog/...'` — off by one directory level.
+**Root cause:** Adapters are installed with a category directory (e.g., `http/hono/`) making them one level deeper than the hardcoded relative imports expect. The Prisma adapter uses a bare path `src/domains/...` instead of a relative path.
 **Fix applied:** Corrected imports in adapter files to use proper relative paths (4 levels up instead of 3).
 
 ## Friction Point 4: Hono requires @hono/node-server for Node runtime

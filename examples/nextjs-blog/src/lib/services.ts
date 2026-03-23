@@ -2,8 +2,8 @@ import { PrismaClient } from "../generated/prisma/client.js";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import { PrismaPostRepository } from "../adapters/persistence/prisma/blog/post-repository.adapter.js";
 import { InMemorySearchEngine } from "../adapters/in-memory-search-engine.js";
-import { createBlogService } from "../capabilities/blog/contracts/index.js";
-import { createSearchService } from "../capabilities/search/contracts/search.factory.js";
+import { createBlogService } from "../domains/blog/contracts/index.js";
+import { createSearchService } from "../domains/search/contracts/search.factory.js";
 import { createBridge } from "../bridges/blog-search/blog-search.bridge.js";
 import { InMemoryEventBus } from "../shared/in-memory-event-bus.js";
 import { createBlogRouteHandlers } from "../adapters/http/nextjs/blog/blog.route-handlers.js";
@@ -36,7 +36,7 @@ function bootstrapServices() {
   const postRepository = new PrismaPostRepository(prisma as never);
   const searchEngine = new InMemorySearchEngine();
 
-  // Capabilities
+  // Domains
   const blogService = createBlogService({ postRepository, eventBus });
   const searchService = createSearchService({ searchEngine });
 

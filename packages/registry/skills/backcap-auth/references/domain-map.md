@@ -1,6 +1,6 @@
-# Auth Capability — Domain Map
+# Auth Domain — Domain Map
 
-Complete file-by-file reference for the `auth` capability.
+Complete file-by-file reference for the `auth` domain.
 
 ---
 
@@ -387,7 +387,7 @@ type AuthServiceDeps = {
 
 ### `contracts/index.ts`
 
-The single barrel for the capability. Import everything from here:
+The single barrel for the domain. Import everything from here:
 
 ```typescript
 import { createAuthService, type IAuthService } from './domains/auth/contracts'
@@ -456,5 +456,5 @@ After merging: `npx prisma migrate dev --name auth && npx prisma generate`.
 
 **Export**: `Result<T, E extends Error>`
 
-The `Result` monad. Copied into each capability so the domain and application layers have
+The `Result` monad. Copied into each domain so the domain and application layers have
 zero npm dependencies. Methods: `ok`, `fail`, `isOk`, `isFail`, `unwrap`, `unwrapError`, `map`.

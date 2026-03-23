@@ -8,7 +8,7 @@ export type FeatureFlagsServiceDeps = {
   flagStore: IFlagStore;
 };
 
-export function createFeatureFlagsCapability(
+export function createFeatureFlagsDomain(
   deps: FeatureFlagsServiceDeps,
 ): IFeatureFlagsService {
   const evaluateFlag = new EvaluateFlag(deps.flagStore);

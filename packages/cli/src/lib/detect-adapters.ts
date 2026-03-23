@@ -24,7 +24,7 @@ export interface DetectedAdapter {
 
 export async function detectAdapters(
   cwd: string,
-  capabilityName: string,
+  domainName: string,
 ): Promise<DetectedAdapter[]> {
   try {
     const pkg = await readPackageJSON(cwd);
@@ -32,7 +32,7 @@ export async function detectAdapters(
 
     return KNOWN_ADAPTERS
       .map((mapping) => ({
-        name: `${capabilityName}-${mapping.adapterSuffix}`,
+        name: `${domainName}-${mapping.adapterSuffix}`,
         category: mapping.category,
         detected: mapping.npmPackage in deps,
       }))

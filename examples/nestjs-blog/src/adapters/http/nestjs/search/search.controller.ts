@@ -1,7 +1,7 @@
 import { Controller, Get, Query, Inject, HttpException } from "@nestjs/common";
-import type { ISearchService } from "../../../../capabilities/search/contracts/search.contract.js";
-import { InvalidQuery } from "../../../../capabilities/search/domain/errors/invalid-query.error.js";
-import { IndexNotFound } from "../../../../capabilities/search/domain/errors/index-not-found.error.js";
+import type { ISearchService } from "../../../../domains/search/contracts/search.contract.js";
+import { InvalidQuery } from "../../../../domains/search/domain/errors/invalid-query.error.js";
+import { IndexNotFound } from "../../../../domains/search/domain/errors/index-not-found.error.js";
 
 function toHttpStatus(error: Error): number {
   if (error instanceof InvalidQuery) return 400;

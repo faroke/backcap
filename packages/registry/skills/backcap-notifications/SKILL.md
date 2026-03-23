@@ -1,7 +1,7 @@
 ---
 name: backcap-notifications
 description: >
-  Backcap notifications capability: DDD-structured multi-channel notification delivery for
+  Backcap notifications domain: DDD-structured multi-channel notification delivery for
   TypeScript backends. Domain layer contains Notification entity with status transitions
   (markSent, markFailed), NotificationChannel value object (email/sms/push), NotificationSent
   event, and three typed errors (NotificationNotFound, InvalidChannel,
@@ -18,7 +18,7 @@ metadata:
 
 # backcap-notifications
 
-The `notifications` capability provides **multi-channel notification delivery** (email, SMS,
+The `notifications` domain provides **multi-channel notification delivery** (email, SMS,
 push) for TypeScript backends. It is structured in strict Clean Architecture layers and has zero
 npm dependencies in the domain and application layers.
 
@@ -119,5 +119,5 @@ Adding a new channel:
 
 | Command | Description |
 |---|---|
-| `npx @backcap/cli add notifications` | Install the notifications capability (prompts for adapter selection) |
+| `npx @backcap/cli add notifications` | Install the notifications domain (prompts for adapter selection) |
 | `npx @backcap/cli add notifications --yes` | Non-interactive install; auto-selects detected adapters |

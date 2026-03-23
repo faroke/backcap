@@ -1,7 +1,7 @@
 {
   "name": "organizations-billing",
-  "sourceCapability": "organizations",
-  "targetCapability": "billing",
+  "sourceDomain": "organizations",
+  "targetDomain": "billing",
   "events": ["OrganizationCreated"],
   "version": "1.0.0"
 }

@@ -1,5 +1,5 @@
 // ============================================================
-// Notifications Capability — Prisma Schema Fragment
+// Notifications Domain — Prisma Schema Fragment
 // ============================================================
 // INSTRUCTIONS:
 // 1. Copy the model below into your main schema.prisma file

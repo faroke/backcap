@@ -8,7 +8,7 @@ export type AuditLogServiceDeps = {
   auditStore: IAuditStore;
 };
 
-export function createAuditLogCapability(
+export function createAuditLogDomain(
   deps: AuditLogServiceDeps,
 ): IAuditLogService {
   const recordEntry = new RecordEntry(deps.auditStore);

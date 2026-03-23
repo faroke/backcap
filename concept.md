@@ -1,10 +1,10 @@
 Build a modern developer-focused landing page for a devtool called **Backcap**.
 
-Backcap is a **registry of composable backend capabilities for TypeScript**.
+Backcap is a **registry of composable backend domains for TypeScript**.
 
 The concept is similar to **installing backend features like npm packages**.
 
-Developers can install backend capabilities such as authentication, blog, search, payments, notifications, etc. into any TypeScript backend.
+Developers can install backend domains such as authentication, blog, search, payments, notifications, etc. into any TypeScript backend.
 
 The system is **framework agnostic** and works with Node, Bun or Deno and frameworks like Next.js, Express, Fastify or NestJS.
 
@@ -22,7 +22,7 @@ SECTION 1 — HERO
 
 Headline:
 
-"The npm for backend capabilities."
+"The npm for backend domains."
 
 Subheadline:
 
@@ -31,7 +31,7 @@ Auth, Blog, Search, Payments and more — ready for any TypeScript backend."
 
 Primary CTA:
 
-"Explore capabilities"
+"Explore domains"
 
 Secondary CTA:
 
@@ -48,7 +48,7 @@ npx backcap add search
 Show the resulting project structure:
 
 ```
-/capabilities
+/domains
   auth
   blog
   search
@@ -75,7 +75,7 @@ Every backend project rebuilds the same features:
 
 This slows development and creates duplicated logic across projects.
 
-Backcap solves this by letting developers **install capabilities instead of rewriting them**.
+Backcap solves this by letting developers **install domains instead of rewriting them**.
 
 Use a visual comparison:
 
@@ -85,7 +85,7 @@ Left side:
 
 Right side:
 
-"Backcap capabilities"
+"Backcap domains"
 
 ---
 
@@ -93,7 +93,7 @@ SECTION 3 — HOW IT WORKS
 
 Title:
 
-"Install backend capabilities."
+"Install backend domains."
 
 Three steps layout.
 
@@ -107,7 +107,7 @@ npx backcap init
 
 Step 2:
 
-Add capabilities.
+Add domains.
 
 ```
 npx backcap add authentication
@@ -119,7 +119,7 @@ Step 3:
 
 Use them in your backend.
 
-Capabilities are added directly to your project with full source code.
+Domains are added directly to your project with full source code.
 
 ---
 
@@ -127,13 +127,13 @@ SECTION 4 — EXAMPLES
 
 Title:
 
-"Build anything with capabilities."
+"Build anything with domains."
 
 Show three example stacks.
 
 Card 1 — SaaS
 
-Capabilities:
+Domains:
 
 * authentication
 * organizations
@@ -143,7 +143,7 @@ Capabilities:
 
 Card 2 — Ecommerce
 
-Capabilities:
+Domains:
 
 * catalog
 * cart
@@ -153,7 +153,7 @@ Capabilities:
 
 Card 3 — Content platform
 
-Capabilities:
+Domains:
 
 * blog
 * comments
@@ -161,15 +161,15 @@ Capabilities:
 * media
 * analytics
 
-Each card should show a small code snippet or capability list.
+Each card should show a small code snippet or domain list.
 
 ---
 
-SECTION 5 — CAPABILITIES
+SECTION 5 — DOMAINS
 
 Title:
 
-"Available capabilities."
+"Available domains."
 
 Grid layout with cards.
 
@@ -208,7 +208,7 @@ Show a visual architecture diagram:
 
 ```
 project
- ├ capabilities
+ ├ domains
  │   ├ auth
  │   ├ blog
  │   └ search
@@ -239,13 +239,13 @@ Title:
 
 "Built for AI-assisted development."
 
-Explain that each capability includes:
+Explain that each domain includes:
 
 * clear specifications
 * domain contracts
 * AI-friendly structure
 
-This allows AI tools to understand and extend backend capabilities easily.
+This allows AI tools to understand and extend backend domains easily.
 
 ---
 
@@ -253,9 +253,9 @@ SECTION 8 — FUTURE REGISTRY
 
 Title:
 
-"A registry of backend capabilities."
+"A registry of backend domains."
 
-Explain that Backcap will become a registry where developers can publish reusable backend capabilities.
+Explain that Backcap will become a registry where developers can publish reusable backend domains.
 
 Show example registry items:
 
@@ -279,7 +279,7 @@ CTA buttons:
 
 "Get Started"
 
-"Explore Capabilities"
+"Explore Domains"
 
 Add a GitHub link placeholder.
 

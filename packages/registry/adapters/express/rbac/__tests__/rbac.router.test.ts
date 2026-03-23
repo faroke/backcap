@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { createRbacRouter } from "../rbac.router.js";
-import { Result } from "../../../../capabilities/rbac/shared/result.js";
-import { DuplicateRole } from "../../../../capabilities/rbac/domain/errors/duplicate-role.error.js";
-import { RoleNotFound } from "../../../../capabilities/rbac/domain/errors/role-not-found.error.js";
+import { Result } from "../../../../domains/rbac/shared/result.js";
+import { DuplicateRole } from "../../../../domains/rbac/domain/errors/duplicate-role.error.js";
+import { RoleNotFound } from "../../../../domains/rbac/domain/errors/role-not-found.error.js";
 
 function createMockAuthorizationService() {
   return {

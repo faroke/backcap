@@ -1,6 +1,6 @@
-# Files Capability — Domain Map
+# Files Domain — Domain Map
 
-Complete file-by-file reference for the `files` capability.
+Complete file-by-file reference for the `files` domain.
 
 ## Domain Layer
 

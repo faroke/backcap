@@ -1,7 +1,7 @@
 // Template: import type { ISubscriptionRepository } from "{{cap_rel}}/billing/application/ports/subscription-repository.port.js";
-import type { ISubscriptionRepository } from "../../../capabilities/billing/application/ports/subscription-repository.port.js";
+import type { ISubscriptionRepository } from "../../../domains/billing/application/ports/subscription-repository.port.js";
 // Template: import { Subscription } from "{{cap_rel}}/billing/domain/entities/subscription.entity.js";
-import { Subscription } from "../../../capabilities/billing/domain/entities/subscription.entity.js";
+import { Subscription } from "../../../domains/billing/domain/entities/subscription.entity.js";
 
 interface PrismaSubscriptionRecord {
   id: string;

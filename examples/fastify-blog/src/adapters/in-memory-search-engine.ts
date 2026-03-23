@@ -1,5 +1,5 @@
-import type { ISearchEngine } from "../capabilities/search/application/ports/search-engine.port.js";
-import type { SearchHit } from "../capabilities/search/application/dto/search-documents.dto.js";
+import type { ISearchEngine } from "../domains/search/application/ports/search-engine.port.js";
+import type { SearchHit } from "../domains/search/application/dto/search-documents.dto.js";
 
 export class InMemorySearchEngine implements ISearchEngine {
   private indices = new Map<string, Map<string, Record<string, unknown>>>();

@@ -1,5 +1,5 @@
 // Template: import type { IOrganizationService } from "{{cap_rel}}/organizations/contracts/index.js";
-import type { IOrganizationService } from "../../../capabilities/organizations/contracts/index.js";
+import type { IOrganizationService } from "../../../domains/organizations/contracts/index.js";
 
 interface Request {
   params: Record<string, string>;

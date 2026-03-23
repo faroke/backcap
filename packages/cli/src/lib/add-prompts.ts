@@ -27,10 +27,10 @@ export async function promptAdapterSelection(
 }
 
 export async function promptInstallConfirm(
-  capabilityName: string,
+  domainName: string,
 ): Promise<boolean> {
   const value = await clack.confirm({
-    message: `Install ${capabilityName} with the above configuration?`,
+    message: `Install ${domainName} with the above configuration?`,
   });
 
   if (clack.isCancel(value)) {
@@ -107,7 +107,7 @@ export async function promptSkillConflict(skillName: string): Promise<SkillConfl
 
 export async function promptNewPath(): Promise<string> {
   const value = await clack.text({
-    message: "Enter a new target path for the capability:",
+    message: "Enter a new target path for the domain:",
     validate: (input) => {
       if (!input || input.trim().length === 0) {
         return "Path cannot be empty";

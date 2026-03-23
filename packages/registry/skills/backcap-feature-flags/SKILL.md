@@ -1,12 +1,12 @@
 ---
 name: backcap-feature-flags
-description: Feature Flags capability for Backcap — toggle features per context without deploys
+description: Feature Flags domain for Backcap — toggle features per context without deploys
 metadata:
   author: backcap
   version: 0.1.0
 ---
 
-# Feature Flags Capability
+# Feature Flags Domain
 
 ## Domain Map
 
@@ -29,7 +29,7 @@ domains/feature-flags/
 │   └── ports/flag-store.port.ts           # IFlagStore — persistence contract
 ├── contracts/
 │   ├── feature-flags.contract.ts          # IFeatureFlagsService
-│   ├── feature-flags.factory.ts           # createFeatureFlagsCapability(deps)
+│   ├── feature-flags.factory.ts           # createFeatureFlagsDomain(deps)
 │   └── index.ts                           # Barrel exports
 └── shared/result.ts                       # Result<T, E> type
 ```
@@ -64,6 +64,6 @@ This keeps the domain pure while allowing flexible rollout strategies.
 ## CLI Commands
 
 ```bash
-backcap add feature-flags       # Install the capability
+backcap add feature-flags       # Install the domain
 backcap bridges                 # List available bridges
 ```

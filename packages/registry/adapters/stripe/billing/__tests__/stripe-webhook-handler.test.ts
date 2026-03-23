@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { StripeWebhookHandler } from "../stripe-webhook-handler.js";
 import type { StripeWebhookEvent, IWebhookEventStore } from "../stripe-webhook-handler.js";
-import type { ICustomerRepository } from "../../../../capabilities/billing/application/ports/customer-repository.port.js";
-import type { ISubscriptionRepository } from "../../../../capabilities/billing/application/ports/subscription-repository.port.js";
-import type { IInvoiceRepository } from "../../../../capabilities/billing/application/ports/invoice-repository.port.js";
-import { Subscription } from "../../../../capabilities/billing/domain/entities/subscription.entity.js";
-import { Invoice } from "../../../../capabilities/billing/domain/entities/invoice.entity.js";
-import { Money } from "../../../../capabilities/billing/domain/value-objects/money.vo.js";
+import type { ICustomerRepository } from "../../../../domains/billing/application/ports/customer-repository.port.js";
+import type { ISubscriptionRepository } from "../../../../domains/billing/application/ports/subscription-repository.port.js";
+import type { IInvoiceRepository } from "../../../../domains/billing/application/ports/invoice-repository.port.js";
+import { Subscription } from "../../../../domains/billing/domain/entities/subscription.entity.js";
+import { Invoice } from "../../../../domains/billing/domain/entities/invoice.entity.js";
+import { Money } from "../../../../domains/billing/domain/value-objects/money.vo.js";
 
 function createMockRepos() {
   const customers: ICustomerRepository = {

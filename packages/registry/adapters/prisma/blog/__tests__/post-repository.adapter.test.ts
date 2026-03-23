@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { PrismaPostRepository } from "../post-repository.adapter.js";
-import { Post } from "../../../../capabilities/blog/domain/entities/post.entity.js";
+import { Post } from "../../../../domains/blog/domain/entities/post.entity.js";
 
 function createMockPrisma() {
   return {

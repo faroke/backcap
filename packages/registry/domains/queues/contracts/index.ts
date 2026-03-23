@@ -11,5 +11,5 @@ export type {
   IQueuesService,
 } from "./queues.contract.js";
 
-export { createQueuesCapability } from "./queues.factory.js";
+export { createQueuesDomain } from "./queues.factory.js";
 export type { QueuesDeps } from "./queues.factory.js";

@@ -18,7 +18,7 @@ export interface SkillFileEntry {
 
 export interface SkillInstallOptions {
   skillsPath: string;
-  capabilityName: string;
+  domainName: string;
   skillFiles: SkillFileEntry[];
   coreSkillFiles: SkillFileEntry[];
   templateValues: Record<string, string>;
@@ -26,15 +26,15 @@ export interface SkillInstallOptions {
 }
 
 export async function installSkill(options: SkillInstallOptions): Promise<void> {
-  const { skillsPath, capabilityName, skillFiles, coreSkillFiles, templateValues, onConflict } = options;
+  const { skillsPath, domainName, skillFiles, coreSkillFiles, templateValues, onConflict } = options;
 
   // Auto-install core skill if absent
   await installCoreSkillIfAbsent(skillsPath, coreSkillFiles, templateValues);
 
   if (skillFiles.length === 0) return;
 
-  // Install capability skill with conflict detection
-  const skillDirName = `backcap-${capabilityName}`;
+  // Install domain skill with conflict detection
+  const skillDirName = `backcap-${domainName}`;
   const skillDir = join(skillsPath, skillDirName);
 
   const existing = await skillDirExists(skillDir);

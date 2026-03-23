@@ -12,5 +12,5 @@ export type {
   IWebhooksService,
 } from "./webhooks.contract.js";
 
-export { createWebhooksCapability } from "./webhooks.factory.js";
+export { createWebhooksDomain } from "./webhooks.factory.js";
 export type { WebhooksDeps } from "./webhooks.factory.js";

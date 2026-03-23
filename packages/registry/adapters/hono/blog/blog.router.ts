@@ -1,11 +1,11 @@
 // Template: import type { IBlogService } from "{{cap_rel}}/blog/contracts/index.js";
-import type { IBlogService } from "../../../capabilities/blog/contracts/index.js";
+import type { IBlogService } from "../../../domains/blog/contracts/index.js";
 // Template: import { InvalidSlug } from "{{cap_rel}}/blog/domain/errors/invalid-slug.error.js";
-import { InvalidSlug } from "../../../capabilities/blog/domain/errors/invalid-slug.error.js";
+import { InvalidSlug } from "../../../domains/blog/domain/errors/invalid-slug.error.js";
 // Template: import { PostNotFound } from "{{cap_rel}}/blog/domain/errors/post-not-found.error.js";
-import { PostNotFound } from "../../../capabilities/blog/domain/errors/post-not-found.error.js";
+import { PostNotFound } from "../../../domains/blog/domain/errors/post-not-found.error.js";
 // Template: import { PostAlreadyPublished } from "{{cap_rel}}/blog/domain/errors/post-already-published.error.js";
-import { PostAlreadyPublished } from "../../../capabilities/blog/domain/errors/post-already-published.error.js";
+import { PostAlreadyPublished } from "../../../domains/blog/domain/errors/post-already-published.error.js";
 
 interface HonoRequest {
   json(): Promise<unknown>;

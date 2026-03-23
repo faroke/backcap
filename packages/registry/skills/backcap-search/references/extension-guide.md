@@ -1,6 +1,6 @@
-# Search Capability — Extension Guide
+# Search Domain — Extension Guide
 
-Step-by-step instructions for extending the `search` capability.
+Step-by-step instructions for extending the `search` domain.
 
 ---
 

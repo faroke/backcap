@@ -1,7 +1,7 @@
 {
   "name": "blog-media",
-  "sourceCapability": "media",
-  "targetCapability": "blog",
+  "sourceDomain": "media",
+  "targetDomain": "blog",
   "events": ["MediaDeleted"],
   "version": "1.0.0"
 }

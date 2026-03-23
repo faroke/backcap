@@ -1,7 +1,7 @@
 export interface BridgeCatalogEntry {
   name: string;
-  sourceCapability: string;
-  targetCapability: string;
+  sourceDomain: string;
+  targetDomain: string;
   events: string[];
   version: string;
 }

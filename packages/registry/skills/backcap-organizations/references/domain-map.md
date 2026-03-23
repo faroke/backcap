@@ -1,8 +1,8 @@
 # Organizations Domain Map
 
-## Capability Root
+## Domain Root
 
-`packages/registry/capabilities/organizations/`
+`packages/registry/domains/organizations/`
 
 ## File Structure
 

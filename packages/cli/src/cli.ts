@@ -12,7 +12,7 @@ export const main = defineCommand({
   meta: {
     name: "backcap",
     version,
-    description: "Backcap — capability registry CLI",
+    description: "Backcap — domain registry CLI",
   },
   subCommands: {
     init,

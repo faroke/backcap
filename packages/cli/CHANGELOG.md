@@ -16,14 +16,14 @@
 
 - fix(shared): align published config schema with DX model pivot
 
-  The published config schema still expected `paths.capabilities` and an `installed` tracking object,
+  The published config schema still expected `paths.domains` and an `installed` tracking object,
   while the CLI already generates `paths.domains` after the DX model pivot. This mismatch caused
   `backcap add` to reject any config produced by `backcap init`.
 
-  - Rename `paths.capabilities` to `paths.domains` in config schema
+  - Rename `paths.domains` to `paths.domains` in config schema
   - Remove `installed` / `installedSchema` (FR12 removal)
   - Update default alias from `@domains` (already correct)
-  - Fix registry test fixture referencing `paths.capabilities`
+  - Fix registry test fixture referencing `paths.domains`
 
 - Updated dependencies
   - @backcap/shared@0.2.1
@@ -44,7 +44,7 @@
 
 ### Patch Changes
 
-- 404f6c7: Next.js Blog example with stop-and-fix methodology (story 12.5): Next.js App Router adapter for blog capability, working example project, documentation pages.
+- 404f6c7: Next.js Blog example with stop-and-fix methodology (story 12.5): Next.js App Router adapter for blog domain, working example project, documentation pages.
 
 ## 0.4.0
 
@@ -56,7 +56,7 @@
 
   - Package manager detection now traverses parent directories (monorepo support)
   - Template markers resolved before conflict detection (eliminates false conflicts)
-  - Bridge conflict detection uses resolved markers (parity with capabilities)
+  - Bridge conflict detection uses resolved markers (parity with domains)
   - `incomingFiles` recomputed after `capRoot` change in different-path flow
   - New `processTemplateComments` resolves `// Template:` lines during installation
   - New per-file markers: `cap_rel`, `shared_rel`, `bridges_rel` for cross-module imports
@@ -79,7 +79,7 @@
 
 ### Minor Changes
 
-- 057992d: Add cross-capability bridges with event bus pattern
+- 057992d: Add cross-domain bridges with event bus pattern
 
   - auth-audit-log bridge subscribes to UserRegistered and LoginSucceeded events
   - blog-search bridge now indexes post content field
@@ -89,7 +89,7 @@
 
 ### Patch Changes
 
-- 1c738e7: Add analytics, forms, comments and tags capabilities with Prisma and Express adapters, documentation, and AI skills
+- 1c738e7: Add analytics, forms, comments and tags domains with Prisma and Express adapters, documentation, and AI skills
 - Updated dependencies [057992d]
   - @backcap/shared@0.2.0
 
@@ -97,14 +97,14 @@
 
 ### Patch Changes
 
-- adc2323: Add feature-flags and audit-log capabilities with Prisma and Express adapters, documentation, and AI skills
-- e908998: Add webhooks and queues capabilities with Prisma and Express adapters
+- adc2323: Add feature-flags and audit-log domains with Prisma and Express adapters, documentation, and AI skills
+- e908998: Add webhooks and queues domains with Prisma and Express adapters
 
 ## 0.2.1
 
 ### Patch Changes
 
-- 207b0fc: Add files and notifications capabilities with Prisma and Express adapters
+- 207b0fc: Add files and notifications domains with Prisma and Express adapters
 
 ## 0.2.0
 
@@ -145,9 +145,9 @@
 - e81b550: Initial public release of the Backcap CLI and shared package.
 
   - `backcap init` — initialize a project with framework/package-manager detection
-  - `backcap list` — browse available capabilities from the registry
-  - `backcap add` — install capabilities with conflict detection and selective installation
-  - `backcap bridges` — view bridge information between capabilities
+  - `backcap list` — browse available domains from the registry
+  - `backcap add` — install domains with conflict detection and selective installation
+  - `backcap bridges` — view bridge information between domains
 
 ### Patch Changes
 

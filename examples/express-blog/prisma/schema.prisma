@@ -12,7 +12,7 @@ datasource db {
   provider = "sqlite"
 }
 
-// Blog Capability — Prisma Schema Fragment
+// Blog Domain — Prisma Schema Fragment
 model Post {
   id          String    @id @default(uuid())
   title       String

@@ -1,5 +1,5 @@
 // ============================================================
-// Auth Capability — Prisma Schema Fragment
+// Auth Domain — Prisma Schema Fragment
 // ============================================================
 // INSTRUCTIONS:
 // 1. Copy the model below into your main schema.prisma file

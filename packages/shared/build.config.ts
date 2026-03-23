@@ -7,7 +7,7 @@ export default defineBuildConfig({
     "src/schemas/config.schema",
     "src/types/registry.types",
     "src/types/config.types",
-    "src/types/capability.types",
+    "src/types/domain.types",
     "src/result",
     "src/event-bus.port",
     "src/in-memory-event-bus",

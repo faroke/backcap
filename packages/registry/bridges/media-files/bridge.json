@@ -1,7 +1,7 @@
 {
   "name": "media-files",
-  "sourceCapability": "media",
-  "targetCapability": "files",
+  "sourceDomain": "media",
+  "targetDomain": "files",
   "events": ["MediaUploaded"],
   "version": "1.0.0"
 }

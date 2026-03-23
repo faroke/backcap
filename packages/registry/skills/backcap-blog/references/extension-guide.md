@@ -1,6 +1,6 @@
-# Blog Capability — Extension Guide
+# Blog Domain — Extension Guide
 
-Step-by-step instructions for extending the `blog` capability with new use cases, entities,
+Step-by-step instructions for extending the `blog` domain with new use cases, entities,
 value objects, and DTOs.
 
 ---

@@ -1,12 +1,12 @@
 export class MissingDependencyError extends Error {
-  readonly missingCapabilities: string[];
+  readonly missingDomains: string[];
   readonly suggestion: string;
 
-  constructor(missingCapabilities: string[]) {
-    super(`Required capabilities not installed: ${missingCapabilities.join(", ")}`);
+  constructor(missingDomains: string[]) {
+    super(`Required domains not installed: ${missingDomains.join(", ")}`);
     this.name = "MissingDependencyError";
-    this.missingCapabilities = missingCapabilities;
-    this.suggestion = `Run: ${missingCapabilities.map((c) => `backcap add ${c}`).join(" && ")}`;
+    this.missingDomains = missingDomains;
+    this.suggestion = `Run: ${missingDomains.map((c) => `backcap add ${c}`).join(" && ")}`;
   }
 }
 

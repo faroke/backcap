@@ -1,7 +1,7 @@
 ---
 name: backcap-blog
 description: >
-  Backcap blog capability: DDD-structured blog post management for TypeScript backends.
+  Backcap blog domain: DDD-structured blog post management for TypeScript backends.
   Domain layer contains Post entity, Slug value object, and three typed errors
   (InvalidSlug, PostNotFound, PostAlreadyPublished). Application layer has
   CreatePost, PublishPost, GetPost, and ListPosts use cases, plus IPostRepository
@@ -16,7 +16,7 @@ metadata:
 
 # backcap-blog
 
-The `blog` capability provides **blog post creation, publishing, and listing** for TypeScript
+The `blog` domain provides **blog post creation, publishing, and listing** for TypeScript
 backends. It is structured in strict Clean Architecture layers and has zero npm dependencies
 in the domain and application layers.
 
@@ -128,8 +128,8 @@ See [`references/bridges.md`](references/bridges.md) for detailed bridge documen
 |---|---|
 | `npx @backcap/cli init` | Scaffold `backcap.json` in the current project |
 | `npx @backcap/cli init --yes` | Non-interactive init; fails if framework or package manager cannot be detected |
-| `npx @backcap/cli list` | List all available capabilities from the registry |
-| `npx @backcap/cli add blog` | Install the blog capability (prompts for adapter selection) |
+| `npx @backcap/cli list` | List all available domains from the registry |
+| `npx @backcap/cli add blog` | Install the blog domain (prompts for adapter selection) |
 | `npx @backcap/cli add blog --yes` | Non-interactive install; auto-selects detected adapters, overwrites conflicts |
-| `npx @backcap/cli bridges` | List bridges compatible with installed capabilities |
+| `npx @backcap/cli bridges` | List bridges compatible with installed domains |
 | `npx @backcap/cli add bridge blog-search` | Install the blog-search bridge |

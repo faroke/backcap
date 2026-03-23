@@ -1,7 +1,7 @@
 ---
 name: backcap-files
 description: >
-  Backcap files capability: DDD-structured file upload, retrieval, and deletion for TypeScript
+  Backcap files domain: DDD-structured file upload, retrieval, and deletion for TypeScript
   backends. Domain layer contains File entity, FilePath value object, FileUploaded event, and
   three typed errors (FileNotFound, InvalidFilePath, FileTooLarge). Application layer has
   UploadFile, GetFile, and DeleteFile use cases, plus IFileStorage port interface. Public surface
@@ -15,7 +15,7 @@ metadata:
 
 # backcap-files
 
-The `files` capability provides **file upload, retrieval, and deletion** for TypeScript backends.
+The `files` domain provides **file upload, retrieval, and deletion** for TypeScript backends.
 It is structured in strict Clean Architecture layers and has zero npm dependencies in the domain
 and application layers.
 
@@ -104,5 +104,5 @@ To replace the default Prisma-based storage with a custom backend (e.g., S3, loc
 
 | Command | Description |
 |---|---|
-| `npx @backcap/cli add files` | Install the files capability (prompts for adapter selection) |
+| `npx @backcap/cli add files` | Install the files domain (prompts for adapter selection) |
 | `npx @backcap/cli add files --yes` | Non-interactive install; auto-selects detected adapters |

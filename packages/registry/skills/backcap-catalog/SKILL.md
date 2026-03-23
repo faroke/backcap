@@ -1,7 +1,7 @@
 ---
 name: backcap-catalog
 description: >
-  Backcap catalog capability: DDD-structured product catalog for TypeScript backends.
+  Backcap catalog domain: DDD-structured product catalog for TypeScript backends.
   Domain layer contains Product aggregate (with variants), Category entity, SKU/Money/ProductStatus
   value objects, four domain events (ProductCreated, ProductPublished, ProductArchived, VariantAdded),
   and three typed errors (ProductNotFound, DuplicateSKU, InvalidPrice). Application layer has eight
@@ -18,7 +18,7 @@ metadata:
 
 # backcap-catalog
 
-The `catalog` capability provides **product and category management** for TypeScript backends. It is
+The `catalog` domain provides **product and category management** for TypeScript backends. It is
 structured in strict Clean Architecture layers and has zero npm dependencies in the domain and
 application layers.
 

@@ -10,8 +10,8 @@
 ## Friction Point 2: ESM .js import extensions incompatible with Next.js webpack
 
 **Step:** `next build`
-**Error:** `Module not found: Can't resolve '../capabilities/blog/contracts/index.js'` — and similar errors for all `.js` extension imports.
-**Root cause:** Backcap capabilities and bridges use ESM-style `.js` extensions in TypeScript imports (e.g., `import { X } from "./foo.js"`). This is standard for pure ESM projects. However, Next.js uses webpack for bundling, which resolves TypeScript files directly without `.js` → `.ts` extension mapping by default.
+**Error:** `Module not found: Can't resolve '../domains/blog/contracts/index.js'` — and similar errors for all `.js` extension imports.
+**Root cause:** Backcap domains and bridges use ESM-style `.js` extensions in TypeScript imports (e.g., `import { X } from "./foo.js"`). This is standard for pure ESM projects. However, Next.js uses webpack for bundling, which resolves TypeScript files directly without `.js` → `.ts` extension mapping by default.
 **Fix applied:** Added `webpack.resolve.extensionAlias` to `next.config.ts`:
 ```typescript
 webpack: (config) => {

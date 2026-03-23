@@ -1,7 +1,7 @@
 ---
 name: backcap-orders
 description: >
-  Backcap orders capability: DDD-structured order management for TypeScript backends.
+  Backcap orders domain: DDD-structured order management for TypeScript backends.
   Domain layer contains Order aggregate root (with items, status state machine, shipping/billing addresses),
   OrderItem entity, OrderStatus value object (pending, confirmed, processing, shipped, delivered, canceled,
   refunded) with valid transitions map, Address value object, five domain events (OrderPlaced, OrderConfirmed,
@@ -18,7 +18,7 @@ metadata:
 
 # backcap-orders
 
-The `orders` capability provides **order lifecycle management** for TypeScript backends. It is
+The `orders` domain provides **order lifecycle management** for TypeScript backends. It is
 structured in strict Clean Architecture layers and has zero npm dependencies in the domain and
 application layers.
 

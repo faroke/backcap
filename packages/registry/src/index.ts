@@ -1,11 +1,11 @@
 export { runQualityChecks } from "./quality-check.js";
 export {
-  discoverCapabilities,
+  discoverDomains,
   discoverAdapters,
   discoverBridges,
-  generateCapabilityItemJson,
+  generateDomainItemJson,
   generateAdapterItemJson,
   generateBridgeItemJson,
   generateRegistryCatalog,
 } from "./generate.js";
-export type { CapabilityMeta, AdapterMeta, BridgeMeta } from "./types.js";
+export type { DomainMeta, AdapterMeta, BridgeMeta } from "./types.js";

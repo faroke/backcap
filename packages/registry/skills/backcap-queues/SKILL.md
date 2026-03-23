@@ -1,12 +1,12 @@
 ---
 name: backcap-queues
-description: Queues capability for Backcap — domain-first clean architecture for asynchronous job processing. Provides job enqueuing, processing with configurable handlers, status tracking, and pluggable queue providers. Use when building background job systems, task queues, or async workload processing.
+description: Queues domain for Backcap — domain-first clean architecture for asynchronous job processing. Provides job enqueuing, processing with configurable handlers, status tracking, and pluggable queue providers. Use when building background job systems, task queues, or async workload processing.
 metadata:
   author: backcap
   version: 0.1.0
 ---
 
-# Queues Capability
+# Queues Domain
 
 ## Domain Map
 
@@ -38,7 +38,7 @@ domains/queues/
 │   └── __tests__/
 ├── contracts/
 │   ├── queues.contract.ts               → IQueuesService
-│   ├── queues.factory.ts                → createQueuesCapability()
+│   ├── queues.factory.ts                → createQueuesDomain()
 │   └── index.ts
 └── shared/result.ts
 ```
@@ -77,7 +77,7 @@ Implement `IQueueProvider.enqueue(type, payload, scheduledAt?)` → `{ jobId }` 
 
 | Command | Description |
 |---------|-------------|
-| `backcap add queues` | Install queues capability |
+| `backcap add queues` | Install queues domain |
 | `backcap add queues --yes` | Install without prompts |
-| `backcap list` | View all available capabilities |
+| `backcap list` | View all available domains |
 | `backcap bridges` | View compatible bridges |

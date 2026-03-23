@@ -18,7 +18,7 @@ describe("registry build output", () => {
     const raw = await readFile(join(DIST, "auth.json"), "utf-8");
     const item = JSON.parse(raw);
     expect(item.name).toBe("auth");
-    expect(item.type).toBe("capability");
+    expect(item.type).toBe("domain");
     expect(item.files).toBeInstanceOf(Array);
     expect(item.files.length).toBeGreaterThan(0);
   });

@@ -58,7 +58,7 @@ describe("resolveSkillFiles", () => {
     expect(result.has("docs/skill.md")).toBe(true);
   });
 
-  it("handles empty capability JSON", () => {
+  it("handles empty domain JSON", () => {
     const result = resolveSkillFiles({});
     expect(result.size).toBe(0);
   });

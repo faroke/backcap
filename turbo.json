@@ -9,7 +9,7 @@
     "@backcap/registry#build": {
       "dependsOn": ["@backcap/shared#build"],
       "inputs": [
-        "capabilities/**",
+        "domains/**",
         "adapters/**",
         "bridges/**",
         "src/**",

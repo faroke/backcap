@@ -1,8 +1,8 @@
 # Backcap Demo
 
-A complete demo project showing how Backcap capabilities compose together.
+A complete demo project showing how Backcap domains compose together.
 
-## Capabilities Used
+## Domains Used
 
 - **auth** — User registration and login
 - **blog** — Blog post creation and publishing
@@ -34,7 +34,7 @@ pnpm --filter @backcap/demo test
 
 ## What This Demonstrates
 
-1. **Pure DI** — Each capability's service is wired with explicit adapter injections, no DI container
+1. **Pure DI** — Each domain's service is wired with explicit adapter injections, no DI container
 2. **Event-driven bridges** — The blog-search bridge subscribes to `PostPublished` and indexes the post
 3. **Port/adapter pattern** — All infrastructure is behind port interfaces, easily swappable
 4. **Clean Architecture** — Domain logic has zero dependencies on infrastructure

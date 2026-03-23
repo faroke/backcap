@@ -22,7 +22,7 @@ describe("detectConflicts", () => {
     const enoent = Object.assign(new Error("ENOENT"), { code: "ENOENT" });
     mockReadFile.mockRejectedValue(enoent);
 
-    const report = await detectConflicts("/project/src/capabilities/auth", [
+    const report = await detectConflicts("/project/src/domains/auth", [
       { relativePath: "domain/user.entity.ts", content: "export class User {}" },
       { relativePath: "contracts/index.ts", content: "export {}" },
     ]);
@@ -37,7 +37,7 @@ describe("detectConflicts", () => {
     const content = "export class User {}";
     mockReadFile.mockResolvedValue(content);
 
-    const report = await detectConflicts("/project/src/capabilities/auth", [
+    const report = await detectConflicts("/project/src/domains/auth", [
       { relativePath: "domain/user.entity.ts", content },
     ]);
 
@@ -49,7 +49,7 @@ describe("detectConflicts", () => {
   it("classifies modified files and sets hasConflicts", async () => {
     mockReadFile.mockResolvedValue("export class User { old() {} }");
 
-    const report = await detectConflicts("/project/src/capabilities/auth", [
+    const report = await detectConflicts("/project/src/domains/auth", [
       { relativePath: "domain/user.entity.ts", content: "export class User { new() {} }" },
     ]);
 
@@ -69,7 +69,7 @@ describe("detectConflicts", () => {
       throw enoent;
     });
 
-    const report = await detectConflicts("/project/src/capabilities/auth", [
+    const report = await detectConflicts("/project/src/domains/auth", [
       { relativePath: "domain/user.entity.ts", content: "same content" },
       { relativePath: "contracts/index.ts", content: "new barrel" },
       { relativePath: "domain/new-file.ts", content: "brand new" },
@@ -95,13 +95,13 @@ describe("detectConflicts", () => {
 
   it("throws ConflictDetectionError on path traversal", async () => {
     await expect(
-      detectConflicts("/project/src/capabilities/auth", [
+      detectConflicts("/project/src/domains/auth", [
         { relativePath: "../../../etc/passwd", content: "malicious" },
       ]),
     ).rejects.toThrow(ConflictDetectionError);
 
     await expect(
-      detectConflicts("/project/src/capabilities/auth", [
+      detectConflicts("/project/src/domains/auth", [
         { relativePath: "../../../etc/passwd", content: "malicious" },
       ]),
     ).rejects.toThrow(/Path traversal detected/);

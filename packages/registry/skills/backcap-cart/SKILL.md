@@ -1,7 +1,7 @@
 ---
 name: backcap-cart
 description: >
-  Backcap cart capability: DDD-structured shopping cart for TypeScript backends.
+  Backcap cart domain: DDD-structured shopping cart for TypeScript backends.
   Domain layer contains Cart aggregate root (with items, totals, status, single-currency enforcement),
   CartItem entity, Quantity and CartStatus value objects, four domain events (ItemAddedToCart,
   ItemRemovedFromCart, CartAbandoned, CartConverted), and four typed errors (CartNotFound, ItemNotInCart,
@@ -18,7 +18,7 @@ metadata:
 
 # backcap-cart
 
-The `cart` capability provides **shopping cart management** for TypeScript backends. It is
+The `cart` domain provides **shopping cart management** for TypeScript backends. It is
 structured in strict Clean Architecture layers and has zero npm dependencies in the domain and
 application layers.
 

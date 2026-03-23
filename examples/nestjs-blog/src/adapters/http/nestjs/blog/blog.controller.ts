@@ -1,8 +1,8 @@
 import { Controller, Post, Get, Put, Body, Param, Inject, HttpCode, HttpException } from "@nestjs/common";
-import type { IBlogService } from "../../../../capabilities/blog/contracts/index.js";
-import { InvalidSlug } from "../../../../capabilities/blog/domain/errors/invalid-slug.error.js";
-import { PostNotFound } from "../../../../capabilities/blog/domain/errors/post-not-found.error.js";
-import { PostAlreadyPublished } from "../../../../capabilities/blog/domain/errors/post-already-published.error.js";
+import type { IBlogService } from "../../../../domains/blog/contracts/index.js";
+import { InvalidSlug } from "../../../../domains/blog/domain/errors/invalid-slug.error.js";
+import { PostNotFound } from "../../../../domains/blog/domain/errors/post-not-found.error.js";
+import { PostAlreadyPublished } from "../../../../domains/blog/domain/errors/post-already-published.error.js";
 
 function toHttpStatus(error: Error): number {
   if (error instanceof InvalidSlug) return 400;

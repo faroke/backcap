@@ -1,10 +1,10 @@
-# Capability Index
+# Domain Index
 
-This file lists all capabilities, adapters, and bridges available in the Backcap registry.
+This file lists all domains, adapters, and bridges available in the Backcap registry.
 
 ---
 
-## Capabilities
+## Domains
 
 | Name | Status | Description | Adapters |
 |---|---|---|---|
@@ -28,7 +28,7 @@ This file lists all capabilities, adapters, and bridges available in the Backcap
 | `tags` | available | Flexible tagging and categorization | `prisma`, `express` |
 | `webhooks` | available | Outbound event delivery with retries | `prisma`, `express` |
 
-Install a capability:
+Install a domain:
 
 ```bash
 npx @backcap/cli add auth
@@ -38,20 +38,20 @@ npx @backcap/cli add auth
 
 ## Adapters
 
-Adapters are installed alongside their parent capability. The CLI detects which adapters are
+Adapters are installed alongside their parent domain. The CLI detects which adapters are
 relevant based on the project's detected framework and package manager.
 
-| Type | Capabilities covered |
+| Type | Domains covered |
 |---|---|
-| `prisma` | All capabilities except search (18/19) |
-| `express` | All capabilities except search (18/19) |
+| `prisma` | All domains except search (18/19) |
+| `express` | All domains except search (18/19) |
 | `stripe` | billing only |
 
 ---
 
 ## Bridges
 
-Bridges are cross-capability modules. They are unlocked once all their dependency capabilities
+Bridges are cross-domain modules. They are unlocked once all their dependency domains
 are installed.
 
 | Name | Dependencies | Status | Description |
@@ -67,7 +67,7 @@ are installed.
 | `organizations-billing` | `organizations`, `billing` | available | Per-organization billing and subscription management |
 | `rbac-organizations` | `rbac`, `organizations` | available | Organization-scoped role assignments |
 
-List bridges compatible with installed capabilities:
+List bridges compatible with installed domains:
 
 ```bash
 npx @backcap/cli bridges

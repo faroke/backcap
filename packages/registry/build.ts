@@ -4,11 +4,11 @@ import { registrySchema } from "@backcap/shared/schemas/registry";
 import { registryItemSchema } from "@backcap/shared/schemas/registry-item";
 import { runQualityChecks, runBridgeQualityChecks } from "./src/quality-check.js";
 import {
-  discoverCapabilities,
+  discoverDomains,
   discoverAdapters,
   discoverBridges,
   discoverSkills,
-  generateCapabilityItemJson,
+  generateDomainItemJson,
   generateAdapterItemJson,
   generateBridgeItemJson,
   generateSkillItemJson,
@@ -18,12 +18,12 @@ import {
 async function main(): Promise<void> {
   const registryRoot = import.meta.dirname ?? ".";
 
-  console.log("[build] Discovering capabilities...");
-  const capabilities = await discoverCapabilities(registryRoot);
-  console.log(`[build] Found ${capabilities.length} capabilities: ${capabilities.map((c) => c.name).join(", ")}`);
+  console.log("[build] Discovering domains...");
+  const domains = await discoverDomains(registryRoot);
+  console.log(`[build] Found ${domains.length} domains: ${domains.map((c) => c.name).join(", ")}`);
 
   console.log("[build] Running quality checks...");
-  const qualityErrors = await runQualityChecks(capabilities);
+  const qualityErrors = await runQualityChecks(domains);
   if (qualityErrors.length > 0) {
     for (const e of qualityErrors) {
       console.error(`[quality-check] ${e}`);
@@ -38,9 +38,9 @@ async function main(): Promise<void> {
     "utf-8",
   );
 
-  // Generate capability item JSONs
+  // Generate domain item JSONs
   const capItems = await Promise.all(
-    capabilities.map((cap) => generateCapabilityItemJson(cap, resultTs)),
+    domains.map((cap) => generateDomainItemJson(cap, resultTs)),
   );
 
   // Discover and generate adapter item JSONs
@@ -126,12 +126,12 @@ async function main(): Promise<void> {
     console.log(`[build] Written dist/skills/${item.name}.json`);
   }
 
-  // Write bridge catalog with sourceCapability/targetCapability/events from manifests
+  // Write bridge catalog with sourceDomain/targetDomain/events from manifests
   const bridgeCatalog = {
     bridges: bridges.map((b) => ({
       name: b.name,
-      sourceCapability: b.sourceCapability ?? "",
-      targetCapability: b.targetCapability ?? "",
+      sourceDomain: b.sourceDomain ?? "",
+      targetDomain: b.targetDomain ?? "",
       events: b.events ?? [],
       version: "1.0.0",
     })),

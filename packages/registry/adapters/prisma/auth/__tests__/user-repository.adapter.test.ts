@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { PrismaUserRepository } from "../user-repository.adapter.js";
-import { User } from "../../../../capabilities/auth/domain/entities/user.entity.js";
+import { User } from "../../../../domains/auth/domain/entities/user.entity.js";
 
 function createMockPrisma() {
   return {

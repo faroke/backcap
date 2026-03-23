@@ -1,7 +1,7 @@
 // Template: import type { ICategoryRepository } from "{{cap_rel}}/catalog/application/ports/category-repository.port.js";
-import type { ICategoryRepository } from "../../../capabilities/catalog/application/ports/category-repository.port.js";
+import type { ICategoryRepository } from "../../../domains/catalog/application/ports/category-repository.port.js";
 // Template: import { Category } from "{{cap_rel}}/catalog/domain/entities/category.entity.js";
-import { Category } from "../../../capabilities/catalog/domain/entities/category.entity.js";
+import { Category } from "../../../domains/catalog/domain/entities/category.entity.js";
 
 interface PrismaCategoryRecord {
   id: string;

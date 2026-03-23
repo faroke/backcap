@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { createOrganizationsRouter } from "../organizations.router.js";
-import { Result } from "../../../../capabilities/organizations/shared/result.js";
-import { OrgNotFound } from "../../../../capabilities/organizations/domain/errors/org-not-found.error.js";
-import { OrgSlugTaken } from "../../../../capabilities/organizations/domain/errors/org-slug-taken.error.js";
+import { Result } from "../../../../domains/organizations/shared/result.js";
+import { OrgNotFound } from "../../../../domains/organizations/domain/errors/org-not-found.error.js";
+import { OrgSlugTaken } from "../../../../domains/organizations/domain/errors/org-slug-taken.error.js";
 
 function createMockRouter() {
   const routes: Record<string, Record<string, Function>> = {};

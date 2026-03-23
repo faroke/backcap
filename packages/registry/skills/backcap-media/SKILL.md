@@ -1,7 +1,7 @@
 ---
 name: backcap-media
 description: >
-  Backcap media capability: DDD-structured media asset management with image/video processing,
+  Backcap media domain: DDD-structured media asset management with image/video processing,
   variant generation (thumbnails, previews, optimized), and CDN-aware URL resolution for TypeScript
   backends. Domain layer contains MediaAsset aggregate (with variants), MediaVariant entity, MimeType
   (validated with category), Dimensions, and MediaPurpose value objects, three domain events
@@ -20,7 +20,7 @@ metadata:
 
 # backcap-media
 
-The `media` capability provides **media asset management with processing and variant generation**
+The `media` domain provides **media asset management with processing and variant generation**
 for TypeScript backends. It is structured in strict Clean Architecture layers and has zero npm
 dependencies in the domain and application layers.
 
@@ -119,7 +119,7 @@ For Backcap-wide architecture rules, naming conventions, and the Result pattern,
 | `blog-media` | media | blog | `MediaDeleted` → cleanup blog post media refs | `createBlogMediaResolver(deps): IBlogMediaResolver` — resolves media URLs for blog posts |
 | `media-files` | media | files | `MediaUploaded` → triggers `ProcessMedia` | `createFileBackedMediaStorage(deps): IMediaStorageAdapter` — wraps `IFileStorage` as `IMediaStorage` |
 
-## Distinction from `files` Capability
+## Distinction from `files` Domain
 
 - `files` = raw upload/download/delete (no processing, no variants, no metadata)
 - `media` = processing-aware (thumbnails, format conversion, dimensions, variants, CDN URLs)
@@ -129,5 +129,5 @@ For Backcap-wide architecture rules, naming conventions, and the Result pattern,
 
 | Command | Description |
 |---|---|
-| `npx @backcap/cli add media` | Install the media capability (prompts for adapter selection) |
+| `npx @backcap/cli add media` | Install the media domain (prompts for adapter selection) |
 | `npx @backcap/cli add media --yes` | Non-interactive install; auto-selects detected adapters |

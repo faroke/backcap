@@ -1,11 +1,11 @@
 # Next.js Blog Example
 
-A working blog API built with [Backcap](https://github.com/faroke/backcap) — demonstrating capabilities, adapters, bridges, and the CLI end-to-end with Next.js App Router.
+A working blog API built with [Backcap](https://github.com/faroke/backcap) — demonstrating domains, adapters, bridges, and the CLI end-to-end with Next.js App Router.
 
 ## What's Inside
 
-- **Blog capability** — CRUD operations for blog posts (create, publish, get, list)
-- **Search capability** — Document indexing and full-text search
+- **Blog domain** — CRUD operations for blog posts (create, publish, get, list)
+- **Search domain** — Document indexing and full-text search
 - **Blog-Search bridge** — Automatically indexes posts in search when published
 - **Prisma adapter** — SQLite persistence via Prisma ORM
 - **Next.js adapter** — HTTP route handlers via Next.js App Router conventions
@@ -67,10 +67,10 @@ This example was built step-by-step using the Backcap CLI:
 # 1. Initialize Backcap config
 npx @backcap/cli init
 
-# 2. Install blog capability (detects Prisma adapter)
+# 2. Install blog domain (detects Prisma adapter)
 npx @backcap/cli add blog
 
-# 3. Install search capability
+# 3. Install search domain
 npx @backcap/cli add search
 
 # 4. Install blog-search bridge
@@ -86,7 +86,7 @@ npx prisma migrate dev --name init
 
 This example validates that Backcap adapters work in serverless contexts:
 
-- **Domain and application layers are identical** — same capability code as all other examples
+- **Domain and application layers are identical** — same domain code as all other examples
 - **Only the HTTP adapter and wiring differ** — Next.js uses file-based routing with exported handler functions
 - **The Next.js adapter** exports `createBlogRouteHandlers()` returning a handler object, unlike Express routers or Hono sub-apps
 - **Serverless-safe** — uses `globalThis` singleton pattern to cache services across HMR in dev, fresh instances per cold start in production
@@ -125,12 +125,12 @@ examples/nextjs-blog/
 │   │           └── route.ts                # GET (search)
 │   ├── lib/
 │   │   └── services.ts                     # Serverless-safe service factory
-│   ├── capabilities/
-│   │   ├── blog/                           # Blog capability (installed by CLI)
+│   ├── domains/
+│   │   ├── blog/                           # Blog domain (installed by CLI)
 │   │   │   ├── domain/                     # Entities, value objects, events
 │   │   │   ├── application/                # Use cases, DTOs, ports
 │   │   │   └── contracts/                  # Service interface & factory
-│   │   └── search/                         # Search capability (installed by CLI)
+│   │   └── search/                         # Search domain (installed by CLI)
 │   ├── adapters/
 │   │   ├── http/nextjs/blog/               # Next.js route handlers
 │   │   ├── persistence/prisma/blog/        # Prisma repository (installed by CLI)

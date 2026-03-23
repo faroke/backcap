@@ -8,8 +8,8 @@ import { fail } from "../ui/prompts.js";
 
 interface BridgeManifest {
   name: string;
-  sourceCapability: string;
-  targetCapability: string;
+  sourceDomain: string;
+  targetDomain: string;
   events: string[];
   version: string;
 }
@@ -27,7 +27,7 @@ async function discoverLocalBridgeManifests(
       try {
         const raw = await readFile(manifestPath, "utf-8");
         const manifest = JSON.parse(raw) as Partial<BridgeManifest>;
-        if (!manifest.name || !manifest.sourceCapability || !manifest.targetCapability || !Array.isArray(manifest.events)) {
+        if (!manifest.name || !manifest.sourceDomain || !manifest.targetDomain || !Array.isArray(manifest.events)) {
           console.warn(`[bridges] Skipping ${entry.name}: bridge.json missing required fields`);
           continue;
         }
@@ -46,7 +46,7 @@ async function discoverLocalBridgeManifests(
 export default defineCommand({
   meta: {
     name: "bridges",
-    description: "List available bridges between installed capabilities",
+    description: "List available bridges between installed domains",
   },
   async run() {
     const cwd = process.cwd();
@@ -73,15 +73,15 @@ export default defineCommand({
     const manifests = await discoverLocalBridgeManifests(bridgesDir);
 
     if (manifests.length === 0) {
-      clack.log.info("Install capabilities first — bridges appear automatically between installed capabilities.");
+      clack.log.info("Install domains first — bridges appear automatically between installed domains.");
       clack.outro("No bridges available.");
       return;
     }
 
     const lines = manifests.map((m) => {
-      const bothInstalled = installedDomains.has(m.sourceCapability) && installedDomains.has(m.targetCapability);
+      const bothInstalled = installedDomains.has(m.sourceDomain) && installedDomains.has(m.targetDomain);
       const status = bothInstalled ? "ready" : "missing dependencies";
-      return `  ${m.name}\n    Source: ${m.sourceCapability} | Target: ${m.targetCapability}\n    Events: ${m.events.join(", ")} | Status: ${status}`;
+      return `  ${m.name}\n    Source: ${m.sourceDomain} | Target: ${m.targetDomain}\n    Events: ${m.events.join(", ")} | Status: ${status}`;
     });
 
     clack.note(lines.join("\n\n"), "Bridges");

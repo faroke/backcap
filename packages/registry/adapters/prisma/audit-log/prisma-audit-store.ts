@@ -2,9 +2,9 @@
 import type {
   IAuditStore,
   AuditFilters,
-} from "../../../capabilities/audit-log/application/ports/audit-store.port.js";
+} from "../../../domains/audit-log/application/ports/audit-store.port.js";
 // Template: import { AuditEntry } from "{{cap_rel}}/audit-log/domain/entities/audit-entry.entity.js";
-import { AuditEntry } from "../../../capabilities/audit-log/domain/entities/audit-entry.entity.js";
+import { AuditEntry } from "../../../domains/audit-log/domain/entities/audit-entry.entity.js";
 
 interface AuditEntryRecord {
   id: string;

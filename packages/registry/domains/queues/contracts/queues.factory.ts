@@ -13,7 +13,7 @@ export type QueuesDeps = {
   maxAttempts?: number;
 };
 
-export function createQueuesCapability(deps: QueuesDeps): IQueuesService {
+export function createQueuesDomain(deps: QueuesDeps): IQueuesService {
   const enqueueJob = new EnqueueJob(deps.jobRepository);
   const processJob = new ProcessJob(deps.jobRepository, deps.processHandler, deps.maxAttempts);
   const getJobStatus = new GetJobStatus(deps.jobRepository);

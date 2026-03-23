@@ -1,7 +1,7 @@
 import { join } from "pathe";
 import { defineCommand } from "citty";
 import { fetchRegistry } from "../lib/registry-fetch.js";
-import { renderCapabilityTable } from "../lib/render-table.js";
+import { renderDomainTable } from "../lib/render-table.js";
 import { configExists, loadConfig } from "../config/loader.js";
 import { detectInstalledDomains } from "../detection/installed.js";
 import { log } from "../utils/logger.js";
@@ -11,7 +11,7 @@ const DEFAULT_REGISTRY_URL = "https://faroke.github.io/backcap/dist/registry.jso
 export default defineCommand({
   meta: {
     name: "list",
-    description: "Browse available capabilities from the registry",
+    description: "Browse available domains from the registry",
   },
   async run() {
     const cwd = process.cwd();
@@ -37,7 +37,7 @@ export default defineCommand({
       const items = (registry as { items?: Array<{ name: string; description: string; type: string }> }).items ?? [];
       log.success("Registry loaded");
 
-      const table = renderCapabilityTable(items, installed);
+      const table = renderDomainTable(items, installed);
       process.stdout.write(table);
     } catch (e) {
       log.error((e as Error).message);

@@ -1,5 +1,5 @@
-// Reference copy of capabilities/notifications/application/ports/notification-sender.port.ts
-// For skill documentation purposes — source of truth is the capability itself.
+// Reference copy of domains/notifications/application/ports/notification-sender.port.ts
+// For skill documentation purposes — source of truth is the domain itself.
 
 import type { Notification } from "../../domain/entities/notification.entity.js";
 

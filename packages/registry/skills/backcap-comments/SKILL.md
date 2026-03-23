@@ -1,12 +1,12 @@
 ---
 name: backcap-comments
-description: Comments capability for Backcap — post, list, and soft-delete comments on any resource
+description: Comments domain for Backcap — post, list, and soft-delete comments on any resource
 metadata:
   author: backcap
   version: 0.1.0
 ---
 
-# Comments Capability
+# Comments Domain
 
 ## Domain Map
 
@@ -61,6 +61,6 @@ The domain supports threads via `parentId`. To display threaded comments:
 ## CLI Commands
 
 ```bash
-backcap add comments       # Install the capability
+backcap add comments       # Install the domain
 backcap bridges            # List available bridges
 ```

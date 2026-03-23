@@ -6,20 +6,20 @@
 
 - fix(shared): align published config schema with DX model pivot
 
-  The published config schema still expected `paths.capabilities` and an `installed` tracking object,
+  The published config schema still expected `paths.domains` and an `installed` tracking object,
   while the CLI already generates `paths.domains` after the DX model pivot. This mismatch caused
   `backcap add` to reject any config produced by `backcap init`.
 
-  - Rename `paths.capabilities` to `paths.domains` in config schema
+  - Rename `paths.domains` to `paths.domains` in config schema
   - Remove `installed` / `installedSchema` (FR12 removal)
   - Update default alias from `@domains` (already correct)
-  - Fix registry test fixture referencing `paths.capabilities`
+  - Fix registry test fixture referencing `paths.domains`
 
 ## 0.2.0
 
 ### Minor Changes
 
-- 057992d: Add cross-capability bridges with event bus pattern
+- 057992d: Add cross-domain bridges with event bus pattern
 
   - auth-audit-log bridge subscribes to UserRegistered and LoginSucceeded events
   - blog-search bridge now indexes post content field
@@ -40,6 +40,6 @@
 - e81b550: Initial public release of the Backcap CLI and shared package.
 
   - `backcap init` — initialize a project with framework/package-manager detection
-  - `backcap list` — browse available capabilities from the registry
-  - `backcap add` — install capabilities with conflict detection and selective installation
-  - `backcap bridges` — view bridge information between capabilities
+  - `backcap list` — browse available domains from the registry
+  - `backcap add` — install domains with conflict detection and selective installation
+  - `backcap bridges` — view bridge information between domains

@@ -17,9 +17,9 @@
 ## Friction Point 3: Adapter imports have wrong relative paths (same as Express)
 
 **Step:** TypeScript compilation
-**Error:** `Cannot find module '../../../capabilities/blog/...'` — off by one directory level.
-**Root cause:** Adapters are installed with a category directory (e.g., `persistence/`) making them one level deeper than the hardcoded relative imports expect. Additionally, the Prisma adapter uses a bare path `src/capabilities/...` instead of a relative path.
-**Fix applied:** Corrected imports in `post-repository.adapter.ts` to use `../../../../capabilities/...` (4 levels up instead of 3).
+**Error:** `Cannot find module '../../../domains/blog/...'` — off by one directory level.
+**Root cause:** Adapters are installed with a category directory (e.g., `persistence/`) making them one level deeper than the hardcoded relative imports expect. Additionally, the Prisma adapter uses a bare path `src/domains/...` instead of a relative path.
+**Fix applied:** Corrected imports in `post-repository.adapter.ts` to use `../../../../domains/...` (4 levels up instead of 3).
 
 ## Friction Point 4: Fastify plugin registration differs from Express
 

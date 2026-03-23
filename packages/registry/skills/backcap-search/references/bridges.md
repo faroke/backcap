@@ -1,4 +1,4 @@
-# Search Capability — Bridges Reference
+# Search Domain — Bridges Reference
 
 ---
 

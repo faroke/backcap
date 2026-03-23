@@ -1,6 +1,6 @@
-# Search Capability — Domain Map
+# Search Domain — Domain Map
 
-Complete file-by-file reference for the `search` capability.
+Complete file-by-file reference for the `search` domain.
 
 ---
 

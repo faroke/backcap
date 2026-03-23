@@ -1,13 +1,13 @@
 ---
 name: backcap-search
 description: >
-  Backcap search capability: DDD-structured full-text search for TypeScript backends.
+  Backcap search domain: DDD-structured full-text search for TypeScript backends.
   Domain layer contains SearchIndex entity, SearchQuery value object, and three typed errors
   (IndexNotFound, DocumentNotFound, InvalidQuery). Application layer has IndexDocument,
   SearchDocuments, and RemoveFromIndex use cases, plus ISearchEngine port interface.
   Public surface is ISearchService and createSearchService factory in contracts/.
   All expected failures return Result<T,E> — no thrown errors. Event: IndexUpdated.
-  Bridge: blog-search indexes posts from blog capability. Zero npm dependencies in domain
+  Bridge: blog-search indexes posts from blog domain. Zero npm dependencies in domain
   and application.
 metadata:
   author: Backcap
@@ -16,7 +16,7 @@ metadata:
 
 # backcap-search
 
-The `search` capability provides **full-text search indexing and querying** for TypeScript
+The `search` domain provides **full-text search indexing and querying** for TypeScript
 backends. It is structured in strict Clean Architecture layers and has zero npm dependencies
 in the domain and application layers.
 
@@ -124,7 +124,7 @@ See [`references/bridges.md`](references/bridges.md) for detailed bridge documen
 |---|---|
 | `npx @backcap/cli init` | Scaffold `backcap.json` in the current project |
 | `npx @backcap/cli init --yes` | Non-interactive init; fails if framework or package manager cannot be detected |
-| `npx @backcap/cli list` | List all available capabilities from the registry |
-| `npx @backcap/cli add search` | Install the search capability (prompts for adapter selection) |
+| `npx @backcap/cli list` | List all available domains from the registry |
+| `npx @backcap/cli add search` | Install the search domain (prompts for adapter selection) |
 | `npx @backcap/cli add search --yes` | Non-interactive install; auto-selects detected adapters, overwrites conflicts |
-| `npx @backcap/cli bridges` | List bridges compatible with installed capabilities |
+| `npx @backcap/cli bridges` | List bridges compatible with installed domains |

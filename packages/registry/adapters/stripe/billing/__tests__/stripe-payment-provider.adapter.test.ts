@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { StripePaymentProvider } from "../stripe-payment-provider.adapter.js";
 import type { StripeClient } from "../stripe-payment-provider.adapter.js";
-import { Money } from "../../../../capabilities/billing/domain/value-objects/money.vo.js";
+import { Money } from "../../../../domains/billing/domain/value-objects/money.vo.js";
 
 function createMockStripe(): StripeClient {
   return {

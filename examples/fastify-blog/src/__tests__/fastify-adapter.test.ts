@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { createBlogPlugin } from "../adapters/http/fastify/blog/blog.router.js";
-import { Result } from "../capabilities/blog/shared/result.js";
-import { PostNotFound } from "../capabilities/blog/domain/errors/post-not-found.error.js";
-import { InvalidSlug } from "../capabilities/blog/domain/errors/invalid-slug.error.js";
+import { Result } from "../domains/blog/shared/result.js";
+import { PostNotFound } from "../domains/blog/domain/errors/post-not-found.error.js";
+import { InvalidSlug } from "../domains/blog/domain/errors/invalid-slug.error.js";
 
 function createMockBlogService() {
   return {

@@ -15,7 +15,7 @@ The landing page is a single Astro component using Starlight's splash template: 
 ### Context & Constraints
 
 - **No fake metrics.** The project is early-stage. No "trusted by X teams", no download counters, no testimonials.
-- **No internal jargon.** Never use "capabilities" (say "features" or list concrete names: auth, billing, search). Never use DDD, hexagonal, clean architecture in copy. Show the structure visually instead.
+- **No internal jargon.** Never use "domains" (say "features" or list concrete names: auth, billing, search). Never use DDD, hexagonal, clean architecture in copy. Show the structure visually instead.
 - **shadcn/ui reference is secondary.** It was the original headline — it confused devs outside React. Keep it only as an italic aside below the hero CTAs.
 - **AI-ready is a key differentiator.** Backcap ships AI skills with each feature so AI agents can understand, extend, and generate code.
 
@@ -23,7 +23,7 @@ The landing page is a single Astro component using Starlight's splash template: 
 
 | Banned term | Replacement |
 |---|---|
-| capabilities | features (or concrete names: auth, billing, search) |
+| domains | features (or concrete names: auth, billing, search) |
 | DDD / hexagonal / clean architecture | "built right" or show the file tree |
 | Knowledge Graph Ready | "Your AI agent understands every feature" |
 | Standardized Manifests | "Specs your tools can read and act on" |
@@ -157,14 +157,14 @@ No badge (remove the "plug & play" badge entirely).
 
 Each row: emoji icon | feature name | short description | `add [name]` command | arrow → linking to doc page
 
-1. 🔐 Auth — Sign-up, login, sessions & API keys → `/capabilities/auth`
-2. 💰 Billing — Payments, subscriptions & invoicing → `/capabilities/billing`
-3. 🔍 Search — Full-text search with filters & facets → `/capabilities/search`
-4. 🛡️ RBAC — Roles, permissions & access control → `/capabilities/rbac`
-5. 🔔 Notifications — In-app, email & push notifications → `/capabilities/notifications`
-6. 📝 Blog — Posts, categories, drafts & publishing → `/capabilities/blog`
+1. 🔐 Auth — Sign-up, login, sessions & API keys → `/domains/auth`
+2. 💰 Billing — Payments, subscriptions & invoicing → `/domains/billing`
+3. 🔍 Search — Full-text search with filters & facets → `/domains/search`
+4. 🛡️ RBAC — Roles, permissions & access control → `/domains/rbac`
+5. 🔔 Notifications — In-app, email & push notifications → `/domains/notifications`
+6. 📝 Blog — Posts, categories, drafts & publishing → `/domains/blog`
 
-Below the list: `+ 14 more features →` link (points to `/concepts/capabilities` for now)
+Below the list: `+ 14 more features →` link (points to `/concepts/domains` for now)
 
 **Right column (hidden on mobile) — file tree preview:**
 
@@ -187,7 +187,7 @@ domains/
 With a small label above: "What you get" (muted, uppercase, tracked).
 Below: "Every feature follows the same clean structure." (muted, italic)
 
-**CTA:** "How features work" (outline button → `/concepts/capabilities`)
+**CTA:** "How features work" (outline button → `/concepts/domains`)
 
 ---
 
@@ -217,7 +217,7 @@ Title: "Generate, don't write"
 Desc:  "Ask your agent to add a feature — it follows the same patterns automatically."
 ```
 
-**Card 3 → links to `/concepts/capabilities`**
+**Card 3 → links to `/concepts/domains`**
 ```
 Icon:  📐 (code/brackets svg, reuse existing)
 Title: "Interfaces your AI can read"
@@ -273,7 +273,7 @@ Keep the cta-orb glow effect.
 - Keep the IntersectionObserver scroll animation system (`.anim` classes)
 - Keep the terminal animation JS exactly as-is
 - Keep the copy-to-clipboard JS for the cmd box
-- The capabilities JS array that generates 20 cards dynamically should be replaced with static HTML for the 6 featured items
+- The domains JS array that generates 20 cards dynamically should be replaced with static HTML for the 6 featured items
 - Remove the Examples section entirely (SaaS/Ecommerce/Content cards)
 - Remove the "plug & play" badge component
 - CSS class `.cap-section`, `.cap-grid`, `.cap-card` etc. can be replaced/simplified for the new layout

@@ -1,14 +1,14 @@
 ---
 name: backcap-core
 description: >
-  Backcap is a DDD capability registry and CLI for TypeScript backends. Each capability follows
+  Backcap is a DDD domain registry and CLI for TypeScript backends. Each domain follows
   strict Clean Architecture layers: domain (entities, value objects, domain errors, domain events),
   application (use cases, ports as interfaces, DTOs), contracts (public factory + service interface,
   the only barrel index.ts), and adapters (framework/persistence implementations). The Result<T,E>
   monad replaces exceptions for expected failures. Ports define interfaces; adapters implement them.
-  Bridges are cross-capability use cases that wire two or more capabilities together. The CLI
+  Bridges are cross-domain use cases that wire two or more domains together. The CLI
   (backcap init, backcap list, backcap add, backcap bridges, backcap add bridge) scaffolds
-  capabilities and adapters into user projects by fetching JSON bundles from the registry.
+  domains and adapters into user projects by fetching JSON bundles from the registry.
   File naming uses kebab-case with typed suffixes. Domain has zero external imports. DI is
   constructor-injection; createXxxService factory functions in contracts/ wire the object graph.
 metadata:
@@ -18,13 +18,13 @@ metadata:
 
 # backcap-core
 
-Backcap is a **capability registry and CLI** for TypeScript backends. It ships production-ready
-Domain-Driven Design (DDD) modules — called *capabilities* — that teams install with a single
-command. Each capability is self-contained, framework-agnostic, and follows strict layering rules.
+Backcap is a **domain registry and CLI** for TypeScript backends. It ships production-ready
+Domain-Driven Design (DDD) modules — called *domains* — that teams install with a single
+command. Each domain is self-contained, framework-agnostic, and follows strict layering rules.
 
 ## Overview
 
-A Backcap **capability** is a vertical slice of backend logic composed of four layers:
+A Backcap **domain** is a vertical slice of backend logic composed of four layers:
 
 | Layer | Responsibility | Import rule |
 |---|---|---|
@@ -33,11 +33,11 @@ A Backcap **capability** is a vertical slice of backend logic composed of four l
 | `contracts/` | Public service interface + factory function | Imports `application/` ports and use cases |
 | `adapters/` | Framework and persistence implementations | Implements `application/` ports |
 
-A **bridge** is a standalone module that wires two or more capabilities together (e.g.
+A **bridge** is a standalone module that wires two or more domains together (e.g.
 `auth-notifications` listens to `UserRegistered` from `auth` and calls a `notifications`
 port to send a welcome email).
 
-The `shared/result.ts` file inside each capability holds the `Result<T, E>` monad used for
+The `shared/result.ts` file inside each domain holds the `Result<T, E>` monad used for
 typed error handling without exceptions.
 
 ## Domain Map
@@ -57,11 +57,11 @@ domains/
       dto/               # Plain data transfer objects (.dto.ts)
       __tests__/         # Co-located unit tests; mocks/ and fixtures/ sub-dirs
     contracts/
-      index.ts           # The ONLY barrel export in the capability
+      index.ts           # The ONLY barrel export in the domain
       <name>.contract.ts # Public service interface (.contract.ts)
       <name>.factory.ts  # createXxxService DI factory (.factory.ts)
     shared/
-      result.ts          # Result<T,E> monad (copied per capability)
+      result.ts          # Result<T,E> monad (copied per domain)
 
 adapters/
   <framework>/
@@ -84,7 +84,7 @@ bridges/
 
 ## Extension Guide
 
-### Adding a new use case to an existing capability
+### Adding a new use case to an existing domain
 
 1. Create `application/use-cases/<verb>-<noun>.use-case.ts` — export a class with an `execute`
    method returning `Promise<Result<Output, Error>>`.
@@ -107,7 +107,7 @@ bridges/
 
 ### Adding an adapter
 
-1. Create `adapters/<framework>/<capability>/<name>.adapter.ts`.
+1. Create `adapters/<framework>/<domain>/<name>.adapter.ts`.
 2. Implement the port interface from `application/ports/`.
 3. Import only from `domains/<name>/application/ports/` and `domains/<name>/domain/`.
 4. Do not export from a barrel; adapters are wired by the consuming application.
@@ -135,7 +135,7 @@ Key rules:
 
 Install a bridge with: `npx @backcap/cli add bridge auth-notifications`
 
-See [`references/capability-index.md`](references/capability-index.md) for the full capability
+See [`references/domain-index.md`](references/domain-index.md) for the full domain
 and bridge catalogue.
 
 ## CLI Commands
@@ -144,10 +144,10 @@ and bridge catalogue.
 |---|---|
 | `npx @backcap/cli init` | Scaffold `backcap.json` config in the current project; auto-detects framework and package manager |
 | `npx @backcap/cli init --yes` | Non-interactive init; fails if framework or package manager cannot be detected |
-| `npx @backcap/cli list` | Fetch and display all available capabilities from the registry |
-| `npx @backcap/cli add <name>` | Install a capability (e.g. `npx @backcap/cli add auth`); detects adapters, resolves conflicts, writes files, installs npm deps |
+| `npx @backcap/cli list` | Fetch and display all available domains from the registry |
+| `npx @backcap/cli add <name>` | Install a domain (e.g. `npx @backcap/cli add auth`); detects adapters, resolves conflicts, writes files, installs npm deps |
 | `npx @backcap/cli add <name> --yes` | Non-interactive install; auto-selects detected adapters, overwrites conflicts, skips confirmations |
-| `npx @backcap/cli bridges` | List bridges that are compatible with currently installed capabilities |
+| `npx @backcap/cli bridges` | List bridges that are compatible with currently installed domains |
 | `npx @backcap/cli add bridge <name>` | Install a specific bridge into the project |
 
 Default registry URL: `https://faroke.github.io/backcap`

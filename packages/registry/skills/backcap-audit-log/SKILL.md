@@ -1,12 +1,12 @@
 ---
 name: backcap-audit-log
-description: Audit Log capability for Backcap — tamper-evident record of all significant actions
+description: Audit Log domain for Backcap — tamper-evident record of all significant actions
 metadata:
   author: backcap
   version: 0.1.0
 ---
 
-# Audit Log Capability
+# Audit Log Domain
 
 ## Domain Map
 
@@ -27,7 +27,7 @@ domains/audit-log/
 │   └── ports/audit-store.port.ts            # IAuditStore — persistence contract (append-only)
 ├── contracts/
 │   ├── audit-log.contract.ts                # IAuditLogService
-│   ├── audit-log.factory.ts                 # createAuditLogCapability(deps)
+│   ├── audit-log.factory.ts                 # createAuditLogDomain(deps)
 │   └── index.ts                             # Barrel exports
 └── shared/result.ts                         # Result<T, E> type
 ```
@@ -71,6 +71,6 @@ The audit log stores entries indefinitely by default. To implement retention:
 ## CLI Commands
 
 ```bash
-backcap add audit-log           # Install the capability
+backcap add audit-log           # Install the domain
 backcap bridges                 # List available bridges
 ```

@@ -34,13 +34,13 @@ describe("installSkill", () => {
 
     await installSkill({
       skillsPath: ".claude/skills",
-      capabilityName: "auth",
+      domainName: "auth",
       skillFiles: [
         { path: "SKILL.md", content: "# Auth Skill" },
         { path: "references/domain-map.md", content: "# Domain Map" },
       ],
       coreSkillFiles: [],
-      templateValues: { capabilities_path: "src/capabilities" },
+      templateValues: { domains_path: "src/domains" },
     });
 
     expect(mockWriteFile).toHaveBeenCalledTimes(2);
@@ -56,7 +56,7 @@ describe("installSkill", () => {
 
     await installSkill({
       skillsPath: ".claude/skills",
-      capabilityName: "auth",
+      domainName: "auth",
       skillFiles: [{ path: "SKILL.md", content: "# Auth" }],
       coreSkillFiles: [{ path: "SKILL.md", content: "# Core" }],
       templateValues: {},
@@ -76,7 +76,7 @@ describe("installSkill", () => {
 
     await installSkill({
       skillsPath: ".claude/skills",
-      capabilityName: "auth",
+      domainName: "auth",
       skillFiles: [{ path: "SKILL.md", content: "# Auth" }],
       coreSkillFiles: [{ path: "SKILL.md", content: "# Core Updated" }],
       templateValues: {},
@@ -96,17 +96,17 @@ describe("installSkill", () => {
 
     await installSkill({
       skillsPath: ".claude/skills",
-      capabilityName: "auth",
+      domainName: "auth",
       skillFiles: [
-        { path: "SKILL.md", content: "Path: {{capabilities_path}}/auth" },
+        { path: "SKILL.md", content: "Path: {{domains_path}}/auth" },
       ],
       coreSkillFiles: [],
-      templateValues: { capabilities_path: "src/capabilities" },
+      templateValues: { domains_path: "src/domains" },
     });
 
     expect(mockWriteFile).toHaveBeenCalledWith(
       ".claude/skills/backcap-auth/SKILL.md",
-      "Path: src/capabilities/auth",
+      "Path: src/domains/auth",
       "utf-8",
     );
   });
@@ -116,7 +116,7 @@ describe("installSkill", () => {
 
     await installSkill({
       skillsPath: "custom/agent-skills",
-      capabilityName: "auth",
+      domainName: "auth",
       skillFiles: [{ path: "SKILL.md", content: "# Auth" }],
       coreSkillFiles: [],
       templateValues: {},
@@ -144,7 +144,7 @@ describe("skill conflict detection", () => {
 
     await installSkill({
       skillsPath: ".claude/skills",
-      capabilityName: "auth",
+      domainName: "auth",
       skillFiles: [{ path: "SKILL.md", content: "# Auth" }],
       coreSkillFiles: [],
       templateValues: {},
@@ -162,7 +162,7 @@ describe("skill conflict detection", () => {
 
     await installSkill({
       skillsPath: ".claude/skills",
-      capabilityName: "auth",
+      domainName: "auth",
       skillFiles: [{ path: "SKILL.md", content: "# Auth" }],
       coreSkillFiles: [],
       templateValues: {},
@@ -185,7 +185,7 @@ describe("skill conflict detection", () => {
 
     await installSkill({
       skillsPath: ".claude/skills",
-      capabilityName: "auth",
+      domainName: "auth",
       skillFiles: [
         { path: "SKILL.md", content: "## Domain Map\nNew map\n\n## Bridges\nBridge content" },
       ],
@@ -211,7 +211,7 @@ describe("skill conflict detection", () => {
 
     await installSkill({
       skillsPath: ".claude/skills",
-      capabilityName: "auth",
+      domainName: "auth",
       skillFiles: [{ path: "SKILL.md", content: "# Auth" }],
       coreSkillFiles: [],
       templateValues: {},

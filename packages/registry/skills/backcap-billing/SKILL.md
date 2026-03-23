@@ -1,12 +1,12 @@
 ---
 name: backcap-billing
-description: Billing capability for Backcap — domain-first clean architecture for payments, subscriptions, and invoicing. Provides vendor-independent payment processing via IPaymentProvider port, subscription lifecycle management (create, cancel, change plan), invoice generation and tracking, and Money value object with safe integer arithmetic. Use when building payment integrations, subscription-based monetization, or invoice management systems.
+description: Billing domain for Backcap — domain-first clean architecture for payments, subscriptions, and invoicing. Provides vendor-independent payment processing via IPaymentProvider port, subscription lifecycle management (create, cancel, change plan), invoice generation and tracking, and Money value object with safe integer arithmetic. Use when building payment integrations, subscription-based monetization, or invoice management systems.
 metadata:
   author: backcap
   version: 0.1.0
 ---
 
-# Billing Capability
+# Billing Domain
 
 ## Domain Map
 

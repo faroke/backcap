@@ -1,5 +1,5 @@
 // ============================================================
-// RBAC Capability — Prisma Schema Fragment
+// RBAC Domain — Prisma Schema Fragment
 // ============================================================
 // INSTRUCTIONS:
 // 1. Copy the models below into your main schema.prisma file

@@ -51,7 +51,7 @@ To support role inheritance:
 
 ## Connecting RBAC to Auth
 
-To integrate with the auth capability:
+To integrate with the auth domain:
 
 1. Create bridge at `bridges/rbac-auth/`
 2. Listen for `UserRegistered` event to assign default role

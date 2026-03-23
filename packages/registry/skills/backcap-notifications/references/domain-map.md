@@ -1,6 +1,6 @@
-# Notifications Capability — Domain Map
+# Notifications Domain — Domain Map
 
-Complete file-by-file reference for the `notifications` capability.
+Complete file-by-file reference for the `notifications` domain.
 
 ## Domain Layer
 

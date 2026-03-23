@@ -1,15 +1,15 @@
 // Template: import type { IBillingService } from "{{cap_rel}}/billing/contracts/index.js";
-import type { IBillingService } from "../../../capabilities/billing/contracts/index.js";
+import type { IBillingService } from "../../../domains/billing/contracts/index.js";
 // Template: import { CustomerNotFound } from "{{cap_rel}}/billing/domain/errors/customer-not-found.error.js";
-import { CustomerNotFound } from "../../../capabilities/billing/domain/errors/customer-not-found.error.js";
+import { CustomerNotFound } from "../../../domains/billing/domain/errors/customer-not-found.error.js";
 // Template: import { SubscriptionNotFound } from "{{cap_rel}}/billing/domain/errors/subscription-not-found.error.js";
-import { SubscriptionNotFound } from "../../../capabilities/billing/domain/errors/subscription-not-found.error.js";
+import { SubscriptionNotFound } from "../../../domains/billing/domain/errors/subscription-not-found.error.js";
 // Template: import { InvalidPlan } from "{{cap_rel}}/billing/domain/errors/invalid-plan.error.js";
-import { InvalidPlan } from "../../../capabilities/billing/domain/errors/invalid-plan.error.js";
+import { InvalidPlan } from "../../../domains/billing/domain/errors/invalid-plan.error.js";
 // Template: import { PaymentDeclined } from "{{cap_rel}}/billing/domain/errors/payment-declined.error.js";
-import { PaymentDeclined } from "../../../capabilities/billing/domain/errors/payment-declined.error.js";
+import { PaymentDeclined } from "../../../domains/billing/domain/errors/payment-declined.error.js";
 // Template: import { InvoiceNotFound } from "{{cap_rel}}/billing/domain/errors/invoice-not-found.error.js";
-import { InvoiceNotFound } from "../../../capabilities/billing/domain/errors/invoice-not-found.error.js";
+import { InvoiceNotFound } from "../../../domains/billing/domain/errors/invoice-not-found.error.js";
 
 interface Request {
   body: Record<string, unknown>;

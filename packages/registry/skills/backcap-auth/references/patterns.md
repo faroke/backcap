@@ -1,4 +1,4 @@
-# Auth Capability — Patterns Reference
+# Auth Domain — Patterns Reference
 
 Auth-specific coding patterns, conventions, and design decisions.
 
