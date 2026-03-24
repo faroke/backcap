@@ -7,8 +7,7 @@ description: >
   CreatePost, PublishPost, GetPost, and ListPosts use cases, plus IPostRepository
   port interface. Public surface is IBlogService and createBlogService factory in contracts/.
   All expected failures return Result<T,E> — no thrown errors. Events: PostCreated and
-  PostPublished for bridge wiring. Bridge: blog-search indexes posts on publish.
-  Zero npm dependencies in domain and application.
+  PostPublished emitted on publish. Zero npm dependencies in domain and application.
 metadata:
   author: Backcap
   version: 1.0.0
@@ -111,16 +110,8 @@ Blog-specific rules:
 - Posts always start as `"draft"` status. The `publish()` method transitions to `"published"`.
 - Slugs can be provided explicitly or auto-generated from the title via `Slug.fromTitle()`.
 - `PostPublished` event is returned in the `PublishPost` result payload for the caller to
-  forward to bridges (e.g. blog-search) or a message bus.
+  forward to a message bus.
 - `PostCreated` event is returned in the `CreatePost` result payload.
-
-## Available Bridges
-
-| Bridge | Description | Install |
-|---|---|---|
-| `blog-search` | Indexes published posts for full-text search | `npx @backcap/cli add bridge blog-search` |
-
-See [`references/bridges.md`](references/bridges.md) for detailed bridge documentation.
 
 ## CLI Commands
 
@@ -129,7 +120,4 @@ See [`references/bridges.md`](references/bridges.md) for detailed bridge documen
 | `npx @backcap/cli init` | Scaffold `backcap.json` in the current project |
 | `npx @backcap/cli init --yes` | Non-interactive init; fails if framework or package manager cannot be detected |
 | `npx @backcap/cli list` | List all available domains from the registry |
-| `npx @backcap/cli add blog` | Install the blog domain (prompts for adapter selection) |
-| `npx @backcap/cli add blog --yes` | Non-interactive install; auto-selects detected adapters, overwrites conflicts |
-| `npx @backcap/cli bridges` | List bridges compatible with installed domains |
-| `npx @backcap/cli add bridge blog-search` | Install the blog-search bridge |
+| `npx @backcap/cli add blog` | Install the blog domain |

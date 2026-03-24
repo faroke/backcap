@@ -37,14 +37,11 @@ npx @backcap/cli init
   "packageManager": "pnpm",
   "paths": {
     "domains": "src/domains",
-    "adapters": "src/adapters",
-    "bridges": "src/bridges",
     "skills": ".claude/skills",
     "shared": "src/shared"
   },
   "installed": {
-    "domains": [],
-    "bridges": []
+    "domains": []
   }
 }
 ```
@@ -72,7 +69,7 @@ npx @backcap/cli init
 
 ## backcap add
 
-Install a domain or bridge from the registry.
+Install a domain from the registry.
 
 ```bash
 npx @backcap/cli add <name>
@@ -82,7 +79,7 @@ npx @backcap/cli add <name>
 
 | Argument | Required | Description |
 |---|---|---|
-| `name` | Yes | The name of the domain or bridge to install (e.g., `auth`, `blog`, `auth-blog`) |
+| `name` | Yes | The name of the domain to install (e.g., `auth`, `blog`) |
 
 **Options:**
 
@@ -94,21 +91,20 @@ npx @backcap/cli add <name>
 
 1. Verifies that `backcap.json` exists (exits with an error if not)
 2. Loads the configuration from `backcap.json`
-3. Fetches the JSON bundle from `https://faroke.github.io/backcap/dist/<name>.json` (falls back to `dist/bridges/<name>.json` for bridges)
-4. Detects which adapters in the bundle are compatible with your `package.json`
-5. Runs conflict detection against your existing files:
+3. Fetches the JSON bundle from `https://faroke.github.io/backcap/dist/<name>.json`
+4. Runs conflict detection against your existing files:
    - If all incoming files are identical to existing files, exits early (nothing to do)
    - If there are no conflicts, proceeds directly to the install prompt
    - If there are conflicts, shows a summary and offers resolution options:
      - **Compare and continue** — shows detailed diffs, then overwrites all conflicting files
-     - **Select files individually** — pick which files to write (domains only)
-     - **Choose a different path** — prompts for a new base path (domains only)
+     - **Select files individually** — pick which files to write
+     - **Choose a different path** — prompts for a new base path
      - **Abort installation** — cancel, no files written
-6. Prompts for final confirmation before writing files
-7. Writes source files to the appropriate directory (`domains/`, `bridges/`, or `adapters/`)
-8. Installs npm dependencies listed in the bundle
-9. Installs `peerDependencies` as devDependencies in a second install pass
-10. Updates `backcap.json` to record the installed domain or bridge
+5. Prompts for final confirmation before writing files
+6. Writes source files to the domains directory
+7. Installs npm dependencies listed in the bundle
+8. Installs `peerDependencies` as devDependencies in a second install pass
+9. Updates `backcap.json` to record the installed domain
 
 **Example:**
 
@@ -123,12 +119,11 @@ npx @backcap/cli add auth
 # auth v1.0.0 installed successfully!
 #
 #   Domain: src/domains/auth
-#   Adapters:   auth-express, auth-prisma
 #
 #   Next steps:
 #   1. Review the installed files in src/domains/auth/
-#   2. Run the test suite to verify: npx vitest run
-#   3. Check available bridges: backcap bridges
+#   2. Implement the port interfaces (IUserRepository, IPasswordHasher, ITokenService)
+#   3. Run the test suite to verify: npx vitest run
 ```
 
 **Conflict resolution options:**
@@ -170,45 +165,7 @@ auth             User registration and login          domain    installed
 blog             Blog post management                 domain    available
 search           Full-text search                     domain    available
 notifications    Email and push notifications         domain    available
-auth-prisma      Prisma adapter for auth              adapter       available
-auth-express     Express router for auth              adapter       available
 ```
-
----
-
-## backcap bridges
-
-List available bridges between installed domains.
-
-```bash
-npx @backcap/cli bridges
-```
-
-**What it does:**
-
-1. Verifies that `backcap.json` exists
-2. Reads all `bridge.json` manifests from your local `bridges/` directory
-3. Displays each bridge with its source domain, target domain, subscribed events, and installation status
-
-**Example output:**
-
-```
-Bridges
-
-  auth-audit-log
-    Source: auth | Target: audit-log
-    Events: UserRegistered, LoginSucceeded | Status: installed
-
-  blog-search
-    Source: blog | Target: search
-    Events: PostPublished | Status: available
-
-  blog-comments
-    Source: comments | Target: blog
-    Events: CommentPosted | Status: installed
-```
-
-If no bridge manifests are found, the command displays "No bridges available."
 
 ---
 
@@ -241,7 +198,6 @@ Common errors and their solutions:
 | `No backcap.json found` | Run `npx @backcap/cli init` first |
 | `Could not fetch "<name>" from registry` | Check your internet connection; verify the name with `backcap list` |
 | `Invalid data received from registry` | The registry may be temporarily unavailable; try again |
-| `No bridges available` | Install domains first — bridges appear automatically between installed domains. |
 
 ---
 

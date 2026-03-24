@@ -39,16 +39,4 @@ describe("registry build output", () => {
       expect(file.content).not.toContain("{{shared_path}}");
     }
   });
-
-  it("adapter JSONs have correct category", async () => {
-    const prismaRaw = await readFile(join(DIST, "auth-prisma.json"), "utf-8");
-    const prisma = JSON.parse(prismaRaw);
-    expect(prisma.name).toBe("auth-prisma");
-    expect(prisma.type).toBe("adapter");
-
-    const expressRaw = await readFile(join(DIST, "auth-express.json"), "utf-8");
-    const express = JSON.parse(expressRaw);
-    expect(express.name).toBe("auth-express");
-    expect(express.type).toBe("adapter");
-  });
 });

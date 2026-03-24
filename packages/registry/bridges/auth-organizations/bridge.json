@@ -1,7 +1,0 @@
-{
-  "name": "auth-organizations",
-  "sourceDomain": "auth",
-  "targetDomain": "organizations",
-  "events": ["UserRegistered"],
-  "version": "1.0.0"
-}

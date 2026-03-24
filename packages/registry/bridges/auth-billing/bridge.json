@@ -1,7 +1,0 @@
-{
-  "name": "auth-billing",
-  "sourceDomain": "auth",
-  "targetDomain": "billing",
-  "events": ["UserRegistered"],
-  "version": "1.0.0"
-}

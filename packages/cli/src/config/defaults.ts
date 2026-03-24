@@ -6,8 +6,6 @@ export interface BackcapConfig {
   packageManager: string;
   paths: {
     domains: string;
-    adapters: string;
-    bridges: string;
     skills: string;
     shared: string;
   };
@@ -23,8 +21,6 @@ export function buildDefaultConfig(
     packageManager: pm,
     paths: {
       domains: "domains",
-      adapters: "adapters",
-      bridges: "bridges",
       skills: ".claude/skills",
       shared: "src/shared",
     },

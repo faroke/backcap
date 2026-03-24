@@ -97,13 +97,13 @@ export interface IUserRepository {
 }
 ```
 
-If you are using Prisma, install the Prisma adapter:
+If you are using Prisma, implement `IUserRepository` by writing a `PrismaUserRepository` class. For example:
 
-```bash
-npx @backcap/cli add auth-prisma
+```typescript
+// src/adapters/prisma/auth/user-repository.adapter.ts
+import type { IUserRepository } from "../../domains/auth/application/ports/user-repository.port";
+// ... implement save, findByEmail, findById using your Prisma client
 ```
-
-This writes `src/adapters/prisma/auth/user-repository.adapter.ts` — a `PrismaUserRepository` class that implements `IUserRepository`.
 
 ### IPasswordHasher
 
@@ -201,38 +201,30 @@ if (loginResult.isOk()) {
 }
 ```
 
-## Step 6 — Add the Express Router (Optional)
+## Step 6 — Add an HTTP Router (Optional)
 
-If you are using Express, install the Express adapter:
-
-```bash
-npx @backcap/cli add auth-express
-```
-
-Then register the router:
+If you are using Express (or any other framework), implement an HTTP adapter that calls your `authService`. For example:
 
 ```typescript
 import express from "express";
-import { Router } from "express";
-import { createAuthRouter } from "./adapters/express/auth/auth.router";
 import { authService } from "./container";
 
 const app = express();
 app.use(express.json());
 
-const router = new Router();
-createAuthRouter(authService, router);
-app.use(router);
+app.post("/auth/register", async (req, res) => {
+  const result = await authService.register(req.body);
+  if (result.isFail()) {
+    return res.status(400).json({ error: result.unwrapError().message });
+  }
+  return res.status(201).json(result.unwrap());
+});
 ```
 
-This installs two files:
-
-- `auth.router.ts` — adds `POST /auth/register` and `POST /auth/login` routes with proper HTTP status code mapping
-- `auth.middleware.ts` — provides `createAuthMiddleware(tokenService)` for protecting routes with Bearer token authentication
+You own this wiring code — implement it in whatever way fits your framework.
 
 ## Next Steps
 
 - Read the [Auth domain reference](/backcap/domains/auth) for the full API
 - Learn about the [Result pattern](/backcap/concepts/domains#the-result-pattern)
-- Explore [Bridges](/backcap/concepts/bridges) to connect auth with notifications
 - See how to [create your own domain](/backcap/guides/create-domain)

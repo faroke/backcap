@@ -39,7 +39,6 @@ Audit entries are **immutable by design**:
 - `AuditEntry` has **no mutation methods** — no `update()`, no `delete()`
 - `IAuditStore` exposes only `append()` and `query()` — no delete/update
 - Express router has **no DELETE or PUT routes** — read-only via HTTP
-- Prisma adapter only implements `append` and `query`
 
 This ensures a tamper-evident record of all actions.
 
@@ -59,18 +58,8 @@ The audit log stores entries indefinitely by default. To implement retention:
 - AuditAction format: `NOUN.VERB` (e.g., `USER.LOGIN`, `POST.CREATED`)
 - Tests co-located in `__tests__/` directories
 
-## Available Adapters
-
-- **Prisma**: `adapters/prisma/audit-log/prisma-audit-store.ts` — implements IAuditStore
-- **Express**: `adapters/express/audit-log/audit-log.router.ts` — REST endpoints
-
-## Available Bridges
-
-- **auth-audit-log** (Story 7.7): Records `USER.REGISTERED` and `USER.LOGGED_IN` on auth events
-
 ## CLI Commands
 
 ```bash
 backcap add audit-log           # Install the domain
-backcap bridges                 # List available bridges
 ```

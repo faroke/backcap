@@ -3,9 +3,8 @@ name: backcap-organizations
 description: >
   Organizations (multi-tenant) domain for backcap registry.
   Provides domain entities for Organizations and Memberships, value objects for
-  OrgSlug and MemberRole, use cases for organization lifecycle and member
-  management, Prisma adapters for persistence, and Express adapter with
-  org-scoped routes and middleware.
+  OrgSlug and MemberRole, and use cases for organization lifecycle and member
+  management.
 metadata:
   author: backcap
   version: 1.0.0
@@ -86,25 +85,6 @@ See [references/domain-map.md](references/domain-map.md) for complete file-by-fi
 | IOrganizationService       | `contracts/organizations.contract.ts`  | Public interface for organization operations         |
 | createOrganizationService  | `contracts/organizations.factory.ts`   | Factory wiring use cases to service interface        |
 | OrganizationServiceDeps    | `contracts/organizations.factory.ts`   | Dependency type for factory                          |
-
-## Adapters
-
-| Adapter                      | File                                                                    | Description                                    |
-| ---------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------- |
-| PrismaOrganizationRepository | `adapters/prisma/organizations/organization-repository.adapter.ts`      | Prisma implementation of IOrganizationRepository |
-| PrismaMembershipRepository   | `adapters/prisma/organizations/membership-repository.adapter.ts`        | Prisma implementation of IMembershipRepository  |
-| PrismaInvitationService      | `adapters/prisma/organizations/invitation-service.adapter.ts`           | Prisma implementation of IInvitationService     |
-| createOrganizationsRouter    | `adapters/express/organizations/organizations.router.ts`                | Express CRUD routes for organizations           |
-| createOrgScopeMiddleware     | `adapters/express/organizations/organizations.middleware.ts`             | Express middleware: org-scoped request context  |
-
-## Bridges
-
-See [references/bridges.md](references/bridges.md) for detailed bridge documentation.
-
-| Bridge | Source | Target | Events |
-|---|---|---|---|
-| `auth-organizations` | auth | organizations | UserRegistered |
-| `rbac-organizations` | organizations | rbac | MemberJoined |
 
 ## Extension Guide
 

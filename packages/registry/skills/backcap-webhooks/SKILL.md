@@ -72,15 +72,9 @@ Implement `IWebhookDelivery.deliver(url, secret, eventType, payload)` → `{ sta
 - File naming: kebab-case with typed suffix (.entity.ts, .vo.ts, etc.)
 - Tests co-located in `__tests__/` within each layer
 
-## Available Bridges
-
-- `auth-notifications` — UserRegistered → SendWelcomeEmail (requires auth + notifications)
-
 ## CLI Commands
 
 | Command | Description |
 |---------|-------------|
 | `backcap add webhooks` | Install webhooks domain |
-| `backcap add webhooks --yes` | Install without prompts |
 | `backcap list` | View all available domains |
-| `backcap bridges` | View compatible bridges |

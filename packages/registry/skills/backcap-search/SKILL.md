@@ -7,8 +7,7 @@ description: >
   SearchDocuments, and RemoveFromIndex use cases, plus ISearchEngine port interface.
   Public surface is ISearchService and createSearchService factory in contracts/.
   All expected failures return Result<T,E> — no thrown errors. Event: IndexUpdated.
-  Bridge: blog-search indexes posts from blog domain. Zero npm dependencies in domain
-  and application.
+  Zero npm dependencies in domain and application.
 metadata:
   author: Backcap
   version: 1.0.0
@@ -110,14 +109,6 @@ Search-specific rules:
 - `IndexDocument` use case checks index existence before indexing.
 - `RemoveFromIndex` validates both index and document existence before removal.
 
-## Available Bridges
-
-| Bridge | Description | Install |
-|---|---|---|
-| `blog-search` | Indexes published blog posts for full-text search | `npx @backcap/cli add bridge blog-search` |
-
-See [`references/bridges.md`](references/bridges.md) for detailed bridge documentation.
-
 ## CLI Commands
 
 | Command | Description |
@@ -125,6 +116,4 @@ See [`references/bridges.md`](references/bridges.md) for detailed bridge documen
 | `npx @backcap/cli init` | Scaffold `backcap.json` in the current project |
 | `npx @backcap/cli init --yes` | Non-interactive init; fails if framework or package manager cannot be detected |
 | `npx @backcap/cli list` | List all available domains from the registry |
-| `npx @backcap/cli add search` | Install the search domain (prompts for adapter selection) |
-| `npx @backcap/cli add search --yes` | Non-interactive install; auto-selects detected adapters, overwrites conflicts |
-| `npx @backcap/cli bridges` | List bridges compatible with installed domains |
+| `npx @backcap/cli add search` | Install the search domain |

@@ -21,15 +21,15 @@ npx @backcap/cli add auth   # Install auth domain source files
 
 ### Framework Agnosticism
 
-Domain and application layers have zero framework or database imports. The same domain logic works with Express, Fastify, Next.js, or NestJS. Runtime support: Node.js, Bun, Deno.
+Domain and application layers have zero framework or database imports. The same domain logic works with Express, Fastify, Next.js, or NestJS. Runtime support: Node.js, Bun, Deno. You implement your own adapters on the port interfaces exposed by each domain.
 
 ---
 
 ## Architecture
 
-### Four Layers
+### Three Layers
 
-Every domain is structured in exactly four layers with strict import rules.
+Every domain is structured in exactly three layers with strict import rules.
 
 #### Layer 1: domain/
 
@@ -68,21 +68,17 @@ Key patterns:
 - `create<Name>Service(deps)` factory wires the dependency graph.
 - This is the only `index.ts` in the domain. No barrel exports in domain/ or application/.
 
-#### Layer 4: adapters/
+### Adapters (You Implement These)
 
-Contents: concrete implementations of port interfaces.
-
-Location: `adapters/<category>/<technology>/<domain>/` — outside the domain directory. Category is `persistence/` (e.g., prisma) or `http/` (e.g., express).
-
-Import rule: imports from `application/ports/` (for the interface) and `domain/` entities (for mapping). Never imports from `contracts/`.
+Adapters are concrete implementations of port interfaces. They live outside the domain directory in your project, organized as you see fit. Backcap provides the ports — you implement them for your chosen framework and persistence layer.
 
 ### The Dependency Rule
 
 ```
-adapters/ → contracts/ → application/ → domain/
+your adapters → contracts/ → application/ → domain/
 ```
 
-Each layer only imports from the layer to its right. Nothing imports from adapters/ except application entry points (container.ts, main.ts).
+Each layer only imports from the layer to its right. Nothing imports from your adapters except application entry points (container.ts, main.ts).
 
 ---
 
@@ -142,15 +138,11 @@ npx @backcap/cli add <domain>
 ```
 
 1. Loads backcap.json (fails if not present)
-2. Fetches `https://faroke.github.io/backcap/dist/<name>.json` — if not found, falls back to `https://faroke.github.io/backcap/dist/bridges/<name>.json` (bridge auto-detection)
-3. If type is "bridge", routes to bridge installation flow (validates dependencies, writes to `<paths.bridges>/<name>/`)
-4. For domains: detects compatible adapters based on project package.json
-5. Runs conflict detection (identical → skip, no conflicts → proceed, conflicts → prompt)
-6. Conflict options: abort, different path, selective install (domains only), compare diffs and continue
-7. Writes files to `<paths.domains>/<domain>/`
-8. Writes adapter files to `<paths.adapters>/<category>/<technology>/<domain>/`
-9. Installs npm deps
-10. Updates `backcap.json` installed list
+2. Fetches `https://faroke.github.io/backcap/dist/<name>.json`
+3. Runs conflict detection (identical → skip, no conflicts → proceed, conflicts → prompt)
+4. Conflict options: abort, different path, selective install, compare diffs and continue
+5. Writes files to `<paths.domains>/<domain>/`
+6. Installs npm deps
 
 ### backcap list
 
@@ -160,19 +152,11 @@ npx @backcap/cli list
 
 Fetches `https://faroke.github.io/backcap/dist/registry.json`. Renders a table of domains with name, description, type, and installed status.
 
-### backcap bridges
-
-```bash
-npx @backcap/cli bridges
-```
-
-Reads local `bridge.json` manifests from the project's bridges directory (`<paths.bridges>/*/bridge.json`). Lists discovered bridges with source domain, target domain, events, and status (installed / available). No remote fetch — only locally installed bridge manifests are shown.
-
 ---
 
 ## Available Domains (20)
 
-All domains follow the same four-layer Clean Architecture. Install any with `npx @backcap/cli add <name>`.
+All domains follow the same three-layer Clean Architecture. Install any with `npx @backcap/cli add <name>`.
 
 | Domain | Description |
 |---|---|
@@ -319,88 +303,6 @@ function createAuthService(deps: {
 }): IAuthService
 ```
 
-### Adapters
-
-#### auth-prisma
-
-`PrismaUserRepository implements IUserRepository`
-
-File: `adapters/persistence/prisma/auth/user-repository.adapter.ts`
-
-Constructor: `new PrismaUserRepository(prisma: PrismaClient)`
-
-Required Prisma model:
-```prisma
-model User {
-  id           String   @id
-  email        String   @unique
-  passwordHash String
-  roles        String[]
-  createdAt    DateTime
-  updatedAt    DateTime
-}
-```
-
-#### auth-express
-
-**createAuthRouter** (`adapters/http/express/auth/auth.router.ts`):
-```typescript
-function createAuthRouter(authService: IAuthService, router: Router): Router
-```
-Adds: `POST /auth/register` → 201 `{ userId }` or error; `POST /auth/login` → 200 `{ token, userId }` or error.
-
-Error mapping: UserAlreadyExists → 409, InvalidCredentials/UserNotFound → 401, InvalidEmail → 400, other → 500.
-
-**createAuthMiddleware** (`adapters/http/express/auth/auth.middleware.ts`):
-```typescript
-function createAuthMiddleware(tokenService: ITokenService): RequestHandler
-```
-Reads `Authorization: Bearer <token>`, verifies with tokenService, sets `req.user.userId` (and `req.user.organizationId` if present), calls next(). Returns 401 on failure.
-
----
-
-## Bridges
-
-A bridge is a standalone module in `bridges/<name>/` that connects two domains via domain events. It defines its own port interfaces and has its own `shared/result.ts`.
-
-### Bridge Structure
-
-Each bridge directory contains:
-- `bridge.json` — Manifest with name, sourceDomain, targetDomain, events, and version
-- `<name>.bridge.ts` — Entry point that wires the bridge
-- Standard Clean Architecture layers (domain/, application/, contracts/)
-
-Install any bridge: `npx @backcap/cli add <bridge-name>` (type auto-detected from registry JSON, no `bridge` subcommand needed).
-
-### Available Bridges (16)
-
-| Bridge | Source → Target |
-|---|---|
-| auth-audit-log | auth → audit-log |
-| auth-billing | auth → billing |
-| auth-notifications | auth → notifications |
-| auth-organizations | auth → organizations |
-| auth-rbac | auth → rbac |
-| blog-comments | blog → comments |
-| blog-media | blog → media |
-| blog-search | blog → search |
-| blog-tags | blog → tags |
-| cart-orders | cart → orders |
-| catalog-cart | catalog → cart |
-| catalog-search | catalog → search |
-| media-files | media → files |
-| orders-billing | orders → billing |
-| organizations-billing | organizations → billing |
-| rbac-organizations | rbac → organizations |
-
-### Example: auth-notifications
-
-Responds to `UserRegistered` from auth, calls `IEmailSender` port to send a welcome email.
-
-Use case: `SendWelcomeEmailUseCase.execute(event: UserRegistered): Promise<Result<void, SendWelcomeEmailError>>`
-
-Port: `IEmailSender { sendEmail(dto: WelcomeEmailDto): Promise<void> }`
-
 ---
 
 ## File Naming Conventions
@@ -416,7 +318,6 @@ Port: `IEmailSender { sendEmail(dto: WelcomeEmailDto): Promise<void> }`
 | `.dto.ts` | `register-input.dto.ts` |
 | `.contract.ts` | `auth.contract.ts` |
 | `.factory.ts` | `auth.factory.ts` |
-| `.adapter.ts` | `user-repository.adapter.ts` |
 
 All files use kebab-case. Class names use PascalCase. Interface names use `I` prefix.
 
@@ -427,7 +328,7 @@ All files use kebab-case. Class names use PascalCase. Interface names use `I` pr
 Each domain has a corresponding `SKILL.md` in `packages/registry/skills/`:
 
 - `backcap-core/SKILL.md` — global architecture rules, import rules, naming conventions, Result pattern, CLI overview
-- `backcap-auth/SKILL.md` — auth domain domain map, all ports and use cases, error types, adapters, bridge
+- `backcap-auth/SKILL.md` — auth domain domain map, all ports and use cases, error types
 
 Load these files as AI context before making changes to a Backcap project. The `description` field in each skill's YAML frontmatter is a dense one-paragraph summary suitable for use as a system prompt prefix.
 
@@ -442,14 +343,8 @@ Load these files as AI context before making changes to a Backcap project. The `
   "alias": "@domains",
   "paths": {
     "domains": "domains",
-    "adapters": "adapters",
-    "bridges": "bridges",
     "skills": ".claude/skills",
     "shared": "shared"
-  },
-  "installed": {
-    "domains": [{ "name": "auth", "version": "1.0.0", "adapters": ["auth-prisma", "auth-express"] }],
-    "bridges": []
   }
 }
 ```
@@ -477,6 +372,5 @@ const authService = createAuthService({
 
 - **Domain tests**: Pure unit tests. No mocks. Fast. Test all value object validation and entity factories.
 - **Application tests**: Use in-memory mock implementations of port interfaces. Test use case logic without infrastructure.
-- **Adapter tests**: Integration tests against real infrastructure (real database, real bcrypt). Only these tests require external services.
 
 Mock implementations live in `application/__tests__/mocks/` and implement the port interfaces with simple in-memory logic.

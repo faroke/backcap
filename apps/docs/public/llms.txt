@@ -8,16 +8,17 @@ Backcap is a registry of composable backend domains for TypeScript. It lets you 
 
 Run `npx @backcap/cli add auth` and Backcap fetches the auth domain from the registry, writes TypeScript source files to `domains/auth/`, installs npm dependencies, and records it in `backcap.json`. No runtime library — the code is yours.
 
-## Four-Layer Architecture
+## Three-Layer Architecture
 
 Every Backcap domain uses strict Clean Architecture layering:
 
 - **domain/** — Entities, value objects, domain errors, domain events. Zero external imports. No framework code.
 - **application/** — Use cases, port interfaces (TypeScript interfaces), DTOs. Imports domain/ only.
 - **contracts/** — Public service interface and factory function. The only barrel index.ts. Imports application/ only.
-- **adapters/** — Framework and persistence implementations of port interfaces. Live outside the domain in adapters/.
 
-Import rule: dependencies point inward only. domain/ never imports from application/. application/ never imports from adapters/.
+Import rule: dependencies point inward only. domain/ never imports from application/. application/ never imports from contracts/.
+
+You implement your own adapters on the port interfaces exposed by each domain.
 
 ## The Result Pattern
 
@@ -38,29 +39,12 @@ const { userId } = result.unwrap();
 - `npx @backcap/cli init` — Detects framework and package manager, writes backcap.json
 - `npx @backcap/cli add <domain>` — Fetches and installs a domain with conflict detection
 - `npx @backcap/cli list` — Lists available domains from the registry
-- `npx @backcap/cli bridges` — Reads local bridge.json manifests and lists locally discovered bridges with install status
 
 ## Available Domains (20)
 
 analytics, audit-log, auth, billing, blog, cart, catalog, comments, feature-flags, files, forms, media, notifications, orders, organizations, queues, rbac, search, tags, webhooks
 
-Each domain follows the same four-layer architecture. Install any with `npx @backcap/cli add <name>`.
-
-## Adapters
-
-Live in `adapters/<category>/<technology>/<domain>/` (category: `persistence/` or `http/`):
-
-- **auth-prisma** — PrismaUserRepository implements IUserRepository
-- **auth-express** — createAuthRouter(), createAuthMiddleware() (sets `req.user.userId`)
-- **billing-prisma** — PrismaCustomerRepository, PrismaSubscriptionRepository, PrismaInvoiceRepository
-- **billing-express** — createBillingRouter() REST API for subscriptions, payments, and invoices
-- **billing-stripe** — StripePaymentProvider implements IPaymentProvider
-
-## Bridges (16)
-
-Bridges connect two domains via domain events. Each bridge has a `bridge.json` manifest and a `<name>.bridge.ts` entry point. Install with `npx @backcap/cli add <bridge-name>` (type auto-detected from registry JSON).
-
-auth-audit-log, auth-billing, auth-notifications, auth-organizations, auth-rbac, blog-comments, blog-media, blog-search, blog-tags, cart-orders, catalog-cart, catalog-search, media-files, orders-billing, organizations-billing, rbac-organizations
+Each domain follows the same three-layer architecture. Install any with `npx @backcap/cli add <name>`.
 
 ## Skills (AI Documentation)
 
@@ -68,7 +52,7 @@ Each domain has a SKILL.md with structured frontmatter and file-by-file tables. 
 
 ## File Naming Conventions
 
-`.entity.ts`, `.vo.ts`, `.error.ts`, `.event.ts`, `.use-case.ts`, `.port.ts`, `.dto.ts`, `.contract.ts`, `.factory.ts`, `.adapter.ts` — all kebab-case.
+`.entity.ts`, `.vo.ts`, `.error.ts`, `.event.ts`, `.use-case.ts`, `.port.ts`, `.dto.ts`, `.contract.ts`, `.factory.ts` — all kebab-case.
 
 ## backcap.json
 
@@ -80,14 +64,8 @@ Configuration file written by `backcap init`:
   "alias": "@domains",
   "paths": {
     "domains": "domains",
-    "adapters": "adapters",
-    "bridges": "bridges",
     "skills": ".claude/skills",
     "shared": "shared"
-  },
-  "installed": {
-    "domains": [],
-    "bridges": []
   }
 }
 ```

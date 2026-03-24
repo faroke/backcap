@@ -41,8 +41,7 @@ To add a custom metric (e.g., conversion funnel):
 1. Add the metric fields to `GetMetricsOutput` in `get-metrics.dto.ts`
 2. Extend `AnalyticsMetrics` interface in `analytics-store.port.ts`
 3. Update `IAnalyticsStore.aggregate()` to compute the new metric
-4. Update the Prisma adapter's `aggregate()` implementation with the necessary query
-5. The domain layer remains unchanged — aggregation is delegated to the store
+4. The domain layer remains unchanged — aggregation is delegated to the store
 
 ### Adding Event Validation Rules
 
@@ -62,14 +61,8 @@ To validate event names or properties:
 - Result<T, E> for all fallible operations
 - Private constructors + static `.create()` factories
 
-## Available Adapters
-
-- **Prisma**: `adapters/prisma/analytics/prisma-analytics-store.ts` — implements IAnalyticsStore
-- **Express**: `adapters/express/analytics/analytics.router.ts` — REST endpoints (POST/GET events, GET metrics)
-
 ## CLI Commands
 
 ```bash
 backcap add analytics       # Install the domain
-backcap bridges             # List available bridges
 ```

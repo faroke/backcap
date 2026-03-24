@@ -6,9 +6,8 @@ description: >
   (InvalidEmail, InvalidCredentials, UserNotFound, UserAlreadyExists). Application layer has
   RegisterUser and LoginUser use cases, plus IUserRepository, IPasswordHasher, and ITokenService
   port interfaces. Public surface is IAuthService and createAuthService factory in contracts/.
-  All expected failures return Result<T,E> — no thrown errors. Adapters: auth-express (router +
-  Bearer middleware), auth-prisma (PrismaUserRepository). Bridge: auth-notifications fires
-  SendWelcomeEmailUseCase on UserRegistered event. Zero npm dependencies in domain and application.
+  All expected failures return Result<T,E> — no thrown errors.
+  Zero npm dependencies in domain and application.
 metadata:
   author: Backcap
   version: 1.0.0
@@ -86,15 +85,6 @@ See [`references/domain-map.md`](references/domain-map.md) for a full file-by-fi
 | `contracts/auth.factory.ts` | `createAuthService(deps: AuthServiceDeps): IAuthService` | DI factory wiring use cases to port implementations |
 | `contracts/index.ts` | re-exports all of the above | The single barrel; import from here only |
 
-### Adapters
-
-| File | Export | Implements |
-|---|---|---|
-| `adapters/express/auth/auth.router.ts` | `createAuthRouter(authService, router)` | `POST /auth/register` → 201 / 409 / 400; `POST /auth/login` → 200 / 401 |
-| `adapters/express/auth/auth.middleware.ts` | `createAuthMiddleware(tokenService)` | Bearer token verification; sets `req.user.userId` |
-| `adapters/prisma/auth/user-repository.adapter.ts` | `PrismaUserRepository` | `IUserRepository` backed by Prisma |
-| `adapters/prisma/auth/auth.schema.prisma` | — | Prisma `User` model fragment to merge into `schema.prisma` |
-
 ## Extension Guide
 
 See [`references/extension-guide.md`](references/extension-guide.md) for step-by-step
@@ -107,7 +97,6 @@ instructions on adding use cases, entities, and DTOs.
 - **New entity / VO**: add to `domain/entities/` or `domain/value-objects/`, private constructor,
   `static create` returning `Result`.
 - **New DTO**: add to `application/dto/`, plain `interface`, no methods.
-- **New adapter**: add to `adapters/<framework>/auth/`, implement the relevant port interface.
 
 ## Conventions
 
@@ -119,18 +108,7 @@ Auth-specific rules:
 - The `LoginUser` use case returns a generic `InvalidCredentials` error for both "not found" and
   "wrong password" paths — this prevents user enumeration.
 - `UserRegistered` event is returned in the `RegisterUser` result payload for the caller to
-  forward to bridges or a message bus.
-
-## Available Bridges
-
-| Bridge | Description | Install |
-|---|---|---|
-| `auth-notifications` | Sends a welcome email when a user registers | `npx @backcap/cli add auth-notifications` |
-| `auth-audit-log` | Logs login, registration, and failed-login events | `npx @backcap/cli add auth-audit-log` |
-| `auth-rbac` | Assigns a default role to new users | `npx @backcap/cli add auth-rbac` |
-| `auth-organizations` | Creates a personal organization for new users | `npx @backcap/cli add auth-organizations` |
-
-See [`references/bridges.md`](references/bridges.md) for detailed bridge documentation.
+  forward to a message bus.
 
 ## CLI Commands
 
@@ -139,7 +117,4 @@ See [`references/bridges.md`](references/bridges.md) for detailed bridge documen
 | `npx @backcap/cli init` | Scaffold `backcap.json` in the current project |
 | `npx @backcap/cli init --yes` | Non-interactive init; fails if framework or package manager cannot be detected |
 | `npx @backcap/cli list` | List all available domains from the registry |
-| `npx @backcap/cli add auth` | Install the auth domain (prompts for adapter selection) |
-| `npx @backcap/cli add auth --yes` | Non-interactive install; auto-selects detected adapters, overwrites conflicts |
-| `npx @backcap/cli bridges` | List bridges compatible with installed domains |
-| `npx @backcap/cli add bridge auth-notifications` | Install the auth-notifications bridge |
+| `npx @backcap/cli add auth` | Install the auth domain |

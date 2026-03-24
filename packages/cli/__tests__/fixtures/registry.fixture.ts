@@ -15,11 +15,5 @@ export const mockRegistryData = {
       description: "Blog domain with CRUD operations",
       files: [],
     },
-    {
-      name: "auth-prisma",
-      type: "adapter",
-      description: "Prisma adapter for auth",
-      files: [],
-    },
   ],
 };

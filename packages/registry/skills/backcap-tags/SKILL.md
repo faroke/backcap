@@ -46,7 +46,7 @@ To tag a new resource type (e.g., "product"):
 1. Call `tagResource` with `resourceType: "product"` — no code changes needed
 2. The tags system is generic: any `(resourceId, resourceType)` pair works
 3. Query tagged products with `listByTag({ tagSlug: "...", resourceType: "product" })`
-4. For type safety, consider creating a bridge that wraps the generic tag calls
+4. For type safety, consider creating a typed wrapper that wraps the generic tag calls
 
 ## Conventions
 
@@ -56,14 +56,8 @@ To tag a new resource type (e.g., "product"):
 - `UntagResource` verifies the association exists before removing
 - Result<T, E> for all fallible operations
 
-## Available Adapters
-
-- **Prisma**: `adapters/prisma/tags/prisma-tag-repository.ts` — implements ITagRepository
-- **Express**: `adapters/express/tags/tags.router.ts` — REST endpoints (POST tags, POST/DELETE/GET resources)
-
 ## CLI Commands
 
 ```bash
 backcap add tags       # Install the domain
-backcap bridges        # List available bridges
 ```

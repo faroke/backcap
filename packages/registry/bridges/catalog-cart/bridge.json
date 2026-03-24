@@ -1,7 +1,0 @@
-{
-  "name": "catalog-cart",
-  "sourceDomain": "catalog",
-  "targetDomain": "cart",
-  "events": ["PriceLookup"],
-  "version": "1.0.0"
-}

@@ -40,9 +40,8 @@ Every Backcap domain is structured in four strict layers:
 | `domain/` | Entities, value objects, domain errors, domain events |
 | `application/` | Use cases, port interfaces, DTOs |
 | `contracts/` | Public service interface and factory function |
-| `adapters/` | Framework and persistence implementations |
 
-The `domain/` and `application/` layers have **zero external npm dependencies**. All framework and persistence concerns live in adapters, which implement the port interfaces defined in the application layer. This is the hexagonal architecture pattern — sometimes called ports and adapters.
+The `domain/` and `application/` layers have **zero external npm dependencies**. All framework and persistence concerns live in adapters that you implement, satisfying the port interfaces defined in the application layer. This is the hexagonal architecture pattern — sometimes called ports and adapters.
 
 ## The Result Pattern
 
@@ -68,12 +67,12 @@ Backcap domains work with any TypeScript runtime and framework:
 - **Runtimes**: Node.js, Bun, Deno
 - **Frameworks**: Express, Fastify, Hono, Next.js, NestJS, or any HTTP layer
 
-The core domain and application code has no framework imports. Framework integration is handled by the adapter layer, which you install separately.
+The core domain and application code has no framework imports. You implement your own adapters on the port interfaces exposed by each domain.
 
 ## Value Proposition
 
 - **Speed**: Add a production-grade auth system in under a minute
 - **Ownership**: Full source code in your repository — no magic, no black boxes
 - **Correctness**: Every domain ships with tests and typed error handling
-- **Adaptability**: Swap persistence layers or frameworks by swapping adapters
+- **Adaptability**: Swap persistence layers or frameworks by swapping your adapter implementations
 - **AI-friendly**: Clear layer separation and typed contracts make AI tooling effective

@@ -3,7 +3,7 @@ title: Architecture
 description: How Backcap applies clean architecture and hexagonal architecture principles.
 ---
 
-Backcap is built on two complementary architectural patterns: **Clean Architecture** (Robert C. Martin) and **Hexagonal Architecture** (Alistair Cockburn, also known as ports and adapters). Understanding these patterns explains every design decision in the codebase.
+Backcap is built on two complementary architectural patterns: **Clean Architecture** (Robert C. Martin) and **Hexagonal Architecture** (Alistair Cockburn, also known as ports and adapters). Understanding these patterns explains every design decision in the codebase. Domains expose ports (interfaces) — you implement the adapters that satisfy them.
 
 ## Clean Architecture
 
@@ -83,9 +83,9 @@ your-project/
         application/
           use-cases/register-user.use-case.ts
           use-cases/login-user.use-case.ts
-          ports/user-repository.port.ts
-          ports/password-hasher.port.ts
-          ports/token-service.port.ts
+          ports/user-repository.port.ts       # IUserRepository — you implement this
+          ports/password-hasher.port.ts       # IPasswordHasher — you implement this
+          ports/token-service.port.ts         # ITokenService — you implement this
           dto/register-input.dto.ts
           dto/login-input.dto.ts
           dto/login-output.dto.ts
@@ -95,26 +95,6 @@ your-project/
           index.ts
         shared/
           result.ts
-    adapters/
-      persistence/
-        prisma/
-          auth/
-            user-repository.adapter.ts
-      http/
-        express/
-          auth/
-            auth.router.ts
-            auth.middleware.ts
-    bridges/
-      auth-notifications/
-        bridge.json                              # Machine-readable manifest
-        auth-notifications.bridge.ts             # Factory + event subscriptions
-        use-cases/send-welcome-email.use-case.ts
-        contracts/auth-notifications.contract.ts
-        domain/events/user-registered.event.ts
-        dto/welcome-email.dto.ts
-        shared/result.ts
-        __tests__/
 ```
 
 ## Registry Package Layout
@@ -125,11 +105,6 @@ The Backcap registry (the npm workspace package at `packages/registry/`) mirrors
 packages/registry/
   domains/
     auth/              # Authored source of the auth domain
-  adapters/
-    prisma/auth/       # Prisma adapter for auth
-    express/auth/      # Express adapter for auth
-  bridges/
-    auth-notifications/  # Bridge between auth and notifications
   skills/
     backcap-core/      # Architecture skill file for AI tools
     backcap-auth/      # Auth domain skill file
@@ -169,6 +144,6 @@ The layered architecture makes testing straightforward:
 
 - **Domain layer**: Pure unit tests. No mocks needed — entities and value objects are deterministic functions.
 - **Application layer**: Tests use mock implementations of port interfaces (in-memory repositories, simple hash functions). No database needed.
-- **Adapters**: Integration tests that use real infrastructure (a test database, a real bcrypt call). These are the only tests that require external services.
+- **Your adapters**: Integration tests that use real infrastructure (a test database, a real bcrypt call). These are the only tests that require external services.
 
 This means the vast majority of tests run instantly with no infrastructure setup.

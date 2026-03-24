@@ -40,14 +40,11 @@ After running `init`, a `backcap.json` is written to your project root:
   "alias": "@domains",
   "paths": {
     "domains": "domains",
-    "adapters": "adapters",
-    "bridges": "bridges",
     "skills": ".claude/skills",
     "shared": "shared"
   },
   "installed": {
-    "domains": [],
-    "bridges": []
+    "domains": []
   }
 }
 ```
@@ -60,11 +57,9 @@ After running `init`, a `backcap.json` is written to your project root:
 | `packageManager` | The package manager used to install dependencies |
 | `alias` | The tsconfig path alias prefix for domains (default: `"@domains"`) |
 | `paths.domains` | Where domain source files are written |
-| `paths.adapters` | Where adapter source files are written |
-| `paths.bridges` | Where bridge source files are written |
 | `paths.skills` | Where agent skill files are written |
 | `paths.shared` | Where shared utilities (like `Result`) are written |
-| `installed` | Structured record of installed domains and bridges |
+| `installed` | Structured record of installed domains |
 
 ### Customizing Paths
 

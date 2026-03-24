@@ -1,7 +1,0 @@
-{
-  "name": "blog-comments",
-  "sourceDomain": "comments",
-  "targetDomain": "blog",
-  "events": ["CommentPosted"],
-  "version": "1.0.0"
-}

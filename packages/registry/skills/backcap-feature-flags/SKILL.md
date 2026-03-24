@@ -40,7 +40,7 @@ domains/feature-flags/
 
 The `conditions` field on `FeatureFlag` is `Record<string, unknown>` by design — opaque to the domain core. To add percentage rollout:
 
-1. Define a condition evaluator outside the domain (e.g., in a bridge or application extension)
+1. Define a condition evaluator outside the domain (e.g., in an application extension or middleware)
 2. The evaluator receives `conditions` and `context` from `EvaluateFlagInput`
 3. Example condition: `{ percentage: 25, segment: "beta-users" }`
 4. The evaluator checks `context.userId` against the percentage hash
@@ -56,14 +56,8 @@ This keeps the domain pure while allowing flexible rollout strategies.
 - Immutable entities — methods return new instances
 - Tests co-located in `__tests__/` directories
 
-## Available Adapters
-
-- **Prisma**: `adapters/prisma/feature-flags/prisma-flag-store.ts` — implements IFlagStore
-- **Express**: `adapters/express/feature-flags/feature-flags.router.ts` — REST endpoints
-
 ## CLI Commands
 
 ```bash
 backcap add feature-flags       # Install the domain
-backcap bridges                 # List available bridges
 ```

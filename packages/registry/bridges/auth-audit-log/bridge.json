@@ -1,7 +1,0 @@
-{
-  "name": "auth-audit-log",
-  "sourceDomain": "auth",
-  "targetDomain": "audit-log",
-  "events": ["UserRegistered", "LoginSucceeded"],
-  "version": "1.0.0"
-}

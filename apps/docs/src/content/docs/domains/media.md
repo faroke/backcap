@@ -118,7 +118,7 @@ const fromString = MediaPurpose.from("preview"); // Result<MediaPurpose, Error>
 |---|---|---|
 | `MediaUploaded` | `UploadMedia` use case | `mediaId`, `name`, `mimeType`, `size`, `occurredAt` |
 | `MediaProcessed` | `ProcessMedia` use case | `mediaId`, `variantCount`, `occurredAt` |
-| `MediaDeleted` | — (available for bridge consumers) | `mediaId`, `occurredAt` |
+| `MediaDeleted` | — (available for event consumers) | `mediaId`, `occurredAt` |
 
 ## Application Layer
 
@@ -223,121 +223,11 @@ const mediaService: IMediaService = createMediaService({
 // getUrl(input): Promise<Result<GetMediaUrlOutput, Error>>
 ```
 
-## Adapters
-
-### media-prisma
-
-Provides `PrismaMediaRepository` which implements `IMediaRepository` with transaction support for variant sync.
-
-```bash
-npx @backcap/cli add media-prisma
-```
-
-```typescript
-import { PrismaMediaRepository } from "./adapters/prisma/media/prisma-media-repository";
-
-const mediaRepository = new PrismaMediaRepository(prisma);
-```
-
-Requires Prisma schema with `MediaAssetRecord` and `MediaVariantRecord` models:
-
-```prisma
-model MediaAssetRecord {
-  id          String               @id @default(uuid())
-  originalUrl String
-  mimeType    String
-  width       Int?
-  height      Int?
-  size        BigInt
-  uploadedAt  DateTime             @default(now())
-  variants    MediaVariantRecord[]
-}
-
-model MediaVariantRecord {
-  id           String           @id @default(uuid())
-  mediaAssetId String
-  url          String
-  width        Int
-  height       Int
-  format       String
-  purpose      String
-  mediaAsset   MediaAssetRecord @relation(fields: [mediaAssetId], references: [id])
-}
-```
-
-### media-express
-
-Provides `createMediaRouter()` with multipart upload, processing, and CDN URL endpoints.
-
-```bash
-npx @backcap/cli add media-express
-```
-
-```typescript
-import { createMediaRouter } from "./adapters/express/media/media.router";
-import multer from "multer";
-
-const upload = multer({ dest: "uploads/" });
-const router = express.Router();
-createMediaRouter(mediaService, router, upload.single("file"));
-app.use(router);
-```
-
-**Routes added:**
-
-| Method | Path | Body | Response |
-|---|---|---|---|
-| `POST` | `/media` | `multipart/form-data` | `201 { mediaId }` or error |
-| `POST` | `/media/:id/process` | `{ variants: [...] }` | `200 { mediaId, variantCount }` or error |
-| `GET` | `/media` | — | `200 { items: [...] }` |
-| `GET` | `/media/:id` | — | `200 { id, originalUrl, ... }` or `404` |
-| `GET` | `/media/:id/url` | `?purpose=thumbnail` | `200 { url }` or `404` |
-| `DELETE` | `/media/:id` | — | `200 { success }` or `404` |
-
-**HTTP error mapping:**
-
-| Domain Error | HTTP Status |
-|---|---|
-| `MediaNotFound` | `404 Not Found` |
-| `FileTooLarge` | `413 Payload Too Large` |
-| `UnsupportedFormat` | `400 Bad Request` |
-| `ProcessingFailed` | `422 Unprocessable Entity` |
-
-## Bridges
-
-### blog-media
-
-When both `blog` and `media` are installed, the `blog-media` bridge connects them:
-
-- **Event-driven:** `MediaDeleted` triggers cleanup of blog post media references (featured images, inline images)
-- **DI factory:** `createBlogMediaResolver()` provides an `IBlogMediaResolver` that wraps `IMediaService.getMediaUrl()` — use it to resolve media URLs for blog post featured images or inline content
-
-```typescript
-import { createBlogMediaResolver } from "./bridges/blog-media/blog-media.bridge.js";
-
-const resolver = createBlogMediaResolver({ getMediaUrl: mediaService });
-const url = await resolver.getMediaUrl("media-123", "thumbnail");
-```
-
-### media-files
-
-When both `media` and `files` are installed, the `media-files` bridge connects them:
-
-- **DI factory:** `createFileBackedMediaStorage()` creates an `IMediaStorage` adapter that delegates to the files domain's `IFileStorage` — raw file storage and variant persistence go through the files layer
-- **Event-driven:** `MediaUploaded` triggers `ProcessMedia` to generate variants after storage confirms success
-
-```typescript
-import { createFileBackedMediaStorage } from "./bridges/media-files/media-files.bridge.js";
-
-const mediaStorage = createFileBackedMediaStorage({ fileStorage });
-// Use mediaStorage as the IMediaStorage implementation
-```
-
 ## Distinction from Files Domain
 
 - **files** = raw upload/download/delete — no processing, no variants, no metadata enrichment
 - **media** = processing-aware — thumbnails, format conversion, dimensions, variants, CDN URLs
-- When both are installed, the `media-files` bridge delegates raw storage to files' `IFileStorage`
+- When both are installed, you can wire media's `IMediaStorage` port to delegate raw storage to files' `IFileStorage`
 
 ## File Map
 

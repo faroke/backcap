@@ -3,12 +3,11 @@ name: backcap-core
 description: >
   Backcap is a DDD domain registry and CLI for TypeScript backends. Each domain follows
   strict Clean Architecture layers: domain (entities, value objects, domain errors, domain events),
-  application (use cases, ports as interfaces, DTOs), contracts (public factory + service interface,
-  the only barrel index.ts), and adapters (framework/persistence implementations). The Result<T,E>
-  monad replaces exceptions for expected failures. Ports define interfaces; adapters implement them.
-  Bridges are cross-domain use cases that wire two or more domains together. The CLI
-  (backcap init, backcap list, backcap add, backcap bridges, backcap add bridge) scaffolds
-  domains and adapters into user projects by fetching JSON bundles from the registry.
+  application (use cases, ports as interfaces, DTOs), and contracts (public factory + service interface,
+  the only barrel index.ts). The Result<T,E>
+  monad replaces exceptions for expected failures. Ports define interfaces; infrastructure implements them.
+  The CLI (backcap init, backcap list, backcap add) scaffolds
+  domains into user projects by fetching JSON bundles from the registry.
   File naming uses kebab-case with typed suffixes. Domain has zero external imports. DI is
   constructor-injection; createXxxService factory functions in contracts/ wire the object graph.
 metadata:
@@ -31,11 +30,6 @@ A Backcap **domain** is a vertical slice of backend logic composed of four layer
 | `domain/` | Entities, value objects, domain errors, domain events | No external imports; no framework code |
 | `application/` | Use cases, port interfaces, DTOs | Imports `domain/` only |
 | `contracts/` | Public service interface + factory function | Imports `application/` ports and use cases |
-| `adapters/` | Framework and persistence implementations | Implements `application/` ports |
-
-A **bridge** is a standalone module that wires two or more domains together (e.g.
-`auth-notifications` listens to `UserRegistered` from `auth` and calls a `notifications`
-port to send a welcome email).
 
 The `shared/result.ts` file inside each domain holds the `Result<T, E>` monad used for
 typed error handling without exceptions.
@@ -62,24 +56,6 @@ domains/
       <name>.factory.ts  # createXxxService DI factory (.factory.ts)
     shared/
       result.ts          # Result<T,E> monad (copied per domain)
-
-adapters/
-  <framework>/
-    <name>/              # Implements application/ ports (.adapter.ts)
-  <orm>/
-    <name>/
-
-bridges/
-  <name>/
-    contracts/
-      index.ts           # Barrel for bridge public surface
-      <name>.contract.ts
-    domain/events/       # Re-exported or mirrored domain events
-    use-cases/           # Bridge orchestration use cases
-    dto/
-    errors/
-    shared/result.ts
-    __tests__/
 ```
 
 ## Extension Guide
@@ -105,21 +81,13 @@ bridges/
 3. Domain objects must not import from `application/` or `contracts/`.
 4. Add a typed error class in `domain/errors/<name>.error.ts` with a `static create(...)` factory.
 
-### Adding an adapter
-
-1. Create `adapters/<framework>/<domain>/<name>.adapter.ts`.
-2. Implement the port interface from `application/ports/`.
-3. Import only from `domains/<name>/application/ports/` and `domains/<name>/domain/`.
-4. Do not export from a barrel; adapters are wired by the consuming application.
-
 ## Conventions
 
 See [`references/conventions.md`](references/conventions.md) for the full conventions reference.
 
 Key rules:
 - **File naming**: kebab-case with typed suffix (`.entity.ts`, `.use-case.ts`, `.vo.ts`, etc.)
-- **`index.ts` barrel rule**: `index.ts` exists ONLY in `contracts/` and bridge `contracts/`.
-  No barrel files anywhere else.
+- **`index.ts` barrel rule**: `index.ts` exists ONLY in `contracts/`. No barrel files anywhere else.
 - **Result pattern**: use `Result<T, E>` for all expected failures. Never `throw` in use cases.
 - **Zero-dependency guarantee**: `domain/` imports nothing outside itself and `shared/result.ts`.
 - **DI pattern**: constructor injection only. `createXxxService(deps)` wires the graph in
@@ -127,16 +95,7 @@ Key rules:
 - **Test co-location**: tests live in `__tests__/` inside the layer they test, not in a top-level
   `tests/` folder.
 
-## Available Bridges
-
-| Bridge | Connects | Description |
-|---|---|---|
-| `auth-notifications` | `auth` | Listens to `UserRegistered` and sends a welcome email via an `IEmailSender` port |
-
-Install a bridge with: `npx @backcap/cli add bridge auth-notifications`
-
-See [`references/domain-index.md`](references/domain-index.md) for the full domain
-and bridge catalogue.
+See [`references/domain-index.md`](references/domain-index.md) for the full domain catalogue.
 
 ## CLI Commands
 
@@ -145,10 +104,7 @@ and bridge catalogue.
 | `npx @backcap/cli init` | Scaffold `backcap.json` config in the current project; auto-detects framework and package manager |
 | `npx @backcap/cli init --yes` | Non-interactive init; fails if framework or package manager cannot be detected |
 | `npx @backcap/cli list` | Fetch and display all available domains from the registry |
-| `npx @backcap/cli add <name>` | Install a domain (e.g. `npx @backcap/cli add auth`); detects adapters, resolves conflicts, writes files, installs npm deps |
-| `npx @backcap/cli add <name> --yes` | Non-interactive install; auto-selects detected adapters, overwrites conflicts, skips confirmations |
-| `npx @backcap/cli bridges` | List bridges that are compatible with currently installed domains |
-| `npx @backcap/cli add bridge <name>` | Install a specific bridge into the project |
+| `npx @backcap/cli add <name>` | Install a domain (e.g. `npx @backcap/cli add auth`); resolves conflicts, writes files, installs npm deps |
 
 Default registry URL: `https://faroke.github.io/backcap`
 
@@ -157,11 +113,9 @@ Config file written to `backcap.json` with default paths:
 ```json
 {
   "paths": {
-    "domains":  "domains",
-    "adapters": "adapters",
-    "bridges":  "bridges",
-    "skills":   ".claude/skills",
-    "shared":   "src/shared"
+    "domains": "domains",
+    "skills":  ".claude/skills",
+    "shared":  "src/shared"
   },
   "alias": "@domains"
 }

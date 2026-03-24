@@ -52,14 +52,8 @@ To add a custom field type (e.g., `"date"`, `"url"`):
 - Select fields require non-empty `options` array
 - Result<T, E> for all fallible operations
 
-## Available Adapters
-
-- **Prisma**: `adapters/prisma/forms/prisma-form-store.ts` — implements IFormStore
-- **Express**: `adapters/express/forms/forms.router.ts` — REST endpoints (POST forms, POST submit, GET submissions)
-
 ## CLI Commands
 
 ```bash
 backcap add forms       # Install the domain
-backcap bridges         # List available bridges
 ```

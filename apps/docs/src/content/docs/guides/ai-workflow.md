@@ -7,7 +7,7 @@ Backcap is designed to work well with AI coding assistants. The strict layer sep
 
 ## Why Backcap Works Well with AI
 
-**Predictable structure**: Every domain has the same four layers with the same naming conventions. An AI that has read `SKILL.md` once knows where every type of file belongs.
+**Predictable structure**: Every domain has the same three layers with the same naming conventions. An AI that has read `SKILL.md` once knows where every type of file belongs.
 
 **Typed error handling**: `Result<T, E>` makes failure modes explicit in the type signature. The AI can see exactly what errors a use case returns and generate correct error-handling code.
 
@@ -72,21 +72,6 @@ The AI will:
 - Implement all three methods: `findByEmail`, `findById`, `save`
 - Map between the domain `User` entity and the Drizzle schema type
 - Call `User.create().unwrap()` safely (trusting data from the database)
-
-## Generating Bridge Use Cases
-
-Bridges connect two domains. Load both relevant skill files:
-
-```
-Read backcap-core, backcap-auth, and any notifications skill.
-
-Create an auth-notifications bridge that:
-- Listens for UserRegistered events from the auth domain
-- Calls an IEmailSender port to send a welcome email
-- Returns Result<void, SendWelcomeEmailError>
-
-Model it on the existing auth-notifications bridge pattern.
-```
 
 ## Extending a Domain
 
@@ -180,7 +165,7 @@ updateEmail(newEmail: string): Result<User, InvalidEmail> {
 The Backcap documentation site publishes two files for AI consumption:
 
 - **`/llms.txt`** — a concise (300-500 word) summary of Backcap for use as a system prompt prefix
-- **`/llms-full.txt`** — a comprehensive (2000-4000 word) reference covering all domains, adapters, and architecture rules
+- **`/llms-full.txt`** — a comprehensive (2000-4000 word) reference covering all domains and architecture rules
 
 These follow the [llms.txt convention](https://llmstxt.org/) and can be fetched and embedded in AI tool configurations.
 

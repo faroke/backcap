@@ -18,8 +18,6 @@ const validConfig = {
   packageManager: "npm",
   paths: {
     domains: "domains",
-    adapters: "adapters",
-    bridges: "src/bridges",
     skills: "src/skills",
     shared: "src/shared",
   },

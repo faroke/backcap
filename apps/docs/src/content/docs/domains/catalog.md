@@ -121,31 +121,3 @@ const result = await catalog.createProduct({
 });
 ```
 
-## Bridges
-
-| Bridge | Target | Description |
-|---|---|---|
-| `catalog-cart` | cart | Dependency-injection bridge — provides `IProductPriceLookup` to validate product existence and current price when adding to cart |
-| `catalog-search` | search | `ProductPublished` → indexes product data (name, description, price, variants) in the search engine |
-
-## Adapters
-
-### Prisma
-
-- `PrismaProductRepository` — Product and ProductVariant persistence
-- `PrismaCategoryRepository` — Category persistence
-
-### Express
-
-Product and category routes:
-
-| Method | Route | Description |
-|---|---|---|
-| `POST` | `/products` | Create product |
-| `GET` | `/products` | List products |
-| `GET` | `/products/:id` | Get product |
-| `POST` | `/products/:id/publish` | Publish product |
-| `POST` | `/products/:id/variants` | Add variant |
-| `PUT` | `/products/:id/price` | Update price |
-| `POST` | `/categories` | Create category |
-| `GET` | `/categories/:id/products` | List products by category |

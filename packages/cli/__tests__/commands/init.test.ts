@@ -98,8 +98,6 @@ describe("init command integration", () => {
       packageManager: "npm",
       paths: {
         domains: "domains",
-        adapters: "adapters",
-        bridges: "bridges",
         skills: ".claude/skills",
         shared: "src/shared",
       },
@@ -357,8 +355,6 @@ describe("init path customization", () => {
     mockCustomizePaths.mockResolvedValue(true);
     mockPromptPath
       .mockResolvedValueOnce("src/domains")
-      .mockResolvedValueOnce("src/adapters")
-      .mockResolvedValueOnce("src/bridges")
       .mockResolvedValueOnce("@app");
 
     const initCommand = await import("../../src/commands/init.js");
@@ -377,8 +373,6 @@ describe("init path customization", () => {
     expect(configWriteCall).toBeDefined();
     const writtenConfig = JSON.parse(configWriteCall![1] as string);
     expect(writtenConfig.paths.domains).toBe("src/domains");
-    expect(writtenConfig.paths.adapters).toBe("src/adapters");
-    expect(writtenConfig.paths.bridges).toBe("src/bridges");
     expect(writtenConfig.alias).toBe("@app");
 
     const tsconfigWriteCall = mockWriteFile.mock.calls.find((call) =>

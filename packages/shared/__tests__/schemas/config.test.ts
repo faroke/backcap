@@ -8,8 +8,6 @@ describe("configSchema", () => {
     packageManager: "pnpm",
     paths: {
       domains: "domains",
-      adapters: "adapters",
-      bridges: "src/bridges",
       skills: "src/skills",
       shared: "src/shared",
     },

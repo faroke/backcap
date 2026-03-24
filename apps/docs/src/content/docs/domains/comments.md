@@ -140,34 +140,6 @@ import { createCommentsService, ICommentsService } from "./domains/comments/cont
 const commentsService: ICommentsService = createCommentsService({ commentRepository });
 ```
 
-## Adapters
-
-### comments-prisma
-
-Provides `PrismaCommentRepository` which implements `ICommentRepository`.
-
-```bash
-npx @backcap/cli add comments-prisma
-```
-
-### comments-express
-
-Provides `createCommentsRouter(service, router)` for HTTP access.
-
-```bash
-npx @backcap/cli add comments-express
-```
-
-| Method | Path | Body / Query | Response |
-|---|---|---|---|
-| `POST` | `/comments` | `{ content, authorId, resourceId, resourceType, parentId? }` | `201 { commentId, createdAt }` |
-| `GET` | `/comments` | `?resourceId=&resourceType=&includeDeleted=&limit=&offset=` | `200 { comments, total }` |
-| `DELETE` | `/comments/:id` | `{ requesterId }` | `200 { deletedAt }` |
-
-## Bridges
-
-- **blog-comments** — triggers `SendNotification` when `CommentPosted` fires on a blog post
-
 ## File Map
 
 ```

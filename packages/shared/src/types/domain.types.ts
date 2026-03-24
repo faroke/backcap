@@ -1,4 +1,4 @@
-export type DomainType = "domain" | "adapter" | "bridge" | "skill";
+export type DomainType = "domain" | "skill";
 
 export interface TemplateMarker {
   key: string;

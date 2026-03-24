@@ -33,8 +33,6 @@ export default defineConfig({
           items: [
             { label: "Domains", slug: "concepts/domains" },
             { label: "Skills", slug: "concepts/skills" },
-            { label: "Adapters", slug: "concepts/adapters" },
-            { label: "Bridges", slug: "concepts/bridges" },
             { label: "Architecture", slug: "concepts/architecture" },
           ],
         },
@@ -52,33 +50,7 @@ export default defineConfig({
               label: "Create a Domain",
               slug: "guides/create-domain",
             },
-            { label: "Create an Adapter", slug: "guides/create-adapter" },
             { label: "AI Workflow", slug: "guides/ai-workflow" },
-          ],
-        },
-        {
-          label: "Examples",
-          items: [
-            {
-              label: "Express Blog",
-              slug: "guides/express-blog-example",
-            },
-            {
-              label: "Fastify Blog",
-              slug: "guides/fastify-blog-example",
-            },
-            {
-              label: "Hono Blog",
-              slug: "guides/hono-blog-example",
-            },
-            {
-              label: "NestJS Blog",
-              slug: "guides/nestjs-blog-example",
-            },
-            {
-              label: "Next.js Blog",
-              slug: "guides/nextjs-blog-example",
-            },
           ],
         },
         {
@@ -105,17 +77,6 @@ export default defineConfig({
             { label: "Search", slug: "domains/search" },
             { label: "Tags", slug: "domains/tags" },
             { label: "Webhooks", slug: "domains/webhooks" },
-          ],
-        },
-        {
-          label: "Adapters",
-          items: [
-            { label: "Prisma", slug: "adapters/prisma" },
-            { label: "Express", slug: "adapters/express" },
-            { label: "Fastify", slug: "adapters/fastify" },
-            { label: "Hono", slug: "adapters/hono" },
-            { label: "NestJS", slug: "adapters/nestjs" },
-            { label: "Next.js", slug: "adapters/nextjs" },
           ],
         },
       ],

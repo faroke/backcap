@@ -140,30 +140,6 @@ import { createAnalyticsDomain, IAnalyticsService } from "./domains/analytics/co
 const analyticsService: IAnalyticsService = createAnalyticsDomain({ analyticsStore });
 ```
 
-## Adapters
-
-### analytics-prisma
-
-Provides `PrismaAnalyticsStore` which implements `IAnalyticsStore`.
-
-```bash
-npx @backcap/cli add analytics-prisma
-```
-
-### analytics-express
-
-Provides `createAnalyticsRouter(service, router)` for HTTP access.
-
-```bash
-npx @backcap/cli add analytics-express
-```
-
-| Method | Path | Body / Query | Response |
-|---|---|---|---|
-| `POST` | `/analytics/events` | `{ trackingId, name, properties?, userId?, sessionId? }` | `201 { eventId, occurredAt }` |
-| `GET` | `/analytics/events` | `?trackingId=&name=&fromDate=&toDate=&limit=&offset=` | `200 { events, total }` |
-| `GET` | `/analytics/metrics` | `?trackingId=&fromDate=&toDate=` | `200 { totalEvents, uniqueUsers, eventBreakdown }` |
-
 ## File Map
 
 ```

@@ -38,14 +38,6 @@
     "./in-memory-event-bus": {
       "import": "./dist/in-memory-event-bus.mjs",
       "types": "./dist/in-memory-event-bus.d.mts"
-    },
-    "./bridge": {
-      "import": "./dist/bridge.mjs",
-      "types": "./dist/bridge.d.mts"
-    },
-    "./types/bridge-catalog": {
-      "import": "./dist/types/bridge-catalog.types.mjs",
-      "types": "./dist/types/bridge-catalog.types.d.mts"
     }
   },
   "files": [

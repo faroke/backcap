@@ -2,8 +2,6 @@ import { z } from "zod";
 
 export const configPathsSchema = z.object({
   domains: z.string(),
-  adapters: z.string(),
-  bridges: z.string(),
   skills: z.string(),
   shared: z.string(),
 }).strict();

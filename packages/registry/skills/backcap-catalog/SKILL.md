@@ -8,8 +8,7 @@ description: >
   use cases (CreateProduct, PublishProduct, AddVariant, UpdatePrice, ListProducts, GetProduct,
   CreateCategory, ListByCategory), plus IProductRepository and ICategoryRepository port interfaces.
   Public surface is ICatalogService and createCatalogService factory in contracts/.
-  All expected failures return Result<T,E> — no thrown errors. Adapters: catalog-express (product
-  CRUD and category routes), catalog-prisma (PrismaProductRepository, PrismaCategoryRepository).
+  All expected failures return Result<T,E> — no thrown errors.
   Zero npm dependencies in domain and application.
 metadata:
   author: Backcap

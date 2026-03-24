@@ -9,7 +9,6 @@ description: >
   UpdateQuantity, GetCart, ClearCart, AbandonCart, ConvertCart), plus ICartRepository and
   IProductPriceLookup port interfaces. Public surface is ICartService and createCartService factory
   in contracts/. All expected failures return Result<T,E> — no thrown errors.
-  Adapters: cart-express (cart CRUD + lifecycle routes), cart-prisma (PrismaCartRepository).
   Zero npm dependencies in domain and application.
 metadata:
   author: Backcap

@@ -32,7 +32,7 @@ export function createBlogService(deps: BlogServiceDeps): IBlogService {
       const result = await publishPost.execute(input);
       if (result.isOk() && deps.eventBus) {
         const { event } = result.unwrap();
-        // Enrich event with full post data for bridge consumers
+        // Enrich event with full post data for event consumers
         const postResult = await getPost.execute({ postId: input.postId });
         const post = postResult.isOk() ? postResult.unwrap() : null;
         await deps.eventBus.publish("PostPublished", {

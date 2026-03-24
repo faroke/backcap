@@ -8,9 +8,8 @@ description: >
   NotificationDeliveryFailed). Application layer has SendNotification, GetNotifications, and
   MarkAsRead use cases, plus INotificationSender and INotificationRepository port interfaces.
   Public surface is INotificationsService and createNotificationsService factory in contracts/.
-  All expected failures return Result<T,E> — no thrown errors. Adapters: notifications-express
-  (router), notifications-prisma (PrismaNotificationRepository). Zero npm dependencies in domain
-  and application.
+  All expected failures return Result<T,E> — no thrown errors.
+  Zero npm dependencies in domain and application.
 metadata:
   author: Backcap
   version: 1.0.0
@@ -88,14 +87,6 @@ See [`references/domain-map.md`](references/domain-map.md) for a full file-by-fi
 | `contracts/notifications.factory.ts` | `createNotificationsService(deps: NotificationsServiceDeps): INotificationsService` | DI factory wiring use cases to port implementations |
 | `contracts/index.ts` | re-exports all of the above | The single barrel; import from here only |
 
-### Adapters
-
-| File | Export | Implements |
-|---|---|---|
-| `adapters/express/notifications/notifications.router.ts` | `createNotificationsRouter(notificationsService, router)` | `POST /notifications` → 201; `GET /notifications` → 200; `PUT /notifications/:id/read` → 200 / 404 |
-| `adapters/prisma/notifications/prisma-notification-repository.ts` | `PrismaNotificationRepository` | `INotificationRepository` backed by Prisma |
-| `adapters/prisma/notifications/notifications.schema.prisma` | — | Prisma `NotificationRecord` model fragment to merge into `schema.prisma` |
-
 ## Channel Provider Swap Guide
 
 To replace the notification sender with a custom provider:
@@ -107,17 +98,10 @@ To replace the notification sender with a custom provider:
 Adding a new channel:
 1. Update the `ChannelType` union in `domain/value-objects/notification-channel.vo.ts`
 2. Update `VALID_CHANNELS` array
-3. Implement channel-specific logic in your `INotificationSender` adapter
-
-## Available Bridges
-
-| Bridge | Description | Install |
-|---|---|---|
-| `auth-notifications` | Sends a welcome email when a user registers | `npx @backcap/cli add bridge auth-notifications` |
+3. Implement channel-specific logic in your `INotificationSender` implementation
 
 ## CLI Commands
 
 | Command | Description |
 |---|---|
-| `npx @backcap/cli add notifications` | Install the notifications domain (prompts for adapter selection) |
-| `npx @backcap/cli add notifications --yes` | Non-interactive install; auto-selects detected adapters |
+| `npx @backcap/cli add notifications` | Install the notifications domain |

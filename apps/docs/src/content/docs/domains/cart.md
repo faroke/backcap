@@ -146,24 +146,5 @@ await cart.convertCart("cart-123");
 | `ICartRepository` | Cart persistence (findById, findByUserId, save, update) |
 | `IProductPriceLookup` | Price verification at add time — prevents stale price attacks |
 
-The `IProductPriceLookup` port is satisfied by the catalog domain's contract when both are installed (via bridge).
+The `IProductPriceLookup` port is satisfied by the catalog domain's contract.
 
-## Adapters
-
-### Prisma
-
-- `PrismaCartRepository` — Cart and CartItem persistence with transaction support
-
-### Express
-
-Cart routes:
-
-| Method | Route | Description |
-|---|---|---|
-| `GET` | `/carts/:id` | Get cart |
-| `POST` | `/carts/:id/items` | Add item to cart |
-| `DELETE` | `/carts/:id/items/:variantId` | Remove item |
-| `PUT` | `/carts/:id/items/:variantId/quantity` | Update quantity |
-| `POST` | `/carts/:id/clear` | Clear all items |
-| `POST` | `/carts/:id/abandon` | Mark cart as abandoned |
-| `POST` | `/carts/:id/convert` | Mark cart as converted |

@@ -33,7 +33,7 @@ domains/queues/
 │   │   ├── process-job.dto.ts
 │   │   └── get-job-status.dto.ts
 │   ├── ports/
-│   │   ├── queue-provider.port.ts       → IQueueProvider (for adapter layer)
+│   │   ├── queue-provider.port.ts       → IQueueProvider (pluggable queue backend)
 │   │   └── job-repository.port.ts       → IJobRepository
 │   └── __tests__/
 ├── contracts/
@@ -78,6 +78,4 @@ Implement `IQueueProvider.enqueue(type, payload, scheduledAt?)` → `{ jobId }` 
 | Command | Description |
 |---------|-------------|
 | `backcap add queues` | Install queues domain |
-| `backcap add queues --yes` | Install without prompts |
 | `backcap list` | View all available domains |
-| `backcap bridges` | View compatible bridges |

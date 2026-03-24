@@ -19,7 +19,7 @@ npx @backcap/cli init
 npx @backcap/cli add auth
 ```
 
-That's it. You get a complete authentication module with entities, use cases, ports, DTOs, adapters, and an AI skill file — all wired into your project.
+That's it. You get a complete authentication module with entities, use cases, ports, DTOs, and an AI skill file — all wired into your project. You implement the adapters on the exposed ports.
 
 ---
 
@@ -28,13 +28,13 @@ That's it. You get a complete authentication module with entities, use cases, po
 Most backend starters give you a monolith to fork or a library to depend on. Backcap takes a different approach:
 
 - **Source code, not packages** — Every domain lands in your `src/` as plain TypeScript. No vendor lock-in, no black boxes.
-- **Clean Architecture by default** — Domain, Application, Contracts, Adapters. Each layer has strict import rules enforced by convention.
-- **Framework-agnostic** — Works with Express, Fastify, NestJS, Next.js, or any Node/Bun/Deno runtime. Adapters are swappable.
+- **Clean Architecture by default** — Domain, Application, Contracts. Each layer has strict import rules enforced by convention.
+- **Framework-agnostic** — Works with Express, Fastify, NestJS, Next.js, or any Node/Bun/Deno runtime. You implement adapters on the ports exposed by each domain.
 - **AI-native** — Each domain ships with a SKILL.md file that gives your AI assistant full context on the architecture, file map, and rules.
 
 ## Domains
 
-13 production-ready domains, each following the same clean architecture:
+20 production-ready domains, each following the same clean architecture:
 
 | Domain | Description |
 |---|---|
@@ -48,60 +48,44 @@ Most backend starters give you a monolith to fork or a library to depend on. Bac
 | **notifications** | Multi-channel notification dispatch |
 | **analytics** | Event tracking and aggregation |
 | **audit-log** | Immutable audit trail |
+| **billing** | Payments, subscriptions, invoicing |
+| **cart** | Shopping cart management |
+| **catalog** | Product catalog and inventory |
 | **feature-flags** | Feature toggles with targeting rules |
+| **media** | Media asset management and processing |
+| **orders** | Order processing and fulfillment |
+| **organizations** | Multi-tenant organization management |
 | **queues** | Job queues with retry and scheduling |
+| **rbac** | Role-based access control |
 | **webhooks** | Outbound webhook delivery and management |
 
 ## Architecture
 
-Every domain follows the same 4-layer structure:
+Every domain follows the same 3-layer structure:
 
 ```
-src/domains/auth/
+domains/auth/
   domain/           # Entities, value objects, errors, events — zero external imports
   application/      # Use cases, ports (interfaces), DTOs — depends only on domain
   contracts/        # Public API: factory function + service interface — the only index.ts
   shared/           # Local utilities (Result re-export, etc.)
 ```
 
-```
-src/adapters/
-  persistence/prisma/auth/    # Prisma implementation of repository ports
-  http/express/auth/          # Express routes calling the service contract
-```
-
 Key principles:
 - **`Result<T, E>`** replaces exceptions for all expected failures
-- **Ports** define interfaces; **adapters** implement them
+- **Ports** define interfaces; **you implement the adapters**
 - **DI** via constructor injection — a single `createXxxService(deps)` factory wires everything
 - **Domain has zero imports** — pure TypeScript, no frameworks, no libraries
-
-## Bridges
-
-Bridges wire domains together through domain events:
-
-| Bridge | Connects |
-|---|---|
-| `auth-audit-log` | Logs authentication events to the audit trail |
-| `auth-notifications` | Sends welcome emails on registration |
-| `blog-comments` | Attaches comments to blog posts |
-| `blog-search` | Indexes blog posts for search |
-| `blog-tags` | Adds tagging to blog posts |
-
-```bash
-npx @backcap/cli add blog-search
-```
 
 ## CLI
 
 ```bash
 npx @backcap/cli init          # Initialize a project — detects framework & package manager
 npx @backcap/cli list          # List all available domains
-npx @backcap/cli add <name>    # Scaffold a domain or bridge into your project
-npx @backcap/cli bridges       # List bridges compatible with your installed domains
+npx @backcap/cli add <name>    # Scaffold a domain into your project
 ```
 
-The CLI handles adapter detection, conflict resolution, dependency installation, and skill file placement — all interactively.
+The CLI handles conflict resolution, dependency installation, and skill file placement — all interactively.
 
 ## AI Skills
 
@@ -130,10 +114,7 @@ npx @backcap/cli init
 npx @backcap/cli add auth
 npx @backcap/cli add blog
 
-# 3. Wire them together
-npx @backcap/cli add blog-tags
-
-# 4. Implement your adapters and start building
+# 3. Implement your adapters on the exposed ports and start building
 ```
 
 ## Project Structure

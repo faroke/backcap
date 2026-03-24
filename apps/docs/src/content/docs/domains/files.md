@@ -1,6 +1,6 @@
 ---
 title: Files Domain
-description: File upload, retrieval, and deletion for TypeScript backends — domain model, use cases, ports, and adapters.
+description: File upload, retrieval, and deletion for TypeScript backends — domain model, use cases, and ports.
 ---
 
 The `files` domain provides **file upload, retrieval, and deletion** for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
@@ -153,76 +153,6 @@ const filesService: IFilesService = createFilesService({
 ```
 
 This is the only import consumers need. The internal use case classes are implementation details.
-
-## Adapters
-
-### files-prisma
-
-Provides `PrismaFileStorage` which implements `IFileStorage`.
-
-```bash
-npx @backcap/cli add files-prisma
-```
-
-```typescript
-import { PrismaFileStorage } from "./adapters/prisma/files/prisma-file-storage";
-
-const fileStorage = new PrismaFileStorage(prisma);
-```
-
-Requires a Prisma schema with a `FileRecord` model:
-
-```prisma
-model FileRecord {
-  id         String   @id @default(uuid())
-  name       String
-  path       String
-  mimeType   String
-  size       BigInt
-  uploadedAt DateTime @default(now())
-}
-```
-
-### files-express
-
-Provides `createFilesRouter()` with multipart upload support.
-
-```bash
-npx @backcap/cli add files-express
-```
-
-```typescript
-import { createFilesRouter } from "./adapters/express/files/files.router";
-
-const router = express.Router();
-createFilesRouter(filesService, router); // works without upload middleware
-app.use(router);
-```
-
-The `uploadMiddleware` parameter is optional. When provided, it handles multipart parsing on the upload route:
-
-```typescript
-import multer from "multer";
-
-const upload = multer({ dest: "uploads/" });
-createFilesRouter(filesService, router, upload.single("file"));
-```
-
-**Routes added:**
-
-| Method | Path | Body | Response |
-|---|---|---|---|
-| `POST` | `/files` | `multipart/form-data` | `201 { fileId }` or error |
-| `GET` | `/files/:id` | — | `200 { id, name, path, ... }` or `404` |
-| `DELETE` | `/files/:id` | — | `200 { success }` or `404` |
-
-**HTTP error mapping:**
-
-| Domain Error | HTTP Status |
-|---|---|
-| `FileNotFound` | `404 Not Found` |
-| `FileTooLarge` | `413 Payload Too Large` |
-| `InvalidFilePath` | `400 Bad Request` |
 
 ## File Map
 

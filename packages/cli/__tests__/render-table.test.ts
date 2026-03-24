@@ -4,7 +4,6 @@ import { renderDomainTable } from "../src/lib/render-table.js";
 const items = [
   { name: "auth", description: "Authentication domain", type: "domain", version: "1.0.0" },
   { name: "blog", description: "Blog domain with a very long description that exceeds sixty characters in total length for truncation testing purposes", type: "domain", version: "0.2.0" },
-  { name: "auth-prisma", description: "Prisma adapter", type: "adapter" },
 ];
 
 describe("renderDomainTable", () => {
@@ -14,11 +13,6 @@ describe("renderDomainTable", () => {
     expect(output).toContain("✓");
     expect(output).toContain("blog");
     expect(output).toContain("—");
-  });
-
-  it("only shows domains, not adapters", () => {
-    const output = renderDomainTable(items, new Set());
-    expect(output).not.toContain("auth-prisma");
   });
 
   it("truncates long descriptions", () => {

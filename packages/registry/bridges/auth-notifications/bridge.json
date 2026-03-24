@@ -1,7 +1,0 @@
-{
-  "name": "auth-notifications",
-  "sourceDomain": "auth",
-  "targetDomain": "notifications",
-  "events": ["UserRegistered"],
-  "version": "1.0.0"
-}

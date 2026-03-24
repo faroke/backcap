@@ -25,7 +25,7 @@ describe("promptConflictResolution", () => {
     expect(values).toEqual(["compare_and_continue", "selective", "different_path", "abort"]);
   });
 
-  it("excludes selective and different_path for bridge context", async () => {
+  it("excludes specified options", async () => {
     mockSelect.mockResolvedValue("abort");
     await promptConflictResolution(["selective", "different_path"]);
 

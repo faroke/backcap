@@ -67,18 +67,6 @@ domains/billing/
 └── shared/result.ts
 ```
 
-## Adapters
-
-```
-adapters/prisma/billing/
-├── customer-repository.adapter.ts     → PrismaCustomerRepository
-├── subscription-repository.adapter.ts → PrismaSubscriptionRepository
-└── invoice-repository.adapter.ts      → PrismaInvoiceRepository
-
-adapters/express/billing/
-└── billing.router.ts → createBillingRouter(billingService, router)
-```
-
 ## Key Design Decisions
 
 - **Money VO**: Integer cents arithmetic to avoid floating-point issues. All amounts stored as smallest currency unit.

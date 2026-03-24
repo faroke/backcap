@@ -1,6 +1,6 @@
 ---
 title: Feature Flags Domain
-description: Toggle features per context without deploys — domain model, use cases, ports, and adapters for TypeScript backends.
+description: Toggle features per context without deploys — domain model, use cases, and ports for TypeScript backends.
 ---
 
 The `feature-flags` domain provides **controlled feature rollouts** with key validation, toggle tracking, and optional contextual conditions for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
@@ -121,22 +121,6 @@ interface IFlagStore {
   findAll(): Promise<FeatureFlag[]>;
 }
 ```
-
-## Adapters
-
-### Prisma
-
-`PrismaFlagStore` implements `IFlagStore` with a `FeatureFlagRecord` model.
-
-### Express
-
-`createFeatureFlagsRouter(service, router)` exposes:
-
-| Method | Route | Status | Description |
-|---|---|---|---|
-| `GET` | `/flags/:key/evaluate` | 200 / 404 | Evaluate a flag (optional `context` query param as JSON) |
-| `POST` | `/flags` | 201 / 400 | Create a new flag |
-| `PUT` | `/flags/:key/toggle` | 200 / 404 / 409 | Toggle a flag on/off |
 
 ## Extending Conditions
 

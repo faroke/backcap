@@ -3,7 +3,6 @@ import { ofetch } from "ofetch";
 import { normalize, join } from "pathe";
 import { registryItemSchema } from "@backcap/shared/schemas/registry-item";
 import { configExists, loadConfig } from "../config/loader.js";
-import { detectAdapters } from "../lib/detect-adapters.js";
 import { detectPM } from "../lib/detect-pm.js";
 import { writeDomainFiles } from "../lib/write-domain.js";
 import { installDeps } from "../lib/install-deps.js";
@@ -14,7 +13,6 @@ import { resolveSkillFiles } from "../installer/skill-resolver.js";
 import { installSkill, extractSkillFiles, resolveSkillsPath } from "../installer/skill-installer.js";
 import { reportInstallResult } from "../installer/install-reporter.js";
 import {
-  promptAdapterSelection,
   promptInstallConfirm,
   promptConflictResolution,
   promptNewPath,
@@ -24,21 +22,19 @@ import { intro, outro, fail } from "../ui/prompts.js";
 import { log } from "../utils/logger.js";
 import { ConflictDetectionError } from "../errors/conflict-detection.error.js";
 import { FileWriteError } from "../installer/file-writer.js";
-import { MissingDependencyError } from "../errors/bridge.error.js";
-import { detectInstalledDomains } from "../detection/installed.js";
 
 const DEFAULT_REGISTRY_URL = "https://faroke.github.io/backcap";
 
 export default defineCommand({
   meta: {
     name: "add",
-    description: "Install a domain or bridge from the registry",
+    description: "Install a domain from the registry",
   },
   args: {
     domain: {
       type: "positional",
       required: true,
-      description: "Domain or bridge name to install",
+      description: "Domain name to install",
     },
     yes: {
       type: "boolean",
@@ -49,7 +45,7 @@ export default defineCommand({
   },
   async run({ args }) {
     const cwd = process.cwd();
-    const itemName = args.domain;
+    const domainName = args.domain;
     intro();
 
     // Load config
@@ -66,25 +62,16 @@ export default defineCommand({
 
     const config = configResult.unwrap();
 
-    // Fetch item JSON — try domain path first, then bridges
-    log.info(`Fetching ${itemName}...`);
+    // Fetch item JSON
+    log.info(`Fetching ${domainName}...`);
     let itemData: unknown;
-    let fetchedFromBridges = false;
     try {
-      itemData = await ofetch(`${DEFAULT_REGISTRY_URL}/dist/${itemName}.json`, {
+      itemData = await ofetch(`${DEFAULT_REGISTRY_URL}/dist/${domainName}.json`, {
         timeout: 5000,
       });
     } catch {
-      // Try bridges path
-      try {
-        itemData = await ofetch(`${DEFAULT_REGISTRY_URL}/dist/bridges/${itemName}.json`, {
-          timeout: 5000,
-        });
-        fetchedFromBridges = true;
-      } catch {
-        fail(`Could not fetch "${itemName}" from registry.`);
-        return;
-      }
+      fail(`Could not fetch "${domainName}" from registry.`);
+      return;
     }
 
     const parsed = registryItemSchema.safeParse(itemData);
@@ -95,34 +82,9 @@ export default defineCommand({
 
     const item = parsed.data;
     const itemVersion = (item as Record<string, unknown>).version as string | undefined;
-    const itemType = item.type;
-
-    // Route to bridge installation if type is "bridge"
-    if (itemType === "bridge" || fetchedFromBridges) {
-      await installBridge(cwd, config, item, itemVersion, args.yes);
-      return;
-    }
-
-    // --- Domain installation flow ---
-    const domainName = itemName;
 
     // Resolve skill files from domain JSON
     const skillFiles = resolveSkillFiles(item as { files?: Array<{ path: string; content?: string }>; skills?: string[] });
-
-    // Detect adapters from project dependencies
-    const availableAdapters = await detectAdapters(cwd, domainName);
-    let selectedAdapters: string[] = [];
-
-    if (availableAdapters.length > 0) {
-      if (args.yes) {
-        selectedAdapters = availableAdapters.filter((a) => a.detected).map((a) => a.name);
-      } else {
-        selectedAdapters = await promptAdapterSelection(
-          availableAdapters.map((a) => ({ name: a.name, category: a.category })),
-          availableAdapters.filter((a) => a.detected).map((a) => a.name),
-        );
-      }
-    }
 
     const files = item.files as Array<{ path: string; content?: string }>;
     const filesToWrite = files
@@ -228,34 +190,6 @@ export default defineCommand({
       log.success(`Domain files written to ${capRoot}`);
     }
 
-    // Fetch and write adapter files (always, regardless of selective install)
-    for (const adapterName of selectedAdapters) {
-      log.info(`Fetching adapter ${adapterName}...`);
-      try {
-        const adapterData = await ofetch(`${DEFAULT_REGISTRY_URL}/dist/${adapterName}.json`, {
-          timeout: 5000,
-        });
-        const adapterParsed = registryItemSchema.safeParse(adapterData);
-        if (!adapterParsed.success) {
-          log.warn(`Invalid adapter data for "${adapterName}", skipping.`);
-          continue;
-        }
-
-        const adapterItem = adapterParsed.data;
-        const adapterFiles = (adapterItem.files as Array<{ path: string; content?: string }>)
-          .filter((f): f is { path: string; content: string } => typeof f.content === "string");
-
-        const adapterType = adapterName.replace(`${domainName}-`, "");
-        const category = adapterType === "prisma" ? "persistence" : "http";
-        const adapterRoot = normalize(join(cwd, config.paths.adapters, category, adapterType, domainName));
-
-        await writeDomainFiles(adapterFiles, { domainRoot: adapterRoot });
-        log.success(`Adapter files written to ${adapterRoot}`);
-      } catch {
-        log.warn(`Could not fetch adapter "${adapterName}", skipping.`);
-      }
-    }
-
     // Install skill files
     const skillsPath = normalize(join(cwd, resolveSkillsPath(config)));
     const capSkillFiles = extractSkillFiles(files);
@@ -279,8 +213,6 @@ export default defineCommand({
 
       const templateValues = {
         domains_path: config.paths.domains,
-        adapters_path: config.paths.adapters,
-        bridges_path: config.paths.bridges,
         skills_path: config.paths.skills,
         shared_config_path: config.paths.shared ?? "src/shared",
       };
@@ -317,113 +249,13 @@ export default defineCommand({
         `${domainName} v${version} installed successfully!`,
         "",
         `  Domain: ${capRoot}`,
+        "",
+        "  Next steps:",
+        `  1. Review the installed files in ${config.paths.domains}/${domainName}/`,
+        "  2. Implement your adapters on the exposed ports",
+        "  3. Run the test suite to verify: npx vitest run",
       ];
-      if (selectedAdapters.length > 0) {
-        lines.push(`  Adapters:   ${selectedAdapters.join(", ")}`);
-      }
-      lines.push("", "  Next steps:");
-      lines.push(`  1. Review the installed files in ${config.paths.domains}/${domainName}/`);
-      lines.push("  2. Run the test suite to verify: npx vitest run");
-      lines.push("  3. Check available bridges: backcap bridges");
       outro(lines.join("\n"));
     }
   },
 });
-
-// --- Bridge installation flow ---
-async function installBridge(
-  cwd: string,
-  config: { paths: { domains: string; adapters: string; bridges: string; skills: string; shared?: string } },
-  item: { name: string; type: string; files: Array<Record<string, unknown>>; dependencies?: Record<string, string> | string[] },
-  itemVersion: string | undefined,
-  yes = false,
-): Promise<void> {
-  const bridgeName = item.name;
-  const version = itemVersion ?? "0.1.0";
-
-  // Validate dependencies — all required domains must exist on disk
-  const requiredDeps = Array.isArray(item.dependencies)
-    ? item.dependencies
-    : item.dependencies ? Object.keys(item.dependencies) : [];
-
-  if (requiredDeps.length > 0) {
-    const domainsPath = join(cwd, config.paths.domains);
-    const installedDomains = await detectInstalledDomains(domainsPath);
-    const installedDomainSet = new Set(installedDomains);
-    const missing = requiredDeps.filter((dep) => !installedDomainSet.has(dep));
-
-    if (missing.length > 0) {
-      const err = new MissingDependencyError(missing);
-      fail(`${err.message}\n${err.suggestion}`);
-      return;
-    }
-  }
-
-  // Extract files to write
-  const files = item.files as Array<{ path: string; content?: string }>;
-  const filesToWrite = files
-    .filter((f): f is { path: string; content: string } => typeof f.content === "string");
-
-  const bridgeRoot = normalize(join(cwd, config.paths.bridges, bridgeName));
-
-  // Conflict detection
-  const incomingFiles = filesToWrite.map((f) => ({
-    relativePath: f.path,
-    content: f.content,
-  }));
-
-  try {
-    const report = await detectConflicts(bridgeRoot, incomingFiles);
-
-    if (report.files.every((f) => f.status === "identical")) {
-      log.info("All bridge files are identical. No changes needed.");
-      outro("Nothing to update.");
-      return;
-    }
-
-    if (report.hasConflicts) {
-      renderConflictSummary(report);
-      const action = yes ? "compare_and_continue" : await promptConflictResolution(["selective", "different_path"]);
-      if (action === "abort") {
-        outro("Installation cancelled. No files were written.");
-        return;
-      }
-      if (action === "compare_and_continue") {
-        renderDetailedDiffs(report);
-      }
-    }
-  } catch (err) {
-    if (err instanceof ConflictDetectionError) {
-      fail(`Conflict detection failed for ${err.filePath}: ${err.message}\n${err.suggestion}`);
-      return;
-    }
-    throw err;
-  }
-
-  // Confirm installation
-  if (!yes) {
-    const confirmed = await promptInstallConfirm(bridgeName);
-    if (!confirmed) {
-      outro("Installation cancelled.");
-      return;
-    }
-  }
-
-  // Write bridge files
-  await writeDomainFiles(filesToWrite, { domainRoot: bridgeRoot });
-  log.success(`Bridge files written to ${bridgeRoot}`);
-
-  // Success message
-  const lines = [
-    `Bridge ${bridgeName} v${version} installed successfully!`,
-    "",
-    `  Bridge: ${bridgeRoot}`,
-    `  Connects: ${requiredDeps.join(" + ")}`,
-    "",
-    "  Next steps:",
-    `  1. Review the bridge files in ${config.paths.bridges}/${bridgeName}/`,
-    "  2. Wire the bridge in your application entry point",
-    "  3. Run the test suite: npx vitest run",
-  ];
-  outro(lines.join("\n"));
-}

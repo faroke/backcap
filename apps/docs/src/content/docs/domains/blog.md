@@ -155,47 +155,6 @@ export interface IPostRepository {
 }
 ```
 
-## Adapters
-
-### blog-prisma
-
-Provides `PrismaPostRepository` which implements `IPostRepository`.
-
-```bash
-npx @backcap/cli add blog-prisma
-```
-
-```typescript
-import { PrismaPostRepository } from "./adapters/prisma/blog/post-repository.adapter";
-
-const postRepository = new PrismaPostRepository(prisma);
-```
-
-### blog-express
-
-Provides `createBlogRouter(service, router)` for HTTP access.
-
-```bash
-npx @backcap/cli add blog-express
-```
-
-```typescript
-import { createBlogRouter } from "./adapters/express/blog/blog.router";
-
-const router = express.Router();
-createBlogRouter(blogService, router);
-app.use(router);
-```
-
-**Routes added:**
-
-| Method | Path | Body | Response |
-|---|---|---|---|
-| `POST` | `/posts` | `{ title, content, authorId, slug? }` | `201 { postId, slug }` or error |
-| `PUT` | `/posts/:id/publish` | — | `200 { postId, slug, publishedAt }` or error |
-| `GET` | `/posts/:id` | — | `200 { id, title, ... }` or `404` |
-| `GET` | `/posts` | — | `200 { posts }` |
-
 ## Public API (contracts/)
 
 ```typescript
@@ -213,27 +172,7 @@ const blogService: IBlogService = createBlogService({
 // listPosts(input): Promise<Result<ListPostsOutput, Error>>
 ```
 
-The `eventBus` dependency is optional. When provided, the factory automatically publishes `PostCreated` and `PostPublished` domain events after successful operations. This enables bridges (like `blog-search`) to react to blog events without manual wiring.
-
-## Bridges
-
-### blog-search
-
-Indexes published posts into the search domain when `PostPublished` fires.
-
-```bash
-npx @backcap/cli add blog-search
-```
-
-**Requires**: `blog` and `search` domains installed.
-
-### blog-comments
-
-Notifies post authors when a comment is posted on their post.
-
-### blog-tags
-
-Associates tags with posts when they are published.
+The `eventBus` dependency is optional. When provided, the factory automatically publishes `PostCreated` and `PostPublished` domain events after successful operations. This enables event consumers to react to blog events without manual wiring.
 
 ## File Map
 

@@ -14,8 +14,6 @@ The `backcap.json` file is created by `backcap init` at the root of your project
   "alias": "@domains",
   "paths": {
     "domains": "domains",
-    "adapters": "adapters",
-    "bridges": "bridges",
     "skills": ".claude/skills",
     "shared": "src/shared"
   }
@@ -26,7 +24,7 @@ The `backcap.json` file is created by `backcap init` at the root of your project
 
 ### `framework`
 
-The backend framework for your project. Used to select the right adapters when running `backcap add`.
+The backend framework for your project. Recorded for reference during `backcap add`.
 
 | Value | Detected from |
 |-------|---------------|
@@ -86,10 +84,8 @@ Controls where the CLI writes files when you run `backcap add`. All paths are re
 | Field | Default | Description |
 |-------|---------|-------------|
 | `paths.domains` | `"domains"` | Domain source files — entities, use cases, contracts, value objects |
-| `paths.adapters` | `"adapters"` | Adapter implementations — Express routers, Prisma repositories, etc. |
-| `paths.bridges` | `"bridges"` | Bridge files — event-driven connections between domains |
 | `paths.skills` | `".claude/skills"` | AI agent skill files (SKILL.md and references) |
-| `paths.shared` | `"src/shared"` | Shared utilities — `Result` type, event bus port, base bridge class |
+| `paths.shared` | `"src/shared"` | Shared utilities — `Result` type and event bus port |
 
 #### Customizing paths
 
@@ -99,8 +95,6 @@ You can edit `backcap.json` directly after init:
 {
   "paths": {
     "domains": "src/domains",
-    "adapters": "src/adapters",
-    "bridges": "src/bridges",
     "skills": ".claude/skills",
     "shared": "src/shared"
   }

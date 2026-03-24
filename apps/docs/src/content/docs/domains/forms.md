@@ -134,30 +134,6 @@ import { createFormsService, IFormsService } from "./domains/forms/contracts";
 const formsService: IFormsService = createFormsService({ formStore });
 ```
 
-## Adapters
-
-### forms-prisma
-
-Provides `PrismaFormStore` which implements `IFormStore`.
-
-```bash
-npx @backcap/cli add forms-prisma
-```
-
-### forms-express
-
-Provides `createFormsRouter(service, router)` for HTTP access.
-
-```bash
-npx @backcap/cli add forms-express
-```
-
-| Method | Path | Body / Query | Response |
-|---|---|---|---|
-| `POST` | `/forms` | `{ name, fields }` | `201 { formId, createdAt }` |
-| `POST` | `/forms/:id/submit` | `{ ...fieldData }` | `201 { submissionId, submittedAt }` |
-| `GET` | `/forms/:id/submissions` | `?limit=&offset=` | `200 { submissions, total }` |
-
 ## File Map
 
 ```

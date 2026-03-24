@@ -140,25 +140,6 @@ export function createAuthService(deps: AuthServiceDeps): IAuthService {
 
 Consumers of the domain only need to know about `IAuthService` and `createAuthService`. The internal use case classes are an implementation detail.
 
-### 4. adapters/
-
-Adapters live **outside the domain directory** in a separate `src/adapters/` tree. An adapter implements a port interface using a specific technology.
-
-```
-src/adapters/
-  persistence/
-    prisma/
-      auth/
-        user-repository.adapter.ts   # PrismaUserRepository implements IUserRepository
-  http/
-    express/
-      auth/
-        auth.router.ts               # createAuthRouter() wires IAuthService to HTTP
-        auth.middleware.ts           # Bearer token middleware
-```
-
-**Import rule**: Persistence adapters import from `application/` ports (for the interface) and `domain/` entities (for type mapping). They must not import from `contracts/`. HTTP adapters import from `contracts/` (for the public service interface) and `domain/` errors (for error mapping).
-
 ## The Result Pattern
 
 Backcap uses a `Result<T, E>` monad for all expected failure conditions. Throwing errors is reserved for truly unexpected situations (programmer errors, environmental failures).
@@ -212,11 +193,11 @@ Backcap uses kebab-case with typed suffixes for all files:
 | `.dto.ts` | `register-input.dto.ts` | Data transfer object |
 | `.contract.ts` | `auth.contract.ts` | Public service interface |
 | `.factory.ts` | `auth.factory.ts` | Factory function |
-| `.adapter.ts` | `user-repository.adapter.ts` | Port implementation |
+| `.adapter.ts` | `user-repository.adapter.ts` | Port implementation (you provide this) |
 
 ## Dependency Injection
 
-Backcap uses constructor injection throughout. Dependencies flow inward from the adapters layer through the factory in contracts, down into the use cases in application. No IoC container is required.
+Backcap uses constructor injection throughout. Dependencies flow inward from your adapter implementations through the factory in contracts, down into the use cases in application. No IoC container is required.
 
 ```typescript
 // All wiring happens in one place

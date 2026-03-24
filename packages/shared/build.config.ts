@@ -11,8 +11,6 @@ export default defineBuildConfig({
     "src/result",
     "src/event-bus.port",
     "src/in-memory-event-bus",
-    "src/bridge",
-    "src/types/bridge-catalog.types",
   ],
   declaration: true,
   rollup: {

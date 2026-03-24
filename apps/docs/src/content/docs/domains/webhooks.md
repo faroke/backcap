@@ -1,6 +1,6 @@
 ---
 title: Webhooks Domain
-description: Outbound HTTP event delivery with URL validation, SSRF protection, and delivery tracking for TypeScript backends — domain model, use cases, ports, and adapters.
+description: Outbound HTTP event delivery with URL validation, SSRF protection, and delivery tracking for TypeScript backends — domain model, use cases, and ports.
 ---
 
 The `webhooks` domain provides **outbound HTTP event delivery** with URL validation, SSRF protection, and delivery tracking for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
@@ -184,69 +184,6 @@ const webhooksService: IWebhooksService = createWebhooksDomain({
 ```
 
 This is the only import consumers need. The internal use case classes are implementation details.
-
-## Adapters
-
-### webhooks-prisma
-
-Provides `PrismaWebhookRepository` which implements `IWebhookRepository`.
-
-```bash
-npx @backcap/cli add webhooks-prisma
-```
-
-```typescript
-import { PrismaWebhookRepository } from "./adapters/prisma/webhooks/prisma-webhook-repository";
-
-const webhookRepository = new PrismaWebhookRepository(prisma);
-```
-
-Requires a Prisma schema with a `WebhookRecord` model:
-
-```prisma
-model WebhookRecord {
-  id        String   @id @default(uuid())
-  url       String
-  events    Json
-  secret    String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-
-  @@map("webhooks")
-}
-```
-
-### webhooks-express
-
-Provides `createWebhooksRouter()` for HTTP access.
-
-```bash
-npx @backcap/cli add webhooks-express
-```
-
-```typescript
-import { createWebhooksRouter } from "./adapters/express/webhooks/webhooks.router";
-
-const router = express.Router();
-createWebhooksRouter(webhooksService, router);
-app.use(router);
-```
-
-**Routes added:**
-
-| Method | Path | Body / Query | Response |
-|---|---|---|---|
-| `POST` | `/webhooks` | `{ url, events, secret }` | `201 { webhookId, createdAt }` or error |
-| `POST` | `/webhooks/:id/trigger` | `{ eventType, payload }` | `200 { deliveredAt, statusCode }` or error |
-| `GET` | `/webhooks` | `?isActive=true&limit=10&offset=0` | `200 { webhooks, total }` or error |
-
-**HTTP error mapping:**
-
-| Domain Error | HTTP Status |
-|---|---|
-| `WebhookNotFound` | `404 Not Found` |
-| `InvalidWebhookUrl` | `400 Bad Request` |
-| `WebhookDeliveryFailed` | `502 Bad Gateway` |
 
 ## File Map
 

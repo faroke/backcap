@@ -1,6 +1,6 @@
 ---
 title: Notifications Domain
-description: Multi-channel notification delivery (email, SMS, push) for TypeScript backends — domain model, use cases, ports, and adapters.
+description: Multi-channel notification delivery (email, SMS, push) for TypeScript backends — domain model, use cases, and ports.
 ---
 
 The `notifications` domain provides **multi-channel notification delivery** (email, SMS, push) for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
@@ -177,81 +177,6 @@ const notificationsService: INotificationsService = createNotificationsService({
 ```
 
 This is the only import consumers need. The internal use case classes are implementation details.
-
-## Adapters
-
-### notifications-prisma
-
-Provides `PrismaNotificationRepository` which implements `INotificationRepository`.
-
-```bash
-npx @backcap/cli add notifications-prisma
-```
-
-```typescript
-import { PrismaNotificationRepository } from "./adapters/prisma/notifications/prisma-notification-repository";
-
-const notificationRepository = new PrismaNotificationRepository(prisma);
-```
-
-Requires a Prisma schema with a `NotificationRecord` model:
-
-```prisma
-model NotificationRecord {
-  id        String    @id @default(uuid())
-  channel   String
-  recipient String
-  subject   String
-  body      String
-  status    String    @default("pending")
-  sentAt    DateTime?
-
-  @@index([recipient])
-}
-```
-
-### notifications-express
-
-Provides `createNotificationsRouter()` for HTTP access.
-
-```bash
-npx @backcap/cli add notifications-express
-```
-
-```typescript
-import { createNotificationsRouter } from "./adapters/express/notifications/notifications.router";
-
-const router = express.Router();
-createNotificationsRouter(notificationsService, router);
-app.use(router);
-```
-
-**Routes added:**
-
-| Method | Path | Body / Query | Response |
-|---|---|---|---|
-| `POST` | `/notifications` | `{ channel, recipient, subject, body }` | `201 { notificationId }` or error |
-| `GET` | `/notifications` | `?recipient=...` (required) | `200 { notifications }` or `400` |
-| `PUT` | `/notifications/:id/read` | — | `200 { success }` or `404` |
-
-**HTTP error mapping:**
-
-| Domain Error | HTTP Status |
-|---|---|
-| `NotificationNotFound` | `404 Not Found` |
-| `InvalidChannel` | `400 Bad Request` |
-
-## Bridges
-
-### auth-notifications
-
-Sends a welcome email when a new user registers.
-
-```bash
-npx @backcap/cli add auth-notifications
-```
-
-See the [auth-notifications bridge](/backcap/concepts/bridges#the-auth-notifications-bridge) documentation for wiring instructions.
 
 ## File Map
 

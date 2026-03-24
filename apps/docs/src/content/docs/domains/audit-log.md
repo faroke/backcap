@@ -3,7 +3,7 @@ title: Audit Log Domain
 description: Tamper-evident activity tracking with append-only design, filtering, and pagination for TypeScript backends.
 ---
 
-The `audit-log` domain provides a **tamper-evident record of all significant actions** with validated action formats, rich filtering, and pagination for TypeScript backends. It enforces append-only design at every layer — domain, port, adapter, and HTTP.
+The `audit-log` domain provides a **tamper-evident record of all significant actions** with validated action formats, rich filtering, and pagination for TypeScript backends. It enforces append-only design at every layer — domain, application, and contracts.
 
 ## Install
 
@@ -130,35 +130,6 @@ interface AuditFilters {
   offset?: number;
 }
 ```
-
-## Adapters
-
-### Prisma
-
-`PrismaAuditStore` implements `IAuditStore` with an `AuditEntryRecord` model. Includes composite indexes on `(actor, timestamp)`, `(action, timestamp)`, `resource`, and `timestamp` for efficient queries.
-
-### Express
-
-`createAuditLogRouter(service, router)` exposes:
-
-| Method | Route | Status | Description |
-|---|---|---|---|
-| `POST` | `/audit` | 201 / 400 | Record a new audit entry |
-| `GET` | `/audit` | 200 / 500 | Query audit entries with filters |
-
-No `DELETE` or `PUT` routes — audit logs are read-only via HTTP.
-
-## Bridges
-
-### auth-audit-log
-
-Records audit entries for authentication events. When `UserRegistered` fires, it records a `USER.REGISTERED` action. When `LoginSucceeded` fires, it records a `USER.LOGIN` action.
-
-```bash
-npx @backcap/cli add auth-audit-log
-```
-
-**Requires**: auth, audit-log
 
 ## Retention Policies
 

@@ -43,8 +43,6 @@ function normalizePaths(config: BackcapConfig): BackcapConfig {
     ...config,
     paths: {
       domains: normalize(config.paths.domains),
-      adapters: normalize(config.paths.adapters),
-      bridges: normalize(config.paths.bridges),
       skills: normalize(config.paths.skills),
       shared: normalize(config.paths.shared),
     },

@@ -3,9 +3,8 @@ name: backcap-rbac
 description: >
   Role-Based Access Control (RBAC) domain for backcap registry.
   Provides domain entities for Roles and Permissions, value objects for
-  PermissionAction and ResourceType, use cases for role management and
-  permission checking, Prisma adapter for persistence, and Express
-  middleware for route-level authorization via requirePermission().
+  PermissionAction and ResourceType, and use cases for role management and
+  permission checking.
 metadata:
   author: backcap
   version: 1.0.0
@@ -82,24 +81,6 @@ See [references/domain-map.md](references/domain-map.md) for complete file-by-fi
 | IAuthorizationService        | `contracts/rbac.contract.ts`     | Public interface for RBAC operations                |
 | createAuthorizationService   | `contracts/rbac.factory.ts`      | Factory wiring use cases to service interface       |
 | AuthorizationServiceDeps     | `contracts/rbac.factory.ts`      | Dependency type for factory                         |
-
-## Adapters
-
-| Adapter                  | File                                                     | Description                              |
-| ------------------------ | -------------------------------------------------------- | ---------------------------------------- |
-| PrismaRoleRepository     | `adapters/prisma/rbac/prisma-role-repository.adapter.ts` | Prisma implementation of IRoleRepository |
-| rbac.schema.prisma       | `adapters/prisma/rbac/rbac.schema.prisma`                | Prisma schema fragment (Role, Permission, UserRole) |
-| createRbacRouter         | `adapters/express/rbac/rbac.router.ts`                   | Express CRUD routes for roles            |
-| requirePermission        | `adapters/express/rbac/rbac.middleware.ts`                | Express middleware: `requirePermission(service, 'posts', 'create')` |
-
-## Bridges
-
-See [references/bridges.md](references/bridges.md) for detailed bridge documentation.
-
-| Bridge | Source | Target | Events |
-|---|---|---|---|
-| `auth-rbac` | auth | rbac | UserRegistered |
-| `rbac-organizations` | organizations | rbac | MemberJoined |
 
 ## Extension Guide
 

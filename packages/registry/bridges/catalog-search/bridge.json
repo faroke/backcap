@@ -1,7 +1,0 @@
-{
-  "name": "catalog-search",
-  "sourceDomain": "catalog",
-  "targetDomain": "search",
-  "events": ["ProductPublished"],
-  "version": "1.0.0"
-}

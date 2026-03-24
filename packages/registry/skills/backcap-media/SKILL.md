@@ -10,9 +10,7 @@ description: >
   GetMedia, ListMedia, DeleteMedia, and GetMediaUrl use cases, plus IMediaRepository,
   IMediaProcessor, and IMediaStorage port interfaces. Public surface is IMediaService and
   createMediaService factory in contracts/. All expected failures return Result<T,E> — no thrown
-  errors. Adapters: media-express (router with multipart upload + processing + serving routes),
-  media-prisma (PrismaMediaRepository with MediaAssetRecord + MediaVariantRecord). Zero npm
-  dependencies in domain and application.
+  errors. Zero npm dependencies in domain and application.
 metadata:
   author: Backcap
   version: 1.0.0
@@ -104,30 +102,13 @@ For Backcap-wide architecture rules, naming conventions, and the Result pattern,
 | `contracts/media.factory.ts` | `createMediaService(deps: MediaServiceDeps): IMediaService` | DI factory wiring use cases to port implementations |
 | `contracts/index.ts` | re-exports all of the above | The single barrel; import from here only |
 
-### Adapters
-
-| File | Export | Implements |
-|---|---|---|
-| `adapters/express/media/media.router.ts` | `createMediaRouter(mediaService, router, uploadMiddleware?)` | `POST /media` (multipart) -> 201/413/400; `POST /media/:id/process` -> 200/404/422; `GET /media` -> 200; `GET /media/:id` -> 200/404; `GET /media/:id/url` -> 200/404; `DELETE /media/:id` -> 200/404 |
-| `adapters/prisma/media/prisma-media-repository.ts` | `PrismaMediaRepository` | `IMediaRepository` backed by Prisma |
-| `adapters/prisma/media/media.schema.prisma` | — | Prisma `MediaAssetRecord` + `MediaVariantRecord` model fragments to merge into `schema.prisma` |
-
-## Bridges
-
-| Bridge | Source | Target | Events | DI Exports |
-|---|---|---|---|---|
-| `blog-media` | media | blog | `MediaDeleted` → cleanup blog post media refs | `createBlogMediaResolver(deps): IBlogMediaResolver` — resolves media URLs for blog posts |
-| `media-files` | media | files | `MediaUploaded` → triggers `ProcessMedia` | `createFileBackedMediaStorage(deps): IMediaStorageAdapter` — wraps `IFileStorage` as `IMediaStorage` |
-
 ## Distinction from `files` Domain
 
 - `files` = raw upload/download/delete (no processing, no variants, no metadata)
 - `media` = processing-aware (thumbnails, format conversion, dimensions, variants, CDN URLs)
-- When both are installed, `media-files` bridge delegates raw storage to files' `IFileStorage`
 
 ## CLI Commands
 
 | Command | Description |
 |---|---|
-| `npx @backcap/cli add media` | Install the media domain (prompts for adapter selection) |
-| `npx @backcap/cli add media --yes` | Non-interactive install; auto-selects detected adapters |
+| `npx @backcap/cli add media` | Install the media domain |

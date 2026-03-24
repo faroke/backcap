@@ -3,11 +3,11 @@ title: Skills
 description: Agent Skills — machine-readable documentation for AI-assisted development.
 ---
 
-Backcap **Skills** are machine-readable documentation files that make each domain and adapter understandable to AI coding assistants. A skill is a Markdown file with structured frontmatter that describes the module's architecture, contracts, and usage rules in a form optimized for language models.
+Backcap **Skills** are machine-readable documentation files that make each domain understandable to AI coding assistants. A skill is a Markdown file with structured frontmatter that describes the module's architecture, contracts, and usage rules in a form optimized for language models.
 
 ## What is a Skill?
 
-A skill is a `SKILL.md` file inside a domain or adapter directory. It contains:
+A skill is a `SKILL.md` file for a domain. It contains:
 
 - A YAML frontmatter block with a name, description, and metadata
 - A prose explanation of the module's purpose and structure
@@ -38,10 +38,9 @@ name: backcap-core
 description: >
   Backcap is a DDD domain registry and CLI for TypeScript backends. Each domain follows
   strict Clean Architecture layers: domain (entities, value objects, domain errors, domain events),
-  application (use cases, ports as interfaces, DTOs), contracts (public factory + service interface,
-  the only barrel index.ts), and adapters (framework/persistence implementations). The Result<T,E>
-  monad replaces exceptions for expected failures. Ports define interfaces; adapters implement them.
-  Bridges are cross-domain use cases that wire two or more domains together.
+  application (use cases, ports as interfaces, DTOs), and contracts (public factory + service interface,
+  the only barrel index.ts). The Result<T,E> monad replaces exceptions for expected failures.
+  Ports define interfaces that you implement with your own adapters.
 metadata:
   author: Backcap
   version: 1.0.0
@@ -50,10 +49,9 @@ metadata:
 
 AI tools that load the `backcap-core` skill understand:
 
-- The four-layer architecture and its import rules
+- The three-layer architecture and its import rules
 - The `Result<T, E>` monad and when to use it vs. throwing
 - File naming conventions (`.entity.ts`, `.vo.ts`, `.port.ts`, etc.)
-- The role of bridges and adapters
 - How the CLI commands work
 
 ## The backcap-auth Skill
@@ -69,15 +67,15 @@ description: >
   (InvalidEmail, InvalidCredentials, UserNotFound, UserAlreadyExists). Application layer has
   RegisterUser and LoginUser use cases, plus IUserRepository, IPasswordHasher, and ITokenService
   port interfaces. Public surface is IAuthService and createAuthService factory in contracts/.
-  All expected failures return Result<T,E> — no thrown errors. Adapters: auth-express (router +
-  Bearer middleware), auth-prisma (PrismaUserRepository). Bridge: auth-notifications fires
-  SendWelcomeEmailUseCase on UserRegistered event. Zero npm dependencies in domain and application.
+  All expected failures return Result<T,E> — no thrown errors. You implement adapters on the
+  exposed ports (e.g., Prisma for IUserRepository, bcrypt for IPasswordHasher).
+  Zero npm dependencies in domain and application.
 ---
 ```
 
 This gives an AI assistant enough context to:
 
-- Know which interfaces to implement when writing a custom adapter
+- Know which port interfaces to implement
 - Understand which errors can be returned by each use case
 - Generate correct code that follows the existing architectural patterns
 - Avoid introducing framework imports into the domain layer
@@ -125,7 +123,7 @@ Architecture prose and reference tables mapping every file to its exported types
 
 ### 4. Extension Guide
 
-Instructions for adding new use cases, ports, or adapters to the domain.
+Instructions for adding new use cases or ports to the domain.
 
 ### 5. Conventions
 
@@ -133,7 +131,7 @@ File naming rules, import rules, and coding conventions specific to the module.
 
 ### 6. Additional Sections
 
-Depending on the skill, additional sections may include Available Bridges, CLI Commands, or other domain-specific reference material.
+Depending on the skill, additional sections may include CLI Commands or other domain-specific reference material.
 
 ## Creating Skills for Your Own Domains
 

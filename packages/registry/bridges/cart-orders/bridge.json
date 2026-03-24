@@ -1,7 +1,0 @@
-{
-  "name": "cart-orders",
-  "sourceDomain": "cart",
-  "targetDomain": "orders",
-  "events": ["CartConverted"],
-  "version": "1.0.0"
-}

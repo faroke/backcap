@@ -10,8 +10,6 @@
       "dependsOn": ["@backcap/shared#build"],
       "inputs": [
         "domains/**",
-        "adapters/**",
-        "bridges/**",
         "src/**",
         "build.ts",
         "../../packages/shared/src/**"

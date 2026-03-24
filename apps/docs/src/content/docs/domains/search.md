@@ -155,7 +155,7 @@ export interface ISearchEngine {
 }
 ```
 
-No registry adapter is provided — implement this port for your search provider (Meilisearch, Algolia, Typesense, PostgreSQL full-text, etc.).
+Implement this port for your search provider (Meilisearch, Algolia, Typesense, PostgreSQL full-text, etc.).
 
 ## Public API (contracts/)
 
@@ -171,20 +171,6 @@ const searchService: ISearchService = createSearchService({
 // searchDocuments(input): Promise<Result<SearchDocumentsOutput, Error>>
 // removeFromIndex(input): Promise<Result<RemoveFromIndexOutput, Error>>
 ```
-
-## Bridges
-
-### blog-search
-
-Automatically indexes blog posts when they are published via the `PostPublished` event.
-
-```bash
-npx @backcap/cli add blog-search
-```
-
-**Requires**: `blog` and `search` domains installed.
-
-When a `PostPublished` event fires, the bridge calls `indexDocument` to add the post to the `"posts"` index with `title`, `slug`, `authorId`, and `publishedAt`.
 
 ## File Map
 

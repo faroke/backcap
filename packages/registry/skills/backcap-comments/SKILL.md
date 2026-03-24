@@ -53,14 +53,8 @@ The domain supports threads via `parentId`. To display threaded comments:
 - `ListComments` excludes deleted by default (`includeDeleted: false`)
 - Result<T, E> for all fallible operations
 
-## Available Adapters
-
-- **Prisma**: `adapters/prisma/comments/prisma-comment-repository.ts` — implements ICommentRepository
-- **Express**: `adapters/express/comments/comments.router.ts` — REST endpoints (POST, GET, DELETE)
-
 ## CLI Commands
 
 ```bash
 backcap add comments       # Install the domain
-backcap bridges            # List available bridges
 ```

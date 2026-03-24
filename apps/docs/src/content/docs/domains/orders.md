@@ -136,34 +136,9 @@ const order = await orders.getOrder("order-id");
 const all = await orders.listOrders();
 ```
 
-## Bridges
-
-| Bridge | Source/Target | Description |
-|---|---|---|
-| `cart-orders` | cart → orders | `CartConverted` → retrieves cart items and places a new order, then publishes `OrderPlaced` |
-| `orders-billing` | orders → billing | `OrderPlaced` → processes payment and confirms order; `PaymentFailed` → publishes `PaymentRetryRequested` |
-
 ## Ports
 
 | Port | Description |
 |---|---|
 | `IOrderRepository` | Order persistence (findById, findAll, save, update) |
 
-## Adapters
-
-### Prisma
-
-- `PrismaOrderRepository` — Order and OrderItem persistence with transaction support
-
-### Express
-
-Order routes:
-
-| Method | Route | Description |
-|---|---|---|
-| `GET` | `/orders` | List all orders |
-| `GET` | `/orders/:id` | Get order by ID |
-| `POST` | `/orders` | Place a new order |
-| `POST` | `/orders/:id/confirm` | Confirm order |
-| `POST` | `/orders/:id/ship` | Ship order |
-| `POST` | `/orders/:id/cancel` | Cancel order |

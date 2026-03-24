@@ -142,35 +142,6 @@ import { createTagsService, ITagsService } from "./domains/tags/contracts";
 const tagsService: ITagsService = createTagsService({ tagRepository });
 ```
 
-## Adapters
-
-### tags-prisma
-
-Provides `PrismaTagRepository` which implements `ITagRepository`.
-
-```bash
-npx @backcap/cli add tags-prisma
-```
-
-### tags-express
-
-Provides `createTagsRouter(service, router)` for HTTP access.
-
-```bash
-npx @backcap/cli add tags-express
-```
-
-| Method | Path | Body / Query | Response |
-|---|---|---|---|
-| `POST` | `/tags` | `{ name }` | `201 { tagId, slug, createdAt }` / `409` if slug exists |
-| `POST` | `/tags/:slug/resources` | `{ resourceId, resourceType }` | `201 { taggedAt }` / `409` if already tagged |
-| `DELETE` | `/tags/:slug/resources/:resourceId` | `{ resourceType }` | `200 { untaggedAt }` |
-| `GET` | `/tags/:slug/resources` | `?resourceType=&limit=&offset=` | `200 { resources, total }` |
-
-## Bridges
-
-- **blog-tags** — calls `TagResource` when `PostPublished` fires
-
 ## File Map
 
 ```

@@ -1,31 +1,5 @@
 import * as clack from "@clack/prompts";
 
-interface AdapterOption {
-  name: string;
-  category: string;
-}
-
-export async function promptAdapterSelection(
-  available: AdapterOption[],
-  detected: string[],
-): Promise<string[]> {
-  const value = await clack.multiselect({
-    message: "Which adapters do you want to install? (detected from package.json)",
-    options: available.map((a) => ({
-      value: a.name,
-      label: `${a.name} (${a.category})`,
-    })),
-    initialValues: detected,
-  });
-
-  if (clack.isCancel(value)) {
-    clack.cancel("Installation cancelled.");
-    process.exit(0);
-  }
-
-  return value as string[];
-}
-
 export async function promptInstallConfirm(
   domainName: string,
 ): Promise<boolean> {

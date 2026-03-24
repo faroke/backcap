@@ -6,8 +6,7 @@ description: >
   three typed errors (FileNotFound, InvalidFilePath, FileTooLarge). Application layer has
   UploadFile, GetFile, and DeleteFile use cases, plus IFileStorage port interface. Public surface
   is IFilesService and createFilesService factory in contracts/. All expected failures return
-  Result<T,E> — no thrown errors. Adapters: files-express (router with multipart upload support),
-  files-prisma (PrismaFileStorage). Zero npm dependencies in domain and application.
+  Result<T,E> — no thrown errors. Zero npm dependencies in domain and application.
 metadata:
   author: Backcap
   version: 1.0.0
@@ -84,14 +83,6 @@ See [`references/domain-map.md`](references/domain-map.md) for a full file-by-fi
 | `contracts/files.factory.ts` | `createFilesService(deps: FilesServiceDeps): IFilesService` | DI factory wiring use cases to port implementations |
 | `contracts/index.ts` | re-exports all of the above | The single barrel; import from here only |
 
-### Adapters
-
-| File | Export | Implements |
-|---|---|---|
-| `adapters/express/files/files.router.ts` | `createFilesRouter(filesService, router, uploadMiddleware?)` | `POST /files` (multipart) → 201 / 413 / 400; `GET /files/:id` → 200 / 404; `DELETE /files/:id` → 200 / 404 |
-| `adapters/prisma/files/prisma-file-storage.ts` | `PrismaFileStorage` | `IFileStorage` backed by Prisma |
-| `adapters/prisma/files/files.schema.prisma` | — | Prisma `FileRecord` model fragment to merge into `schema.prisma` |
-
 ## Storage Backend Swap Guide
 
 To replace the default Prisma-based storage with a custom backend (e.g., S3, local disk):
@@ -104,5 +95,4 @@ To replace the default Prisma-based storage with a custom backend (e.g., S3, loc
 
 | Command | Description |
 |---|---|
-| `npx @backcap/cli add files` | Install the files domain (prompts for adapter selection) |
-| `npx @backcap/cli add files --yes` | Non-interactive install; auto-selects detected adapters |
+| `npx @backcap/cli add files` | Install the files domain |

@@ -1,7 +1,0 @@
-{
-  "name": "rbac-organizations",
-  "sourceDomain": "organizations",
-  "targetDomain": "rbac",
-  "events": ["MemberJoined"],
-  "version": "1.0.0"
-}

@@ -1,7 +1,0 @@
-{
-  "name": "blog-tags",
-  "sourceDomain": "blog",
-  "targetDomain": "tags",
-  "events": ["PostPublished"],
-  "version": "1.0.0"
-}

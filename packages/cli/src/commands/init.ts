@@ -136,8 +136,6 @@ export default defineCommand({
       const customize = await promptCustomizePaths();
       if (customize) {
         config.paths.domains = await promptPath("Domains folder", config.paths.domains);
-        config.paths.adapters = await promptPath("Adapters folder", config.paths.adapters);
-        config.paths.bridges = await promptPath("Bridges folder", config.paths.bridges);
         config.alias = await promptPath("Tsconfig alias", config.alias);
       }
     }

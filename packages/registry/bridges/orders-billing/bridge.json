@@ -1,7 +1,0 @@
-{
-  "name": "orders-billing",
-  "sourceDomain": "orders",
-  "targetDomain": "billing",
-  "events": ["OrderPlaced", "PaymentSucceeded", "PaymentFailed", "PaymentRetryRequested"],
-  "version": "1.0.0"
-}

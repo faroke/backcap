@@ -1,7 +1,0 @@
-{
-  "name": "blog-search",
-  "sourceDomain": "blog",
-  "targetDomain": "search",
-  "events": ["PostPublished"],
-  "version": "1.0.0"
-}

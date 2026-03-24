@@ -7,7 +7,7 @@ This guide walks through creating a new domain for the Backcap registry. We'll u
 
 ## Before You Start
 
-A domain is a vertical slice of backend business logic structured in four layers: `domain/`, `application/`, `contracts/`, and an optional `adapters/` tree. Read the [Domains concept page](/backcap/concepts/domains) and the [Architecture page](/backcap/concepts/architecture) before proceeding.
+A domain is a vertical slice of backend business logic structured in three layers: `domain/`, `application/`, and `contracts/`. Adapters (port implementations) are authored by you outside the domain directory. Read the [Domains concept page](/backcap/concepts/domains) and the [Architecture page](/backcap/concepts/architecture) before proceeding.
 
 ## Checklist
 
@@ -102,7 +102,7 @@ Rules:
 
 ### 7. Define Domain Events
 
-Domain events represent something that happened. They are emitted by use cases and consumed by bridges:
+Domain events represent something that happened. They are emitted by use cases and can be consumed by event handlers you wire up:
 
 ```typescript
 // domain/events/notification-sent.event.ts

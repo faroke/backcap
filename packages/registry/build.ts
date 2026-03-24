@@ -2,15 +2,11 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { join } from "pathe";
 import { registrySchema } from "@backcap/shared/schemas/registry";
 import { registryItemSchema } from "@backcap/shared/schemas/registry-item";
-import { runQualityChecks, runBridgeQualityChecks } from "./src/quality-check.js";
+import { runQualityChecks } from "./src/quality-check.js";
 import {
   discoverDomains,
-  discoverAdapters,
-  discoverBridges,
   discoverSkills,
   generateDomainItemJson,
-  generateAdapterItemJson,
-  generateBridgeItemJson,
   generateSkillItemJson,
   generateRegistryCatalog,
 } from "./src/generate.js";
@@ -43,31 +39,6 @@ async function main(): Promise<void> {
     domains.map((cap) => generateDomainItemJson(cap, resultTs)),
   );
 
-  // Discover and generate adapter item JSONs
-  const adapters = await discoverAdapters(registryRoot);
-  const adapterItems = await Promise.all(
-    adapters.map((adapter) => generateAdapterItemJson(adapter)),
-  );
-
-  // Discover and generate bridge item JSONs
-  console.log("[build] Discovering bridges...");
-  const bridges = await discoverBridges(registryRoot);
-  console.log(`[build] Found ${bridges.length} bridges: ${bridges.map((b) => b.name).join(", ")}`);
-
-  console.log("[build] Running bridge quality checks...");
-  const bridgeQualityErrors = await runBridgeQualityChecks(bridges);
-  if (bridgeQualityErrors.length > 0) {
-    for (const e of bridgeQualityErrors) {
-      console.error(`[quality-check] ${e}`);
-    }
-    process.exit(1);
-  }
-  console.log("[build] Bridge quality checks passed");
-
-  const bridgeItems = await Promise.all(
-    bridges.map((bridge) => generateBridgeItemJson(bridge, resultTs)),
-  );
-
   // Discover and generate skill item JSONs
   console.log("[build] Discovering skills...");
   const skills = await discoverSkills(registryRoot);
@@ -77,7 +48,7 @@ async function main(): Promise<void> {
   );
 
   // Validate each item
-  for (const item of [...capItems, ...adapterItems, ...bridgeItems, ...skillItems]) {
+  for (const item of [...capItems, ...skillItems]) {
     const result = registryItemSchema.safeParse(item);
     if (!result.success) {
       console.error(`[build] Item validation failed for "${item.name}":`, result.error.issues);
@@ -86,7 +57,7 @@ async function main(): Promise<void> {
   }
 
   // Generate catalog
-  const catalog = await generateRegistryCatalog(capItems, adapterItems, bridgeItems, skillItems);
+  const catalog = await generateRegistryCatalog(capItems, skillItems);
   const catalogResult = registrySchema.safeParse(catalog);
   if (!catalogResult.success) {
     console.error("[build] Registry catalog validation failed:", catalogResult.error.issues);
@@ -105,19 +76,6 @@ async function main(): Promise<void> {
     console.log(`[build] Written dist/${item.name}.json`);
   }
 
-  for (const item of adapterItems) {
-    await writeFile(join(distDir, `${item.name}.json`), JSON.stringify(item, null, 2) + "\n");
-    console.log(`[build] Written dist/${item.name}.json`);
-  }
-
-  // Write bridge JSONs
-  const bridgesDistDir = join(distDir, "bridges");
-  await mkdir(bridgesDistDir, { recursive: true });
-  for (const item of bridgeItems) {
-    await writeFile(join(bridgesDistDir, `${item.name}.json`), JSON.stringify(item, null, 2) + "\n");
-    console.log(`[build] Written dist/bridges/${item.name}.json`);
-  }
-
   // Write skill JSONs
   const skillsDistDir = join(distDir, "skills");
   await mkdir(skillsDistDir, { recursive: true });
@@ -125,19 +83,6 @@ async function main(): Promise<void> {
     await writeFile(join(skillsDistDir, `${item.name}.json`), JSON.stringify(item, null, 2) + "\n");
     console.log(`[build] Written dist/skills/${item.name}.json`);
   }
-
-  // Write bridge catalog with sourceDomain/targetDomain/events from manifests
-  const bridgeCatalog = {
-    bridges: bridges.map((b) => ({
-      name: b.name,
-      sourceDomain: b.sourceDomain ?? "",
-      targetDomain: b.targetDomain ?? "",
-      events: b.events ?? [],
-      version: "1.0.0",
-    })),
-  };
-  await writeFile(join(bridgesDistDir, "index.json"), JSON.stringify(bridgeCatalog, null, 2) + "\n");
-  console.log("[build] Written dist/bridges/index.json");
 
   console.log("[build] Done!");
 }

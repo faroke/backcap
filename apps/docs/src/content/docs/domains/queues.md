@@ -1,6 +1,6 @@
 ---
 title: Queues Domain
-description: Background job processing with configurable handlers, retry logic, and status tracking for TypeScript backends — domain model, use cases, ports, and adapters.
+description: Background job processing with configurable handlers, retry logic, and status tracking for TypeScript backends — domain model, use cases, and ports.
 ---
 
 The `queues` domain provides **background job processing** with configurable handlers, retry logic, and status tracking for TypeScript backends. It is structured in strict Clean Architecture layers with zero npm dependencies in the domain and application layers.
@@ -187,71 +187,6 @@ const queuesService: IQueuesService = createQueuesDomain({
 ```
 
 This is the only import consumers need. The internal use case classes are implementation details.
-
-## Adapters
-
-### queues-prisma
-
-Provides `PrismaJobRepository` which implements `IJobRepository`.
-
-```bash
-npx @backcap/cli add queues-prisma
-```
-
-```typescript
-import { PrismaJobRepository } from "./adapters/prisma/queues/prisma-job-repository";
-
-const jobRepository = new PrismaJobRepository(prisma);
-```
-
-Requires a Prisma schema with a `JobRecord` model:
-
-```prisma
-model JobRecord {
-  id            String   @id @default(uuid())
-  type          String
-  payload       Json
-  status        String   @default("pending")
-  attempts      Int      @default(0)
-  scheduledAt   DateTime @default(now())
-  createdAt     DateTime @default(now())
-  failureReason String?
-
-  @@map("jobs")
-}
-```
-
-### queues-express
-
-Provides `createQueuesRouter()` for HTTP access.
-
-```bash
-npx @backcap/cli add queues-express
-```
-
-```typescript
-import { createQueuesRouter } from "./adapters/express/queues/queues.router";
-
-const router = express.Router();
-createQueuesRouter(queuesService, router);
-app.use(router);
-```
-
-**Routes added:**
-
-| Method | Path | Body | Response |
-|---|---|---|---|
-| `POST` | `/jobs` | `{ type, payload, scheduledAt? }` | `201 { jobId, scheduledAt }` or error |
-| `POST` | `/jobs/:id/process` | — | `200 { status, completedAt }` or error |
-| `GET` | `/jobs/:id` | — | `200 { id, type, status, ... }` or `404` |
-
-**HTTP error mapping:**
-
-| Domain Error | HTTP Status |
-|---|---|
-| `JobNotFound` | `404 Not Found` |
-| `InvalidJobPayload` | `400 Bad Request` |
-| `MaxAttemptsExceeded` | `429 Too Many Requests` |
 
 ## File Map
 

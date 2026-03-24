@@ -9,7 +9,6 @@ description: >
   OrderAlreadyCanceled). Application layer has six use cases (PlaceOrder, ConfirmOrder, ShipOrder, CancelOrder,
   GetOrder, ListOrders), plus IOrderRepository port interface. Public surface is IOrderService and
   createOrderService factory in contracts/. All expected failures return Result<T,E> — no thrown errors.
-  Adapters: orders-express (order CRUD + lifecycle routes), orders-prisma (PrismaOrderRepository).
   Zero npm dependencies in domain and application.
 metadata:
   author: Backcap
