@@ -27,7 +27,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm turbo build --filter='!@backcap/docs' --filter='!@backcap/demo'
+      - run: pnpm turbo build --filter='!@backcap/docs'
 
       - name: Create Release Pull Request or Publish
         uses: changesets/action@v1
