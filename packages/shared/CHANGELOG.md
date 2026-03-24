@@ -1,5 +1,11 @@
 # @backcap/shared
 
+## 0.2.2
+
+### Patch Changes
+
+- 2da3d79: Remove adapters, bridges, examples, and demo — pivot to pure domain-centric architecture where domains only expose ports and users implement their own adapters.
+
 ## 0.2.1
 
 ### Patch Changes
