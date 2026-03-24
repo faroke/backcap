@@ -8,7 +8,7 @@ export default defineConfig({
     starlight({
       title: "Backcap",
       description:
-        "Production-ready backend features for TypeScript. Copy and own — auth, billing, search and more.",
+        "Production-ready backend features for TypeScript. Copy and own — auth, billing, blog and more.",
       social: [
         {
           icon: "github",
@@ -57,7 +57,7 @@ export default defineConfig({
           label: "Domains",
           items: [
             { label: "All Features", slug: "domains" },
-            { label: "Analytics", slug: "domains/analytics" },
+            { label: "Activity", slug: "domains/activity" },
             { label: "Audit Log", slug: "domains/audit-log" },
             { label: "Auth", slug: "domains/auth" },
             { label: "Billing", slug: "domains/billing" },
@@ -65,18 +65,18 @@ export default defineConfig({
             { label: "Cart", slug: "domains/cart" },
             { label: "Catalog", slug: "domains/catalog" },
             { label: "Comments", slug: "domains/comments" },
-            { label: "Feature Flags", slug: "domains/feature-flags" },
+            { label: "Discounts", slug: "domains/discounts" },
             { label: "Files", slug: "domains/files" },
             { label: "Forms", slug: "domains/forms" },
-            { label: "Media", slug: "domains/media" },
+            { label: "Inventory", slug: "domains/inventory" },
             { label: "Notifications", slug: "domains/notifications" },
             { label: "Orders", slug: "domains/orders" },
             { label: "Organizations", slug: "domains/organizations" },
-            { label: "Queues", slug: "domains/queues" },
             { label: "RBAC", slug: "domains/rbac" },
-            { label: "Search", slug: "domains/search" },
+            { label: "Reviews", slug: "domains/reviews" },
+            { label: "Shipping", slug: "domains/shipping" },
             { label: "Tags", slug: "domains/tags" },
-            { label: "Webhooks", slug: "domains/webhooks" },
+            { label: "Users", slug: "domains/users" },
           ],
         },
       ],
