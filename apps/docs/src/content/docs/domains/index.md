@@ -20,7 +20,6 @@ Browse all production-ready backend features. Each one is independent, well-stru
 | [Blog](/backcap/domains/blog) | Posts, categories, drafts & publishing | `npx @backcap/cli add blog` |
 | [Comments](/backcap/domains/comments) | Threaded comments & moderation | `npx @backcap/cli add comments` |
 | [Tags](/backcap/domains/tags) | Flexible tagging & categorization | `npx @backcap/cli add tags` |
-| [Media](/backcap/domains/media) | Image/video processing, thumbnails & CDN URLs | `npx @backcap/cli add media` |
 | [Forms](/backcap/domains/forms) | Dynamic form schemas & submissions | `npx @backcap/cli add forms` |
 
 ## Commerce
@@ -31,19 +30,25 @@ Browse all production-ready backend features. Each one is independent, well-stru
 | [Catalog](/backcap/domains/catalog) | Products, variants, categories & pricing | `npx @backcap/cli add catalog` |
 | [Cart](/backcap/domains/cart) | Shopping cart with price verification & lifecycle | `npx @backcap/cli add cart` |
 | [Orders](/backcap/domains/orders) | Order lifecycle with state machine & fulfillment | `npx @backcap/cli add orders` |
+| [Inventory](/backcap/domains/inventory) | Stock management, reservations & low-stock alerts | `npx @backcap/cli add inventory` |
+| [Discounts](/backcap/domains/discounts) | Promotions, coupons & discount rules | `npx @backcap/cli add discounts` |
+| [Shipping](/backcap/domains/shipping) | Shipment lifecycle, tracking & rate calculation | `npx @backcap/cli add shipping` |
+| [Reviews](/backcap/domains/reviews) | Customer reviews, moderation & aggregated ratings | `npx @backcap/cli add orders` |
+
+## Social
+
+| Feature | Description | Install |
+|---|---|---|
+| [Activity](/backcap/domains/activity) | Activity feeds & timelines | `npx @backcap/cli add activity` |
+| [Users](/backcap/domains/users) | Profiles, preferences & addresses | `npx @backcap/cli add users` |
 
 ## Infrastructure
 
 | Feature | Description | Install |
 |---|---|---|
 | [Notifications](/backcap/domains/notifications) | In-app, email & push notifications | `npx @backcap/cli add notifications` |
-| [Search](/backcap/domains/search) | Full-text search with filters & facets | `npx @backcap/cli add search` |
-| [Files](/backcap/domains/files) | Upload, storage & file management | `npx @backcap/cli add files` |
-| [Webhooks](/backcap/domains/webhooks) | Outbound event delivery & retries | `npx @backcap/cli add webhooks` |
-| [Queues](/backcap/domains/queues) | Background jobs & task processing | `npx @backcap/cli add queues` |
-| [Feature Flags](/backcap/domains/feature-flags) | Toggle features per user or env | `npx @backcap/cli add feature-flags` |
+| [Files](/backcap/domains/files) | Upload, storage, file management, image/video processing & variants | `npx @backcap/cli add files` |
 | [Audit Log](/backcap/domains/audit-log) | Track every action in your system | `npx @backcap/cli add audit-log` |
-| [Analytics](/backcap/domains/analytics) | Events, metrics & dashboards | `npx @backcap/cli add analytics` |
 
 ---
 
