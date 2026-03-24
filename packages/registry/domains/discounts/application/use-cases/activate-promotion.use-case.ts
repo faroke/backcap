@@ -1,0 +1,25 @@
+import { Result } from "../../shared/result.js";
+import { PromotionNotFound } from "../../domain/errors/promotion-not-found.error.js";
+import { PromotionActivated } from "../../domain/events/promotion-activated.event.js";
+import type { IPromotionRepository } from "../ports/promotion-repository.port.js";
+
+export class ActivatePromotion {
+  constructor(private readonly promotionRepository: IPromotionRepository) {}
+
+  async execute(
+    promotionId: string,
+  ): Promise<Result<{ event: PromotionActivated }, Error>> {
+    const promotion = await this.promotionRepository.findById(promotionId);
+    if (!promotion) {
+      return Result.fail(PromotionNotFound.create(promotionId));
+    }
+
+    const activateResult = promotion.activate();
+    if (activateResult.isFail()) return Result.fail(activateResult.unwrapError());
+
+    await this.promotionRepository.save(activateResult.unwrap());
+
+    const event = new PromotionActivated(promotionId);
+    return Result.ok({ event });
+  }
+}
