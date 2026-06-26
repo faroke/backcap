@@ -3,13 +3,17 @@ import { File } from "../../domain/entities/file.entity.js";
 import { FileUploaded } from "../../domain/events/file-uploaded.event.js";
 import type { IFileStorage } from "../ports/file-storage.port.js";
 import type { UploadFileInput, UploadFileOutput } from "../dto/upload-file.dto.js";
+import type { InvalidFilePath } from "../../domain/errors/invalid-file-path.error.js";
+import type { FileTooLarge } from "../../domain/errors/file-too-large.error.js";
 
 export class UploadFile {
   constructor(private readonly fileStorage: IFileStorage) {}
 
   async execute(
     input: UploadFileInput,
-  ): Promise<Result<{ output: UploadFileOutput; event: FileUploaded }, Error>> {
+  ): Promise<
+    Result<{ output: UploadFileOutput; event: FileUploaded }, InvalidFilePath | FileTooLarge>
+  > {
     const id = crypto.randomUUID();
     const fileResult = File.create({
       id,

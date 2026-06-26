@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidMemberRole } from "../errors/invalid-member-role.error.js";
 
 const VALID_ROLES = ["owner", "admin", "member", "viewer"] as const;
 
@@ -11,13 +12,9 @@ export class MemberRole {
     this.value = value;
   }
 
-  static create(value: string): Result<MemberRole, Error> {
+  static create(value: string): Result<MemberRole, InvalidMemberRole> {
     if (!VALID_ROLES.includes(value as MemberRoleType)) {
-      return Result.fail(
-        new Error(
-          `Invalid member role: "${value}". Valid roles: ${VALID_ROLES.join(", ")}`,
-        ),
-      );
+      return Result.fail(InvalidMemberRole.create(value, VALID_ROLES));
     }
     return Result.ok(new MemberRole(value as MemberRoleType));
   }

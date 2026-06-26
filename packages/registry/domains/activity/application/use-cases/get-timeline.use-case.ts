@@ -21,7 +21,7 @@ function toEntryOutput(entry: ActivityEntry): ActivityEntryOutput {
 export class GetTimeline {
   constructor(private readonly activityStore: IActivityStore) {}
 
-  async execute(input: GetTimelineInput): Promise<Result<GetTimelineOutput, Error>> {
+  async execute(input: GetTimelineInput): Promise<Result<GetTimelineOutput, QueryFailed>> {
     try {
       const { entries, total } = await this.activityStore.query({
         actorId: input.actorId,

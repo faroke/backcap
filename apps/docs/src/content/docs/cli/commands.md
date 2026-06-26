@@ -163,7 +163,7 @@ npx @backcap/cli list
 Name             Description                          Type          Status
 auth             User registration and login          domain    installed
 blog             Blog post management                 domain    available
-search           Full-text search                     domain    available
+files            Upload, storage & file management    domain    available
 notifications    Email and push notifications         domain    available
 ```
 

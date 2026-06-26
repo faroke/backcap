@@ -2,6 +2,8 @@ import { Result } from "../../shared/result.js";
 import { Review } from "../../domain/entities/review.entity.js";
 import { ReviewSubmitted } from "../../domain/events/review-submitted.event.js";
 import { DuplicateReview } from "../../domain/errors/duplicate-review.error.js";
+import { InvalidRating } from "../../domain/errors/invalid-rating.error.js";
+import { InvalidReviewBody } from "../../domain/errors/invalid-review-body.error.js";
 import type { IReviewRepository } from "../ports/review-repository.port.js";
 import type { SubmitReviewInput, SubmitReviewOutput } from "../dto/submit-review.dto.js";
 
@@ -10,7 +12,12 @@ export class SubmitReview {
 
   async execute(
     input: SubmitReviewInput,
-  ): Promise<Result<{ output: SubmitReviewOutput; event: ReviewSubmitted }, Error>> {
+  ): Promise<
+    Result<
+      { output: SubmitReviewOutput; event: ReviewSubmitted },
+      DuplicateReview | InvalidRating | InvalidReviewBody
+    >
+  > {
     const existing = await this.reviewRepository.findByAuthorAndResource(
       input.authorId,
       input.resourceId,

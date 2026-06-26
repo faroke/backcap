@@ -1,6 +1,7 @@
-import { Result } from "../../../shared/result.js";
+import { Result } from "../../shared/result.js";
 import { ShippingZone } from "../../domain/value-objects/shipping-zone.vo.js";
 import { NoRateAvailable } from "../../domain/errors/no-rate-available.error.js";
+import type { InvalidShippingZone } from "../../domain/errors/invalid-shipping-zone.error.js";
 import type { IRateProvider } from "../ports/rate-provider.port.js";
 import type { GetRateInput } from "../dto/get-rate-input.dto.js";
 
@@ -9,7 +10,12 @@ export class EstimateDelivery {
 
   async execute(
     input: GetRateInput,
-  ): Promise<Result<{ estimatedMinDays: number; estimatedMaxDays: number; estimatedDate: Date }, Error>> {
+  ): Promise<
+    Result<
+      { estimatedMinDays: number; estimatedMaxDays: number; estimatedDate: Date },
+      InvalidShippingZone | NoRateAvailable
+    >
+  > {
     const zoneResult = ShippingZone.create({
       originCountry: input.originCountry,
       destinationCountry: input.destinationCountry,

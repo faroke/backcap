@@ -1,5 +1,6 @@
-import { Result } from "../../../shared/result.js";
+import { Result } from "../../shared/result.js";
 import { ShippingZone } from "../value-objects/shipping-zone.vo.js";
+import { InvalidCarrier } from "../errors/invalid-carrier.error.js";
 
 export class Carrier {
   readonly id: string;
@@ -32,18 +33,18 @@ export class Carrier {
     supportedZones?: ShippingZone[];
     active?: boolean;
     createdAt?: Date;
-  }): Result<Carrier, Error> {
+  }): Result<Carrier, InvalidCarrier> {
     if (!params.id || params.id.trim().length === 0) {
-      return Result.fail(new Error("Carrier ID is required"));
+      return Result.fail(InvalidCarrier.missingId());
     }
     if (!params.name || params.name.trim().length === 0) {
-      return Result.fail(new Error("Carrier name is required"));
+      return Result.fail(InvalidCarrier.missingName());
     }
     if (!params.code || params.code.trim().length === 0) {
-      return Result.fail(new Error("Carrier code is required"));
+      return Result.fail(InvalidCarrier.missingCode());
     }
     if (!/^[a-z0-9-]+$/.test(params.code)) {
-      return Result.fail(new Error(`Invalid carrier code: "${params.code}"`));
+      return Result.fail(InvalidCarrier.invalidCode(params.code));
     }
 
     return Result.ok(

@@ -3,7 +3,7 @@ title: Introduction
 description: What Backcap is, how it works, and why it exists.
 ---
 
-Backcap is a **registry of composable backend domains for TypeScript**. It lets you install production-ready backend features — authentication, search, blog, payments, notifications — the same way you install npm packages, with full source code dropped directly into your project.
+Backcap is a **registry of composable backend domains for TypeScript**. It lets you install production-ready backend features — authentication, blog, payments, notifications — the same way you install npm packages, with full source code dropped directly into your project.
 
 ## The Problem
 
@@ -12,7 +12,7 @@ Every backend project rebuilds the same features from scratch:
 - User authentication and session management
 - Role-based permissions
 - Blog and content management
-- Full-text search
+- File management and uploads
 - Notification delivery
 - Billing and subscription logic
 

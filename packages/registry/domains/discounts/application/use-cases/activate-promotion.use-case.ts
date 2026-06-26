@@ -1,6 +1,7 @@
 import { Result } from "../../shared/result.js";
 import { PromotionNotFound } from "../../domain/errors/promotion-not-found.error.js";
 import { PromotionActivated } from "../../domain/events/promotion-activated.event.js";
+import type { InvalidPromotionTransition } from "../../domain/errors/invalid-promotion-transition.error.js";
 import type { IPromotionRepository } from "../ports/promotion-repository.port.js";
 
 export class ActivatePromotion {
@@ -8,7 +9,7 @@ export class ActivatePromotion {
 
   async execute(
     promotionId: string,
-  ): Promise<Result<{ event: PromotionActivated }, Error>> {
+  ): Promise<Result<{ event: PromotionActivated }, PromotionNotFound | InvalidPromotionTransition>> {
     const promotion = await this.promotionRepository.findById(promotionId);
     if (!promotion) {
       return Result.fail(PromotionNotFound.create(promotionId));

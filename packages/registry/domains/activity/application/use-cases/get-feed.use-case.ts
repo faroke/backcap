@@ -21,7 +21,7 @@ function toEntryOutput(entry: ActivityEntry): ActivityEntryOutput {
 export class GetFeed {
   constructor(private readonly activityStore: IActivityStore) {}
 
-  async execute(input: GetFeedInput): Promise<Result<GetFeedOutput, Error>> {
+  async execute(input: GetFeedInput): Promise<Result<GetFeedOutput, QueryFailed>> {
     try {
       const { entries, total } = await this.activityStore.query({
         actorId: input.actorId,

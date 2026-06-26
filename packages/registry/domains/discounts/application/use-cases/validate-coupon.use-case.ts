@@ -12,7 +12,7 @@ export class ValidateCoupon {
 
   async execute(
     code: string,
-  ): Promise<Result<{ valid: boolean; promotionId: string; promotionName: string }, Error>> {
+  ): Promise<Result<{ valid: boolean; promotionId: string; promotionName: string }, CouponNotFound | PromotionNotFound>> {
     const coupon = await this.couponRepository.findByCode(code);
     if (!coupon) {
       return Result.fail(CouponNotFound.create(code));

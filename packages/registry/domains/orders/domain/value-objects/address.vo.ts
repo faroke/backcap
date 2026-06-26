@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidAddress } from "../errors/invalid-address.error.js";
 
 export class Address {
   readonly street: string;
@@ -18,18 +19,18 @@ export class Address {
     city: string;
     country: string;
     postalCode: string;
-  }): Result<Address, Error> {
+  }): Result<Address, InvalidAddress> {
     if (!params.street || params.street.trim().length === 0) {
-      return Result.fail(new Error("Street is required"));
+      return Result.fail(InvalidAddress.create("Street"));
     }
     if (!params.city || params.city.trim().length === 0) {
-      return Result.fail(new Error("City is required"));
+      return Result.fail(InvalidAddress.create("City"));
     }
     if (!params.country || params.country.trim().length === 0) {
-      return Result.fail(new Error("Country is required"));
+      return Result.fail(InvalidAddress.create("Country"));
     }
     if (!params.postalCode || params.postalCode.trim().length === 0) {
-      return Result.fail(new Error("Postal code is required"));
+      return Result.fail(InvalidAddress.create("Postal code"));
     }
 
     return Result.ok(

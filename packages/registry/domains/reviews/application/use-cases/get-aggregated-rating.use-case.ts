@@ -11,7 +11,7 @@ export class GetAggregatedRating {
 
   async execute(
     input: GetAggregatedRatingInput,
-  ): Promise<Result<GetAggregatedRatingOutput, Error>> {
+  ): Promise<Result<GetAggregatedRatingOutput, never>> {
     const distribution = await this.reviewRepository.computeRatingDistribution(
       input.resourceId,
       input.resourceType,

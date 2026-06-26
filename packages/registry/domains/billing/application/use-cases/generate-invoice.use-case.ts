@@ -2,6 +2,8 @@ import { Result } from "../../shared/result.js";
 import { Invoice } from "../../domain/entities/invoice.entity.js";
 import { InvoiceGenerated } from "../../domain/events/invoice-generated.event.js";
 import { CustomerNotFound } from "../../domain/errors/customer-not-found.error.js";
+import type { InvalidInvoice } from "../../domain/errors/invalid-invoice.error.js";
+import type { MoneyError } from "../../domain/errors/money.error.js";
 import type { ICustomerRepository } from "../ports/customer-repository.port.js";
 import type { IInvoiceRepository } from "../ports/invoice-repository.port.js";
 import type { GenerateInvoiceInput } from "../dto/generate-invoice-input.dto.js";
@@ -14,7 +16,12 @@ export class GenerateInvoice {
 
   async execute(
     input: GenerateInvoiceInput,
-  ): Promise<Result<{ invoiceId: string; event: InvoiceGenerated }, Error>> {
+  ): Promise<
+    Result<
+      { invoiceId: string; event: InvoiceGenerated },
+      CustomerNotFound | InvalidInvoice | MoneyError
+    >
+  > {
     const customer = await this.customerRepository.findById(input.customerId);
     if (!customer) {
       return Result.fail(CustomerNotFound.create(input.customerId));

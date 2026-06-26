@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidCartStatus } from "../errors/invalid-cart-status.error.js";
 
 export type CartStatusValue = "active" | "abandoned" | "converted";
 
@@ -21,11 +22,11 @@ export class CartStatus {
     return new CartStatus("converted");
   }
 
-  static from(value: string): Result<CartStatus, Error> {
+  static from(value: string): Result<CartStatus, InvalidCartStatus> {
     if (value === "active" || value === "abandoned" || value === "converted") {
       return Result.ok(new CartStatus(value));
     }
-    return Result.fail(new Error(`Invalid cart status: "${value}"`));
+    return Result.fail(InvalidCartStatus.create(value));
   }
 
   isActive(): boolean {

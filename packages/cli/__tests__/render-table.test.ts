@@ -39,9 +39,9 @@ describe("renderDomainTable", () => {
 
   it("shows dash for missing version", () => {
     const noVersionItems = [
-      { name: "search", description: "Search domain", type: "domain" },
+      { name: "files", description: "Search domain", type: "domain" },
     ];
     const output = renderDomainTable(noVersionItems, new Set());
-    expect(output).toMatch(/search\s+—/);
+    expect(output).toMatch(/files\s+—/);
   });
 });

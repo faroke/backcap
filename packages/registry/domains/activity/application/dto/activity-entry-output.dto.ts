@@ -5,6 +5,6 @@ export interface ActivityEntryOutput {
   targetId: string;
   targetName: string;
   summary: string;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, unknown> | undefined;
   occurredAt: Date;
 }

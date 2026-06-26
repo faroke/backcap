@@ -1,4 +1,5 @@
-import { Result } from "../../../shared/result.js";
+import { Result } from "../../shared/result.js";
+import { InvalidTrackingNumber } from "../errors/invalid-tracking-number.error.js";
 
 export class TrackingNumber {
   readonly value: string;
@@ -7,16 +8,16 @@ export class TrackingNumber {
     this.value = value;
   }
 
-  static create(value: string): Result<TrackingNumber, Error> {
+  static create(value: string): Result<TrackingNumber, InvalidTrackingNumber> {
     const trimmed = value.trim();
     if (trimmed.length === 0) {
-      return Result.fail(new Error("Tracking number cannot be empty"));
+      return Result.fail(InvalidTrackingNumber.empty());
     }
     if (!/^[A-Za-z0-9-]+$/.test(trimmed)) {
-      return Result.fail(new Error(`Invalid tracking number format: "${value}"`));
+      return Result.fail(InvalidTrackingNumber.invalidFormat(value));
     }
     if (trimmed.length < 6 || trimmed.length > 40) {
-      return Result.fail(new Error(`Tracking number must be between 6 and 40 characters: "${value}"`));
+      return Result.fail(InvalidTrackingNumber.invalidLength(value));
     }
     return Result.ok(new TrackingNumber(trimmed.toUpperCase()));
   }

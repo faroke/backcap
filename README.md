@@ -39,25 +39,25 @@ Most backend starters give you a monolith to fork or a library to depend on. Bac
 | Domain | Description |
 |---|---|
 | **auth** | Registration, login, JWT tokens, password hashing |
+| **users** | User profiles, preferences, and address management |
+| **rbac** | Role-based access control |
+| **organizations** | Multi-tenant organization management |
+| **audit-log** | Immutable audit trail |
+| **activity** | User activity tracking, feeds, and timelines |
 | **blog** | Posts, drafts, publishing workflow |
 | **comments** | Threaded comments with moderation |
-| **search** | Full-text search with pluggable engines |
+| **reviews** | Customer reviews with moderation and aggregated ratings |
 | **tags** | Tagging system with relationships |
 | **files** | File upload, storage, metadata |
 | **forms** | Dynamic form builder and submissions |
 | **notifications** | Multi-channel notification dispatch |
-| **analytics** | Event tracking and aggregation |
-| **audit-log** | Immutable audit trail |
-| **billing** | Payments, subscriptions, invoicing |
-| **cart** | Shopping cart management |
 | **catalog** | Product catalog and inventory |
-| **feature-flags** | Feature toggles with targeting rules |
-| **media** | Media asset management and processing |
+| **inventory** | Stock management across warehouses with reservations |
+| **cart** | Shopping cart management |
 | **orders** | Order processing and fulfillment |
-| **organizations** | Multi-tenant organization management |
-| **queues** | Job queues with retry and scheduling |
-| **rbac** | Role-based access control |
-| **webhooks** | Outbound webhook delivery and management |
+| **discounts** | Promotions, coupon codes, and discount rules |
+| **shipping** | Shipment lifecycle, carriers, and rate calculation |
+| **billing** | Payments, subscriptions, invoicing |
 
 ## Architecture
 

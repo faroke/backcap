@@ -2,6 +2,8 @@ import { Result } from "../../shared/result.js";
 import { Money } from "../../domain/value-objects/money.vo.js";
 import { SubscriptionNotFound } from "../../domain/errors/subscription-not-found.error.js";
 import { InvalidPlan } from "../../domain/errors/invalid-plan.error.js";
+import type { SubscriptionStateError } from "../../domain/errors/subscription-state.error.js";
+import type { MoneyError } from "../../domain/errors/money.error.js";
 import type { ISubscriptionRepository } from "../ports/subscription-repository.port.js";
 import type { ChangeSubscriptionPlanInput } from "../dto/change-subscription-plan-input.dto.js";
 
@@ -12,7 +14,12 @@ export class ChangeSubscriptionPlan {
 
   async execute(
     input: ChangeSubscriptionPlanInput,
-  ): Promise<Result<{ subscriptionId: string }, Error>> {
+  ): Promise<
+    Result<
+      { subscriptionId: string },
+      SubscriptionNotFound | InvalidPlan | SubscriptionStateError | MoneyError
+    >
+  > {
     const subscription = await this.subscriptionRepository.findById(input.subscriptionId);
     if (!subscription) {
       return Result.fail(SubscriptionNotFound.create(input.subscriptionId));

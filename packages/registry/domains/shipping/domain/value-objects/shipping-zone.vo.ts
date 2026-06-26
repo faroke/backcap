@@ -1,4 +1,5 @@
-import { Result } from "../../../shared/result.js";
+import { Result } from "../../shared/result.js";
+import { InvalidShippingZone } from "../errors/invalid-shipping-zone.error.js";
 
 export class ShippingZone {
   readonly originCountry: string;
@@ -9,15 +10,15 @@ export class ShippingZone {
     this.destinationCountry = destinationCountry;
   }
 
-  static create(params: { originCountry: string; destinationCountry: string }): Result<ShippingZone, Error> {
+  static create(params: { originCountry: string; destinationCountry: string }): Result<ShippingZone, InvalidShippingZone> {
     const origin = params.originCountry.trim().toUpperCase();
     const destination = params.destinationCountry.trim().toUpperCase();
 
     if (!/^[A-Z]{2}$/.test(origin)) {
-      return Result.fail(new Error(`Invalid origin country code: "${params.originCountry}"`));
+      return Result.fail(InvalidShippingZone.invalidOrigin(params.originCountry));
     }
     if (!/^[A-Z]{2}$/.test(destination)) {
-      return Result.fail(new Error(`Invalid destination country code: "${params.destinationCountry}"`));
+      return Result.fail(InvalidShippingZone.invalidDestination(params.destinationCountry));
     }
 
     return Result.ok(new ShippingZone(origin, destination));

@@ -1,4 +1,5 @@
 import type { Result } from "../shared/result.js";
+import type { InvalidCustomer } from "../domain/errors/invalid-customer.error.js";
 
 export interface CreateCustomerInput {
   id: string;
@@ -11,5 +12,5 @@ export interface CreateCustomerOutput {
 }
 
 export interface ICreateCustomer {
-  execute(input: CreateCustomerInput): Promise<Result<CreateCustomerOutput, Error>>;
+  execute(input: CreateCustomerInput): Promise<Result<CreateCustomerOutput, InvalidCustomer>>;
 }

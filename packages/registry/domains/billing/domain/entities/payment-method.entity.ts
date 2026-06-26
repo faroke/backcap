@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidPaymentMethod } from "../errors/invalid-payment-method.error.js";
 
 export type PaymentMethodType = "card" | "bank_account" | "paypal";
 
@@ -18,10 +19,10 @@ export class PaymentMethod {
     customerId: string;
     type: PaymentMethodType;
     last4: string;
-    expiryMonth?: number;
-    expiryYear?: number;
+    expiryMonth?: number | undefined;
+    expiryYear?: number | undefined;
     isDefault: boolean;
-    externalId?: string;
+    externalId?: string | undefined;
     createdAt: Date;
   }) {
     this.id = params.id;
@@ -45,15 +46,15 @@ export class PaymentMethod {
     isDefault?: boolean;
     externalId?: string;
     createdAt?: Date;
-  }): Result<PaymentMethod, Error> {
+  }): Result<PaymentMethod, InvalidPaymentMethod> {
     if (!params.last4 || params.last4.length !== 4 || !/^\d{4}$/.test(params.last4)) {
-      return Result.fail(new Error("last4 must be exactly 4 digits"));
+      return Result.fail(InvalidPaymentMethod.invalidLast4());
     }
     if (params.expiryMonth !== undefined && (params.expiryMonth < 1 || params.expiryMonth > 12)) {
-      return Result.fail(new Error("Expiry month must be between 1 and 12"));
+      return Result.fail(InvalidPaymentMethod.invalidExpiryMonth());
     }
     if (params.expiryYear !== undefined && (params.expiryYear < 2000 || params.expiryYear > 2100)) {
-      return Result.fail(new Error("Expiry year must be between 2000 and 2100"));
+      return Result.fail(InvalidPaymentMethod.invalidExpiryYear());
     }
     return Result.ok(
       new PaymentMethod({

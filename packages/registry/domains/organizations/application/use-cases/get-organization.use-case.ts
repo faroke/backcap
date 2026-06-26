@@ -10,7 +10,7 @@ export class GetOrganization {
 
   async execute(
     organizationId: string,
-  ): Promise<Result<Organization, Error>> {
+  ): Promise<Result<Organization, OrgNotFound>> {
     const org = await this.organizationRepository.findById(organizationId);
     if (!org) {
       return Result.fail(OrgNotFound.create(organizationId));

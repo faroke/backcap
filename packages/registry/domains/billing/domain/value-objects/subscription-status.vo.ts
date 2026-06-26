@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidSubscriptionStatus } from "../errors/invalid-subscription-status.error.js";
 
 export type SubscriptionStatusValue =
   | "active"
@@ -24,9 +25,9 @@ export class SubscriptionStatus {
     this.value = value;
   }
 
-  static create(value: string): Result<SubscriptionStatus, Error> {
+  static create(value: string): Result<SubscriptionStatus, InvalidSubscriptionStatus> {
     if (!VALID_STATUSES.includes(value as SubscriptionStatusValue)) {
-      return Result.fail(new Error(`Invalid subscription status: "${value}". Valid: ${VALID_STATUSES.join(", ")}`));
+      return Result.fail(InvalidSubscriptionStatus.create(value, VALID_STATUSES));
     }
     return Result.ok(new SubscriptionStatus(value as SubscriptionStatusValue));
   }

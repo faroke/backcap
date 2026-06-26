@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidProductStatus } from "../errors/invalid-product-status.error.js";
 
 export type ProductStatusValue = "draft" | "active" | "archived";
 
@@ -21,11 +22,11 @@ export class ProductStatus {
     return new ProductStatus("archived");
   }
 
-  static from(value: string): Result<ProductStatus, Error> {
+  static from(value: string): Result<ProductStatus, InvalidProductStatus> {
     if (value === "draft" || value === "active" || value === "archived") {
       return Result.ok(new ProductStatus(value));
     }
-    return Result.fail(new Error(`Invalid product status: "${value}"`));
+    return Result.fail(InvalidProductStatus.create(value));
   }
 
   isDraft(): boolean {

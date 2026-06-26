@@ -3,6 +3,9 @@ import { Organization } from "../../domain/entities/organization.entity.js";
 import { Membership } from "../../domain/entities/membership.entity.js";
 import { OrganizationCreated } from "../../domain/events/organization-created.event.js";
 import { OrgSlugTaken } from "../../domain/errors/org-slug-taken.error.js";
+import type { InvalidOrganizationName } from "../../domain/errors/invalid-organization-name.error.js";
+import type { InvalidOrgSlug } from "../../domain/errors/invalid-org-slug.error.js";
+import type { InvalidMemberRole } from "../../domain/errors/invalid-member-role.error.js";
 import type { IOrganizationRepository } from "../ports/organization-repository.port.js";
 import type { IMembershipRepository } from "../ports/membership-repository.port.js";
 import type { CreateOrganizationInput } from "../dto/create-organization-input.dto.js";
@@ -15,7 +18,12 @@ export class CreateOrganization {
 
   async execute(
     input: CreateOrganizationInput,
-  ): Promise<Result<{ organizationId: string; event: OrganizationCreated }, Error>> {
+  ): Promise<
+    Result<
+      { organizationId: string; event: OrganizationCreated },
+      OrgSlugTaken | InvalidOrganizationName | InvalidOrgSlug | InvalidMemberRole
+    >
+  > {
     const existing = await this.organizationRepository.findBySlug(input.slug);
     if (existing) {
       return Result.fail(OrgSlugTaken.create(input.slug));

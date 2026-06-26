@@ -172,7 +172,7 @@ class PostPublished {
 }
 ```
 
-Used by the blog-search bridge to index published posts.
+Emitted when a post is published. Can be consumed by bridges (e.g., blog-tags).
 
 ---
 

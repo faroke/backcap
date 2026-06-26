@@ -30,7 +30,7 @@ function toCartOutput(cart: Cart): CartOutput {
 export class GetCart {
   constructor(private readonly cartRepository: ICartRepository) {}
 
-  async execute(cartId: string): Promise<Result<CartOutput, Error>> {
+  async execute(cartId: string): Promise<Result<CartOutput, CartNotFound>> {
     const cart = await this.cartRepository.findById(cartId);
     if (!cart) {
       return Result.fail(CartNotFound.create(cartId));

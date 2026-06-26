@@ -1,12 +1,18 @@
 import { Result } from "../../shared/result.js";
 import { OrderNotFound } from "../../domain/errors/order-not-found.error.js";
 import { OrderShipped } from "../../domain/events/order-shipped.event.js";
+import type { OrderAlreadyCanceled } from "../../domain/errors/order-already-canceled.error.js";
+import type { InvalidOrderTransition } from "../../domain/errors/invalid-order-transition.error.js";
 import type { IOrderRepository } from "../ports/order-repository.port.js";
 
 export class ShipOrder {
   constructor(private readonly orderRepository: IOrderRepository) {}
 
-  async execute(orderId: string): Promise<Result<{ event: OrderShipped }, Error>> {
+  async execute(
+    orderId: string,
+  ): Promise<
+    Result<{ event: OrderShipped }, OrderNotFound | OrderAlreadyCanceled | InvalidOrderTransition>
+  > {
     const order = await this.orderRepository.findById(orderId);
     if (!order) {
       return Result.fail(OrderNotFound.create(orderId));

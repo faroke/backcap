@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { CategoryNotFound } from "../../domain/errors/category-not-found.error.js";
 import type { IProductRepository } from "../ports/product-repository.port.js";
 import type { ICategoryRepository } from "../ports/category-repository.port.js";
 import type { ProductOutput } from "../dto/product-output.dto.js";
@@ -10,10 +11,10 @@ export class ListByCategory {
     private readonly categoryRepository: ICategoryRepository,
   ) {}
 
-  async execute(categoryId: string): Promise<Result<ProductOutput[], Error>> {
+  async execute(categoryId: string): Promise<Result<ProductOutput[], CategoryNotFound>> {
     const category = await this.categoryRepository.findById(categoryId);
     if (!category) {
-      return Result.fail(new Error(`Category not found: "${categoryId}"`));
+      return Result.fail(CategoryNotFound.create(categoryId));
     }
 
     const products = await this.productRepository.findByCategoryId(categoryId);

@@ -2,6 +2,7 @@ import { Result } from "../../shared/result.js";
 import { Tag } from "../../domain/entities/tag.entity.js";
 import { TagCreated } from "../../domain/events/tag-created.event.js";
 import { TagAlreadyExists } from "../../domain/errors/tag-already-exists.error.js";
+import type { InvalidTagSlug } from "../../domain/errors/invalid-tag-slug.error.js";
 import type { ITagRepository } from "../ports/tag-repository.port.js";
 import type { CreateTagInput, CreateTagOutput } from "../dto/create-tag.dto.js";
 
@@ -10,7 +11,12 @@ export class CreateTag {
 
   async execute(
     input: CreateTagInput,
-  ): Promise<Result<{ output: CreateTagOutput; event: TagCreated }, Error>> {
+  ): Promise<
+    Result<
+      { output: CreateTagOutput; event: TagCreated },
+      InvalidTagSlug | TagAlreadyExists
+    >
+  > {
     const id = crypto.randomUUID();
     const tagResult = Tag.create({ id, name: input.name });
     if (tagResult.isFail()) {

@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidValidityPeriod } from "../errors/invalid-validity-period.error.js";
 
 export class ValidityPeriod {
   readonly startDate: Date;
@@ -9,9 +10,9 @@ export class ValidityPeriod {
     this.endDate = endDate;
   }
 
-  static create(startDate: Date, endDate: Date): Result<ValidityPeriod, Error> {
+  static create(startDate: Date, endDate: Date): Result<ValidityPeriod, InvalidValidityPeriod> {
     if (endDate <= startDate) {
-      return Result.fail(new Error("End date must be after start date"));
+      return Result.fail(InvalidValidityPeriod.create("End date must be after start date"));
     }
     return Result.ok(new ValidityPeriod(startDate, endDate));
   }

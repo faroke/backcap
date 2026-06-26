@@ -6,7 +6,7 @@ import type { GetReviewInput, GetReviewOutput } from "../dto/get-review.dto.js";
 export class GetReview {
   constructor(private readonly reviewRepository: IReviewRepository) {}
 
-  async execute(input: GetReviewInput): Promise<Result<GetReviewOutput, Error>> {
+  async execute(input: GetReviewInput): Promise<Result<GetReviewOutput, ReviewNotFound>> {
     const review = await this.reviewRepository.findById(input.reviewId);
     if (!review) {
       return Result.fail(ReviewNotFound.create(input.reviewId));

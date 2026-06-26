@@ -6,7 +6,7 @@ import type { IPromotionRepository } from "../ports/promotion-repository.port.js
 export class GetPromotion {
   constructor(private readonly promotionRepository: IPromotionRepository) {}
 
-  async execute(promotionId: string): Promise<Result<Promotion, Error>> {
+  async execute(promotionId: string): Promise<Result<Promotion, PromotionNotFound>> {
     const promotion = await this.promotionRepository.findById(promotionId);
     if (!promotion) {
       return Result.fail(PromotionNotFound.create(promotionId));

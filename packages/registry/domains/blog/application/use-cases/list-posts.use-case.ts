@@ -5,7 +5,7 @@ import type { ListPostsInput, ListPostsOutput } from "../dto/list-posts.dto.js";
 export class ListPosts {
   constructor(private readonly postRepository: IPostRepository) {}
 
-  async execute(input: ListPostsInput): Promise<Result<ListPostsOutput, Error>> {
+  async execute(input: ListPostsInput): Promise<Result<ListPostsOutput, never>> {
     const posts = await this.postRepository.findAll({
       authorId: input.authorId,
       status: input.status,

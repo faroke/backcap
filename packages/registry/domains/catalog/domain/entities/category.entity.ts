@@ -1,4 +1,6 @@
 import { Result } from "../../shared/result.js";
+import { InvalidCategoryName } from "../errors/invalid-category-name.error.js";
+import { InvalidCategorySlug } from "../errors/invalid-category-slug.error.js";
 
 // Slug: lowercase alphanumeric with hyphens, 2-100 chars
 const SLUG_REGEX = /^[a-z0-9][a-z0-9-]{0,98}[a-z0-9]$/;
@@ -31,18 +33,16 @@ export class Category {
     id: string;
     name: string;
     slug: string;
-    parentId?: string | null;
+    parentId?: string | null | undefined;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<Category, Error> {
+  }): Result<Category, InvalidCategoryName | InvalidCategorySlug> {
     if (!params.name || params.name.trim().length === 0) {
-      return Result.fail(new Error("Category name cannot be empty"));
+      return Result.fail(InvalidCategoryName.empty());
     }
 
     if (!SLUG_REGEX.test(params.slug)) {
-      return Result.fail(
-        new Error(`Invalid slug format: "${params.slug}". Must be 2-100 lowercase alphanumeric characters with optional hyphens.`),
-      );
+      return Result.fail(InvalidCategorySlug.invalidFormat(params.slug));
     }
 
     const now = new Date();

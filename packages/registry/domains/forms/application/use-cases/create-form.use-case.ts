@@ -3,13 +3,15 @@ import { Form } from "../../domain/entities/form.entity.js";
 import { FormField } from "../../domain/value-objects/form-field.vo.js";
 import type { IFormStore } from "../ports/form-store.port.js";
 import type { CreateFormInput, CreateFormOutput } from "../dto/create-form.dto.js";
+import type { InvalidFormField } from "../../domain/errors/invalid-form-field.error.js";
+import type { EmptyForm } from "../../domain/errors/empty-form.error.js";
 
 export class CreateForm {
   constructor(private readonly formStore: IFormStore) {}
 
   async execute(
     input: CreateFormInput,
-  ): Promise<Result<CreateFormOutput, Error>> {
+  ): Promise<Result<CreateFormOutput, InvalidFormField | EmptyForm>> {
     const fields: FormField[] = [];
     for (const f of input.fields) {
       const fieldResult = FormField.create({

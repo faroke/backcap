@@ -1,7 +1,7 @@
 export class RoleAssigned {
   public readonly userId: string;
   public readonly roleId: string;
-  public readonly organizationId?: string;
+  public readonly organizationId?: string | undefined;
   public readonly occurredAt: Date;
 
   constructor(userId: string, roleId: string, organizationId?: string, occurredAt: Date = new Date()) {

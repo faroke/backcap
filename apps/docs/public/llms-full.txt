@@ -8,7 +8,7 @@ Backcap is a registry of composable backend domains for TypeScript. Domains are 
 
 ### What is a Domain?
 
-A domain is a vertical slice of backend business logic — authentication, blog, search, notifications, billing — implemented in strict Clean Architecture layers. When you install a domain, you receive all source files. You own and can modify every file.
+A domain is a vertical slice of backend business logic — authentication, blog, billing, notifications, files — implemented in strict Clean Architecture layers. When you install a domain, you receive all source files. You own and can modify every file.
 
 ### Installation Model
 
@@ -154,13 +154,12 @@ Fetches `https://faroke.github.io/backcap/dist/registry.json`. Renders a table o
 
 ---
 
-## Available Domains (20)
+## Available Domains (14)
 
 All domains follow the same three-layer Clean Architecture. Install any with `npx @backcap/cli add <name>`.
 
 | Domain | Description |
 |---|---|
-| analytics | Event tracking and analytics pipelines |
 | audit-log | Audit trail and activity logging |
 | auth | User registration, login, and token management |
 | billing | Payments, subscriptions, and invoicing |
@@ -168,18 +167,13 @@ All domains follow the same three-layer Clean Architecture. Install any with `np
 | cart | Shopping cart management |
 | catalog | Product catalog and inventory |
 | comments | Commenting system for any content type |
-| feature-flags | Feature flag management and evaluation |
-| files | File upload, storage, and retrieval |
+| files | File upload, storage, media processing, and retrieval |
 | forms | Dynamic form creation and submission |
-| media | Media asset management and processing |
 | notifications | Multi-channel notification delivery |
 | orders | Order processing and fulfillment |
 | organizations | Multi-tenant organization management |
-| queues | Background job queues and task processing |
 | rbac | Role-based access control |
-| search | Full-text search indexing and querying |
 | tags | Tagging and categorization system |
-| webhooks | Webhook registration and delivery |
 
 ---
 

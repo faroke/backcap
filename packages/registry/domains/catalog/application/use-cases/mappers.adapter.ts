@@ -9,14 +9,14 @@ export function toProductOutput(product: Product): ProductOutput {
     name: product.name,
     description: product.description,
     status: product.status.value,
-    basePriceCents: product.basePrice.cents,
+    basePriceCents: product.basePrice.amount,
     currency: product.basePrice.currency,
     categoryId: product.categoryId,
     variants: product.variants.map(
       (v): ProductVariantOutput => ({
         id: v.id,
         sku: v.sku.value,
-        priceCents: v.price.cents,
+        priceCents: v.price.amount,
         currency: v.price.currency,
         attributes: v.attributes,
       }),

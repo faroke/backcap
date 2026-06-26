@@ -1,5 +1,7 @@
 import { Result } from "../../shared/result.js";
 import { CommentContent } from "../value-objects/comment-content.vo.js";
+import { InvalidCommentContent } from "../errors/invalid-comment-content.error.js";
+import { CommentAlreadyDeleted } from "../errors/comment-already-deleted.error.js";
 
 export class Comment {
   readonly id: string;
@@ -37,10 +39,10 @@ export class Comment {
     authorId: string;
     resourceId: string;
     resourceType: string;
-    parentId?: string;
+    parentId?: string | undefined;
     createdAt?: Date;
     deletedAt?: Date;
-  }): Result<Comment, Error> {
+  }): Result<Comment, InvalidCommentContent> {
     const contentResult = CommentContent.create(params.content);
     if (contentResult.isFail()) {
       return Result.fail(contentResult.unwrapError());
@@ -60,9 +62,9 @@ export class Comment {
     );
   }
 
-  softDelete(): Result<Comment, Error> {
+  softDelete(): Result<Comment, CommentAlreadyDeleted> {
     if (this.deletedAt) {
-      return Result.fail(new Error("Comment is already deleted"));
+      return Result.fail(CommentAlreadyDeleted.create(this.id));
     }
     return Result.ok(
       new Comment(

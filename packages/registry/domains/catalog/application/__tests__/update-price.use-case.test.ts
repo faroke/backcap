@@ -3,7 +3,7 @@ import { UpdatePrice } from "../use-cases/update-price.use-case.js";
 import { InMemoryProductRepository } from "./mocks/product-repository.mock.js";
 import { createTestProduct } from "./fixtures/product.fixture.js";
 import { ProductNotFound } from "../../domain/errors/product-not-found.error.js";
-import { InvalidPrice } from "../../domain/errors/invalid-price.error.js";
+import { MoneyError } from "../../domain/errors/money.error.js";
 
 describe("UpdatePrice use case", () => {
   let productRepo: InMemoryProductRepository;
@@ -25,7 +25,7 @@ describe("UpdatePrice use case", () => {
 
     expect(result.isOk()).toBe(true);
     const updated = await productRepo.findById("prod-1");
-    expect(updated!.basePrice.cents).toBe(2999);
+    expect(updated!.basePrice.amount).toBe(2999);
   });
 
   it("preserves currency if not specified", async () => {
@@ -56,6 +56,6 @@ describe("UpdatePrice use case", () => {
     });
 
     expect(result.isFail()).toBe(true);
-    expect(result.unwrapError()).toBeInstanceOf(InvalidPrice);
+    expect(result.unwrapError()).toBeInstanceOf(MoneyError);
   });
 });

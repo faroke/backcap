@@ -2,6 +2,10 @@ import { Result } from "../../shared/result.js";
 import { Money } from "../value-objects/money.vo.js";
 import { BillingPeriod } from "../value-objects/billing-period.vo.js";
 import { SubscriptionStatus } from "../value-objects/subscription-status.vo.js";
+import { MoneyError } from "../errors/money.error.js";
+import { InvalidBillingPeriod } from "../errors/invalid-billing-period.error.js";
+import { InvalidSubscriptionStatus } from "../errors/invalid-subscription-status.error.js";
+import { SubscriptionStateError } from "../errors/subscription-state.error.js";
 
 export class Subscription {
   readonly id: string;
@@ -22,8 +26,8 @@ export class Subscription {
     status: SubscriptionStatus;
     price: Money;
     billingPeriod: BillingPeriod;
-    externalId?: string;
-    canceledAt?: Date;
+    externalId?: string | undefined;
+    canceledAt?: Date | undefined;
     createdAt: Date;
     updatedAt: Date;
   }) {
@@ -53,7 +57,7 @@ export class Subscription {
     canceledAt?: Date;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<Subscription, Error> {
+  }): Result<Subscription, InvalidSubscriptionStatus | MoneyError | InvalidBillingPeriod> {
     const statusResult = SubscriptionStatus.create(params.status);
     if (statusResult.isFail()) return Result.fail(statusResult.unwrapError());
 
@@ -80,9 +84,9 @@ export class Subscription {
     );
   }
 
-  cancel(reason?: string): Result<Subscription, Error> {
+  cancel(reason?: string): Result<Subscription, SubscriptionStateError> {
     if (this.status.isCanceled()) {
-      return Result.fail(new Error("Subscription is already canceled"));
+      return Result.fail(SubscriptionStateError.alreadyCanceled());
     }
     const canceledStatus = SubscriptionStatus.create("canceled").unwrap();
     return Result.ok(
@@ -101,12 +105,12 @@ export class Subscription {
     );
   }
 
-  changePlan(newPlanId: string, newPrice: Money): Result<Subscription, Error> {
+  changePlan(newPlanId: string, newPrice: Money): Result<Subscription, SubscriptionStateError | MoneyError> {
     if (this.status.isCanceled()) {
-      return Result.fail(new Error("Cannot change plan on a canceled subscription"));
+      return Result.fail(SubscriptionStateError.cannotChangePlanWhenCanceled());
     }
     if (newPrice.currency !== this.price.currency) {
-      return Result.fail(new Error(`Currency mismatch: subscription is ${this.price.currency}, new plan is ${newPrice.currency}`));
+      return Result.fail(MoneyError.currencyMismatch(this.price.currency, newPrice.currency));
     }
     return Result.ok(
       new Subscription({

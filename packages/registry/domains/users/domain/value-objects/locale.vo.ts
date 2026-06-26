@@ -11,10 +11,11 @@ export class Locale {
   static create(value: string): Result<Locale, InvalidLocale> {
     try {
       const canonical = Intl.getCanonicalLocales(value);
-      if (canonical.length === 0) {
+      const first = canonical[0];
+      if (first === undefined) {
         return Result.fail(InvalidLocale.create(value));
       }
-      return Result.ok(new Locale(canonical[0]));
+      return Result.ok(new Locale(first));
     } catch {
       return Result.fail(InvalidLocale.create(value));
     }

@@ -2,13 +2,16 @@ import { Result } from "../../shared/result.js";
 import type { Profile } from "../../domain/entities/profile.entity.js";
 import { Address } from "../../domain/value-objects/address.vo.js";
 import { ProfileNotFound } from "../../domain/errors/profile-not-found.error.js";
+import type { InvalidAddress } from "../../domain/errors/invalid-address.error.js";
 import type { IProfileRepository } from "../ports/profile-repository.port.js";
 import type { AddAddressInput } from "../dto/add-address-input.dto.js";
 
 export class AddAddress {
   constructor(private readonly profileRepository: IProfileRepository) {}
 
-  async execute(input: AddAddressInput): Promise<Result<Profile, Error>> {
+  async execute(
+    input: AddAddressInput,
+  ): Promise<Result<Profile, ProfileNotFound | InvalidAddress>> {
     const profile = await this.profileRepository.findByUserId(input.userId);
     if (!profile) {
       return Result.fail(ProfileNotFound.create(input.userId));

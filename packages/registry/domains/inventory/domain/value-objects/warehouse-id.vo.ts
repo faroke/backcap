@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidWarehouseId } from "../errors/invalid-warehouse-id.error.js";
 
 export class WarehouseId {
   readonly value: string;
@@ -7,13 +8,13 @@ export class WarehouseId {
     this.value = value;
   }
 
-  static create(value: string): Result<WarehouseId, Error> {
+  static create(value: string): Result<WarehouseId, InvalidWarehouseId> {
     const trimmed = value?.trim();
     if (!trimmed || trimmed.length === 0) {
-      return Result.fail(new Error("Warehouse ID cannot be empty"));
+      return Result.fail(InvalidWarehouseId.create("Warehouse ID cannot be empty"));
     }
     if (trimmed.length > 100) {
-      return Result.fail(new Error("Warehouse ID cannot exceed 100 characters"));
+      return Result.fail(InvalidWarehouseId.create("Warehouse ID cannot exceed 100 characters"));
     }
     return Result.ok(new WarehouseId(trimmed));
   }

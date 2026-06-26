@@ -1,5 +1,6 @@
 import { Result } from "../../shared/result.js";
 import { MemberRole } from "../value-objects/member-role.vo.js";
+import { InvalidMemberRole } from "../errors/invalid-member-role.error.js";
 
 export class Membership {
   readonly id: string;
@@ -27,8 +28,8 @@ export class Membership {
     userId: string;
     organizationId: string;
     role: string;
-    joinedAt?: Date;
-  }): Result<Membership, Error> {
+    joinedAt?: Date | undefined;
+  }): Result<Membership, InvalidMemberRole> {
     const roleResult = MemberRole.create(params.role);
     if (roleResult.isFail()) {
       return Result.fail(roleResult.unwrapError());
@@ -45,7 +46,7 @@ export class Membership {
     );
   }
 
-  changeRole(newRole: string): Result<Membership, Error> {
+  changeRole(newRole: string): Result<Membership, InvalidMemberRole> {
     const roleResult = MemberRole.create(newRole);
     if (roleResult.isFail()) {
       return Result.fail(roleResult.unwrapError());

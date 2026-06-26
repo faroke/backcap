@@ -28,7 +28,7 @@ export class Permission {
     id: string;
     action: string;
     resource: string;
-    conditions?: Record<string, unknown>;
+    conditions?: Record<string, unknown> | undefined;
     createdAt?: Date;
   }): Result<Permission, PermissionDenied> {
     const actionResult = PermissionAction.create(params.action);

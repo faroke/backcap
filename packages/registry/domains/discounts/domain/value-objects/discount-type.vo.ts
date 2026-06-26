@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidDiscountType } from "../errors/invalid-discount-type.error.js";
 
 export type DiscountTypeValue = "percentage" | "fixed_amount" | "buy_x_get_y";
 
@@ -11,9 +12,9 @@ export class DiscountType {
     this.value = value;
   }
 
-  static create(value: string): Result<DiscountType, Error> {
+  static create(value: string): Result<DiscountType, InvalidDiscountType> {
     if (!VALID_TYPES.includes(value as DiscountTypeValue)) {
-      return Result.fail(new Error(`Invalid discount type: "${value}". Valid: ${VALID_TYPES.join(", ")}`));
+      return Result.fail(InvalidDiscountType.create(value, VALID_TYPES));
     }
     return Result.ok(new DiscountType(value as DiscountTypeValue));
   }

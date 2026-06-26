@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidPromotionStatus } from "../errors/invalid-promotion-status.error.js";
 
 export type PromotionStatusValue = "draft" | "active" | "inactive" | "expired";
 
@@ -11,9 +12,9 @@ export class PromotionStatus {
     this.value = value;
   }
 
-  static from(value: string): Result<PromotionStatus, Error> {
+  static from(value: string): Result<PromotionStatus, InvalidPromotionStatus> {
     if (!VALID_STATUSES.includes(value as PromotionStatusValue)) {
-      return Result.fail(new Error(`Invalid promotion status: "${value}". Valid: ${VALID_STATUSES.join(", ")}`));
+      return Result.fail(InvalidPromotionStatus.create(value, VALID_STATUSES));
     }
     return Result.ok(new PromotionStatus(value as PromotionStatusValue));
   }

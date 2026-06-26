@@ -8,7 +8,7 @@ export class GetInvoice {
     private readonly invoiceRepository: IInvoiceRepository,
   ) {}
 
-  async execute(invoiceId: string): Promise<Result<Invoice, Error>> {
+  async execute(invoiceId: string): Promise<Result<Invoice, InvoiceNotFound>> {
     const invoice = await this.invoiceRepository.findById(invoiceId);
     if (!invoice) {
       return Result.fail(InvoiceNotFound.create(invoiceId));

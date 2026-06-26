@@ -3,6 +3,7 @@ import { Money } from "../../domain/value-objects/money.vo.js";
 import { PaymentSucceeded } from "../../domain/events/payment-succeeded.event.js";
 import { CustomerNotFound } from "../../domain/errors/customer-not-found.error.js";
 import { PaymentDeclined } from "../../domain/errors/payment-declined.error.js";
+import type { MoneyError } from "../../domain/errors/money.error.js";
 import type { ICustomerRepository } from "../ports/customer-repository.port.js";
 import type { IPaymentProvider } from "../ports/payment-provider.port.js";
 import type { ProcessPaymentInput } from "../dto/process-payment-input.dto.js";
@@ -15,7 +16,12 @@ export class ProcessPayment {
 
   async execute(
     input: ProcessPaymentInput,
-  ): Promise<Result<{ transactionId: string; event: PaymentSucceeded }, Error>> {
+  ): Promise<
+    Result<
+      { transactionId: string; event: PaymentSucceeded },
+      CustomerNotFound | MoneyError | PaymentDeclined
+    >
+  > {
     const customer = await this.customerRepository.findById(input.customerId);
     if (!customer) {
       return Result.fail(CustomerNotFound.create(input.customerId));

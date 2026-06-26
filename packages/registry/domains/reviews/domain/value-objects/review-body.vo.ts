@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidReviewBody } from "../errors/invalid-review-body.error.js";
 
 export class ReviewBody {
   readonly value: string;
@@ -7,14 +8,10 @@ export class ReviewBody {
     this.value = value;
   }
 
-  static create(value: string): Result<ReviewBody, Error> {
+  static create(value: string): Result<ReviewBody, InvalidReviewBody> {
     const trimmed = value.trim();
     if (trimmed.length < 1 || trimmed.length > 5000) {
-      return Result.fail(
-        new Error(
-          `Review body must be between 1 and 5,000 characters after trimming. Got ${trimmed.length}.`,
-        ),
-      );
+      return Result.fail(InvalidReviewBody.create(trimmed.length));
     }
     return Result.ok(new ReviewBody(trimmed));
   }

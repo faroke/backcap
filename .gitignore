@@ -2,6 +2,10 @@ node_modules
 dist
 .turbo
 *.tsbuildinfo
+
+# Build artifact: shared/result.ts is injected into each domain at scaffold time
+# and materialized by the registry typecheck. Source of truth: packages/shared/src/result.ts
+packages/registry/domains/*/shared/
 .env
 .claude/
 .opencode/

@@ -39,7 +39,7 @@ export class Post {
   static create(params: {
     id: string;
     title: string;
-    slug?: string;
+    slug?: string | undefined;
     content: string;
     authorId: string;
     status?: PostStatus;

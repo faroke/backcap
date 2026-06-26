@@ -2,6 +2,7 @@ import { Result } from "../../shared/result.js";
 import { User } from "../../domain/entities/user.entity.js";
 import { UserRegistered } from "../../domain/events/user-registered.event.js";
 import { UserAlreadyExists } from "../../domain/errors/user-already-exists.error.js";
+import type { InvalidEmail } from "../../domain/errors/invalid-email.error.js";
 import type { IUserRepository } from "../ports/user-repository.port.js";
 import type { IPasswordHasher } from "../ports/password-hasher.port.js";
 import type { RegisterInput } from "../dto/register-input.dto.js";
@@ -14,7 +15,9 @@ export class RegisterUser {
 
   async execute(
     input: RegisterInput,
-  ): Promise<Result<{ userId: string; event: UserRegistered }, Error>> {
+  ): Promise<
+    Result<{ userId: string; event: UserRegistered }, UserAlreadyExists | InvalidEmail>
+  > {
     const existing = await this.userRepository.findByEmail(input.email);
     if (existing) {
       return Result.fail(UserAlreadyExists.create(input.email));

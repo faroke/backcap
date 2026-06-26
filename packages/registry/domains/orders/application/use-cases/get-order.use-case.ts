@@ -7,7 +7,7 @@ import { toOrderOutput } from "./mappers.adapter.js";
 export class GetOrder {
   constructor(private readonly orderRepository: IOrderRepository) {}
 
-  async execute(orderId: string): Promise<Result<OrderOutput, Error>> {
+  async execute(orderId: string): Promise<Result<OrderOutput, OrderNotFound>> {
     const order = await this.orderRepository.findById(orderId);
     if (!order) {
       return Result.fail(OrderNotFound.create(orderId));

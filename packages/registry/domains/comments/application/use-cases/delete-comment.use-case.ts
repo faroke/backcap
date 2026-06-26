@@ -1,6 +1,7 @@
 import { Result } from "../../shared/result.js";
 import { CommentNotFound } from "../../domain/errors/comment-not-found.error.js";
 import { UnauthorizedDelete } from "../../domain/errors/unauthorized-delete.error.js";
+import type { CommentAlreadyDeleted } from "../../domain/errors/comment-already-deleted.error.js";
 import type { ICommentRepository } from "../ports/comment-repository.port.js";
 import type { DeleteCommentInput, DeleteCommentOutput } from "../dto/delete-comment.dto.js";
 
@@ -9,7 +10,12 @@ export class DeleteComment {
 
   async execute(
     input: DeleteCommentInput,
-  ): Promise<Result<DeleteCommentOutput, CommentNotFound | UnauthorizedDelete>> {
+  ): Promise<
+    Result<
+      DeleteCommentOutput,
+      CommentNotFound | UnauthorizedDelete | CommentAlreadyDeleted
+    >
+  > {
     const comment = await this.commentRepository.findById(input.commentId);
     if (!comment) {
       return Result.fail(CommentNotFound.create(input.commentId));

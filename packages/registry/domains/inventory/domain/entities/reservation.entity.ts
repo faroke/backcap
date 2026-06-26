@@ -4,6 +4,12 @@ import { WarehouseId } from "../value-objects/warehouse-id.vo.js";
 import { ReservationStatus } from "../value-objects/reservation-status.vo.js";
 import { ReservationExpired } from "../errors/reservation-expired.error.js";
 import { InvalidStockQuantity } from "../errors/invalid-stock-quantity.error.js";
+import { InvalidSku } from "../errors/invalid-sku.error.js";
+import { InvalidReservationReference } from "../errors/invalid-reservation-reference.error.js";
+import { InvalidReservationExpiry } from "../errors/invalid-reservation-expiry.error.js";
+import { InvalidReservationState } from "../errors/invalid-reservation-state.error.js";
+import type { InvalidWarehouseId } from "../errors/invalid-warehouse-id.error.js";
+import type { InvalidReservationStatus } from "../errors/invalid-reservation-status.error.js";
 
 export class Reservation {
   readonly id: string;
@@ -56,17 +62,25 @@ export class Reservation {
     status?: string;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<Reservation, Error> {
+  }): Result<
+    Reservation,
+    | InvalidSku
+    | InvalidReservationReference
+    | InvalidWarehouseId
+    | InvalidStockQuantity
+    | InvalidReservationStatus
+    | InvalidReservationExpiry
+  > {
     if (!params.sku || typeof params.sku !== "string" || params.sku.trim().length === 0) {
-      return Result.fail(new Error("SKU cannot be empty"));
+      return Result.fail(InvalidSku.create());
     }
 
     if (!params.referenceId || typeof params.referenceId !== "string" || params.referenceId.trim().length === 0) {
-      return Result.fail(new Error("Reference ID cannot be empty"));
+      return Result.fail(InvalidReservationReference.create("Reference ID cannot be empty"));
     }
 
     if (!params.referenceType || typeof params.referenceType !== "string" || params.referenceType.trim().length === 0) {
-      return Result.fail(new Error("Reference type cannot be empty"));
+      return Result.fail(InvalidReservationReference.create("Reference type cannot be empty"));
     }
 
     const warehouseIdResult = WarehouseId.create(params.warehouseId);
@@ -97,7 +111,7 @@ export class Reservation {
     // Only validate future expiresAt for genuinely new reservations
     const isReconstitution = params.status !== undefined || params.createdAt !== undefined;
     if (!isReconstitution && params.expiresAt <= new Date()) {
-      return Result.fail(new Error("Expiration date must be in the future"));
+      return Result.fail(InvalidReservationExpiry.create());
     }
 
     const now = new Date();
@@ -117,13 +131,13 @@ export class Reservation {
     );
   }
 
-  confirm(now: Date): Result<Reservation, Error> {
+  confirm(now: Date): Result<Reservation, InvalidReservationState | ReservationExpired> {
     if (this.status.isConfirmed()) {
       return Result.ok(this);
     }
 
     if (!this.status.isPending()) {
-      return Result.fail(new Error(`Cannot confirm reservation in "${this.status.value}" state`));
+      return Result.fail(InvalidReservationState.create("confirm", this.status.value));
     }
 
     if (this.isExpired(now)) {
@@ -146,13 +160,13 @@ export class Reservation {
     );
   }
 
-  release(now: Date): Result<Reservation, Error> {
+  release(now: Date): Result<Reservation, InvalidReservationState> {
     if (this.status.isReleased()) {
       return Result.ok(this);
     }
 
     if (!this.status.isPending()) {
-      return Result.fail(new Error(`Cannot release reservation in "${this.status.value}" state`));
+      return Result.fail(InvalidReservationState.create("release", this.status.value));
     }
 
     return Result.ok(
@@ -171,13 +185,13 @@ export class Reservation {
     );
   }
 
-  expire(): Result<Reservation, Error> {
+  expire(): Result<Reservation, InvalidReservationState> {
     if (this.status.isExpired()) {
       return Result.ok(this);
     }
 
     if (!this.status.isPending()) {
-      return Result.fail(new Error(`Cannot expire reservation in "${this.status.value}" state`));
+      return Result.fail(InvalidReservationState.create("expire", this.status.value));
     }
 
     return Result.ok(

@@ -1,6 +1,8 @@
 import { Result } from "../../shared/result.js";
 import type { Organization } from "../../domain/entities/organization.entity.js";
 import { OrgNotFound } from "../../domain/errors/org-not-found.error.js";
+import type { InvalidOrganizationName } from "../../domain/errors/invalid-organization-name.error.js";
+import type { OrganizationSettingsTooLarge } from "../../domain/errors/organization-settings-too-large.error.js";
 import type { IOrganizationRepository } from "../ports/organization-repository.port.js";
 import type { UpdateOrganizationInput } from "../dto/update-organization-input.dto.js";
 
@@ -11,7 +13,9 @@ export class UpdateOrganization {
 
   async execute(
     input: UpdateOrganizationInput,
-  ): Promise<Result<Organization, Error>> {
+  ): Promise<
+    Result<Organization, OrgNotFound | InvalidOrganizationName | OrganizationSettingsTooLarge>
+  > {
     const org = await this.organizationRepository.findById(input.organizationId);
     if (!org) {
       return Result.fail(OrgNotFound.create(input.organizationId));

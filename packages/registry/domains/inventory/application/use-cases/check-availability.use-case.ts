@@ -6,7 +6,7 @@ import type { StockLevelOutput } from "../dto/stock-level-output.dto.js";
 export class CheckAvailability {
   constructor(private readonly stockRepository: IStockRepository) {}
 
-  async execute(sku: string): Promise<Result<StockLevelOutput[], Error>> {
+  async execute(sku: string): Promise<Result<StockLevelOutput[], never>> {
     const stocks = await this.stockRepository.findBySku(sku);
     return Result.ok(stocks.map(toStockLevelOutput));
   }

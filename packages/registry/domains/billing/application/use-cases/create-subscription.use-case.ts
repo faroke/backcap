@@ -2,6 +2,11 @@ import { Result } from "../../shared/result.js";
 import { Subscription } from "../../domain/entities/subscription.entity.js";
 import { SubscriptionCreated } from "../../domain/events/subscription-created.event.js";
 import { CustomerNotFound } from "../../domain/errors/customer-not-found.error.js";
+import { ProviderError } from "../../domain/errors/provider.error.js";
+import { PersistenceError } from "../../domain/errors/persistence.error.js";
+import type { MoneyError } from "../../domain/errors/money.error.js";
+import type { InvalidBillingPeriod } from "../../domain/errors/invalid-billing-period.error.js";
+import type { InvalidSubscriptionStatus } from "../../domain/errors/invalid-subscription-status.error.js";
 import type { ICustomerRepository } from "../ports/customer-repository.port.js";
 import type { ISubscriptionRepository } from "../ports/subscription-repository.port.js";
 import type { IPaymentProvider } from "../ports/payment-provider.port.js";
@@ -16,7 +21,17 @@ export class CreateSubscription {
 
   async execute(
     input: CreateSubscriptionInput,
-  ): Promise<Result<{ subscriptionId: string; event: SubscriptionCreated }, Error>> {
+  ): Promise<
+    Result<
+      { subscriptionId: string; event: SubscriptionCreated },
+      | CustomerNotFound
+      | ProviderError
+      | InvalidSubscriptionStatus
+      | MoneyError
+      | InvalidBillingPeriod
+      | PersistenceError
+    >
+  > {
     const customer = await this.customerRepository.findById(input.customerId);
     if (!customer) {
       return Result.fail(CustomerNotFound.create(input.customerId));
@@ -31,7 +46,7 @@ export class CreateSubscription {
       externalSubscriptionId = result.externalSubscriptionId;
     } catch (err) {
       const reason = err instanceof Error ? err.message : "Provider subscription creation failed";
-      return Result.fail(new Error(reason));
+      return Result.fail(ProviderError.create(reason));
     }
 
     const now = new Date();
@@ -70,7 +85,7 @@ export class CreateSubscription {
     } catch (err) {
       await this.paymentProvider.cancelSubscription(externalSubscriptionId).catch(() => {});
       const reason = err instanceof Error ? err.message : "Failed to save subscription";
-      return Result.fail(new Error(reason));
+      return Result.fail(PersistenceError.create(reason));
     }
 
     const event = new SubscriptionCreated(subscription.id, input.customerId, input.planId);

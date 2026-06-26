@@ -1,8 +1,10 @@
-import { Result } from "../../../shared/result.js";
+import { Result } from "../../shared/result.js";
 import { ShipmentStatus } from "../value-objects/shipment-status.vo.js";
 import { ShippingZone } from "../value-objects/shipping-zone.vo.js";
 import { TrackingNumber } from "../value-objects/tracking-number.vo.js";
 import { InvalidShipmentTransition } from "../errors/invalid-shipment-transition.error.js";
+import { InvalidShipment } from "../errors/invalid-shipment.error.js";
+import type { InvalidShipmentStatus } from "../errors/invalid-shipment-status.error.js";
 
 export class Shipment {
   readonly id: string;
@@ -63,18 +65,18 @@ export class Shipment {
     estimatedDeliveryDate?: Date;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<Shipment, Error> {
+  }): Result<Shipment, InvalidShipment | InvalidShipmentStatus> {
     if (!params.id || params.id.trim().length === 0) {
-      return Result.fail(new Error("Shipment ID is required"));
+      return Result.fail(InvalidShipment.missingId());
     }
     if (!params.orderId || params.orderId.trim().length === 0) {
-      return Result.fail(new Error("Order ID is required"));
+      return Result.fail(InvalidShipment.missingOrderId());
     }
     if (!params.carrierId || params.carrierId.trim().length === 0) {
-      return Result.fail(new Error("Carrier ID is required"));
+      return Result.fail(InvalidShipment.missingCarrierId());
     }
     if (!Number.isInteger(params.weightGrams) || params.weightGrams <= 0) {
-      return Result.fail(new Error("Weight must be a positive integer (grams)"));
+      return Result.fail(InvalidShipment.invalidWeight());
     }
 
     let status: ShipmentStatus;
@@ -108,7 +110,7 @@ export class Shipment {
     );
   }
 
-  dispatch(trackingNumber: TrackingNumber): Result<Shipment, Error> {
+  dispatch(trackingNumber: TrackingNumber): Result<Shipment, InvalidShipmentTransition> {
     if (!this.status.canTransitionTo("dispatched")) {
       return Result.fail(InvalidShipmentTransition.create(this.status.value, "dispatched"));
     }
@@ -122,7 +124,7 @@ export class Shipment {
     );
   }
 
-  markInTransit(): Result<Shipment, Error> {
+  markInTransit(): Result<Shipment, InvalidShipmentTransition> {
     if (!this.status.canTransitionTo("in_transit")) {
       return Result.fail(InvalidShipmentTransition.create(this.status.value, "in_transit"));
     }
@@ -136,7 +138,7 @@ export class Shipment {
     );
   }
 
-  deliver(): Result<Shipment, Error> {
+  deliver(): Result<Shipment, InvalidShipmentTransition> {
     if (!this.status.canTransitionTo("delivered")) {
       return Result.fail(InvalidShipmentTransition.create(this.status.value, "delivered"));
     }
@@ -150,7 +152,7 @@ export class Shipment {
     );
   }
 
-  cancel(reason?: string): Result<Shipment, Error> {
+  cancel(reason?: string): Result<Shipment, InvalidShipmentTransition> {
     if (!this.status.canTransitionTo("canceled")) {
       return Result.fail(InvalidShipmentTransition.create(this.status.value, "canceled"));
     }
@@ -164,12 +166,12 @@ export class Shipment {
     );
   }
 
-  assignRate(rateCents: number, rateCurrency: string): Result<Shipment, Error> {
+  assignRate(rateCents: number, rateCurrency: string): Result<Shipment, InvalidShipment> {
     if (!Number.isInteger(rateCents) || rateCents < 0) {
-      return Result.fail(new Error("Rate cents must be a non-negative integer"));
+      return Result.fail(InvalidShipment.invalidRateCents());
     }
     if (!/^[A-Z]{3}$/.test(rateCurrency.toUpperCase())) {
-      return Result.fail(new Error(`Invalid rate currency: "${rateCurrency}"`));
+      return Result.fail(InvalidShipment.invalidRateCurrency(rateCurrency));
     }
     return Result.ok(
       new Shipment(
@@ -181,10 +183,10 @@ export class Shipment {
     );
   }
 
-  assignEstimatedDelivery(date: Date, now?: Date): Result<Shipment, Error> {
+  assignEstimatedDelivery(date: Date, now?: Date): Result<Shipment, InvalidShipment> {
     const reference = now ?? new Date();
     if (date <= reference) {
-      return Result.fail(new Error("Estimated delivery date must be in the future"));
+      return Result.fail(InvalidShipment.estimatedDeliveryNotFuture());
     }
     return Result.ok(
       new Shipment(

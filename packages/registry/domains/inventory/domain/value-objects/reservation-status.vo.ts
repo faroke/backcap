@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidReservationStatus } from "../errors/invalid-reservation-status.error.js";
 
 export type ReservationStatusValue = "pending" | "confirmed" | "released" | "expired";
 
@@ -25,11 +26,11 @@ export class ReservationStatus {
     return new ReservationStatus("expired");
   }
 
-  static from(value: string): Result<ReservationStatus, Error> {
+  static from(value: string): Result<ReservationStatus, InvalidReservationStatus> {
     if (value === "pending" || value === "confirmed" || value === "released" || value === "expired") {
       return Result.ok(new ReservationStatus(value));
     }
-    return Result.fail(new Error(`Invalid reservation status: "${value}"`));
+    return Result.fail(InvalidReservationStatus.create(value));
   }
 
   isPending(): boolean {

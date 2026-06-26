@@ -1,13 +1,14 @@
 import { Result } from "../../shared/result.js";
 import { Money } from "../../domain/value-objects/money.vo.js";
 import { ProductNotFound } from "../../domain/errors/product-not-found.error.js";
+import type { MoneyError } from "../../domain/errors/money.error.js";
 import type { IProductRepository } from "../ports/product-repository.port.js";
 import type { UpdatePriceInput } from "../dto/update-price-input.dto.js";
 
 export class UpdatePrice {
   constructor(private readonly productRepository: IProductRepository) {}
 
-  async execute(input: UpdatePriceInput): Promise<Result<void, Error>> {
+  async execute(input: UpdatePriceInput): Promise<Result<void, ProductNotFound | MoneyError>> {
     const product = await this.productRepository.findById(input.productId);
     if (!product) {
       return Result.fail(ProductNotFound.create(input.productId));

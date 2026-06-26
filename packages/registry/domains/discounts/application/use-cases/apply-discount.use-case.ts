@@ -1,6 +1,8 @@
 import { Result } from "../../shared/result.js";
 import { CouponNotFound } from "../../domain/errors/coupon-not-found.error.js";
 import { PromotionNotFound } from "../../domain/errors/promotion-not-found.error.js";
+import type { InvalidMoney } from "../../domain/errors/invalid-money.error.js";
+import type { CurrencyMismatch } from "../../domain/errors/currency-mismatch.error.js";
 import type { Promotion } from "../../domain/entities/promotion.entity.js";
 import type { IPromotionRepository } from "../ports/promotion-repository.port.js";
 import type { ICouponRepository } from "../ports/coupon-repository.port.js";
@@ -21,7 +23,9 @@ export class ApplyDiscount {
 
   async execute(
     input: ApplyDiscountInput,
-  ): Promise<Result<DiscountResultOutput, Error>> {
+  ): Promise<
+    Result<DiscountResultOutput, CouponNotFound | PromotionNotFound | InvalidMoney | CurrencyMismatch>
+  > {
     const context = {
       orderTotalCents: input.orderTotalCents,
       orderCurrency: input.orderCurrency,
@@ -110,7 +114,7 @@ export class ApplyDiscount {
         }
         return b.discountCents - a.discountCents;
       });
-      bestNonStackable = nonStackable[0];
+      bestNonStackable = nonStackable[0]!;
     }
 
     const stackableSum = stackable.reduce((sum, pd) => sum + pd.discountCents, 0);

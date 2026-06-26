@@ -1,8 +1,12 @@
-import { Result } from "../../../shared/result.js";
+import { Result } from "../../shared/result.js";
 import { Shipment } from "../../domain/entities/shipment.entity.js";
 import { ShippingZone } from "../../domain/value-objects/shipping-zone.vo.js";
 import { CarrierNotFound } from "../../domain/errors/carrier-not-found.error.js";
+import { CarrierInactive } from "../../domain/errors/carrier-inactive.error.js";
 import { ShipmentCreated } from "../../domain/events/shipment-created.event.js";
+import type { InvalidShippingZone } from "../../domain/errors/invalid-shipping-zone.error.js";
+import type { InvalidShipment } from "../../domain/errors/invalid-shipment.error.js";
+import type { InvalidShipmentStatus } from "../../domain/errors/invalid-shipment-status.error.js";
 import type { IShipmentRepository } from "../ports/shipment-repository.port.js";
 import type { ICarrierRepository } from "../ports/carrier-repository.port.js";
 import type { CreateShipmentInput } from "../dto/create-shipment-input.dto.js";
@@ -13,13 +17,20 @@ export class CreateShipment {
     private readonly carrierRepository: ICarrierRepository,
   ) {}
 
-  async execute(input: CreateShipmentInput): Promise<Result<{ shipmentId: string; event: ShipmentCreated }, Error>> {
+  async execute(
+    input: CreateShipmentInput,
+  ): Promise<
+    Result<
+      { shipmentId: string; event: ShipmentCreated },
+      CarrierNotFound | CarrierInactive | InvalidShippingZone | InvalidShipment | InvalidShipmentStatus
+    >
+  > {
     const carrier = await this.carrierRepository.findById(input.carrierId);
     if (!carrier) {
       return Result.fail(CarrierNotFound.create(input.carrierId));
     }
     if (!carrier.active) {
-      return Result.fail(new Error(`Carrier "${input.carrierId}" is not active`));
+      return Result.fail(CarrierInactive.create(input.carrierId));
     }
 
     const zoneResult = ShippingZone.create({

@@ -1,4 +1,5 @@
-import { Result } from "../../../shared/result.js";
+import { Result } from "../../shared/result.js";
+import { InvalidShipmentStatus } from "../errors/invalid-shipment-status.error.js";
 
 export type ShipmentStatusValue =
   | "created"
@@ -42,7 +43,7 @@ export class ShipmentStatus {
     return new ShipmentStatus("canceled");
   }
 
-  static from(value: string): Result<ShipmentStatus, Error> {
+  static from(value: string): Result<ShipmentStatus, InvalidShipmentStatus> {
     if (
       value === "created" ||
       value === "dispatched" ||
@@ -52,7 +53,7 @@ export class ShipmentStatus {
     ) {
       return Result.ok(new ShipmentStatus(value));
     }
-    return Result.fail(new Error(`Invalid shipment status: "${value}"`));
+    return Result.fail(InvalidShipmentStatus.create(value));
   }
 
   canTransitionTo(target: ShipmentStatusValue): boolean {

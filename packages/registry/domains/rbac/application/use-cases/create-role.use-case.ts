@@ -2,6 +2,8 @@ import { Result } from "../../shared/result.js";
 import { Role } from "../../domain/entities/role.entity.js";
 import { Permission } from "../../domain/entities/permission.entity.js";
 import { DuplicateRole } from "../../domain/errors/duplicate-role.error.js";
+import type { PermissionDenied } from "../../domain/errors/permission-denied.error.js";
+import type { InvalidRoleName } from "../../domain/errors/invalid-role-name.error.js";
 import { PermissionGranted } from "../../domain/events/permission-granted.event.js";
 import type { IRoleRepository } from "../ports/role-repository.port.js";
 import type { CreateRoleInput } from "../dto/create-role-input.dto.js";
@@ -11,7 +13,12 @@ export class CreateRole {
 
   async execute(
     input: CreateRoleInput,
-  ): Promise<Result<{ roleId: string; events: PermissionGranted[] }, Error>> {
+  ): Promise<
+    Result<
+      { roleId: string; events: PermissionGranted[] },
+      DuplicateRole | PermissionDenied | InvalidRoleName
+    >
+  > {
     const existing = await this.roleRepository.findByName(input.name);
     if (existing) {
       return Result.fail(DuplicateRole.create(input.name));

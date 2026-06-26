@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidOrderItem } from "../errors/invalid-order-item.error.js";
 
 export class OrderItem {
   readonly id: string;
@@ -31,18 +32,18 @@ export class OrderItem {
     quantity: number;
     unitPriceCents: number;
     createdAt?: Date;
-  }): Result<OrderItem, Error> {
+  }): Result<OrderItem, InvalidOrderItem> {
     if (!params.id || params.id.trim().length === 0) {
-      return Result.fail(new Error("Order item ID is required"));
+      return Result.fail(InvalidOrderItem.create("Order item ID is required"));
     }
     if (!params.productId || params.productId.trim().length === 0) {
-      return Result.fail(new Error("Product ID is required"));
+      return Result.fail(InvalidOrderItem.create("Product ID is required"));
     }
     if (!Number.isInteger(params.quantity) || params.quantity < 1) {
-      return Result.fail(new Error("Quantity must be a positive integer"));
+      return Result.fail(InvalidOrderItem.create("Quantity must be a positive integer"));
     }
     if (!Number.isInteger(params.unitPriceCents) || params.unitPriceCents < 0) {
-      return Result.fail(new Error("Unit price must be a non-negative integer (cents)"));
+      return Result.fail(InvalidOrderItem.create("Unit price must be a non-negative integer (cents)"));
     }
 
     return Result.ok(

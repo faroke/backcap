@@ -1,6 +1,7 @@
 import { Result } from "../../shared/result.js";
 import { AuditEntry } from "../../domain/entities/audit-entry.entity.js";
 import { EntryRecorded } from "../../domain/events/entry-recorded.event.js";
+import type { InvalidAuditAction } from "../../domain/errors/invalid-audit-action.error.js";
 import type { IAuditStore } from "../ports/audit-store.port.js";
 import type { RecordEntryInput } from "../dto/record-entry.dto.js";
 import type { RecordEntryOutput } from "../dto/record-entry.dto.js";
@@ -10,7 +11,7 @@ export class RecordEntry {
 
   async execute(
     input: RecordEntryInput,
-  ): Promise<Result<{ output: RecordEntryOutput; event: EntryRecorded }, Error>> {
+  ): Promise<Result<{ output: RecordEntryOutput; event: EntryRecorded }, InvalidAuditAction>> {
     const id = crypto.randomUUID();
     const entryResult = AuditEntry.create({
       id,

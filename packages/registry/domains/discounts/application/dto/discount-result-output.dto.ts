@@ -8,7 +8,7 @@ export interface DiscountResultOutput {
     promotionName: string;
     discountCents: number;
     ruleType: "percentage" | "fixed_amount" | "buy_x_get_y";
-    buyQuantity?: number;
-    getQuantity?: number;
+    buyQuantity?: number | undefined;
+    getQuantity?: number | undefined;
   }>;
 }

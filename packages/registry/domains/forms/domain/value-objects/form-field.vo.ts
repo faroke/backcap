@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidFormField } from "../errors/invalid-form-field.error.js";
 
 export type FormFieldType = "text" | "email" | "number" | "boolean" | "select";
 
@@ -37,17 +38,15 @@ export class FormField {
     name: string;
     type: FormFieldType;
     required: boolean;
-    options?: string[];
-  }): Result<FormField, Error> {
+    options?: string[] | undefined;
+  }): Result<FormField, InvalidFormField> {
     if (!params.name || params.name.trim().length === 0) {
-      return Result.fail(new Error("Field name cannot be empty"));
+      return Result.fail(InvalidFormField.emptyName());
     }
 
     if (params.type === "select") {
       if (!params.options || params.options.length === 0) {
-        return Result.fail(
-          new Error(`Field "${params.name}" of type "select" requires non-empty options`),
-        );
+        return Result.fail(InvalidFormField.missingOptions(params.name));
       }
     }
 

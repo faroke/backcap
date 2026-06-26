@@ -1,5 +1,6 @@
 import { Result } from "../../shared/result.js";
 import { FormField } from "../value-objects/form-field.vo.js";
+import { EmptyForm } from "../errors/empty-form.error.js";
 
 export class Form {
   readonly id: string;
@@ -24,9 +25,9 @@ export class Form {
     name: string;
     fields: FormField[];
     createdAt?: Date;
-  }): Result<Form, Error> {
+  }): Result<Form, EmptyForm> {
     if (params.fields.length === 0) {
-      return Result.fail(new Error("A form must have at least one field"));
+      return Result.fail(EmptyForm.create());
     }
 
     return Result.ok(
@@ -34,7 +35,7 @@ export class Form {
     );
   }
 
-  addField(field: FormField): Result<Form, Error> {
+  addField(field: FormField): Result<Form, never> {
     const newFields = [...this.fields, field];
     return Result.ok(new Form(this.id, this.name, newFields, this.createdAt));
   }

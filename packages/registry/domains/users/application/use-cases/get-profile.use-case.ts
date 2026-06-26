@@ -6,7 +6,7 @@ import type { IProfileRepository } from "../ports/profile-repository.port.js";
 export class GetProfile {
   constructor(private readonly profileRepository: IProfileRepository) {}
 
-  async execute(userId: string): Promise<Result<Profile, Error>> {
+  async execute(userId: string): Promise<Result<Profile, ProfileNotFound>> {
     const profile = await this.profileRepository.findByUserId(userId);
     if (!profile) {
       return Result.fail(ProfileNotFound.create(userId));

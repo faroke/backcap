@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidCustomer } from "../errors/invalid-customer.error.js";
 
 export class Customer {
   readonly id: string;
@@ -12,7 +13,7 @@ export class Customer {
     id: string;
     email: string;
     name: string;
-    externalId?: string;
+    externalId?: string | undefined;
     createdAt: Date;
     updatedAt: Date;
   }) {
@@ -31,12 +32,12 @@ export class Customer {
     externalId?: string;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<Customer, Error> {
+  }): Result<Customer, InvalidCustomer> {
     if (!params.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(params.email)) {
-      return Result.fail(new Error(`Invalid customer email: "${params.email}"`));
+      return Result.fail(InvalidCustomer.invalidEmail(params.email));
     }
     if (!params.name || params.name.trim().length === 0) {
-      return Result.fail(new Error("Customer name is required"));
+      return Result.fail(InvalidCustomer.nameRequired());
     }
     const now = new Date();
     return Result.ok(

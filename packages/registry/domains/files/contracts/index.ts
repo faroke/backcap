@@ -4,6 +4,15 @@ export type {
   GetFileInput,
   GetFileOutput,
   DeleteFileInput,
+  ProcessFileInput,
+  ProcessFileOutput,
+  ListFilesInput,
+  ListFilesOutput,
+  GetFileUrlInput,
+  GetFileUrlOutput,
+  FileUploaded,
+  FileProcessed,
+  FileDeleted,
   IFilesService,
 } from "./files.contract.js";
 

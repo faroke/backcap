@@ -3,6 +3,8 @@ import { Rating } from "../value-objects/rating.vo.js";
 import { ReviewBody } from "../value-objects/review-body.vo.js";
 import { ModerationStatus } from "../value-objects/moderation-status.vo.js";
 import { ReviewAlreadyModerated } from "../errors/review-already-moderated.error.js";
+import { InvalidRating } from "../errors/invalid-rating.error.js";
+import { InvalidReviewBody } from "../errors/invalid-review-body.error.js";
 
 export class Review {
   readonly id: string;
@@ -43,7 +45,7 @@ export class Review {
   static create(params: {
     id: string;
     rating: number;
-    body?: string;
+    body?: string | undefined;
     authorId: string;
     resourceId: string;
     resourceType: string;
@@ -51,7 +53,7 @@ export class Review {
     createdAt?: Date;
     moderatedAt?: Date;
     moderatorId?: string;
-  }): Result<Review, Error> {
+  }): Result<Review, InvalidRating | InvalidReviewBody> {
     const ratingResult = Rating.create(params.rating);
     if (ratingResult.isFail()) {
       return Result.fail(ratingResult.unwrapError());

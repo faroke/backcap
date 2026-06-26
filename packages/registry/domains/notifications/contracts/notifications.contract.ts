@@ -8,6 +8,9 @@ import type {
   GetNotificationsOutput,
 } from "../application/dto/get-notifications.dto.js";
 import type { MarkAsReadInput } from "../application/dto/mark-as-read.dto.js";
+import type { InvalidChannel } from "../domain/errors/invalid-channel.error.js";
+import type { NotificationDeliveryFailed } from "../domain/errors/notification-delivery-failed.error.js";
+import type { NotificationNotFound } from "../domain/errors/notification-not-found.error.js";
 
 export type {
   SendNotificationInput,
@@ -18,7 +21,9 @@ export type {
 };
 
 export interface INotificationsService {
-  send(input: SendNotificationInput): Promise<Result<SendNotificationOutput, Error>>;
-  getByRecipient(input: GetNotificationsInput): Promise<Result<GetNotificationsOutput, Error>>;
-  markAsRead(input: MarkAsReadInput): Promise<Result<void, Error>>;
+  send(
+    input: SendNotificationInput,
+  ): Promise<Result<SendNotificationOutput, InvalidChannel | NotificationDeliveryFailed>>;
+  getByRecipient(input: GetNotificationsInput): Promise<Result<GetNotificationsOutput, never>>;
+  markAsRead(input: MarkAsReadInput): Promise<Result<void, NotificationNotFound>>;
 }

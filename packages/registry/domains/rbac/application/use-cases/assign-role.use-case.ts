@@ -9,7 +9,7 @@ export class AssignRole {
 
   async execute(
     input: AssignRoleInput,
-  ): Promise<Result<{ event: RoleAssigned }, Error>> {
+  ): Promise<Result<{ event: RoleAssigned }, RoleNotFound>> {
     const role = await this.roleRepository.findById(input.roleId);
     if (!role) {
       return Result.fail(RoleNotFound.create(input.roleId));

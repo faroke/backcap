@@ -4,7 +4,7 @@ description: >
   Backcap catalog domain: DDD-structured product catalog for TypeScript backends.
   Domain layer contains Product aggregate (with variants), Category entity, SKU/Money/ProductStatus
   value objects, four domain events (ProductCreated, ProductPublished, ProductArchived, VariantAdded),
-  and three typed errors (ProductNotFound, DuplicateSKU, InvalidPrice). Application layer has eight
+  and three typed errors (ProductNotFound, DuplicateSKU, MoneyError). Application layer has eight
   use cases (CreateProduct, PublishProduct, AddVariant, UpdatePrice, ListProducts, GetProduct,
   CreateCategory, ListByCategory), plus IProductRepository and ICategoryRepository port interfaces.
   Public surface is ICatalogService and createCatalogService factory in contracts/.
@@ -39,7 +39,7 @@ For Backcap-wide architecture rules, naming conventions, and the Result pattern,
 | VO              | File                                          | Validation                                     |
 |-----------------|-----------------------------------------------|------------------------------------------------|
 | `SKU`           | `domain/value-objects/sku.vo.ts`              | 3-50 alphanumeric + hyphens, uppercase         |
-| `Money`         | `domain/value-objects/money.vo.ts`            | Integer cents, ISO 4217 currency, arithmetic   |
+| `Money`         | `domain/value-objects/money.vo.ts`            | Integer `amount` (cents), explicit ISO 4217 currency (no default), arithmetic |
 | `ProductStatus` | `domain/value-objects/product-status.vo.ts`   | draft → active → archived                     |
 
 ### Events
@@ -57,7 +57,7 @@ For Backcap-wide architecture rules, naming conventions, and the Result pattern,
 |------------------|-----------------------------------------------|--------------------------------|
 | `ProductNotFound`| `domain/errors/product-not-found.error.ts`    | `.create(productId)`           |
 | `DuplicateSKU`   | `domain/errors/duplicate-sku.error.ts`        | `.create(sku)`                 |
-| `InvalidPrice`   | `domain/errors/invalid-price.error.ts`        | `.create(reason)`              |
+| `MoneyError`     | `domain/errors/money.error.ts`                | `.create(reason)`              |
 
 ### Ports
 
@@ -89,7 +89,7 @@ For Backcap-wide architecture rules, naming conventions, and the Result pattern,
 ## Conventions
 
 - `Product` is the aggregate root and owns its variants
-- `Money` VO is self-contained (not shared with billing)
+- `Money` VO is the unified value object shared with billing (uses `amount` property for integer cents, requires explicit currency)
 - `ProductStatus` state machine: draft → active (publish), active → archived (archive). No reverse.
 - `addVariant()` enforces no duplicate SKUs within a product
 - `Category` hierarchy uses flat `parentId` references

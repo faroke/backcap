@@ -9,7 +9,7 @@ export class QueryAuditLog {
 
   async execute(
     input: QueryAuditLogInput,
-  ): Promise<Result<QueryAuditLogOutput, Error>> {
+  ): Promise<Result<QueryAuditLogOutput, AuditQueryFailed>> {
     try {
       const { entries, total } = await this.auditStore.query({
         actor: input.actor,

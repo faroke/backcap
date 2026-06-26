@@ -11,6 +11,8 @@ export default defineBuildConfig({
     "src/result",
     "src/event-bus.port",
     "src/in-memory-event-bus",
+    "src/money.vo",
+    "src/errors/money.error",
   ],
   declaration: true,
   rollup: {

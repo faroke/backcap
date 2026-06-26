@@ -7,7 +7,7 @@ import { toProductOutput } from "./mappers.adapter.js";
 export class GetProduct {
   constructor(private readonly productRepository: IProductRepository) {}
 
-  async execute(productId: string): Promise<Result<ProductOutput, Error>> {
+  async execute(productId: string): Promise<Result<ProductOutput, ProductNotFound>> {
     const product = await this.productRepository.findById(productId);
     if (!product) {
       return Result.fail(ProductNotFound.create(productId));

@@ -29,6 +29,7 @@ domains/billing/
 │   │   ├── payment-failed.event.ts        → PaymentFailed
 │   │   └── invoice-generated.event.ts     → InvoiceGenerated
 │   ├── errors/
+│   │   ├── money.error.ts                  → MoneyError
 │   │   ├── payment-declined.error.ts       → PaymentDeclined
 │   │   ├── subscription-not-found.error.ts → SubscriptionNotFound
 │   │   ├── invalid-plan.error.ts           → InvalidPlan
@@ -64,12 +65,12 @@ domains/billing/
 │   ├── billing.contract.ts → IBillingService
 │   ├── billing.factory.ts  → createBillingService(deps)
 │   └── index.ts
-└── shared/result.ts
+└── shared/result.ts          # injected at build time
 ```
 
 ## Key Design Decisions
 
-- **Money VO**: Integer cents arithmetic to avoid floating-point issues. All amounts stored as smallest currency unit.
+- **Money VO**: Integer cents arithmetic to avoid floating-point issues. All amounts stored as smallest currency unit. Validation failures throw `MoneyError`.
 - **IPaymentProvider**: Core abstraction for payment gateway — Stripe, Paddle, etc. implement this port.
 - **Vendor independence**: Domain layer has zero knowledge of payment providers.
 - **Immutable entities**: All mutations return new instances via Result type.

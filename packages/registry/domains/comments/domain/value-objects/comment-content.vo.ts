@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidCommentContent } from "../errors/invalid-comment-content.error.js";
 
 export class CommentContent {
   readonly value: string;
@@ -7,14 +8,10 @@ export class CommentContent {
     this.value = value;
   }
 
-  static create(value: string): Result<CommentContent, Error> {
+  static create(value: string): Result<CommentContent, InvalidCommentContent> {
     const trimmed = value.trim();
     if (trimmed.length < 1 || trimmed.length > 10000) {
-      return Result.fail(
-        new Error(
-          `Comment content must be between 1 and 10,000 characters after trimming. Got ${trimmed.length}.`,
-        ),
-      );
+      return Result.fail(InvalidCommentContent.create(trimmed.length));
     }
     return Result.ok(new CommentContent(trimmed));
   }

@@ -10,7 +10,7 @@ export class GetPaymentHistory {
     private readonly invoiceRepository: IInvoiceRepository,
   ) {}
 
-  async execute(customerId: string): Promise<Result<Invoice[], Error>> {
+  async execute(customerId: string): Promise<Result<Invoice[], CustomerNotFound>> {
     const customer = await this.customerRepository.findById(customerId);
     if (!customer) {
       return Result.fail(CustomerNotFound.create(customerId));

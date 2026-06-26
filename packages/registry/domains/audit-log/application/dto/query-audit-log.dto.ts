@@ -13,7 +13,7 @@ export interface QueryAuditLogEntry {
   actor: string;
   action: string;
   resource: string;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, unknown> | undefined;
   timestamp: Date;
 }
 

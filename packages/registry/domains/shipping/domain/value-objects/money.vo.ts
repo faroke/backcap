@@ -1,4 +1,4 @@
-import { Result } from "../../../shared/result.js";
+import { Result } from "../../shared/result.js";
 import { MoneyError } from "../errors/money.error.js";
 
 export class Money {

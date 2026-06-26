@@ -70,12 +70,9 @@ return Result.ok({ output: { postId, slug }, event: new PostCreated(postId, auth
 The calling layer decides what to do with the event:
 
 ```typescript
-// Forward to blog-search bridge
 const { output, event } = result.unwrap();
+// Forward to a bridge (e.g., blog-tags) or ignore the event
 await eventBus.publish("PostPublished", event);
-
-// Or ignore the event
-const { output } = result.unwrap();
 ```
 
 ---

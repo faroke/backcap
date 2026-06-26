@@ -1,5 +1,9 @@
 import { Result } from "../../shared/result.js";
 import { Quantity } from "../value-objects/quantity.vo.js";
+import { InvalidQuantity } from "../errors/invalid-quantity.error.js";
+import { InvalidCartItem } from "../errors/invalid-cart-item.error.js";
+import { InvalidUnitPrice } from "../errors/invalid-unit-price.error.js";
+import { InvalidCurrency } from "../errors/invalid-currency.error.js";
 
 const CURRENCY_REGEX = /^[A-Z]{3}$/;
 
@@ -46,23 +50,23 @@ export class CartItem {
     currency?: string;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<CartItem, Error> {
+  }): Result<CartItem, InvalidCartItem | InvalidUnitPrice | InvalidCurrency | InvalidQuantity> {
     if (!params.id || params.id.trim().length === 0) {
-      return Result.fail(new Error("Cart item ID is required"));
+      return Result.fail(InvalidCartItem.create("Cart item ID is required"));
     }
     if (!params.productId || params.productId.trim().length === 0) {
-      return Result.fail(new Error("Product ID is required"));
+      return Result.fail(InvalidCartItem.create("Product ID is required"));
     }
     if (!params.variantId || params.variantId.trim().length === 0) {
-      return Result.fail(new Error("Variant ID is required"));
+      return Result.fail(InvalidCartItem.create("Variant ID is required"));
     }
     if (!Number.isInteger(params.unitPriceCents) || params.unitPriceCents < 0 || params.unitPriceCents > 99_999_999_99) {
-      return Result.fail(new Error("Unit price must be a non-negative integer (cents) up to 99999999999"));
+      return Result.fail(InvalidUnitPrice.create());
     }
 
     const currency = (params.currency ?? "USD").toUpperCase();
     if (!CURRENCY_REGEX.test(currency)) {
-      return Result.fail(new Error(`Invalid ISO 4217 currency code: "${params.currency}"`));
+      return Result.fail(InvalidCurrency.create(params.currency ?? currency));
     }
 
     const quantityResult = Quantity.create(params.quantity);
@@ -85,7 +89,7 @@ export class CartItem {
     );
   }
 
-  updateQuantity(newQuantity: number): Result<CartItem, Error> {
+  updateQuantity(newQuantity: number): Result<CartItem, InvalidQuantity> {
     const quantityResult = Quantity.create(newQuantity);
     if (quantityResult.isFail()) {
       return Result.fail(quantityResult.unwrapError());
@@ -104,13 +108,16 @@ export class CartItem {
     );
   }
 
-  updatePrice(newPriceCents: number, newCurrency: string): Result<CartItem, Error> {
+  updatePrice(
+    newPriceCents: number,
+    newCurrency: string,
+  ): Result<CartItem, InvalidUnitPrice | InvalidCurrency> {
     if (!Number.isInteger(newPriceCents) || newPriceCents < 0 || newPriceCents > 99_999_999_99) {
-      return Result.fail(new Error("Unit price must be a non-negative integer (cents) up to 99999999999"));
+      return Result.fail(InvalidUnitPrice.create());
     }
     const upper = newCurrency.toUpperCase();
     if (!CURRENCY_REGEX.test(upper)) {
-      return Result.fail(new Error(`Invalid ISO 4217 currency code: "${newCurrency}"`));
+      return Result.fail(InvalidCurrency.create(newCurrency));
     }
     return Result.ok(
       new CartItem(

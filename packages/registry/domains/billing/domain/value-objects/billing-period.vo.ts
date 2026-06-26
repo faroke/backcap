@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidBillingPeriod } from "../errors/invalid-billing-period.error.js";
 
 export type BillingInterval = "monthly" | "yearly";
 
@@ -13,9 +14,9 @@ export class BillingPeriod {
     this.endDate = endDate;
   }
 
-  static create(interval: BillingInterval, startDate: Date, endDate: Date): Result<BillingPeriod, Error> {
+  static create(interval: BillingInterval, startDate: Date, endDate: Date): Result<BillingPeriod, InvalidBillingPeriod> {
     if (endDate <= startDate) {
-      return Result.fail(new Error("End date must be after start date"));
+      return Result.fail(InvalidBillingPeriod.create());
     }
     return Result.ok(new BillingPeriod(interval, startDate, endDate));
   }

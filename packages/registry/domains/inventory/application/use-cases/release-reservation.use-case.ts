@@ -2,6 +2,8 @@ import { Result } from "../../shared/result.js";
 import { ReservationNotFound } from "../../domain/errors/reservation-not-found.error.js";
 import { StockNotFound } from "../../domain/errors/stock-not-found.error.js";
 import { ReservationReleased } from "../../domain/events/reservation-released.event.js";
+import type { InvalidReservationState } from "../../domain/errors/invalid-reservation-state.error.js";
+import type { InvalidStockQuantity } from "../../domain/errors/invalid-stock-quantity.error.js";
 import type { IStockRepository } from "../ports/stock-repository.port.js";
 import type { IReservationRepository } from "../ports/reservation-repository.port.js";
 
@@ -13,7 +15,12 @@ export class ReleaseReservation {
 
   async execute(
     reservationId: string,
-  ): Promise<Result<{ event: ReservationReleased }, Error>> {
+  ): Promise<
+    Result<
+      { event: ReservationReleased },
+      ReservationNotFound | InvalidReservationState | StockNotFound | InvalidStockQuantity
+    >
+  > {
     const reservation = await this.reservationRepository.findById(reservationId);
     if (!reservation) {
       return Result.fail(ReservationNotFound.create(reservationId));

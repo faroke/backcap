@@ -5,7 +5,7 @@ import type { ListReviewsInput, ListReviewsOutput } from "../dto/list-reviews.dt
 export class ListReviews {
   constructor(private readonly reviewRepository: IReviewRepository) {}
 
-  async execute(input: ListReviewsInput): Promise<Result<ListReviewsOutput, Error>> {
+  async execute(input: ListReviewsInput): Promise<Result<ListReviewsOutput, never>> {
     const { reviews, total } = await this.reviewRepository.findByResource(
       input.resourceId,
       input.resourceType,

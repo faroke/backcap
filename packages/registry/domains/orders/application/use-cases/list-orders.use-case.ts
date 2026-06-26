@@ -6,7 +6,7 @@ import { toOrderOutput } from "./mappers.adapter.js";
 export class ListOrders {
   constructor(private readonly orderRepository: IOrderRepository) {}
 
-  async execute(): Promise<Result<OrderOutput[], Error>> {
+  async execute(): Promise<Result<OrderOutput[], never>> {
     const orders = await this.orderRepository.findAll();
     return Result.ok(orders.map(toOrderOutput));
   }

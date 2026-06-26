@@ -1,12 +1,16 @@
-import { Result } from "../../../shared/result.js";
+import { Result } from "../../shared/result.js";
 import { ShipmentNotFound } from "../../domain/errors/shipment-not-found.error.js";
 import { ShipmentCanceled } from "../../domain/events/shipment-canceled.event.js";
+import type { InvalidShipmentTransition } from "../../domain/errors/invalid-shipment-transition.error.js";
 import type { IShipmentRepository } from "../ports/shipment-repository.port.js";
 
 export class CancelShipment {
   constructor(private readonly shipmentRepository: IShipmentRepository) {}
 
-  async execute(shipmentId: string, reason?: string): Promise<Result<{ event: ShipmentCanceled }, Error>> {
+  async execute(
+    shipmentId: string,
+    reason?: string,
+  ): Promise<Result<{ event: ShipmentCanceled }, ShipmentNotFound | InvalidShipmentTransition>> {
     const shipment = await this.shipmentRepository.findById(shipmentId);
     if (!shipment) {
       return Result.fail(ShipmentNotFound.create(shipmentId));

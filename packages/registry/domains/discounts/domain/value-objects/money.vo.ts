@@ -1,4 +1,6 @@
 import { Result } from "../../shared/result.js";
+import { InvalidMoney } from "../errors/invalid-money.error.js";
+import { CurrencyMismatch } from "../errors/currency-mismatch.error.js";
 
 export class Money {
   readonly amount: number;
@@ -9,41 +11,41 @@ export class Money {
     this.currency = currency;
   }
 
-  static create(amount: number, currency: string): Result<Money, Error> {
+  static create(amount: number, currency: string): Result<Money, InvalidMoney> {
     if (!Number.isInteger(amount)) {
-      return Result.fail(new Error("Invalid amount: must be an integer (cents)"));
+      return Result.fail(InvalidMoney.create("Invalid amount: must be an integer (cents)"));
     }
     if (amount < 0) {
-      return Result.fail(new Error("Invalid amount: cannot be negative"));
+      return Result.fail(InvalidMoney.create("Invalid amount: cannot be negative"));
     }
     const upper = currency.toUpperCase();
     if (!/^[A-Z]{3}$/.test(upper)) {
-      return Result.fail(new Error(`Invalid ISO 4217 currency code: "${currency}"`));
+      return Result.fail(InvalidMoney.create(`Invalid ISO 4217 currency code: "${currency}"`));
     }
     return Result.ok(new Money(amount, upper));
   }
 
-  static zero(currency: string): Result<Money, Error> {
+  static zero(currency: string): Result<Money, InvalidMoney> {
     return Money.create(0, currency);
   }
 
-  add(other: Money): Result<Money, Error> {
+  add(other: Money): Result<Money, CurrencyMismatch> {
     if (this.currency !== other.currency) {
-      return Result.fail(new Error(`Currency mismatch: cannot operate on ${this.currency} and ${other.currency}`));
+      return Result.fail(CurrencyMismatch.create(this.currency, other.currency));
     }
     return Result.ok(new Money(this.amount + other.amount, this.currency));
   }
 
-  subtract(other: Money): Result<Money, Error> {
+  subtract(other: Money): Result<Money, CurrencyMismatch> {
     if (this.currency !== other.currency) {
-      return Result.fail(new Error(`Currency mismatch: cannot operate on ${this.currency} and ${other.currency}`));
+      return Result.fail(CurrencyMismatch.create(this.currency, other.currency));
     }
     return Result.ok(new Money(this.amount - other.amount, this.currency));
   }
 
-  multiply(factor: number): Result<Money, Error> {
+  multiply(factor: number): Result<Money, InvalidMoney> {
     if (!Number.isFinite(factor)) {
-      return Result.fail(new Error("Invalid multiplication factor: must be a finite number"));
+      return Result.fail(InvalidMoney.create("Invalid multiplication factor: must be a finite number"));
     }
     return Result.ok(new Money(Math.round(this.amount * factor), this.currency));
   }

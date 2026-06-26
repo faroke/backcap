@@ -8,7 +8,7 @@ export class GetUserPermissions {
 
   async execute(
     input: GetUserPermissionsInput,
-  ): Promise<Result<Permission[], Error>> {
+  ): Promise<Result<Permission[], never>> {
     const permissions = await this.permissionResolver.getUserPermissions(
       input.userId,
       input.organizationId || undefined,

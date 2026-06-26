@@ -3,13 +3,14 @@ import { Post } from "../../domain/entities/post.entity.js";
 import { PostCreated } from "../../domain/events/post-created.event.js";
 import type { IPostRepository } from "../ports/post-repository.port.js";
 import type { CreatePostInput, CreatePostOutput } from "../dto/create-post.dto.js";
+import type { InvalidSlug } from "../../domain/errors/invalid-slug.error.js";
 
 export class CreatePost {
   constructor(private readonly postRepository: IPostRepository) {}
 
   async execute(
     input: CreatePostInput,
-  ): Promise<Result<{ output: CreatePostOutput; event: PostCreated }, Error>> {
+  ): Promise<Result<{ output: CreatePostOutput; event: PostCreated }, InvalidSlug>> {
     const id = crypto.randomUUID();
     const postResult = Post.create({
       id,

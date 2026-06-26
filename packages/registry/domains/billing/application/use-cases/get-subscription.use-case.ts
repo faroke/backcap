@@ -8,7 +8,7 @@ export class GetSubscription {
     private readonly subscriptionRepository: ISubscriptionRepository,
   ) {}
 
-  async execute(subscriptionId: string): Promise<Result<Subscription, Error>> {
+  async execute(subscriptionId: string): Promise<Result<Subscription, SubscriptionNotFound>> {
     const subscription = await this.subscriptionRepository.findById(subscriptionId);
     if (!subscription) {
       return Result.fail(SubscriptionNotFound.create(subscriptionId));

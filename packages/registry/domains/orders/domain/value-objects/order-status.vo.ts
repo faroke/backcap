@@ -1,4 +1,5 @@
 import { Result } from "../../shared/result.js";
+import { InvalidOrderStatus } from "../errors/invalid-order-status.error.js";
 
 export type OrderStatusValue =
   | "pending"
@@ -54,7 +55,7 @@ export class OrderStatus {
     return new OrderStatus("refunded");
   }
 
-  static from(value: string): Result<OrderStatus, Error> {
+  static from(value: string): Result<OrderStatus, InvalidOrderStatus> {
     if (
       value === "pending" ||
       value === "confirmed" ||
@@ -66,7 +67,7 @@ export class OrderStatus {
     ) {
       return Result.ok(new OrderStatus(value));
     }
-    return Result.fail(new Error(`Invalid order status: "${value}"`));
+    return Result.fail(InvalidOrderStatus.create(value));
   }
 
   canTransitionTo(target: OrderStatusValue): boolean {

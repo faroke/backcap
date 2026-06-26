@@ -38,6 +38,14 @@
     "./in-memory-event-bus": {
       "import": "./dist/in-memory-event-bus.mjs",
       "types": "./dist/in-memory-event-bus.d.mts"
+    },
+    "./money": {
+      "import": "./dist/money.vo.mjs",
+      "types": "./dist/money.vo.d.mts"
+    },
+    "./errors/money": {
+      "import": "./dist/errors/money.error.mjs",
+      "types": "./dist/errors/money.error.d.mts"
     }
   },
   "files": [

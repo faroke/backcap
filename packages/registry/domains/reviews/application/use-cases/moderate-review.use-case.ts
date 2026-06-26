@@ -1,5 +1,6 @@
 import { Result } from "../../shared/result.js";
 import { ReviewNotFound } from "../../domain/errors/review-not-found.error.js";
+import { ReviewAlreadyModerated } from "../../domain/errors/review-already-moderated.error.js";
 import { ReviewModerated } from "../../domain/events/review-moderated.event.js";
 import type { IReviewRepository } from "../ports/review-repository.port.js";
 import type { ModerateReviewInput, ModerateReviewOutput } from "../dto/moderate-review.dto.js";
@@ -9,7 +10,12 @@ export class ModerateReview {
 
   async execute(
     input: ModerateReviewInput,
-  ): Promise<Result<{ output: ModerateReviewOutput; event: ReviewModerated }, Error>> {
+  ): Promise<
+    Result<
+      { output: ModerateReviewOutput; event: ReviewModerated },
+      ReviewNotFound | ReviewAlreadyModerated
+    >
+  > {
     const review = await this.reviewRepository.findById(input.reviewId);
     if (!review) {
       return Result.fail(ReviewNotFound.create(input.reviewId));

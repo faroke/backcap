@@ -1,7 +1,9 @@
 import { Result } from "../../shared/result.js";
 import { MemberInvited } from "../../domain/events/member-invited.event.js";
 import { OrgNotFound } from "../../domain/errors/org-not-found.error.js";
+import { CannotInviteOwner } from "../../domain/errors/cannot-invite-owner.error.js";
 import { MemberRole } from "../../domain/value-objects/member-role.vo.js";
+import type { InvalidMemberRole } from "../../domain/errors/invalid-member-role.error.js";
 import type { IOrganizationRepository } from "../ports/organization-repository.port.js";
 import type { IInvitationService } from "../ports/invitation-service.port.js";
 import type { InviteMemberInput } from "../dto/invite-member-input.dto.js";
@@ -14,7 +16,12 @@ export class InviteMember {
 
   async execute(
     input: InviteMemberInput,
-  ): Promise<Result<{ invitationId: string; event: MemberInvited }, Error>> {
+  ): Promise<
+    Result<
+      { invitationId: string; event: MemberInvited },
+      OrgNotFound | InvalidMemberRole | CannotInviteOwner
+    >
+  > {
     const org = await this.organizationRepository.findById(input.organizationId);
     if (!org) {
       return Result.fail(OrgNotFound.create(input.organizationId));
@@ -26,7 +33,7 @@ export class InviteMember {
       return Result.fail(roleResult.unwrapError());
     }
     if (roleResult.unwrap().isOwner()) {
-      return Result.fail(new Error("Cannot invite with owner role"));
+      return Result.fail(CannotInviteOwner.create());
     }
 
     const invitation = await this.invitationService.create({

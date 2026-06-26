@@ -2,6 +2,8 @@ import { Result } from "../../shared/result.js";
 import type { Profile } from "../../domain/entities/profile.entity.js";
 import { ProfileNotFound } from "../../domain/errors/profile-not-found.error.js";
 import { ProfileUpdated } from "../../domain/events/profile-updated.event.js";
+import type { InvalidLocale } from "../../domain/errors/invalid-locale.error.js";
+import type { InvalidTimezone } from "../../domain/errors/invalid-timezone.error.js";
 import type { IProfileRepository } from "../ports/profile-repository.port.js";
 import type { UpdatePreferencesInput } from "../dto/update-preferences-input.dto.js";
 
@@ -10,7 +12,12 @@ export class UpdatePreferences {
 
   async execute(
     input: UpdatePreferencesInput,
-  ): Promise<Result<{ profile: Profile; event: ProfileUpdated }, Error>> {
+  ): Promise<
+    Result<
+      { profile: Profile; event: ProfileUpdated },
+      ProfileNotFound | InvalidLocale | InvalidTimezone
+    >
+  > {
     const profile = await this.profileRepository.findByUserId(input.userId);
     if (!profile) {
       return Result.fail(ProfileNotFound.create(input.userId));

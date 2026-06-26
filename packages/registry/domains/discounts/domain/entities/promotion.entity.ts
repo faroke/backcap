@@ -2,6 +2,12 @@ import { Result } from "../../shared/result.js";
 import { PromotionStatus } from "../value-objects/promotion-status.vo.js";
 import { ValidityPeriod } from "../value-objects/validity-period.vo.js";
 import { Money } from "../value-objects/money.vo.js";
+import { InvalidPromotion } from "../errors/invalid-promotion.error.js";
+import { InvalidPromotionStatus } from "../errors/invalid-promotion-status.error.js";
+import { InvalidPromotionTransition } from "../errors/invalid-promotion-transition.error.js";
+import { InvalidValidityPeriod } from "../errors/invalid-validity-period.error.js";
+import { InvalidMoney } from "../errors/invalid-money.error.js";
+import { CurrencyMismatch } from "../errors/currency-mismatch.error.js";
 import type { DiscountRule } from "./discount-rule.entity.js";
 import type { EligibilityCondition } from "./eligibility-condition.entity.js";
 
@@ -47,25 +53,25 @@ export class Promotion {
   static create(params: {
     id: string;
     name: string;
-    description?: string;
+    description?: string | undefined;
     status?: string;
     rules: DiscountRule[];
     conditions?: EligibilityCondition[];
     startDate: Date;
     endDate: Date;
-    stackable?: boolean;
-    priority?: number;
+    stackable?: boolean | undefined;
+    priority?: number | undefined;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<Promotion, Error> {
+  }): Result<Promotion, InvalidPromotion | InvalidPromotionStatus | InvalidValidityPeriod> {
     if (!params.id || params.id.trim() === "") {
-      return Result.fail(new Error("Promotion id is required"));
+      return Result.fail(InvalidPromotion.create("Promotion id is required"));
     }
     if (!params.name || params.name.trim() === "") {
-      return Result.fail(new Error("Promotion name is required"));
+      return Result.fail(InvalidPromotion.create("Promotion name is required"));
     }
     if (!params.rules || params.rules.length === 0) {
-      return Result.fail(new Error("Promotion must have at least one discount rule"));
+      return Result.fail(InvalidPromotion.create("Promotion must have at least one discount rule"));
     }
 
     const statusResult = PromotionStatus.from(params.status ?? "draft");
@@ -92,9 +98,9 @@ export class Promotion {
     );
   }
 
-  activate(): Result<Promotion, Error> {
+  activate(): Result<Promotion, InvalidPromotionTransition> {
     if (!this.status.canActivate()) {
-      return Result.fail(new Error(`Cannot activate promotion in "${this.status.value}" status`));
+      return Result.fail(InvalidPromotionTransition.create("activate", this.status.value));
     }
     return Result.ok(
       new Promotion({
@@ -113,9 +119,9 @@ export class Promotion {
     );
   }
 
-  deactivate(): Result<Promotion, Error> {
+  deactivate(): Result<Promotion, InvalidPromotionTransition> {
     if (!this.status.canDeactivate()) {
-      return Result.fail(new Error(`Cannot deactivate promotion in "${this.status.value}" status`));
+      return Result.fail(InvalidPromotionTransition.create("deactivate", this.status.value));
     }
     const inactiveStatus = PromotionStatus.from("inactive").unwrap();
     return Result.ok(
@@ -139,7 +145,7 @@ export class Promotion {
     orderTotalCents: number;
     orderCurrency: string;
     productIds: string[];
-    customerSegment?: string;
+    customerSegment?: string | undefined;
     totalItemQuantity: number;
   }): boolean {
     if (!this.status.isActive()) return false;
@@ -147,7 +153,7 @@ export class Promotion {
     return this.conditions.every((condition) => condition.isSatisfiedBy(context));
   }
 
-  calculateTotalDiscount(orderTotalCents: number, currency: string): Result<Money, Error> {
+  calculateTotalDiscount(orderTotalCents: number, currency: string): Result<Money, InvalidMoney | CurrencyMismatch> {
     const zeroResult = Money.zero(currency);
     if (zeroResult.isFail()) return zeroResult;
     let total = zeroResult.unwrap();

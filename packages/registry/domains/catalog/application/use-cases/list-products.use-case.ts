@@ -6,7 +6,7 @@ import { toProductOutput } from "./mappers.adapter.js";
 export class ListProducts {
   constructor(private readonly productRepository: IProductRepository) {}
 
-  async execute(): Promise<Result<ProductOutput[], Error>> {
+  async execute(): Promise<Result<ProductOutput[], never>> {
     const products = await this.productRepository.findAll();
     return Result.ok(products.map(toProductOutput));
   }

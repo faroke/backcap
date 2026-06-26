@@ -5,7 +5,7 @@ import type { IRoleRepository } from "../ports/role-repository.port.js";
 export class ListRoles {
   constructor(private readonly roleRepository: IRoleRepository) {}
 
-  async execute(): Promise<Result<Role[], Error>> {
+  async execute(): Promise<Result<Role[], never>> {
     const roles = await this.roleRepository.findAll();
     return Result.ok(roles);
   }

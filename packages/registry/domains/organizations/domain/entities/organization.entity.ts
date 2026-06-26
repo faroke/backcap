@@ -1,5 +1,8 @@
 import { Result } from "../../shared/result.js";
 import { OrgSlug } from "../value-objects/org-slug.vo.js";
+import { InvalidOrgSlug } from "../errors/invalid-org-slug.error.js";
+import { InvalidOrganizationName } from "../errors/invalid-organization-name.error.js";
+import { OrganizationSettingsTooLarge } from "../errors/organization-settings-too-large.error.js";
 
 export class Organization {
   readonly id: string;
@@ -32,13 +35,13 @@ export class Organization {
     id: string;
     name: string;
     slug: string;
-    plan?: string;
-    settings?: Record<string, unknown>;
-    createdAt?: Date;
-    updatedAt?: Date;
-  }): Result<Organization, Error> {
+    plan?: string | undefined;
+    settings?: Record<string, unknown> | undefined;
+    createdAt?: Date | undefined;
+    updatedAt?: Date | undefined;
+  }): Result<Organization, InvalidOrganizationName | InvalidOrgSlug> {
     if (!params.name || params.name.trim().length === 0) {
-      return Result.fail(new Error("Organization name is required"));
+      return Result.fail(InvalidOrganizationName.create());
     }
 
     const slugResult = OrgSlug.create(params.slug);
@@ -60,9 +63,9 @@ export class Organization {
     );
   }
 
-  updateName(newName: string): Result<Organization, Error> {
+  updateName(newName: string): Result<Organization, InvalidOrganizationName> {
     if (!newName || newName.trim().length === 0) {
-      return Result.fail(new Error("Organization name is required"));
+      return Result.fail(InvalidOrganizationName.create());
     }
 
     return Result.ok(
@@ -80,11 +83,11 @@ export class Organization {
 
   updateSettings(
     newSettings: Record<string, unknown>,
-  ): Result<Organization, Error> {
+  ): Result<Organization, OrganizationSettingsTooLarge> {
     const merged = { ...this.settings, ...newSettings };
     const serialized = JSON.stringify(merged);
     if (serialized.length > 65_536) {
-      return Result.fail(new Error("Organization settings exceed maximum size (64KB)"));
+      return Result.fail(OrganizationSettingsTooLarge.create());
     }
     return Result.ok(new Organization(
       this.id,

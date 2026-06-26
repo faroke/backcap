@@ -1,6 +1,10 @@
 import { Result } from "../../shared/result.js";
 import { DiscountType } from "../value-objects/discount-type.vo.js";
 import { Money } from "../value-objects/money.vo.js";
+import { InvalidDiscountRule } from "../errors/invalid-discount-rule.error.js";
+import { InvalidDiscountType } from "../errors/invalid-discount-type.error.js";
+import { InvalidMoney } from "../errors/invalid-money.error.js";
+import { CurrencyMismatch } from "../errors/currency-mismatch.error.js";
 
 export class DiscountRule {
   readonly id: string;
@@ -15,11 +19,11 @@ export class DiscountRule {
   private constructor(params: {
     id: string;
     type: DiscountType;
-    percentageValue?: number;
-    fixedAmount?: Money;
-    buyQuantity?: number;
-    getQuantity?: number;
-    maxDiscountAmount?: Money;
+    percentageValue?: number | undefined;
+    fixedAmount?: Money | undefined;
+    buyQuantity?: number | undefined;
+    getQuantity?: number | undefined;
+    maxDiscountAmount?: Money | undefined;
     createdAt: Date;
   }) {
     this.id = params.id;
@@ -43,9 +47,9 @@ export class DiscountRule {
     maxDiscountAmountValue?: number;
     maxDiscountAmountCurrency?: string;
     createdAt?: Date;
-  }): Result<DiscountRule, Error> {
+  }): Result<DiscountRule, InvalidDiscountRule | InvalidDiscountType | InvalidMoney> {
     if (!params.id || params.id.trim() === "") {
-      return Result.fail(new Error("Discount rule id is required"));
+      return Result.fail(InvalidDiscountRule.create("Discount rule id is required"));
     }
 
     const typeResult = DiscountType.create(params.type);
@@ -60,7 +64,7 @@ export class DiscountRule {
 
     if (type.isPercentage()) {
       if (params.percentageValue === undefined || params.percentageValue <= 0 || params.percentageValue > 100) {
-        return Result.fail(new Error("Percentage value must be between 0 (exclusive) and 100 (inclusive)"));
+        return Result.fail(InvalidDiscountRule.create("Percentage value must be between 0 (exclusive) and 100 (inclusive)"));
       }
       percentageValue = params.percentageValue;
 
@@ -71,7 +75,7 @@ export class DiscountRule {
       }
     } else if (type.isFixedAmount()) {
       if (params.fixedAmountValue === undefined || params.fixedAmountCurrency === undefined) {
-        return Result.fail(new Error("Fixed amount value and currency are required for fixed_amount type"));
+        return Result.fail(InvalidDiscountRule.create("Fixed amount value and currency are required for fixed_amount type"));
       }
       const fixedResult = Money.create(params.fixedAmountValue, params.fixedAmountCurrency);
       if (fixedResult.isFail()) return Result.fail(fixedResult.unwrapError());
@@ -85,7 +89,7 @@ export class DiscountRule {
         params.buyQuantity <= 0 ||
         params.getQuantity <= 0
       ) {
-        return Result.fail(new Error("buyQuantity and getQuantity must be positive integers for buy_x_get_y type"));
+        return Result.fail(InvalidDiscountRule.create("buyQuantity and getQuantity must be positive integers for buy_x_get_y type"));
       }
       buyQuantity = params.buyQuantity;
       getQuantity = params.getQuantity;
@@ -105,7 +109,7 @@ export class DiscountRule {
     );
   }
 
-  calculateDiscount(orderTotalCents: number, currency: string): Result<Money, Error> {
+  calculateDiscount(orderTotalCents: number, currency: string): Result<Money, CurrencyMismatch | InvalidMoney> {
     if (this.type.isPercentage()) {
       let discountCents = Math.round(orderTotalCents * this.percentageValue! / 100);
       if (this.maxDiscountAmount && this.maxDiscountAmount.currency === currency && discountCents > this.maxDiscountAmount.amount) {
@@ -116,7 +120,7 @@ export class DiscountRule {
 
     if (this.type.isFixedAmount()) {
       if (this.fixedAmount!.currency !== currency) {
-        return Result.fail(new Error(`Currency mismatch: rule is ${this.fixedAmount!.currency}, order is ${currency}`));
+        return Result.fail(CurrencyMismatch.create(this.fixedAmount!.currency, currency));
       }
       return Result.ok(this.fixedAmount!);
     }

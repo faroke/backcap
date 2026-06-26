@@ -2,9 +2,9 @@ import type { Review } from "../../domain/entities/review.entity.js";
 import type { ModerationStatusValue } from "../../domain/value-objects/moderation-status.vo.js";
 
 export interface ReviewFilters {
-  moderationStatus?: ModerationStatusValue;
-  limit?: number;
-  offset?: number;
+  moderationStatus?: ModerationStatusValue | undefined;
+  limit?: number | undefined;
+  offset?: number | undefined;
 }
 
 export interface RatingDistribution {

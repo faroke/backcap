@@ -7,7 +7,7 @@ export class ListComments {
 
   async execute(
     input: ListCommentsInput,
-  ): Promise<Result<ListCommentsOutput, Error>> {
+  ): Promise<Result<ListCommentsOutput, never>> {
     const { comments, total } = await this.commentRepository.findByResource(
       input.resourceId,
       input.resourceType,

@@ -2,6 +2,9 @@ import { Result } from "../../shared/result.js";
 import type { Profile } from "../../domain/entities/profile.entity.js";
 import { ProfileNotFound } from "../../domain/errors/profile-not-found.error.js";
 import { ProfileUpdated } from "../../domain/events/profile-updated.event.js";
+import type { InvalidDisplayName } from "../../domain/errors/invalid-display-name.error.js";
+import type { InvalidAvatarUrl } from "../../domain/errors/invalid-avatar-url.error.js";
+import type { InvalidBio } from "../../domain/errors/invalid-bio.error.js";
 import type { IProfileRepository } from "../ports/profile-repository.port.js";
 import type { UpdateProfileInput } from "../dto/update-profile-input.dto.js";
 
@@ -10,7 +13,12 @@ export class UpdateProfile {
 
   async execute(
     input: UpdateProfileInput,
-  ): Promise<Result<{ profile: Profile; event: ProfileUpdated }, Error>> {
+  ): Promise<
+    Result<
+      { profile: Profile; event: ProfileUpdated },
+      ProfileNotFound | InvalidDisplayName | InvalidAvatarUrl | InvalidBio
+    >
+  > {
     let profile = await this.profileRepository.findByUserId(input.userId);
     if (!profile) {
       return Result.fail(ProfileNotFound.create(input.userId));

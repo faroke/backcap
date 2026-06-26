@@ -6,7 +6,7 @@ import type { GetPostInput, GetPostOutput } from "../dto/get-post.dto.js";
 export class GetPost {
   constructor(private readonly postRepository: IPostRepository) {}
 
-  async execute(input: GetPostInput): Promise<Result<GetPostOutput, Error>> {
+  async execute(input: GetPostInput): Promise<Result<GetPostOutput, PostNotFound>> {
     const post = await this.postRepository.findById(input.postId);
     if (!post) {
       return Result.fail(PostNotFound.create(input.postId));

@@ -6,4 +6,13 @@ export class InvalidTrackingNumber extends Error {
   static create(value: string): InvalidTrackingNumber {
     return new InvalidTrackingNumber(`Invalid tracking number: "${value}"`);
   }
+  static empty(): InvalidTrackingNumber {
+    return new InvalidTrackingNumber("Tracking number cannot be empty");
+  }
+  static invalidFormat(value: string): InvalidTrackingNumber {
+    return new InvalidTrackingNumber(`Invalid tracking number format: "${value}"`);
+  }
+  static invalidLength(value: string): InvalidTrackingNumber {
+    return new InvalidTrackingNumber(`Tracking number must be between 6 and 40 characters: "${value}"`);
+  }
 }

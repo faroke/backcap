@@ -3,6 +3,12 @@ import { Money } from "../value-objects/money.vo.js";
 import { ProductStatus } from "../value-objects/product-status.vo.js";
 import { ProductVariant } from "./product-variant.entity.js";
 import { DuplicateSKU } from "../errors/duplicate-sku.error.js";
+import { MoneyError } from "../errors/money.error.js";
+import { InvalidProductStatus } from "../errors/invalid-product-status.error.js";
+import { InvalidProductName } from "../errors/invalid-product-name.error.js";
+import { InvalidProductDescription } from "../errors/invalid-product-description.error.js";
+import { ProductNotPublishable } from "../errors/product-not-publishable.error.js";
+import { ProductNotArchivable } from "../errors/product-not-archivable.error.js";
 
 export class Product {
   readonly id: string;
@@ -42,22 +48,25 @@ export class Product {
     name: string;
     description: string;
     basePriceCents: number;
-    currency?: string;
-    status?: string;
-    categoryId?: string | null;
-    variants?: ProductVariant[];
+    currency?: string | undefined;
+    status?: string | undefined;
+    categoryId?: string | null | undefined;
+    variants?: ProductVariant[] | undefined;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<Product, Error> {
+  }): Result<
+    Product,
+    InvalidProductName | InvalidProductDescription | MoneyError | InvalidProductStatus
+  > {
     if (!params.name || typeof params.name !== "string" || params.name.trim().length === 0) {
-      return Result.fail(new Error("Product name cannot be empty"));
+      return Result.fail(InvalidProductName.empty());
     }
     if (params.name.trim().length > 500) {
-      return Result.fail(new Error("Product name cannot exceed 500 characters"));
+      return Result.fail(InvalidProductName.tooLong());
     }
 
     if (params.description == null || typeof params.description !== "string") {
-      return Result.fail(new Error("Product description is required"));
+      return Result.fail(InvalidProductDescription.required());
     }
 
     const priceResult = Money.create(params.basePriceCents, params.currency ?? "USD");
@@ -92,9 +101,9 @@ export class Product {
     );
   }
 
-  publish(): Result<Product, Error> {
+  publish(): Result<Product, ProductNotPublishable> {
     if (!this.status.isDraft()) {
-      return Result.fail(new Error("Only draft products can be published"));
+      return Result.fail(ProductNotPublishable.create());
     }
     return Result.ok(
       new Product(
@@ -111,9 +120,9 @@ export class Product {
     );
   }
 
-  archive(): Result<Product, Error> {
+  archive(): Result<Product, ProductNotArchivable> {
     if (!this.status.isActive()) {
-      return Result.fail(new Error("Only active products can be archived"));
+      return Result.fail(ProductNotArchivable.create());
     }
     return Result.ok(
       new Product(
@@ -150,9 +159,9 @@ export class Product {
     );
   }
 
-  updatePrice(newPrice: Money): Result<Product, Error> {
+  updatePrice(newPrice: Money): Result<Product, MoneyError> {
     if (this.basePrice.currency !== newPrice.currency) {
-      return Result.fail(new Error(`Cannot change product currency from ${this.basePrice.currency} to ${newPrice.currency}`));
+      return Result.fail(MoneyError.currencyMismatch(this.basePrice.currency, newPrice.currency));
     }
     return Result.ok(
       new Product(

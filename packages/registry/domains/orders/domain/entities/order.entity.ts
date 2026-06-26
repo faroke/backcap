@@ -4,6 +4,8 @@ import { OrderStatus } from "../value-objects/order-status.vo.js";
 import { Address } from "../value-objects/address.vo.js";
 import { InvalidOrderTransition } from "../errors/invalid-order-transition.error.js";
 import { OrderAlreadyCanceled } from "../errors/order-already-canceled.error.js";
+import { InvalidOrder } from "../errors/invalid-order.error.js";
+import { InvalidOrderStatus } from "../errors/invalid-order-status.error.js";
 
 export class Order {
   readonly id: string;
@@ -48,12 +50,12 @@ export class Order {
     billingAddress: Address;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<Order, Error> {
+  }): Result<Order, InvalidOrder | InvalidOrderStatus> {
     if (!params.id || params.id.trim().length === 0) {
-      return Result.fail(new Error("Order ID is required"));
+      return Result.fail(InvalidOrder.create("Order ID is required"));
     }
     if (!params.items || params.items.length === 0) {
-      return Result.fail(new Error("Order must have at least one item"));
+      return Result.fail(InvalidOrder.create("Order must have at least one item"));
     }
 
     let status: OrderStatus;
@@ -81,7 +83,7 @@ export class Order {
     );
   }
 
-  confirm(): Result<Order, Error> {
+  confirm(): Result<Order, OrderAlreadyCanceled | InvalidOrderTransition> {
     if (this.status.isCanceled()) {
       return Result.fail(OrderAlreadyCanceled.create(this.id));
     }
@@ -93,7 +95,7 @@ export class Order {
     );
   }
 
-  ship(): Result<Order, Error> {
+  ship(): Result<Order, OrderAlreadyCanceled | InvalidOrderTransition> {
     if (this.status.isCanceled()) {
       return Result.fail(OrderAlreadyCanceled.create(this.id));
     }
@@ -105,7 +107,7 @@ export class Order {
     );
   }
 
-  deliver(): Result<Order, Error> {
+  deliver(): Result<Order, InvalidOrderTransition> {
     if (!this.status.canTransitionTo("delivered")) {
       return Result.fail(InvalidOrderTransition.create(this.status.value, "delivered"));
     }
@@ -114,7 +116,7 @@ export class Order {
     );
   }
 
-  cancel(): Result<Order, Error> {
+  cancel(): Result<Order, OrderAlreadyCanceled | InvalidOrderTransition> {
     if (this.status.isCanceled()) {
       return Result.fail(OrderAlreadyCanceled.create(this.id));
     }
@@ -126,7 +128,7 @@ export class Order {
     );
   }
 
-  process(): Result<Order, Error> {
+  process(): Result<Order, InvalidOrderTransition> {
     if (!this.status.canTransitionTo("processing")) {
       return Result.fail(InvalidOrderTransition.create(this.status.value, "processing"));
     }

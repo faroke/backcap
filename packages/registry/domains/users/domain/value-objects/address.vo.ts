@@ -7,7 +7,7 @@ export class Address {
   readonly city: string;
   readonly postalCode: string;
   readonly country: string;
-  readonly state?: string;
+  readonly state?: string | undefined;
 
   private constructor(params: {
     label: string;
@@ -15,7 +15,7 @@ export class Address {
     city: string;
     postalCode: string;
     country: string;
-    state?: string;
+    state?: string | undefined;
   }) {
     this.label = params.label;
     this.street = params.street;
@@ -31,7 +31,7 @@ export class Address {
     city: string;
     postalCode: string;
     country: string;
-    state?: string;
+    state?: string | undefined;
   }): Result<Address, InvalidAddress> {
     if (!params.label.trim()) {
       return Result.fail(InvalidAddress.create("label must not be empty"));

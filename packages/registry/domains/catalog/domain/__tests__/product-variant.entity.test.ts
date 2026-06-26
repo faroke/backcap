@@ -16,7 +16,7 @@ describe("ProductVariant entity", () => {
     expect(variant.id).toBe("var-1");
     expect(variant.productId).toBe("prod-1");
     expect(variant.sku.value).toBe("SKU-001");
-    expect(variant.price.cents).toBe(2499);
+    expect(variant.price.amount).toBe(2499);
     expect(variant.attributes).toEqual({});
   });
 

@@ -12,7 +12,7 @@ export class ListMembers {
 
   async execute(
     organizationId: string,
-  ): Promise<Result<Membership[], Error>> {
+  ): Promise<Result<Membership[], OrgNotFound>> {
     const org = await this.organizationRepository.findById(organizationId);
     if (!org) {
       return Result.fail(OrgNotFound.create(organizationId));

@@ -1,6 +1,10 @@
 import { Result } from "../../shared/result.js";
 import { StockLevel } from "../../domain/entities/stock-level.entity.js";
 import { StockInitialized } from "../../domain/events/stock-initialized.event.js";
+import { StockAlreadyExists } from "../../domain/errors/stock-already-exists.error.js";
+import type { InvalidSku } from "../../domain/errors/invalid-sku.error.js";
+import type { InvalidWarehouseId } from "../../domain/errors/invalid-warehouse-id.error.js";
+import type { InvalidStockQuantity } from "../../domain/errors/invalid-stock-quantity.error.js";
 import type { IStockRepository } from "../ports/stock-repository.port.js";
 import type { InitializeStockInput } from "../dto/initialize-stock-input.dto.js";
 
@@ -9,12 +13,15 @@ export class InitializeStock {
 
   async execute(
     input: InitializeStockInput,
-  ): Promise<Result<{ stockLevelId: string; event: StockInitialized }, Error>> {
+  ): Promise<
+    Result<
+      { stockLevelId: string; event: StockInitialized },
+      StockAlreadyExists | InvalidSku | InvalidWarehouseId | InvalidStockQuantity
+    >
+  > {
     const existing = await this.stockRepository.findBySkuAndWarehouse(input.sku, input.warehouseId);
     if (existing) {
-      return Result.fail(
-        new Error(`Stock already exists for SKU "${input.sku}" in warehouse "${input.warehouseId}"`),
-      );
+      return Result.fail(StockAlreadyExists.create(input.sku, input.warehouseId));
     }
 
     const id = crypto.randomUUID();

@@ -1,9 +1,9 @@
 import type { Tag } from "../../domain/entities/tag.entity.js";
 
 export interface TagResourceFilters {
-  resourceType?: string;
-  limit?: number;
-  offset?: number;
+  resourceType?: string | undefined;
+  limit?: number | undefined;
+  offset?: number | undefined;
 }
 
 export interface ITagRepository {

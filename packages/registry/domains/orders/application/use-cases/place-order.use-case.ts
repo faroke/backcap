@@ -3,15 +3,26 @@ import { Order } from "../../domain/entities/order.entity.js";
 import { OrderItem } from "../../domain/entities/order-item.entity.js";
 import { Address } from "../../domain/value-objects/address.vo.js";
 import { OrderPlaced } from "../../domain/events/order-placed.event.js";
+import { InvalidOrder } from "../../domain/errors/invalid-order.error.js";
+import { InvalidAddress } from "../../domain/errors/invalid-address.error.js";
+import { InvalidOrderItem } from "../../domain/errors/invalid-order-item.error.js";
+import { InvalidOrderStatus } from "../../domain/errors/invalid-order-status.error.js";
 import type { IOrderRepository } from "../ports/order-repository.port.js";
 import type { PlaceOrderInput } from "../dto/place-order-input.dto.js";
 
 export class PlaceOrder {
   constructor(private readonly orderRepository: IOrderRepository) {}
 
-  async execute(input: PlaceOrderInput): Promise<Result<{ orderId: string; event: OrderPlaced }, Error>> {
+  async execute(
+    input: PlaceOrderInput,
+  ): Promise<
+    Result<
+      { orderId: string; event: OrderPlaced },
+      InvalidOrder | InvalidAddress | InvalidOrderItem | InvalidOrderStatus
+    >
+  > {
     if (!input.items || input.items.length === 0) {
-      return Result.fail(new Error("Order must have at least one item"));
+      return Result.fail(InvalidOrder.create("Order must have at least one item"));
     }
 
     const shippingResult = Address.create(input.shippingAddress);

@@ -19,7 +19,7 @@ describe("Product entity", () => {
     expect(product.id).toBe("prod-1");
     expect(product.name).toBe("Test Product");
     expect(product.description).toBe("A test product");
-    expect(product.basePrice.cents).toBe(1999);
+    expect(product.basePrice.amount).toBe(1999);
     expect(product.status.isDraft()).toBe(true);
     expect(product.variants).toEqual([]);
     expect(product.categoryId).toBeNull();
@@ -113,17 +113,17 @@ describe("Product entity", () => {
   describe("updatePrice", () => {
     it("updates base price", () => {
       const product = Product.create(validParams).unwrap();
-      const newPrice = Money.create(2999).unwrap();
+      const newPrice = Money.create(2999, "USD").unwrap();
       const result = product.updatePrice(newPrice);
       expect(result.isOk()).toBe(true);
-      expect(result.unwrap().basePrice.cents).toBe(2999);
+      expect(result.unwrap().basePrice.amount).toBe(2999);
     });
 
     it("preserves original product immutability", () => {
       const product = Product.create(validParams).unwrap();
-      const newPrice = Money.create(2999).unwrap();
+      const newPrice = Money.create(2999, "USD").unwrap();
       product.updatePrice(newPrice);
-      expect(product.basePrice.cents).toBe(1999);
+      expect(product.basePrice.amount).toBe(1999);
     });
   });
 });

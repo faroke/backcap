@@ -4,6 +4,11 @@ import { PromotionNotFound } from "../../domain/errors/promotion-not-found.error
 import { PromotionInactive } from "../../domain/errors/promotion-inactive.error.js";
 import { EligibilityNotMet } from "../../domain/errors/eligibility-not-met.error.js";
 import { CouponRedeemed } from "../../domain/events/coupon-redeemed.event.js";
+import type { CouponExpired } from "../../domain/errors/coupon-expired.error.js";
+import type { CouponUsageExceeded } from "../../domain/errors/coupon-usage-exceeded.error.js";
+import type { UsageLimitExhausted } from "../../domain/errors/usage-limit-exhausted.error.js";
+import type { InvalidMoney } from "../../domain/errors/invalid-money.error.js";
+import type { CurrencyMismatch } from "../../domain/errors/currency-mismatch.error.js";
 import type { ICouponRepository } from "../ports/coupon-repository.port.js";
 import type { IPromotionRepository } from "../ports/promotion-repository.port.js";
 import type { RedeemCouponInput } from "../dto/redeem-coupon-input.dto.js";
@@ -16,7 +21,20 @@ export class RedeemCoupon {
 
   async execute(
     input: RedeemCouponInput,
-  ): Promise<Result<{ discountCents: number; currency: string; event: CouponRedeemed }, Error>> {
+  ): Promise<
+    Result<
+      { discountCents: number; currency: string; event: CouponRedeemed },
+      | CouponNotFound
+      | PromotionNotFound
+      | PromotionInactive
+      | EligibilityNotMet
+      | CouponExpired
+      | CouponUsageExceeded
+      | UsageLimitExhausted
+      | InvalidMoney
+      | CurrencyMismatch
+    >
+  > {
     const coupon = await this.couponRepository.findByCode(input.code);
     if (!coupon) {
       return Result.fail(CouponNotFound.create(input.code));

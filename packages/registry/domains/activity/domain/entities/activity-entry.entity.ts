@@ -1,6 +1,7 @@
 import { Result } from "../../shared/result.js";
 import { Actor } from "../value-objects/actor.vo.js";
 import { Action } from "../value-objects/action.vo.js";
+import { InvalidTarget } from "../errors/invalid-target.error.js";
 import type { InvalidActor } from "../errors/invalid-actor.error.js";
 import type { InvalidAction } from "../errors/invalid-action.error.js";
 
@@ -41,9 +42,9 @@ export class ActivityEntry {
     action: string;
     targetId: string;
     targetName: string;
-    metadata?: Record<string, unknown>;
+    metadata?: Record<string, unknown> | undefined;
     occurredAt?: Date;
-  }): Result<ActivityEntry, InvalidActor | InvalidAction | Error> {
+  }): Result<ActivityEntry, InvalidActor | InvalidAction | InvalidTarget> {
     const actorResult = Actor.create(params.actor);
     if (actorResult.isFail()) {
       return Result.fail(actorResult.unwrapError());
@@ -55,11 +56,11 @@ export class ActivityEntry {
     }
 
     if (!params.targetId || params.targetId.trim().length === 0) {
-      return Result.fail(new Error("targetId must not be empty"));
+      return Result.fail(InvalidTarget.create("targetId must not be empty"));
     }
 
     if (!params.targetName || params.targetName.trim().length === 0) {
-      return Result.fail(new Error("targetName must not be empty"));
+      return Result.fail(InvalidTarget.create("targetName must not be empty"));
     }
 
     return Result.ok(

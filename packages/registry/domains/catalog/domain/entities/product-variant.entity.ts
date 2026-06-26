@@ -1,6 +1,8 @@
 import { Result } from "../../shared/result.js";
 import { SKU } from "../value-objects/sku.vo.js";
 import { Money } from "../value-objects/money.vo.js";
+import { InvalidSKU } from "../errors/invalid-sku.error.js";
+import { MoneyError } from "../errors/money.error.js";
 
 export class ProductVariant {
   readonly id: string;
@@ -34,11 +36,11 @@ export class ProductVariant {
     productId: string;
     sku: string;
     priceCents: number;
-    currency?: string;
-    attributes?: Record<string, string>;
+    currency?: string | undefined;
+    attributes?: Record<string, string> | undefined;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<ProductVariant, Error> {
+  }): Result<ProductVariant, InvalidSKU | MoneyError> {
     const skuResult = SKU.create(params.sku);
     if (skuResult.isFail()) {
       return Result.fail(skuResult.unwrapError());

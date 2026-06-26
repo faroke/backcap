@@ -3,6 +3,15 @@ import { CartItem } from "./cart-item.entity.js";
 import { CartStatus } from "../value-objects/cart-status.vo.js";
 import { CartLimitExceeded } from "../errors/cart-limit-exceeded.error.js";
 import { ItemNotInCart } from "../errors/item-not-in-cart.error.js";
+import { InvalidCartId } from "../errors/invalid-cart-id.error.js";
+import { InvalidMaxItems } from "../errors/invalid-max-items.error.js";
+import { InvalidCurrency } from "../errors/invalid-currency.error.js";
+import { CurrencyMismatch } from "../errors/currency-mismatch.error.js";
+import { CartNotActive } from "../errors/cart-not-active.error.js";
+import { InvalidCartStatus } from "../errors/invalid-cart-status.error.js";
+import { InvalidCartItem } from "../errors/invalid-cart-item.error.js";
+import { InvalidUnitPrice } from "../errors/invalid-unit-price.error.js";
+import { InvalidQuantity } from "../errors/invalid-quantity.error.js";
 
 const DEFAULT_MAX_ITEMS = 50;
 
@@ -53,14 +62,22 @@ export class Cart {
     currency?: string;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<Cart, Error> {
+  }): Result<
+    Cart,
+    | InvalidCartId
+    | InvalidMaxItems
+    | InvalidCartStatus
+    | InvalidCurrency
+    | CartLimitExceeded
+    | CurrencyMismatch
+  > {
     if (!params.id || params.id.trim().length === 0) {
-      return Result.fail(new Error("Cart ID is required"));
+      return Result.fail(InvalidCartId.create());
     }
 
     const maxItems = params.maxItems ?? DEFAULT_MAX_ITEMS;
     if (!Number.isInteger(maxItems) || maxItems < 1) {
-      return Result.fail(new Error("maxItems must be a positive integer"));
+      return Result.fail(InvalidMaxItems.create());
     }
 
     let status: CartStatus;
@@ -76,7 +93,7 @@ export class Cart {
 
     const currency = (params.currency ?? "USD").toUpperCase();
     if (!/^[A-Z]{3}$/.test(currency)) {
-      return Result.fail(new Error(`Invalid ISO 4217 currency code: "${params.currency}"`));
+      return Result.fail(InvalidCurrency.create(params.currency ?? currency));
     }
 
     const items = params.items ?? [];
@@ -85,7 +102,7 @@ export class Cart {
     }
     for (const item of items) {
       if (item.currency !== currency) {
-        return Result.fail(new Error(`Currency mismatch: cart uses ${currency} but item uses ${item.currency}`));
+        return Result.fail(CurrencyMismatch.create(currency, item.currency));
       }
     }
 
@@ -111,14 +128,23 @@ export class Cart {
     quantity: number;
     unitPriceCents: number;
     currency?: string;
-  }): Result<Cart, Error> {
+  }): Result<
+    Cart,
+    | CartNotActive
+    | CurrencyMismatch
+    | CartLimitExceeded
+    | InvalidQuantity
+    | InvalidUnitPrice
+    | InvalidCurrency
+    | InvalidCartItem
+  > {
     if (!this.status.isActive()) {
-      return Result.fail(new Error("Cannot add items to a non-active cart"));
+      return Result.fail(CartNotActive.create("Cannot add items to a non-active cart"));
     }
 
     const itemCurrency = (params.currency ?? this.currency).toUpperCase();
     if (itemCurrency !== this.currency) {
-      return Result.fail(new Error(`Currency mismatch: cart uses ${this.currency} but item uses ${itemCurrency}`));
+      return Result.fail(CurrencyMismatch.create(this.currency, itemCurrency));
     }
 
     const existing = this.items.find(
@@ -181,9 +207,9 @@ export class Cart {
     );
   }
 
-  removeItem(variantId: string): Result<Cart, Error> {
+  removeItem(variantId: string): Result<Cart, CartNotActive | ItemNotInCart> {
     if (!this.status.isActive()) {
-      return Result.fail(new Error("Cannot remove items from a non-active cart"));
+      return Result.fail(CartNotActive.create("Cannot remove items from a non-active cart"));
     }
 
     const exists = this.items.find((i) => i.variantId === variantId);
@@ -197,9 +223,12 @@ export class Cart {
     );
   }
 
-  updateItemQuantity(variantId: string, newQuantity: number): Result<Cart, Error> {
+  updateItemQuantity(
+    variantId: string,
+    newQuantity: number,
+  ): Result<Cart, CartNotActive | ItemNotInCart | InvalidQuantity> {
     if (!this.status.isActive()) {
-      return Result.fail(new Error("Cannot update items in a non-active cart"));
+      return Result.fail(CartNotActive.create("Cannot update items in a non-active cart"));
     }
 
     const existing = this.items.find((i) => i.variantId === variantId);
@@ -221,9 +250,9 @@ export class Cart {
     );
   }
 
-  clear(): Result<Cart, Error> {
+  clear(): Result<Cart, CartNotActive> {
     if (!this.status.isActive()) {
-      return Result.fail(new Error("Cannot clear a non-active cart"));
+      return Result.fail(CartNotActive.create("Cannot clear a non-active cart"));
     }
 
     return Result.ok(
@@ -231,9 +260,9 @@ export class Cart {
     );
   }
 
-  abandon(): Result<Cart, Error> {
+  abandon(): Result<Cart, CartNotActive> {
     if (!this.status.isActive()) {
-      return Result.fail(new Error("Only active carts can be abandoned"));
+      return Result.fail(CartNotActive.create("Only active carts can be abandoned"));
     }
 
     return Result.ok(
@@ -241,9 +270,9 @@ export class Cart {
     );
   }
 
-  convert(): Result<Cart, Error> {
+  convert(): Result<Cart, CartNotActive> {
     if (!this.status.isActive()) {
-      return Result.fail(new Error("Only active carts can be converted"));
+      return Result.fail(CartNotActive.create("Only active carts can be converted"));
     }
 
     return Result.ok(

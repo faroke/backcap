@@ -1,9 +1,9 @@
 import type { Comment } from "../../domain/entities/comment.entity.js";
 
 export interface CommentFilters {
-  includeDeleted?: boolean;
-  limit?: number;
-  offset?: number;
+  includeDeleted?: boolean | undefined;
+  limit?: number | undefined;
+  offset?: number | undefined;
 }
 
 export interface ICommentRepository {

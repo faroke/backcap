@@ -7,6 +7,9 @@ import { Address } from "../value-objects/address.vo.js";
 import { InvalidDisplayName } from "../errors/invalid-display-name.error.js";
 import { InvalidAvatarUrl } from "../errors/invalid-avatar-url.error.js";
 import { InvalidAddress } from "../errors/invalid-address.error.js";
+import { InvalidBio } from "../errors/invalid-bio.error.js";
+import type { InvalidLocale } from "../errors/invalid-locale.error.js";
+import type { InvalidTimezone } from "../errors/invalid-timezone.error.js";
 
 export class Profile {
   readonly id: string;
@@ -48,14 +51,17 @@ export class Profile {
     id: string;
     userId: string;
     displayName: string;
-    avatarUrl?: string | null;
-    bio?: string;
-    locale?: string;
-    timezone?: string;
-    addresses?: Address[];
-    createdAt?: Date;
-    updatedAt?: Date;
-  }): Result<Profile, Error> {
+    avatarUrl?: string | null | undefined;
+    bio?: string | undefined;
+    locale?: string | undefined;
+    timezone?: string | undefined;
+    addresses?: Address[] | undefined;
+    createdAt?: Date | undefined;
+    updatedAt?: Date | undefined;
+  }): Result<
+    Profile,
+    InvalidDisplayName | InvalidAvatarUrl | InvalidBio | InvalidLocale | InvalidTimezone
+  > {
     const displayNameResult = DisplayName.create(params.displayName);
     if (displayNameResult.isFail()) {
       return Result.fail(displayNameResult.unwrapError());
@@ -72,7 +78,7 @@ export class Profile {
 
     const bio = params.bio ?? "";
     if (bio.length > 2000) {
-      return Result.fail(new Error("Bio must not exceed 2000 characters"));
+      return Result.fail(InvalidBio.create(bio.length));
     }
 
     const localeResult = Locale.create(params.locale ?? "en");
@@ -160,9 +166,9 @@ export class Profile {
     );
   }
 
-  updateBio(newBio: string): Result<Profile, Error> {
+  updateBio(newBio: string): Result<Profile, InvalidBio> {
     if (newBio.length > 2000) {
-      return Result.fail(new Error("Bio must not exceed 2000 characters"));
+      return Result.fail(InvalidBio.create(newBio.length));
     }
     return Result.ok(
       new Profile(
@@ -181,9 +187,9 @@ export class Profile {
   }
 
   updatePreferences(params: {
-    locale?: string;
-    timezone?: string;
-  }): Result<Profile, Error> {
+    locale?: string | undefined;
+    timezone?: string | undefined;
+  }): Result<Profile, InvalidLocale | InvalidTimezone> {
     let locale = this.locale;
     if (params.locale !== undefined) {
       const localeResult = Locale.create(params.locale);

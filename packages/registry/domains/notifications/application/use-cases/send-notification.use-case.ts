@@ -2,6 +2,7 @@ import { Result } from "../../shared/result.js";
 import { Notification } from "../../domain/entities/notification.entity.js";
 import { NotificationSent } from "../../domain/events/notification-sent.event.js";
 import { NotificationDeliveryFailed } from "../../domain/errors/notification-delivery-failed.error.js";
+import type { InvalidChannel } from "../../domain/errors/invalid-channel.error.js";
 import type { INotificationSender } from "../ports/notification-sender.port.js";
 import type { INotificationRepository } from "../ports/notification-repository.port.js";
 import type {
@@ -17,7 +18,12 @@ export class SendNotification {
 
   async execute(
     input: SendNotificationInput,
-  ): Promise<Result<{ output: SendNotificationOutput; event: NotificationSent }, Error>> {
+  ): Promise<
+    Result<
+      { output: SendNotificationOutput; event: NotificationSent },
+      InvalidChannel | NotificationDeliveryFailed
+    >
+  > {
     const id = crypto.randomUUID();
     const notificationResult = Notification.create({
       id,

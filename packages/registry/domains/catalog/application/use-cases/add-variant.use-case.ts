@@ -2,6 +2,9 @@ import { Result } from "../../shared/result.js";
 import { ProductVariant } from "../../domain/entities/product-variant.entity.js";
 import { VariantAdded } from "../../domain/events/variant-added.event.js";
 import { ProductNotFound } from "../../domain/errors/product-not-found.error.js";
+import type { InvalidSKU } from "../../domain/errors/invalid-sku.error.js";
+import type { MoneyError } from "../../domain/errors/money.error.js";
+import type { DuplicateSKU } from "../../domain/errors/duplicate-sku.error.js";
 import type { IProductRepository } from "../ports/product-repository.port.js";
 import type { AddVariantInput } from "../dto/add-variant-input.dto.js";
 
@@ -10,7 +13,12 @@ export class AddVariant {
 
   async execute(
     input: AddVariantInput,
-  ): Promise<Result<{ variantId: string; event: VariantAdded }, Error>> {
+  ): Promise<
+    Result<
+      { variantId: string; event: VariantAdded },
+      ProductNotFound | InvalidSKU | MoneyError | DuplicateSKU
+    >
+  > {
     const product = await this.productRepository.findById(input.productId);
     if (!product) {
       return Result.fail(ProductNotFound.create(input.productId));

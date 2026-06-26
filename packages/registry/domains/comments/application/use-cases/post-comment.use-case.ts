@@ -2,6 +2,7 @@ import { Result } from "../../shared/result.js";
 import { Comment } from "../../domain/entities/comment.entity.js";
 import { CommentPosted } from "../../domain/events/comment-posted.event.js";
 import { CommentNotFound } from "../../domain/errors/comment-not-found.error.js";
+import type { InvalidCommentContent } from "../../domain/errors/invalid-comment-content.error.js";
 import type { ICommentRepository } from "../ports/comment-repository.port.js";
 import type { PostCommentInput, PostCommentOutput } from "../dto/post-comment.dto.js";
 
@@ -10,7 +11,12 @@ export class PostComment {
 
   async execute(
     input: PostCommentInput,
-  ): Promise<Result<{ output: PostCommentOutput; event: CommentPosted }, Error>> {
+  ): Promise<
+    Result<
+      { output: PostCommentOutput; event: CommentPosted },
+      CommentNotFound | InvalidCommentContent
+    >
+  > {
     if (input.parentId) {
       const parent = await this.commentRepository.findById(input.parentId);
       if (!parent) {

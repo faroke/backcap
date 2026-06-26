@@ -3,13 +3,19 @@ import { PostNotFound } from "../../domain/errors/post-not-found.error.js";
 import type { IPostRepository } from "../ports/post-repository.port.js";
 import type { PublishPostInput, PublishPostOutput } from "../dto/publish-post.dto.js";
 import type { PostPublished } from "../../domain/events/post-published.event.js";
+import type { PostAlreadyPublished } from "../../domain/errors/post-already-published.error.js";
 
 export class PublishPost {
   constructor(private readonly postRepository: IPostRepository) {}
 
   async execute(
     input: PublishPostInput,
-  ): Promise<Result<{ output: PublishPostOutput; event: PostPublished }, Error>> {
+  ): Promise<
+    Result<
+      { output: PublishPostOutput; event: PostPublished },
+      PostNotFound | PostAlreadyPublished
+    >
+  > {
     const post = await this.postRepository.findById(input.postId);
     if (!post) {
       return Result.fail(PostNotFound.create(input.postId));

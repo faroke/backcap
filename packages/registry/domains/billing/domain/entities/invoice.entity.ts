@@ -1,5 +1,7 @@
 import { Result } from "../../shared/result.js";
 import { Money } from "../value-objects/money.vo.js";
+import { MoneyError } from "../errors/money.error.js";
+import { InvalidInvoice } from "../errors/invalid-invoice.error.js";
 
 export type InvoiceStatus = "draft" | "open" | "paid" | "void" | "uncollectible";
 
@@ -17,11 +19,11 @@ export class Invoice {
   private constructor(params: {
     id: string;
     customerId: string;
-    subscriptionId?: string;
+    subscriptionId?: string | undefined;
     amount: Money;
     status: InvoiceStatus;
     dueDate: Date;
-    paidAt?: Date;
+    paidAt?: Date | undefined;
     createdAt: Date;
     updatedAt: Date;
   }) {
@@ -41,7 +43,7 @@ export class Invoice {
   static create(params: {
     id: string;
     customerId: string;
-    subscriptionId?: string;
+    subscriptionId?: string | undefined;
     amountValue: number;
     amountCurrency: string;
     status: string;
@@ -49,9 +51,9 @@ export class Invoice {
     paidAt?: Date;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<Invoice, Error> {
+  }): Result<Invoice, InvalidInvoice | MoneyError> {
     if (!Invoice.VALID_STATUSES.includes(params.status as InvoiceStatus)) {
-      return Result.fail(new Error(`Invalid invoice status: "${params.status}"`));
+      return Result.fail(InvalidInvoice.invalidStatus(params.status));
     }
     const amountResult = Money.create(params.amountValue, params.amountCurrency);
     if (amountResult.isFail()) return Result.fail(amountResult.unwrapError());
@@ -72,9 +74,9 @@ export class Invoice {
     );
   }
 
-  markPaid(): Result<Invoice, Error> {
+  markPaid(): Result<Invoice, InvalidInvoice> {
     if (this.status !== "open" && this.status !== "draft") {
-      return Result.fail(new Error(`Cannot mark invoice as paid from status "${this.status}"`));
+      return Result.fail(InvalidInvoice.cannotMarkPaid(this.status));
     }
     return Result.ok(
       new Invoice({

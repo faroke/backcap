@@ -14,7 +14,9 @@ export class LoginUser {
     private readonly passwordHasher: IPasswordHasher,
   ) {}
 
-  async execute(input: LoginInput): Promise<Result<LoginOutput, Error>> {
+  async execute(
+    input: LoginInput,
+  ): Promise<Result<LoginOutput, UserNotFound | InvalidCredentials>> {
     const user = await this.userRepository.findByEmail(input.email);
     if (!user) {
       return Result.fail(UserNotFound.create(input.email));

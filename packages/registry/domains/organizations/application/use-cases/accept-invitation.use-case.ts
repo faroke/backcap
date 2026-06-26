@@ -2,6 +2,10 @@ import { Result } from "../../shared/result.js";
 import { Membership } from "../../domain/entities/membership.entity.js";
 import { MemberJoined } from "../../domain/events/member-joined.event.js";
 import { MemberAlreadyExists } from "../../domain/errors/member-already-exists.error.js";
+import { InvitationNotFound } from "../../domain/errors/invitation-not-found.error.js";
+import { InvitationAlreadyAccepted } from "../../domain/errors/invitation-already-accepted.error.js";
+import { InvitationExpired } from "../../domain/errors/invitation-expired.error.js";
+import type { InvalidMemberRole } from "../../domain/errors/invalid-member-role.error.js";
 import type { IMembershipRepository } from "../ports/membership-repository.port.js";
 import type { IInvitationService } from "../ports/invitation-service.port.js";
 import type { AcceptInvitationInput } from "../dto/accept-invitation-input.dto.js";
@@ -14,18 +18,27 @@ export class AcceptInvitation {
 
   async execute(
     input: AcceptInvitationInput,
-  ): Promise<Result<{ membershipId: string; event: MemberJoined }, Error>> {
+  ): Promise<
+    Result<
+      { membershipId: string; event: MemberJoined },
+      | InvitationNotFound
+      | InvitationAlreadyAccepted
+      | InvitationExpired
+      | MemberAlreadyExists
+      | InvalidMemberRole
+    >
+  > {
     const invitation = await this.invitationService.findByToken(input.token);
     if (!invitation) {
-      return Result.fail(new Error("Invitation not found or expired"));
+      return Result.fail(InvitationNotFound.create());
     }
 
     if (invitation.acceptedAt) {
-      return Result.fail(new Error("Invitation has already been accepted"));
+      return Result.fail(InvitationAlreadyAccepted.create());
     }
 
     if (invitation.expiresAt < new Date()) {
-      return Result.fail(new Error("Invitation has expired"));
+      return Result.fail(InvitationExpired.create());
     }
 
     // Check if user is already a member

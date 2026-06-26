@@ -31,8 +31,8 @@ export class AuditEntry {
     actor: string;
     action: string;
     resource: string;
-    metadata?: Record<string, unknown>;
-    timestamp?: Date;
+    metadata?: Record<string, unknown> | undefined;
+    timestamp?: Date | undefined;
   }): Result<AuditEntry, InvalidAuditAction> {
     const actionResult = AuditAction.create(params.action);
     if (actionResult.isFail()) {

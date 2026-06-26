@@ -1,6 +1,6 @@
 # Backcap
 
-Backcap is a registry of composable backend domains for TypeScript. It lets you install production-ready backend features — authentication, search, blog, billing, notifications — the same way you install npm packages, with full source code written directly into your project. You own every file.
+Backcap is a registry of composable backend domains for TypeScript. It lets you install production-ready backend features — authentication, billing, blog, notifications, files — the same way you install npm packages, with full source code written directly into your project. You own every file.
 
 > For the full API reference, see [llms-full.txt](https://faroke.github.io/backcap/llms-full.txt).
 
@@ -40,9 +40,9 @@ const { userId } = result.unwrap();
 - `npx @backcap/cli add <domain>` — Fetches and installs a domain with conflict detection
 - `npx @backcap/cli list` — Lists available domains from the registry
 
-## Available Domains (20)
+## Available Domains (14)
 
-analytics, audit-log, auth, billing, blog, cart, catalog, comments, feature-flags, files, forms, media, notifications, orders, organizations, queues, rbac, search, tags, webhooks
+audit-log, auth, billing, blog, cart, catalog, comments, files, forms, notifications, orders, organizations, rbac, tags
 
 Each domain follows the same three-layer architecture. Install any with `npx @backcap/cli add <name>`.
 

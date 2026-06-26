@@ -3,6 +3,8 @@ import { Quantity } from "../value-objects/quantity.vo.js";
 import { WarehouseId } from "../value-objects/warehouse-id.vo.js";
 import { InsufficientStock } from "../errors/insufficient-stock.error.js";
 import { InvalidStockQuantity } from "../errors/invalid-stock-quantity.error.js";
+import { InvalidSku } from "../errors/invalid-sku.error.js";
+import type { InvalidWarehouseId } from "../errors/invalid-warehouse-id.error.js";
 
 export class StockLevel {
   readonly id: string;
@@ -46,12 +48,12 @@ export class StockLevel {
     warehouseId: string;
     totalQuantity: number;
     reservedQuantity?: number;
-    lowStockThreshold?: number;
+    lowStockThreshold?: number | undefined;
     createdAt?: Date;
     updatedAt?: Date;
-  }): Result<StockLevel, Error> {
+  }): Result<StockLevel, InvalidSku | InvalidWarehouseId | InvalidStockQuantity> {
     if (!params.sku || typeof params.sku !== "string" || params.sku.trim().length === 0) {
-      return Result.fail(new Error("SKU cannot be empty"));
+      return Result.fail(InvalidSku.create());
     }
 
     const warehouseIdResult = WarehouseId.create(params.warehouseId);
@@ -101,7 +103,7 @@ export class StockLevel {
     );
   }
 
-  adjustTotal(newTotal: number, reason: string): Result<StockLevel, Error> {
+  adjustTotal(newTotal: number, reason: string): Result<StockLevel, InvalidStockQuantity> {
     const newTotalResult = Quantity.create(newTotal);
     if (newTotalResult.isFail()) {
       return Result.fail(newTotalResult.unwrapError());
@@ -130,7 +132,7 @@ export class StockLevel {
     );
   }
 
-  reserve(quantity: number): Result<StockLevel, InsufficientStock | Error> {
+  reserve(quantity: number): Result<StockLevel, InsufficientStock | InvalidStockQuantity> {
     const qtyResult = Quantity.create(quantity);
     if (qtyResult.isFail()) {
       return Result.fail(qtyResult.unwrapError());
@@ -157,7 +159,7 @@ export class StockLevel {
     );
   }
 
-  releaseReserved(quantity: number): Result<StockLevel, Error> {
+  releaseReserved(quantity: number): Result<StockLevel, InvalidStockQuantity> {
     const qtyResult = Quantity.create(quantity);
     if (qtyResult.isFail()) {
       return Result.fail(qtyResult.unwrapError());
@@ -191,7 +193,7 @@ export class StockLevel {
     );
   }
 
-  confirmReserved(quantity: number): Result<StockLevel, Error> {
+  confirmReserved(quantity: number): Result<StockLevel, InvalidStockQuantity> {
     const qtyResult = Quantity.create(quantity);
     if (qtyResult.isFail()) {
       return Result.fail(qtyResult.unwrapError());
@@ -230,7 +232,7 @@ export class StockLevel {
     );
   }
 
-  restock(quantity: number): Result<StockLevel, Error> {
+  restock(quantity: number): Result<StockLevel, InvalidStockQuantity> {
     if (quantity <= 0) {
       return Result.fail(
         InvalidStockQuantity.create("Restock quantity must be greater than zero"),

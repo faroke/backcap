@@ -23,9 +23,6 @@ export function createNotificationsService(
   return {
     send: async (input) => {
       const result = await sendNotification.execute(input);
-      if (result.isFail()) {
-        return result;
-      }
       return result.map(({ output }) => output);
     },
     getByRecipient: (input) => getNotifications.execute(input),
